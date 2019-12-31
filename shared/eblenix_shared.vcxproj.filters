@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="dxsdk">
+      <UniqueIdentifier>{3214f549-49e6-447a-885d-ec936df92f53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dxsdk\include">
+      <UniqueIdentifier>{66bcede2-5a09-4251-b34e-2de4c9a11c78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dxsdk\lib">
+      <UniqueIdentifier>{4d7b168f-4415-49ed-86c4-b9df16f567fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dxsdk\lib\x86">
+      <UniqueIdentifier>{d49c6132-d4d3-4a98-b5bd-8f59e3b18e41}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="dxsdk\lib\x86\d3d9.lib">
+      <Filter>dxsdk\lib\x86</Filter>
+    </Library>
+    <Library Include="dxsdk\lib\x86\d3dx9.lib">
+      <Filter>dxsdk\lib\x86</Filter>
+    </Library>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="dxsdk\include\d3d9.h">
+      <Filter>dxsdk\include</Filter>
+    </ClInclude>
+    <ClInclude Include="dxsdk\include\d3d9caps.h">
+      <Filter>dxsdk\include</Filter>
+    </ClInclude>
+    <ClInclude Include="dxsdk\include\d3d9types.h">
+      <Filter>dxsdk\include</Filter>
+    </ClInclude>
+    <ClInclude Include="dxsdk\include\d3dx9.h">
+      <Filter>dxsdk\include</Filter>
+    </ClInclude>
+    <ClInclude Include="dxsdk\include\d3dx9anim.h">
+      <Filter>dxsdk\include</Filter>
+    </ClInclude>
+    <ClInclude Include="dxsdk\include\d3dx9core.h">
+      <Filter>dxsdk\include</Filter>
+    </ClInclude>
+    <ClInclude Include="dxsdk\include\d3dx9effect.h">
+      <Filter>dxsdk\include</Filter>
+    </ClInclude>
+    <ClInclude Include="dxsdk\include\d3dx9math.h">
+      <Filter>dxsdk\include</Filter>
+    </ClInclude>
+    <ClInclude Include="dxsdk\include\d3dx9mesh.h">
+      <Filter>dxsdk\include</Filter>
+    </ClInclude>
+    <ClInclude Include="dxsdk\include\d3dx9shader.h">
+      <Filter>dxsdk\include</Filter>
+    </ClInclude>
+    <ClInclude Include="dxsdk\include\d3dx9shape.h">
+      <Filter>dxsdk\include</Filter>
+    </ClInclude>
+    <ClInclude Include="dxsdk\include\d3dx9tex.h">
+      <Filter>dxsdk\include</Filter>
+    </ClInclude>
+    <ClInclude Include="dxsdk\include\d3dx9xof.h">
+      <Filter>dxsdk\include</Filter>
+    </ClInclude>
+    <ClInclude Include="shared_defines.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="dxsdk\include\d3dx9math.inl">
+      <Filter>dxsdk\include</Filter>
+    </None>
+  </ItemGroup>
+</Project>

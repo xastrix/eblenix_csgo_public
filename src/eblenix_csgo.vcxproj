@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{AF041675-F00D-4A72-B40F-78D0C4BB72D9}</ProjectGuid>
+    <RootNamespace>eblenix_csgo</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
+    <ProjectName>eblenix_csgo</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)obj\$(ProjectName)\$(Configuration)\</IntDir>
+    <LibraryPath>$(SolutionDir)shared\dxsdk\lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)shared;$(SolutionDir)shared\dxsdk\include;$(SolutionDir)external\minhook\include;$(IncludePath)</IncludePath>
+    <TargetName>$(ProjectName)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)obj\$(ProjectName)\$(Configuration)\</IntDir>
+    <LibraryPath>$(SolutionDir)shared\dxsdk\lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)shared;$(SolutionDir)shared\dxsdk\include;$(SolutionDir)external\minhook\include;$(IncludePath)</IncludePath>
+    <TargetName>$(ProjectName)</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>false</ConformanceMode>
+      <PreprocessorDefinitions>_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>d3dx9.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <Optimization>MinSpace</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>false</ConformanceMode>
+      <PreprocessorDefinitions>_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
+      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <StringPooling>true</StringPooling>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EntryPointSymbol>
+      </EntryPointSymbol>
+      <UACExecutionLevel>AsInvoker</UACExecutionLevel>
+      <StackReserveSize>
+      </StackReserveSize>
+      <AdditionalDependencies>d3dx9.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\external\minhook\src\buffer.c" />
+    <ClCompile Include="..\external\minhook\src\hde\hde32.c" />
+    <ClCompile Include="..\external\minhook\src\hde\hde64.c" />
+    <ClCompile Include="..\external\minhook\src\hook.c" />
+    <ClCompile Include="..\external\minhook\src\trampoline.c" />
+    <ClCompile Include="event_manager.cpp" />
+    <ClCompile Include="math.cpp" />
+    <ClCompile Include="matrix.cpp" />
+    <ClCompile Include="vec2.cpp" />
+    <ClCompile Include="vec3.cpp" />
+    <ClCompile Include="netvar_manager.cpp" />
+    <ClCompile Include="game_event_mgr.cpp" />
+    <ClCompile Include="render_view.cpp" />
+    <ClCompile Include="trace_ray.cpp" />
+    <ClCompile Include="weapon_system.cpp" />
+    <ClCompile Include="material.cpp" />
+    <ClCompile Include="signatures.cpp" />
+    <ClCompile Include="base_attributable_item.cpp" />
+    <ClCompile Include="base_client.cpp" />
+    <ClCompile Include="base_convars.cpp" />
+    <ClCompile Include="base_entity.cpp" />
+    <ClCompile Include="base_plantedc4.cpp" />
+    <ClCompile Include="base_player.cpp" />
+    <ClCompile Include="base_weapon.cpp" />
+    <ClCompile Include="engine_client.cpp" />
+    <ClCompile Include="entity_list.cpp" />
+    <ClCompile Include="material_system.cpp" />
+    <ClCompile Include="model_info.cpp" />
+    <ClCompile Include="model_render.cpp" />
+    <ClCompile Include="panel.cpp" />
+    <ClCompile Include="config_manager.cpp" />
+    <ClCompile Include="movement.cpp" />
+    <ClCompile Include="aimbot.cpp" />
+    <ClCompile Include="esp.cpp" />
+    <ClCompile Include="knifebot.cpp" />
+    <ClCompile Include="triggerbot.cpp" />
+    <ClCompile Include="visuals.cpp" />
+    <ClCompile Include="font_manager.cpp" />
+    <ClCompile Include="globals.cpp" />
+    <ClCompile Include="hooks.cpp" />
+    <ClCompile Include="input_manager.cpp" />
+    <ClCompile Include="interfaces.cpp" />
+    <ClCompile Include="mod.cpp" />
+    <ClCompile Include="render_manager.cpp" />
+    <ClCompile Include="sprite_manager.cpp" />
+    <ClCompile Include="helpers.cpp" />
+    <ClCompile Include="ui.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\external\minhook\include\MinHook.h" />
+    <ClInclude Include="..\external\minhook\src\buffer.h" />
+    <ClInclude Include="..\external\minhook\src\hde\hde32.h" />
+    <ClInclude Include="..\external\minhook\src\hde\hde64.h" />
+    <ClInclude Include="..\external\minhook\src\hde\pstdint.h" />
+    <ClInclude Include="..\external\minhook\src\hde\table32.h" />
+    <ClInclude Include="..\external\minhook\src\hde\table64.h" />
+    <ClInclude Include="..\external\minhook\src\trampoline.h" />
+    <ClInclude Include="common.h" />
+    <ClInclude Include="event_manager.h" />
+    <ClInclude Include="math.h" />
+    <ClInclude Include="matrix.h" />
+    <ClInclude Include="vars_def.h" />
+    <ClInclude Include="vec.h" />
+    <ClInclude Include="vec2.h" />
+    <ClInclude Include="vec3.h" />
+    <ClInclude Include="netvar_manager.h" />
+    <ClInclude Include="view_setup.h" />
+    <ClInclude Include="input.h" />
+    <ClInclude Include="signatures.h" />
+    <ClInclude Include="app_system.h" />
+    <ClInclude Include="base_client.h" />
+    <ClInclude Include="base_convars.h" />
+    <ClInclude Include="base_entity.h" />
+    <ClInclude Include="client_class.h" />
+    <ClInclude Include="engine_client.h" />
+    <ClInclude Include="entity_list.h" />
+    <ClInclude Include="game_event_mgr.h" />
+    <ClInclude Include="global_vars.h" />
+    <ClInclude Include="glow_manager.h" />
+    <ClInclude Include="material_system.h" />
+    <ClInclude Include="model_info.h" />
+    <ClInclude Include="model_render.h" />
+    <ClInclude Include="panel.h" />
+    <ClInclude Include="recv_prop.h" />
+    <ClInclude Include="render_view.h" />
+    <ClInclude Include="studio.h" />
+    <ClInclude Include="trace_ray.h" />
+    <ClInclude Include="weapon_system.h" />
+    <ClInclude Include="material.h" />
+    <ClInclude Include="model.h" />
+    <ClInclude Include="net_channel.h" />
+    <ClInclude Include="player_info.h" />
+    <ClInclude Include="user_cmd.h" />
+    <ClInclude Include="weapon_info.h" />
+    <ClInclude Include="sdk.h" />
+    <ClInclude Include="config_manager.h" />
+    <ClInclude Include="movement.h" />
+    <ClInclude Include="aimbot.h" />
+    <ClInclude Include="esp.h" />
+    <ClInclude Include="knifebot.h" />
+    <ClInclude Include="triggerbot.h" />
+    <ClInclude Include="visuals.h" />
+    <ClInclude Include="font_manager.h" />
+    <ClInclude Include="globals.h" />
+    <ClInclude Include="hooks.h" />
+    <ClInclude Include="input_manager.h" />
+    <ClInclude Include="interfaces.h" />
+    <ClInclude Include="mod.h" />
+    <ClInclude Include="render_manager.h" />
+    <ClInclude Include="sprite_manager.h" />
+    <ClInclude Include="fnv.h" />
+    <ClInclude Include="helpers.h" />
+    <ClInclude Include="ui.h" />
+    <ClInclude Include="vars.h" />
+    <ClInclude Include="fonts.hpp" />
+    <ClInclude Include="sprites.hpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

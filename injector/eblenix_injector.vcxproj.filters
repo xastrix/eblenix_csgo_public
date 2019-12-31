@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="d3d.cpp">
+      <Filter>interface</Filter>
+    </ClCompile>
+    <ClCompile Include="interface.cpp">
+      <Filter>interface</Filter>
+    </ClCompile>
+    <ClCompile Include="sprites.cpp">
+      <Filter>interface</Filter>
+    </ClCompile>
+    <ClCompile Include="mouse.cpp">
+      <Filter>interface</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="util.h" />
+    <ClInclude Include="csgo_icon.hpp">
+      <Filter>resources</Filter>
+    </ClInclude>
+    <ClInclude Include="interface.h">
+      <Filter>interface</Filter>
+    </ClInclude>
+    <ClInclude Include="ui.h">
+      <Filter>interface</Filter>
+    </ClInclude>
+    <ClInclude Include="globals.h" />
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="resources">
+      <UniqueIdentifier>{e971f24e-86d1-4f0f-bcf9-984da56bbf9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="interface">
+      <UniqueIdentifier>{1e3ef9c3-dcad-4a6e-928a-942636c4d466}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="eblenix_injector.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="icon.ico" />
+  </ItemGroup>
+</Project>

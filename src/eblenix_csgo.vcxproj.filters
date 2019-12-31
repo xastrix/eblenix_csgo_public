@@ -1,0 +1,465 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="netvar_manager.cpp">
+      <Filter>csgo\netvar_manager</Filter>
+    </ClCompile>
+    <ClCompile Include="signatures.cpp">
+      <Filter>csgo\signatures</Filter>
+    </ClCompile>
+    <ClCompile Include="math.cpp">
+      <Filter>csgo\math</Filter>
+    </ClCompile>
+    <ClCompile Include="matrix.cpp">
+      <Filter>csgo\math</Filter>
+    </ClCompile>
+    <ClCompile Include="vec2.cpp">
+      <Filter>csgo\math</Filter>
+    </ClCompile>
+    <ClCompile Include="vec3.cpp">
+      <Filter>csgo\math</Filter>
+    </ClCompile>
+    <ClCompile Include="aimbot.cpp">
+      <Filter>features\aimbot</Filter>
+    </ClCompile>
+    <ClCompile Include="esp.cpp">
+      <Filter>features\esp</Filter>
+    </ClCompile>
+    <ClCompile Include="triggerbot.cpp">
+      <Filter>features\triggerbot</Filter>
+    </ClCompile>
+    <ClCompile Include="knifebot.cpp">
+      <Filter>features\knifebot</Filter>
+    </ClCompile>
+    <ClCompile Include="movement.cpp">
+      <Filter>features\movement</Filter>
+    </ClCompile>
+    <ClCompile Include="visuals.cpp">
+      <Filter>features\visuals</Filter>
+    </ClCompile>
+    <ClCompile Include="interfaces.cpp">
+      <Filter>csgo\interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="font_manager.cpp">
+      <Filter>managers\font_manager</Filter>
+    </ClCompile>
+    <ClCompile Include="render_manager.cpp">
+      <Filter>managers\render_manager</Filter>
+    </ClCompile>
+    <ClCompile Include="sprite_manager.cpp">
+      <Filter>managers\sprite_manager</Filter>
+    </ClCompile>
+    <ClCompile Include="input_manager.cpp">
+      <Filter>managers\input_manager</Filter>
+    </ClCompile>
+    <ClCompile Include="config_manager.cpp">
+      <Filter>managers\config_manager</Filter>
+    </ClCompile>
+    <ClCompile Include="helpers.cpp">
+      <Filter>helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="globals.cpp">
+      <Filter>globals</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks.cpp">
+      <Filter>hooks</Filter>
+    </ClCompile>
+    <ClCompile Include="ui.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="mod.cpp">
+      <Filter>mod</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\minhook\src\buffer.c">
+      <Filter>external\minhook\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\minhook\src\hook.c">
+      <Filter>external\minhook\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\minhook\src\trampoline.c">
+      <Filter>external\minhook\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\minhook\src\hde\hde32.c">
+      <Filter>external\minhook\src\hde</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\minhook\src\hde\hde64.c">
+      <Filter>external\minhook\src\hde</Filter>
+    </ClCompile>
+    <ClCompile Include="base_attributable_item.cpp">
+      <Filter>csgo\client</Filter>
+    </ClCompile>
+    <ClCompile Include="base_client.cpp">
+      <Filter>csgo\client</Filter>
+    </ClCompile>
+    <ClCompile Include="base_convars.cpp">
+      <Filter>csgo\client</Filter>
+    </ClCompile>
+    <ClCompile Include="engine_client.cpp">
+      <Filter>csgo\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="render_view.cpp">
+      <Filter>csgo\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="trace_ray.cpp">
+      <Filter>csgo\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="base_entity.cpp">
+      <Filter>csgo\entity</Filter>
+    </ClCompile>
+    <ClCompile Include="base_player.cpp">
+      <Filter>csgo\entity</Filter>
+    </ClCompile>
+    <ClCompile Include="entity_list.cpp">
+      <Filter>csgo\entity</Filter>
+    </ClCompile>
+    <ClCompile Include="game_event_mgr.cpp">
+      <Filter>csgo\game_events</Filter>
+    </ClCompile>
+    <ClCompile Include="material.cpp">
+      <Filter>csgo\materials</Filter>
+    </ClCompile>
+    <ClCompile Include="material_system.cpp">
+      <Filter>csgo\materials</Filter>
+    </ClCompile>
+    <ClCompile Include="model_info.cpp">
+      <Filter>csgo\models</Filter>
+    </ClCompile>
+    <ClCompile Include="model_render.cpp">
+      <Filter>csgo\models</Filter>
+    </ClCompile>
+    <ClCompile Include="panel.cpp">
+      <Filter>csgo\vgui</Filter>
+    </ClCompile>
+    <ClCompile Include="base_plantedc4.cpp">
+      <Filter>csgo\weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="base_weapon.cpp">
+      <Filter>csgo\weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="weapon_system.cpp">
+      <Filter>csgo\weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="event_manager.cpp">
+      <Filter>managers\event_manager</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="netvar_manager.h">
+      <Filter>csgo\netvar_manager</Filter>
+    </ClInclude>
+    <ClInclude Include="signatures.h">
+      <Filter>csgo\signatures</Filter>
+    </ClInclude>
+    <ClInclude Include="math.h">
+      <Filter>csgo\math</Filter>
+    </ClInclude>
+    <ClInclude Include="matrix.h">
+      <Filter>csgo\math</Filter>
+    </ClInclude>
+    <ClInclude Include="vec.h">
+      <Filter>csgo\math</Filter>
+    </ClInclude>
+    <ClInclude Include="vec2.h">
+      <Filter>csgo\math</Filter>
+    </ClInclude>
+    <ClInclude Include="vec3.h">
+      <Filter>csgo\math</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk.h">
+      <Filter>csgo</Filter>
+    </ClInclude>
+    <ClInclude Include="aimbot.h">
+      <Filter>features\aimbot</Filter>
+    </ClInclude>
+    <ClInclude Include="esp.h">
+      <Filter>features\esp</Filter>
+    </ClInclude>
+    <ClInclude Include="triggerbot.h">
+      <Filter>features\triggerbot</Filter>
+    </ClInclude>
+    <ClInclude Include="knifebot.h">
+      <Filter>features\knifebot</Filter>
+    </ClInclude>
+    <ClInclude Include="movement.h">
+      <Filter>features\movement</Filter>
+    </ClInclude>
+    <ClInclude Include="visuals.h">
+      <Filter>features\visuals</Filter>
+    </ClInclude>
+    <ClInclude Include="interfaces.h">
+      <Filter>csgo\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="fnv.h">
+      <Filter>csgo\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="font_manager.h">
+      <Filter>managers\font_manager</Filter>
+    </ClInclude>
+    <ClInclude Include="render_manager.h">
+      <Filter>managers\render_manager</Filter>
+    </ClInclude>
+    <ClInclude Include="sprite_manager.h">
+      <Filter>managers\sprite_manager</Filter>
+    </ClInclude>
+    <ClInclude Include="input_manager.h">
+      <Filter>managers\input_manager</Filter>
+    </ClInclude>
+    <ClInclude Include="config_manager.h">
+      <Filter>managers\config_manager</Filter>
+    </ClInclude>
+    <ClInclude Include="helpers.h">
+      <Filter>helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="globals.h">
+      <Filter>globals</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks.h">
+      <Filter>hooks</Filter>
+    </ClInclude>
+    <ClInclude Include="ui.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="sprites.hpp">
+      <Filter>resources</Filter>
+    </ClInclude>
+    <ClInclude Include="fonts.hpp">
+      <Filter>resources</Filter>
+    </ClInclude>
+    <ClInclude Include="mod.h">
+      <Filter>mod</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external\minhook\include\MinHook.h">
+      <Filter>external\minhook\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external\minhook\src\buffer.h">
+      <Filter>external\minhook\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external\minhook\src\trampoline.h">
+      <Filter>external\minhook\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external\minhook\src\hde\hde32.h">
+      <Filter>external\minhook\src\hde</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external\minhook\src\hde\hde64.h">
+      <Filter>external\minhook\src\hde</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external\minhook\src\hde\pstdint.h">
+      <Filter>external\minhook\src\hde</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external\minhook\src\hde\table32.h">
+      <Filter>external\minhook\src\hde</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external\minhook\src\hde\table64.h">
+      <Filter>external\minhook\src\hde</Filter>
+    </ClInclude>
+    <ClInclude Include="app_system.h">
+      <Filter>csgo\client</Filter>
+    </ClInclude>
+    <ClInclude Include="base_client.h">
+      <Filter>csgo\client</Filter>
+    </ClInclude>
+    <ClInclude Include="base_convars.h">
+      <Filter>csgo\client</Filter>
+    </ClInclude>
+    <ClInclude Include="client_class.h">
+      <Filter>csgo\client</Filter>
+    </ClInclude>
+    <ClInclude Include="recv_prop.h">
+      <Filter>csgo\client</Filter>
+    </ClInclude>
+    <ClInclude Include="engine_client.h">
+      <Filter>csgo\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="global_vars.h">
+      <Filter>csgo\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="glow_manager.h">
+      <Filter>csgo\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="render_view.h">
+      <Filter>csgo\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="trace_ray.h">
+      <Filter>csgo\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="view_setup.h">
+      <Filter>csgo\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="base_entity.h">
+      <Filter>csgo\entity</Filter>
+    </ClInclude>
+    <ClInclude Include="entity_list.h">
+      <Filter>csgo\entity</Filter>
+    </ClInclude>
+    <ClInclude Include="game_event_mgr.h">
+      <Filter>csgo\game_events</Filter>
+    </ClInclude>
+    <ClInclude Include="material.h">
+      <Filter>csgo\materials</Filter>
+    </ClInclude>
+    <ClInclude Include="material_system.h">
+      <Filter>csgo\materials</Filter>
+    </ClInclude>
+    <ClInclude Include="model_info.h">
+      <Filter>csgo\models</Filter>
+    </ClInclude>
+    <ClInclude Include="model_render.h">
+      <Filter>csgo\models</Filter>
+    </ClInclude>
+    <ClInclude Include="studio.h">
+      <Filter>csgo\models</Filter>
+    </ClInclude>
+    <ClInclude Include="input.h">
+      <Filter>csgo\structs</Filter>
+    </ClInclude>
+    <ClInclude Include="model.h">
+      <Filter>csgo\structs</Filter>
+    </ClInclude>
+    <ClInclude Include="net_channel.h">
+      <Filter>csgo\structs</Filter>
+    </ClInclude>
+    <ClInclude Include="player_info.h">
+      <Filter>csgo\structs</Filter>
+    </ClInclude>
+    <ClInclude Include="user_cmd.h">
+      <Filter>csgo\structs</Filter>
+    </ClInclude>
+    <ClInclude Include="weapon_info.h">
+      <Filter>csgo\structs</Filter>
+    </ClInclude>
+    <ClInclude Include="panel.h">
+      <Filter>csgo\vgui</Filter>
+    </ClInclude>
+    <ClInclude Include="weapon_system.h">
+      <Filter>csgo\weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="event_manager.h">
+      <Filter>managers\event_manager</Filter>
+    </ClInclude>
+    <ClInclude Include="vars.h" />
+    <ClInclude Include="vars_def.h" />
+    <ClInclude Include="common.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="csgo">
+      <UniqueIdentifier>{9d7806a6-9030-4c58-a855-af6b9477f9fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="csgo\client">
+      <UniqueIdentifier>{df3f7331-35fc-4d14-9021-f4b493002eb9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="csgo\engine">
+      <UniqueIdentifier>{60991020-290b-40fd-87b5-748c5bcd23d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="csgo\entity">
+      <UniqueIdentifier>{34726556-f219-40ce-8b9a-0254132b0421}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="csgo\math">
+      <UniqueIdentifier>{d8d956d3-c47c-4513-9582-4fd2813b67cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="csgo\signatures">
+      <UniqueIdentifier>{c5d5b8fc-2558-46af-ab9c-ab23c1badec2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="csgo\netvar_manager">
+      <UniqueIdentifier>{81a8e153-bdd1-4c44-93f1-39271e8c72e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="csgo\vgui">
+      <UniqueIdentifier>{3e03b735-d874-4354-a41c-f48316e9f9ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="csgo\weapons">
+      <UniqueIdentifier>{289fb7a3-5e79-4309-8926-94cc1b8f186b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="csgo\models">
+      <UniqueIdentifier>{7fb04e4a-7de1-4563-ac86-4d869d461f0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="csgo\materials">
+      <UniqueIdentifier>{64f78b04-2157-43cf-9a8e-206838ecc103}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="csgo\game_events">
+      <UniqueIdentifier>{9c6af158-7f2c-4619-b69f-ff76fda87c15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="csgo\structs">
+      <UniqueIdentifier>{97bad1f8-0830-418f-9b13-08f54e53f4e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="features">
+      <UniqueIdentifier>{1f0980bb-c668-4ebb-ab5f-953fb3b8689c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="features\aimbot">
+      <UniqueIdentifier>{baf46f29-c877-43db-b55a-341f1d8a1dee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="features\triggerbot">
+      <UniqueIdentifier>{0fe56000-fbec-45c3-871a-721db6d67c18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="features\esp">
+      <UniqueIdentifier>{74637c9d-1d5e-4f76-8f1f-69b3f3fecd49}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="features\visuals">
+      <UniqueIdentifier>{2d4d9e0e-69d7-411f-846c-5f4512d7b90c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="features\movement">
+      <UniqueIdentifier>{848d947d-0dc6-419d-90f2-b11c6b2e0ece}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="features\knifebot">
+      <UniqueIdentifier>{b5235895-8f91-48ef-a32b-27394ade7d9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="csgo\interfaces">
+      <UniqueIdentifier>{1a448240-a0ce-4208-9d20-b75792d5aab1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="csgo\utils">
+      <UniqueIdentifier>{fa87af76-89ce-40b0-a6b2-a809a2698e55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="managers">
+      <UniqueIdentifier>{f2917bf1-8bf6-4637-a71b-efd251526832}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="managers\font_manager">
+      <UniqueIdentifier>{cd1fef97-2569-47d3-8010-5bcc2ae32645}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="managers\render_manager">
+      <UniqueIdentifier>{933782b7-53e4-460b-a578-9803f459634a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="managers\sprite_manager">
+      <UniqueIdentifier>{1ae169ae-1e88-457b-a42f-b487b6d27382}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="managers\input_manager">
+      <UniqueIdentifier>{dba0bdc5-dbba-4200-95c4-8d614d3d481a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="managers\config_manager">
+      <UniqueIdentifier>{8df0a332-7f8e-4cce-9bae-bc9178ea4144}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="helpers">
+      <UniqueIdentifier>{a031d6e0-15c3-4fca-ba1e-055478838498}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hooks">
+      <UniqueIdentifier>{5601a5a9-2392-4b36-bc21-1239adf33119}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="globals">
+      <UniqueIdentifier>{95f1ebf1-5929-46e6-af64-fd74bdecf8c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ui">
+      <UniqueIdentifier>{9840e7ae-799f-4f14-917f-1544e34cf189}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mod">
+      <UniqueIdentifier>{5fb4bed6-b571-46bd-8f2c-bc1d56b22ad9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources">
+      <UniqueIdentifier>{d6b9b801-07a9-442a-a6e9-ae56e04b233a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="external">
+      <UniqueIdentifier>{c22143f9-a4f6-47ae-a79b-96508f7a59ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="external\minhook">
+      <UniqueIdentifier>{52b31cbb-cdef-4eee-82aa-4c68770292f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="external\minhook\include">
+      <UniqueIdentifier>{e5852b21-459e-420c-bdbc-b9deafee32a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="external\minhook\src">
+      <UniqueIdentifier>{94f63591-a622-44e2-bb54-3cbe0aaf3e47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="external\minhook\src\hde">
+      <UniqueIdentifier>{b30d09ab-5cb5-4b62-ad1f-b157289d3226}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="managers\event_manager">
+      <UniqueIdentifier>{d59d7f8e-973e-4333-8788-8e2edead5e0c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
