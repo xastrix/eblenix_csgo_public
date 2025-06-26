@@ -1,0 +1,86 @@
+#include "cfg.h"
+
+#include "vars.h"
+#include "helpers.h"
+#include "interfaces.h"
+
+#include <files.h>
+
+void cfg::load(const std::wstring& name)
+{
+	std::string cfg_path = CFG_DIRECTORY_PATHS + std::string{ name.begin(), name.end() };
+	std::string data{};
+
+	if (!(Files::read(cfg_path, "rb", data) == FS_OK))
+		return;
+
+	std::string decrypted = Helpers::xor_encrypt_decrypt(data, cfg_path);
+	std::string line{};
+
+	size_t pos = 0, next_pos;
+	while (pos < decrypted.size())
+	{
+		next_pos = decrypted.find('\n', pos);
+
+		if (next_pos == std::string::npos)
+			next_pos = decrypted.size();
+
+		line = decrypted.substr(pos, next_pos - pos);
+
+		const auto equal_pos = line.find('=');
+		if (equal_pos == std::string::npos) {
+			pos = next_pos + 1;
+			continue;
+		}
+
+		const auto key = line.substr(0, equal_pos);
+		const auto value = line.substr(equal_pos + 1);
+
+		if (value == CFG_BOOL_TRUE_KEY) {
+			g_vars.set(key, true);
+		}
+		else if (value == CFG_BOOL_FALSE_KEY) {
+			g_vars.set(key, false);
+		}
+		else
+		{
+			if (value.find(CFG_INT_KEY) != std::string::npos) {
+				g_vars.set(key, std::stoi(Helpers::remove_chars_from_string(value, CFG_INT_KEY)));
+			}
+			else if (value.find(CFG_FLOAT_KEY) != std::string::npos) {
+				g_vars.set(key, std::stof(Helpers::remove_chars_from_string(value, CFG_FLOAT_KEY)));
+			}
+		}
+
+		pos = next_pos + 1;
+	}
+}
+
+void cfg::save(const std::wstring& name)
+{
+	std::string cfg_path = CFG_DIRECTORY_PATHS + std::string{ name.begin(), name.end() };
+	std::string data{};
+
+	Files::make_dirs(CFG_DIRECTORY_PATHS);
+	for (const auto&[k, v] : g_vars.get_vars()) {
+		data += k + "=";
+
+		std::visit([&](auto&& arg) {
+			using T = std::decay_t<decltype(arg)>;
+
+			if constexpr (std::is_same_v<T, bool>) {
+				data += (arg ? CFG_BOOL_TRUE_KEY : CFG_BOOL_FALSE_KEY);
+			}
+			else if constexpr (std::is_same_v<T, int>) {
+				data += CFG_INT_KEY + std::to_string(arg);
+			}
+			else if constexpr (std::is_same_v<T, float>) {
+				data += CFG_FLOAT_KEY + std::to_string(arg);
+			}
+
+			data += "\n";
+		}, v);
+	}
+
+	Files::write(cfg_path, "wb", Helpers::xor_encrypt_decrypt(data, cfg_path));
+}

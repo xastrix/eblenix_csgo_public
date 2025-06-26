@@ -1,0 +1,2 @@
+# eblenix_csgo_public
+A cheat for Counter-Strike: Global Offensive created solely for educational purposes. dev started in 2019, by which time I was already familiar with gamehacking. The cheat does not include a skinchanger because my friends and I didn't need it - we already had skins. All credits to @xastrix
