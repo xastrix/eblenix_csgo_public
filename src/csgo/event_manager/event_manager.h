@@ -1,0 +1,12 @@
+#pragma once
+
+#include "../../csgo/sdk/sdk.h"
+
+struct event_manager : public c_game_event_listener2 {
+	void init();
+	void undo();
+private:
+	void fire_game_event(c_game_event* event);
+};
+
+extern event_manager g_events;

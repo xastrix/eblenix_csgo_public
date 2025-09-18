@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{AF041675-F00D-4A72-B40F-78D0C4BB72D9}</ProjectGuid>
+    <RootNamespace>eblenix_csgo</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
+    <ProjectName>eblenix_csgo</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)obj\$(ProjectName)\$(Configuration)\</IntDir>
+    <LibraryPath>$(SolutionDir)shared\dxsdk\lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)dependencies;$(ProjectDir)resources;$(SolutionDir)shared;$(SolutionDir)shared\dxsdk\include;$(IncludePath)</IncludePath>
+    <TargetName>$(ProjectName)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)obj\$(ProjectName)\$(Configuration)\</IntDir>
+    <LibraryPath>$(SolutionDir)shared\dxsdk\lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)dependencies;$(ProjectDir)resources;$(SolutionDir)shared;$(SolutionDir)shared\dxsdk\include;$(IncludePath)</IncludePath>
+    <TargetName>$(ProjectName)</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>false</ConformanceMode>
+      <PreprocessorDefinitions>_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>d3dx9.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <Optimization>MinSpace</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>false</ConformanceMode>
+      <PreprocessorDefinitions>_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
+      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <StringPooling>true</StringPooling>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EntryPointSymbol>
+      </EntryPointSymbol>
+      <UACExecutionLevel>AsInvoker</UACExecutionLevel>
+      <StackReserveSize>
+      </StackReserveSize>
+      <AdditionalDependencies>d3dx9.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="csgo\event_manager\event_manager.cpp" />
+    <ClCompile Include="csgo\math\math.cpp" />
+    <ClCompile Include="csgo\math\matrix.cpp" />
+    <ClCompile Include="csgo\math\vec2.cpp" />
+    <ClCompile Include="csgo\math\vec3.cpp" />
+    <ClCompile Include="csgo\mem\mem.cpp" />
+    <ClCompile Include="csgo\netvar_manager\netvar_manager.cpp" />
+    <ClCompile Include="csgo\sdk\c_game_event_mgr.cpp" />
+    <ClCompile Include="csgo\sdk\c_render_view.cpp" />
+    <ClCompile Include="csgo\sdk\c_trace_ray.cpp" />
+    <ClCompile Include="csgo\sdk\c_weapon_system.cpp" />
+    <ClCompile Include="csgo\sdk\i_material.cpp" />
+    <ClCompile Include="csgo\signatures\signatures.cpp" />
+    <ClCompile Include="csgo\sdk\c_base_attributable_item.cpp" />
+    <ClCompile Include="csgo\sdk\c_base_client.cpp" />
+    <ClCompile Include="csgo\sdk\c_base_convars.cpp" />
+    <ClCompile Include="csgo\sdk\c_base_entity.cpp" />
+    <ClCompile Include="csgo\sdk\c_base_plantedc4.cpp" />
+    <ClCompile Include="csgo\sdk\c_base_player.cpp" />
+    <ClCompile Include="csgo\sdk\c_base_weapon.cpp" />
+    <ClCompile Include="csgo\sdk\c_engine_client.cpp" />
+    <ClCompile Include="csgo\sdk\c_entity_list.cpp" />
+    <ClCompile Include="csgo\sdk\c_material_system.cpp" />
+    <ClCompile Include="csgo\sdk\c_model_info.cpp" />
+    <ClCompile Include="csgo\sdk\c_model_render.cpp" />
+    <ClCompile Include="csgo\sdk\c_panel.cpp" />
+    <ClCompile Include="hack\config\config.cpp" />
+    <ClCompile Include="hack\features\movement\movement.cpp" />
+    <ClCompile Include="dependencies\minhook\buffer.c" />
+    <ClCompile Include="dependencies\minhook\hde\hde32.c" />
+    <ClCompile Include="dependencies\minhook\hde\hde64.c" />
+    <ClCompile Include="dependencies\minhook\hook.c" />
+    <ClCompile Include="dependencies\minhook\trampoline.c" />
+    <ClCompile Include="hack\features\aimbot\aimbot.cpp" />
+    <ClCompile Include="hack\features\esp\esp.cpp" />
+    <ClCompile Include="hack\features\knifebot\knifebot.cpp" />
+    <ClCompile Include="hack\features\triggerbot\triggerbot.cpp" />
+    <ClCompile Include="hack\features\visuals\visuals.cpp" />
+    <ClCompile Include="hack\hooks\hooks.cpp" />
+    <ClCompile Include="hack\input_manager\input_manager.cpp" />
+    <ClCompile Include="csgo\interfaces\interfaces.cpp" />
+    <ClCompile Include="hack\mod\mod.cpp" />
+    <ClCompile Include="hack\render_manager\render_manager.cpp" />
+    <ClCompile Include="hack\render_manager\sprite_manager\sprite_manager.cpp" />
+    <ClCompile Include="hack\ui\ui.cpp" />
+    <ClCompile Include="hack\ui\ui_adders.cpp" />
+    <ClCompile Include="hack\ui\ui_input.cpp" />
+    <ClCompile Include="hack\ui\ui_render.cpp" />
+    <ClCompile Include="hack\helpers\helpers.cpp" />
+    <ClCompile Include="hack\ui\ui_sprites.cpp" />
+    <ClCompile Include="hack\var_manager\var_manager.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="csgo\event_manager\event_manager.h" />
+    <ClInclude Include="csgo\math\math.h" />
+    <ClInclude Include="csgo\math\matrix.h" />
+    <ClInclude Include="csgo\math\vec.h" />
+    <ClInclude Include="csgo\math\vec2.h" />
+    <ClInclude Include="csgo\math\vec3.h" />
+    <ClInclude Include="csgo\mem\mem.h" />
+    <ClInclude Include="csgo\netvar_manager\netvar_manager.h" />
+    <ClInclude Include="csgo\sdk\c_view_setup.h" />
+    <ClInclude Include="csgo\sdk\i_input.h" />
+    <ClInclude Include="csgo\signatures\signatures.h" />
+    <ClInclude Include="csgo\sdk\c_app_system.h" />
+    <ClInclude Include="csgo\sdk\c_base_client.h" />
+    <ClInclude Include="csgo\sdk\c_base_convars.h" />
+    <ClInclude Include="csgo\sdk\c_base_entity.h" />
+    <ClInclude Include="csgo\sdk\c_client_class.h" />
+    <ClInclude Include="csgo\sdk\c_engine_client.h" />
+    <ClInclude Include="csgo\sdk\c_entity_list.h" />
+    <ClInclude Include="csgo\sdk\c_game_event_mgr.h" />
+    <ClInclude Include="csgo\sdk\c_global_vars.h" />
+    <ClInclude Include="csgo\sdk\c_glow_manager.h" />
+    <ClInclude Include="csgo\sdk\c_material_system.h" />
+    <ClInclude Include="csgo\sdk\c_model_info.h" />
+    <ClInclude Include="csgo\sdk\c_model_render.h" />
+    <ClInclude Include="csgo\sdk\c_panel.h" />
+    <ClInclude Include="csgo\sdk\c_recv_prop.h" />
+    <ClInclude Include="csgo\sdk\c_render_view.h" />
+    <ClInclude Include="csgo\sdk\c_studio.h" />
+    <ClInclude Include="csgo\sdk\c_trace_ray.h" />
+    <ClInclude Include="csgo\sdk\c_weapon_system.h" />
+    <ClInclude Include="csgo\sdk\i_material.h" />
+    <ClInclude Include="csgo\sdk\i_model.h" />
+    <ClInclude Include="csgo\sdk\i_net_channel.h" />
+    <ClInclude Include="csgo\sdk\i_player_info.h" />
+    <ClInclude Include="csgo\sdk\i_user_cmd.h" />
+    <ClInclude Include="csgo\sdk\i_weapon_info.h" />
+    <ClInclude Include="csgo\sdk\sdk.h" />
+    <ClInclude Include="hack\config\config.h" />
+    <ClInclude Include="hack\features\movement\movement.h" />
+    <ClInclude Include="dependencies\minhook\buffer.h" />
+    <ClInclude Include="dependencies\minhook\hde\hde32.h" />
+    <ClInclude Include="dependencies\minhook\hde\hde64.h" />
+    <ClInclude Include="dependencies\minhook\hde\pstdint.h" />
+    <ClInclude Include="dependencies\minhook\hde\table32.h" />
+    <ClInclude Include="dependencies\minhook\hde\table64.h" />
+    <ClInclude Include="dependencies\minhook\minhook.h" />
+    <ClInclude Include="dependencies\minhook\trampoline.h" />
+    <ClInclude Include="hack\features\aimbot\aimbot.h" />
+    <ClInclude Include="hack\features\esp\esp.h" />
+    <ClInclude Include="hack\features\knifebot\knifebot.h" />
+    <ClInclude Include="hack\features\triggerbot\triggerbot.h" />
+    <ClInclude Include="hack\features\visuals\visuals.h" />
+    <ClInclude Include="hack\globals.h" />
+    <ClInclude Include="hack\hooks\hooks.h" />
+    <ClInclude Include="hack\input_manager\input_manager.h" />
+    <ClInclude Include="csgo\interfaces\interfaces.h" />
+    <ClInclude Include="hack\mod\mod.h" />
+    <ClInclude Include="hack\render_manager\render_manager.h" />
+    <ClInclude Include="hack\render_manager\sprite_manager\sprite_manager.h" />
+    <ClInclude Include="hack\ui\ui_adders.h" />
+    <ClInclude Include="hack\ui\ui_globals.h" />
+    <ClInclude Include="hack\ui\ui_input.h" />
+    <ClInclude Include="hack\ui\ui_render.h" />
+    <ClInclude Include="csgo\fnv.h" />
+    <ClInclude Include="hack\helpers\helpers.h" />
+    <ClInclude Include="hack\ui\ui_sprites.h" />
+    <ClInclude Include="hack\var_manager\var_manager.h" />
+    <ClInclude Include="resources\fonts.h" />
+    <ClInclude Include="resources\sprites.h" />
+    <ClInclude Include="hack\ui\ui.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

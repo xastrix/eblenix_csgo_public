@@ -1,0 +1,259 @@
+#include "var_manager.h"
+
+var_manager g_vars;
+
+void var_manager::init()
+{
+	set("aimbot->enabled", false);
+	set("aimbot->silent", false);
+	set("aimbot->autopistol", false);
+	set("aimbot->visible_check", true);
+	set("aimbot->smoke_check", false);
+	set("aimbot->flash_check", false);
+	set("aimbot->teammate_check", false);
+	set("aimbot->jump_check", false);
+	set("aimbot->scope_check", false);
+	set("aimbot->all", false);
+	set("aimbot->all->type", 0);
+	set("aimbot->all->bone", 0);
+	set("aimbot->all->fov", 0.0f);
+	set("aimbot->all->smooth", 1.0f);
+	set("aimbot->type->pistol", 0);
+	set("aimbot->type->rifle", 0);
+	set("aimbot->type->sniper", 0);
+	set("aimbot->type->heavy", 0);
+	set("aimbot->type->smg", 0);
+	set("aimbot->bone->pistol", 0);
+	set("aimbot->bone->rifle", 0);
+	set("aimbot->bone->sniper", 0);
+	set("aimbot->bone->heavy", 0);
+	set("aimbot->bone->smg", 0);
+	set("aimbot->fov->pistol", 0.0f);
+	set("aimbot->smooth->pistol", 1.0f);
+	set("aimbot->fov->rifle", 0.0f);
+	set("aimbot->smooth->rifle", 1.0f);
+	set("aimbot->fov->sniper", 0.0f);
+	set("aimbot->smooth->sniper", 1.0f);
+	set("aimbot->fov->heavy", 0.0f);
+	set("aimbot->smooth->heavy", 1.0f);
+	set("aimbot->fov->smg", 0.0f);
+	set("aimbot->smooth->smg", 1.0f);
+
+	set("triggerbot->enabled", false);
+	set("triggerbot->flash_check", false);
+	set("triggerbot->smoke_check", false);
+	set("triggerbot->teammate_check", false);
+	set("triggerbot->jump_check", false);
+	set("triggerbot->scope_check", false);
+	set("triggerbot->hitbox->head", true);
+	set("triggerbot->hitbox->body", true);
+	set("triggerbot->hitbox->arms", true);
+	set("triggerbot->hitbox->legs", true);
+
+	set("knifebot->enabled", false);
+	set("knifebot->flash_check", false);
+	set("knifebot->smoke_check", false);
+	set("knifebot->teammate_check", false);
+	set("knifebot->distance", 65.0f);
+
+	set("esp->enabled", false);
+	set("esp->team", false);
+	set("esp->visible_only", false);
+	set("esp->walking_only", false);
+	set("esp->render_type", 1);
+	set("esp->name->enabled", false);
+	set("esp->name->type", 0);
+	set("esp->name->col->r", 255);
+	set("esp->name->col->g", 255);
+	set("esp->name->col->b", 255);
+	set("esp->box->enabled", false);
+	set("esp->box->type", 0);
+	set("esp->box->col->r", 255);
+	set("esp->box->col->g", 255);
+	set("esp->box->col->b", 255);
+	set("esp->health->enabled", false);
+	set("esp->health->type", 0);
+	set("esp->health->battery", true);
+	set("esp->health->col->r", 255);
+	set("esp->health->col->g", 255);
+	set("esp->health->col->b", 255);
+	set("esp->weapon->enabled", false);
+	set("esp->weapon->type", 0);
+	set("esp->weapon->col->r", 255);
+	set("esp->weapon->col->g", 255);
+	set("esp->weapon->col->b", 255);
+	set("esp->armor->enabled", false);
+	set("esp->armor->col->r", 255);
+	set("esp->armor->col->g", 255);
+	set("esp->armor->col->b", 255);
+	set("esp->skeleton->enabled", false);
+	set("esp->skeleton->type", 0);
+	set("esp->skeleton->col->r", 255);
+	set("esp->skeleton->col->g", 255);
+	set("esp->skeleton->col->b", 255);
+	set("esp->barrel->enabled", false);
+	set("esp->barrel->col->r", 255);
+	set("esp->barrel->col->g", 255);
+	set("esp->barrel->col->b", 255);
+	set("esp->crosshair->enabled", false);
+	set("esp->crosshair->fov", 1.0f);
+	set("esp->crosshair->col->r", 255);
+	set("esp->crosshair->col->g", 255);
+	set("esp->crosshair->col->b", 255);
+	set("esp->crosshair->col->on_target->r", 255);
+	set("esp->crosshair->col->on_target->g", 60);
+	set("esp->crosshair->col->on_target->b", 60);
+	set("esp->offscreen_lines->enabled", false);
+	set("esp->offscreen_lines->col->r", 255);
+	set("esp->offscreen_lines->col->g", 255);
+	set("esp->offscreen_lines->col->b", 255);
+	set("esp->flags->enabled", false);
+	set("esp->flags->hk", false);
+	set("esp->flags->health", false);
+	set("esp->flags->money", false);
+	set("esp->flags->ammo", false);
+	set("esp->flags->flashed", false);
+	set("esp->flags->defusing", false);
+	set("esp->flags->distance", false);
+	set("esp->flags->scoped", false);
+	set("esp->flags->col->r", 255);
+	set("esp->flags->col->g", 255);
+	set("esp->flags->col->b", 255);
+	set("esp->flags->items->enabled", false);
+	set("esp->flags->items->col->r", 255);
+	set("esp->flags->items->col->g", 255);
+	set("esp->flags->items->col->b", 255);
+
+	set("visuals->enabled", true);
+	set("visuals->interface->status", true);
+	set("visuals->interface->spectators", false);
+	set("visuals->world->projectlines->enabled", false);
+	set("visuals->world->projectlines->distance", false);
+	set("visuals->world->projectlines->type", 0);
+	set("visuals->world->projectlines->col->r", 255);
+	set("visuals->world->projectlines->col->g", 255);
+	set("visuals->world->projectlines->col->b", 255);
+	set("visuals->world->items->enabled", false);
+	set("visuals->world->items->distance", false);
+	set("visuals->world->items->col->r", 255);
+	set("visuals->world->items->col->g", 255);
+	set("visuals->world->items->col->b", 255);
+	set("visuals->world->weapons->enabled", false);
+	set("visuals->world->weapons->distance", false);
+	set("visuals->world->weapons->ammo_bar", false);
+	set("visuals->world->weapons->type", 0);
+	set("visuals->world->weapons->col->r", 255);
+	set("visuals->world->weapons->col->g", 255);
+	set("visuals->world->weapons->col->b", 255);
+	set("visuals->world->weapons->ammo_bar->col->r", 255);
+	set("visuals->world->weapons->ammo_bar->col->g", 255);
+	set("visuals->world->weapons->ammo_bar->col->b", 255);
+	set("visuals->world->c4->enabled", false);
+	set("visuals->world->c4->damage_indicator", false);
+	set("visuals->world->c4->time_bar", false);
+	set("visuals->world->c4->defuse_bar", false);
+	set("visuals->world->c4->type", 0);
+	set("visuals->world->c4->col->r", 255);
+	set("visuals->world->c4->col->g", 255);
+	set("visuals->world->c4->col->b", 255);
+	set("visuals->world->c4->time_bar->col->r", 210);
+	set("visuals->world->c4->time_bar->col->g", 50);
+	set("visuals->world->c4->time_bar->col->b", 0);
+	set("visuals->world->c4->defuse_bar->col->r", 140);
+	set("visuals->world->c4->defuse_bar->col->g", 230);
+	set("visuals->world->c4->defuse_bar->col->b", 0);
+	set("visuals->removals->smoke", false);
+	set("visuals->removals->flash", false);
+	set("visuals->removals->scope", false);
+	set("visuals->removals->sleeves", false);
+	set("visuals->removals->hands", false);
+
+	set("glow->enabled", false);
+	set("glow->visible_only", false);
+	set("glow->walking_only", false);
+	set("glow->team", false);
+	set("glow->health_based", false);
+	set("glow->c4", false);
+	set("glow->enemy->col->r", 255);
+	set("glow->enemy->col->g", 255);
+	set("glow->enemy->col->b", 255);
+	set("glow->enemy->col->a", 255);
+	set("glow->team->col->r", 255);
+	set("glow->team->col->g", 255);
+	set("glow->team->col->b", 255);
+	set("glow->team->col->a", 255);
+	set("glow->c4->col->r", 255);
+	set("glow->c4->col->g", 255);
+	set("glow->c4->col->b", 255);
+	set("glow->c4->col->a", 255);
+
+	set("chams->enabled", false);
+	set("chams->walking_only", false);
+	set("chams->visible_only", false);
+	set("chams->team", false);
+	set("chams->health_based", false);
+	set("chams->type", 0);
+	set("chams->col->r", 255);
+	set("chams->col->g", 255);
+	set("chams->col->b", 255);
+
+	set("misc->visual->engine_radar", false);
+	set("misc->visual->inventory_unlock", false);
+	set("misc->visual->reveal_ranks", false);
+	set("misc->visual->thirdperson", false);
+	set("misc->visual->thirdperson->fov", 80.0f);
+	set("misc->visual->aspect_ratio", false);
+	set("misc->visual->aspect_ratio->value", 1.30f);
+	set("misc->visual->viewmodel->fov", 54.0f);
+	set("misc->movement->bunnyhop", false);
+	set("misc->movement->infinite_duck", false);
+	set("misc->movement->auto_strafe", false);
+	set("misc->movement->blockbot", false);
+	set("misc->event_logs->player_hurt", false);
+	set("misc->event_logs->player_purchase", false);
+
+	set("ui->pos->x", 80);
+	set("ui->pos->y", 80);
+	set("ui->col->r", 95);
+	set("ui->col->g", 115);
+	set("ui->col->b", 150);
+	set("ui->col->a", 130);
+
+	set("keys->on_toggle->aimbot", 0);
+	set("keys->on_toggle->triggerbot", 0);
+	set("keys->on_toggle->thirdperson", 0);
+	set("keys->on_toggle->blockbot", 0);
+	set("keys->on_toggle->panic", 0);
+	set("keys->on_toggle->ui", 0);
+}
+
+void var_manager::reset()
+{
+	init();
+}
+
+void var_manager::set(const std::string& key, const var_type& value)
+{
+	for (auto& var : vars)
+	{
+		if (var.first == key)
+		{
+			if (var.second != value)
+				var.second = std::move(value);
+
+			return;
+		}
+	}
+
+	vars.emplace_back(std::move(key), std::move(value));
+}
+
+vars_t var_manager::get_vars()
+{
+	return vars;
+}
+
+void var_manager::undo()
+{
+	vars.clear();
+}

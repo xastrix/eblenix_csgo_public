@@ -1,0 +1,21 @@
+#pragma once
+
+#include "c_base_client.h"
+#include "c_engine_client.h"
+#include "c_base_convars.h"
+#include "c_trace_ray.h"
+#include "c_model_info.h"
+#include "c_model_render.h"
+#include "c_render_view.h"
+#include "c_game_event_mgr.h"
+#include "c_entity_list.h"
+#include "c_base_entity.h"
+#include "c_panel.h"
+#include "c_global_vars.h"
+#include "c_studio.h"
+#include "c_view_setup.h"
+#include "c_weapon_system.h"
+#include "c_glow_manager.h"
+#include "c_material_system.h"
+
+#include "i_input.h"
