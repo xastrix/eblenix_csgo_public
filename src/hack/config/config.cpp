@@ -53,7 +53,6 @@ void config::load_config(const std::wstring& name)
 		}
 	}
 
-	/* we need to notify the user that the settings have been successfully loaded */
 	g_csgo.m_engine->exec_cmd("record x;stop");
 }
 

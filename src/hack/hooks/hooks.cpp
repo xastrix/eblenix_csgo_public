@@ -203,7 +203,6 @@ static void __stdcall scene_end_h()
 				for (const auto& mat : flash_materials)
 				{
 					if (mat)
-						/* This better unlike flash alpha modify */
 						mat->set_material_var_flag(material_var_no_draw, g_vars.get_as<bool>("visuals->removals->flash").value());
 				}
 			}
@@ -336,8 +335,6 @@ static int __fastcall list_leaves_in_box_h(void* bsp, void*, const vec3& mins, c
 
 static bool __fastcall sv_cheats_boolean_h(convar* convar, int)
 {
-	/* This shit pretty much lowers my fps */
-
 	if (_ReturnAddress() == g_sig.s_cam_think)
 		return true;
 

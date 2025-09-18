@@ -50,7 +50,7 @@ private:
 	}
 
 	void draw() {
-		static bool m_held[3]{};
+		static bool m_held[16]{};
 
 		if (is_hovered()) {
 			g_d3d.draw_filled_rect(m_x, m_y, m_w, m_h, D3DCOLOR_RGBA(68, 99, 153, 255));
@@ -124,7 +124,7 @@ private:
 	}
 
 	void draw() {
-		static bool m_held[3]{};
+		static bool m_held[16]{};
 
 		if (is_hovered()) {
 			g_d3d.draw_filled_rect(m_x, m_y, m_w, m_h, D3DCOLOR_RGBA(68, 99, 153, 255));

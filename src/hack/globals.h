@@ -4,8 +4,6 @@
 #include <mutex>
 #include <vector>
 
-#define NOMINMAX
-
 enum _game_status {
 	gameVersionOutdated,
 	gameVersionOK,
