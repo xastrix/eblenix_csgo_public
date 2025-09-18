@@ -10,9 +10,6 @@ static std::vector<font_t> font_list = {
 	/* ui/interface and some visuals */
 	{ Tahoma12px,     12, "Tahoma",     FW_MEDIUM },
     { Verdana12px,    12, "Verdana",    FW_SEMIBOLD },
-
-	/* for esp flags */
-    { Cambria12px,    12, "Cambria",    FW_NORMAL },
 	
 	/* for weapons and other icons */
 	{ Astriumwep16px, 16, "AstriumWep", FW_NORMAL },

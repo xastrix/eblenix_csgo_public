@@ -666,7 +666,7 @@ void esp::player_rendering(c_base_player* entity)
 		auto fl_pos = 0;
 		for (const auto fl : flags) {
 			g_render.draw_string(fl.first, bbox.x + bbox.w + 3, bbox.y + fl_pos - 2,
-				g_render.get_font(Cambria12px), TEXT_OUTLINE, fl.second);
+				g_render.get_font(Tahoma12px), TEXT_OUTLINE, fl.second);
 
 			fl_pos += 10;
 		}
