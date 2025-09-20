@@ -164,14 +164,14 @@ void render_manager::draw_corner_box(int x, int y, int w, int h, int cx, int cy,
 
 void render_manager::draw_string(const std::string& string, int x, int y, ID3DXFont* font, uint8_t flags, color_t color)
 {
-	const auto string_width = get_text_width(string, font) / 2;
-
 	RECT r{ x, y, x, y };
 	RECT o_r{ x + 1, y + 1, x + 1, y + 1 };
 
 	if (flags & TEXT_CENTER_X) {
-		r = { x - string_width, y, x - string_width, y };
-		o_r = { x - string_width + 1, y + 1, x - string_width + 1, y + 1 };
+		const auto half_width = get_text_width(string, font) / 2;
+
+		r = { x - half_width, y, x - half_width, y };
+		o_r = { x - half_width + 1, y + 1, x - half_width + 1, y + 1 };
 	}
 
 	if (flags & TEXT_OUTLINE) {

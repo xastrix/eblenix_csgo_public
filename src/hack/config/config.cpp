@@ -12,6 +12,14 @@
 
 config g_cfg;
 
+enum _var_types {
+	i32, f32, bl, nbl, maxVarTypes,
+};
+
+std::string v_types[maxVarTypes] = {
+	"<i32>", "<f32>", "<true>", "<false>",
+};
+
 void config::load_config(const std::wstring& name)
 {
 	std::string cfg_path{ CONFIG_DIRECTORY_NAME + std::string{ name.begin(), name.end() } };
@@ -36,19 +44,19 @@ void config::load_config(const std::wstring& name)
 		const auto key = line.substr(0, equal_pos);
 		const auto value = line.substr(equal_pos + 1);
 
-		if (value == "true") {
+		if (value == v_types[bl]) {
 			g_vars.set(key, true);
 		}
-		else if (value == "false") {
+		else if (value == v_types[nbl]) {
 			g_vars.set(key, false);
 		}
 		else
 		{
-			if (value.find("{I}") != std::string::npos) {
-				g_vars.set(key, std::stoi(g_helpers.remove_chars_from_string(value, "{I}")));
+			if (value.find(v_types[i32]) != std::string::npos) {
+				g_vars.set(key, std::stoi(g_helpers.remove_chars_from_string(value, v_types[i32])));
 			}
-			else if (value.find("{F}") != std::string::npos) {
-				g_vars.set(key, std::stof(g_helpers.remove_chars_from_string(value, "{F}")));
+			else if (value.find(v_types[f32]) != std::string::npos) {
+				g_vars.set(key, std::stof(g_helpers.remove_chars_from_string(value, v_types[f32])));
 			}
 		}
 	}
@@ -66,13 +74,13 @@ void config::save_config(const std::wstring& name)
 			using T = std::decay_t<decltype(arg)>;
 
 			if constexpr (std::is_same_v<T, bool>) {
-				oss << (arg ? "true" : "false");
+				oss << v_types[arg ? bl : nbl];
 			}
 			else if constexpr (std::is_same_v<T, int>) {
-				oss << "{I}" << arg;
+				oss << v_types[i32] << arg;
 			}
 			else if constexpr (std::is_same_v<T, float>) {
-				oss << "{F}" << arg;
+				oss << v_types[f32] << arg;
 			}
 
 			oss << std::endl;
