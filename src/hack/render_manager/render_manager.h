@@ -32,6 +32,14 @@ struct vertex_t {
 		     m_tv{};
 };
 
+struct font_t {
+	_fonts      m_index{};
+	int         m_px{};
+	std::string m_name{};
+	uint32_t    m_weight{};
+	DWORD       m_quality{};
+};
+
 class color_t {
 public:
 	color_t(int r = 255, int g = 255, int b = 255, int a = 255)
@@ -74,13 +82,6 @@ private:
 
 		return opt.value();
 	}
-};
-
-struct font_t {
-	_fonts      index{};
-	int         px{};
-	std::string name{};
-	uint32_t    weight{};
 };
 
 struct render_manager {

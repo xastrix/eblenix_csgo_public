@@ -8,14 +8,14 @@ render_manager g_render;
 
 static std::vector<font_t> font_list = {
 	/* ui/interface and some visuals */
-	{ Tahoma12px,     12, "Tahoma",     FW_MEDIUM },
-    { Verdana12px,    12, "Verdana",    FW_SEMIBOLD },
+	{ Tahoma12px,     12, "Tahoma",     FW_MEDIUM,    ANTIALIASED_QUALITY },
+    { Verdana12px,    12, "Verdana",    FW_SEMIBOLD,  ANTIALIASED_QUALITY },
 	
 	/* for weapons and other icons */
-	{ Astriumwep16px, 16, "AstriumWep", FW_NORMAL },
+	{ Astriumwep16px, 16, "AstriumWep", FW_NORMAL,    CLEARTYPE_QUALITY },
 	
 	/* for c4 icon */
-	{ Astriumwep25px, 25, "AstriumWep", FW_NORMAL },
+	{ Astriumwep25px, 25, "AstriumWep", FW_NORMAL,    CLEARTYPE_QUALITY },
 };
 
 bool render_manager::init(IDirect3DDevice9* device)
@@ -42,14 +42,14 @@ bool render_manager::create_objects()
 	{
 		if (FAILED(D3DXCreateFontA(
 			m_device,
-			font.px, 0,
-			font.weight, 1, 0,
+			font.m_px, 0,
+			font.m_weight, 1, 0,
 			DEFAULT_CHARSET,
 			OUT_DEFAULT_PRECIS,
-			ANTIALIASED_QUALITY,
-			FIXED_PITCH | FF_DONTCARE,
-			font.name.c_str(),
-			&m_fonts[font.index])))
+			font.m_quality,
+			FF_DONTCARE,
+			font.m_name.c_str(),
+			&m_fonts[font.m_index])))
 			return false;
 	}
 
@@ -242,9 +242,9 @@ void render_manager::undo()
 
 	for (const auto& font : font_list)
 	{
-		if (m_fonts[font.index]) {
-			m_fonts[font.index]->Release();
-			m_fonts[font.index] = nullptr;
+		if (m_fonts[font.m_index]) {
+			m_fonts[font.m_index]->Release();
+			m_fonts[font.m_index] = nullptr;
 		}
 	}
 
