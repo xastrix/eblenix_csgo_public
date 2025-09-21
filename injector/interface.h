@@ -36,10 +36,12 @@ struct Interface {
 	int get_width();
 	int get_height();
 
-	int& get_mouse_pos_x();
-	int& get_mouse_pos_y();
+	int get_mouse_pos_x();
+	int get_mouse_pos_y();
 
-	bool is_hovered();
+	bool is_focused();
+
+	void set_window_pos(int x, int y);
 
 	void undo();
 private:

@@ -115,11 +115,19 @@ void Interface::on_loop()
 		GetCursorPos(&point);
 		GetWindowRect(m_hwnd, &rect);
 
-		g_interface.get_mouse_pos_x() =
-			(IsWindowVisible(m_hwnd) && g_interface.is_hovered()) ? (point.x - rect.left) : 0;
-
-		g_interface.get_mouse_pos_y() =
-			(IsWindowVisible(m_hwnd) && g_interface.is_hovered()) ? (point.y - rect.top) : 0;
+		if (is_focused()) {
+			if ((m_mouse_pos_x <= m_width && m_mouse_pos_y <= 25) && (GetAsyncKeyState(VK_LBUTTON) & 0x8000)) {
+				set_window_pos(m_mouse_pos_x, m_mouse_pos_y);
+			}
+			else {
+				m_mouse_pos_x = (point.x - rect.left);
+				m_mouse_pos_y = (point.y - rect.top);
+			}
+		}
+		else {
+			m_mouse_pos_x = 0;
+			m_mouse_pos_y = 0;
+		}
 
 		if (!(FAILED(m_device->BeginScene())))
 		{
@@ -196,7 +204,7 @@ void Interface::on_reset()
 	g_d3d.undo();
 	g_ui.m_csgo_icon.on_reset();
 
-	g_interface.m_device->Reset(&g_interface.m_present_params);
+	m_device->Reset(&m_present_params);
 
 	g_ui.m_csgo_icon.on_reset_end();
 	g_d3d.create_objects();
@@ -212,20 +220,39 @@ int Interface::get_height()
 	return m_height;
 }
 
-int& Interface::get_mouse_pos_x()
+int Interface::get_mouse_pos_x()
 {
 	return m_mouse_pos_x;
 }
 
-int& Interface::get_mouse_pos_y()
+int Interface::get_mouse_pos_y()
 {
 	return m_mouse_pos_y;
 }
 
-bool Interface::is_hovered()
+bool Interface::is_focused()
 {
-	return m_mouse_pos_x >= 0 && m_mouse_pos_x <= 0 + m_width
-		&& m_mouse_pos_y >= 0 && m_mouse_pos_y <= 0 + m_height;
+	return GetForegroundWindow() == m_hwnd && IsWindowVisible(m_hwnd);
+}
+
+void Interface::set_window_pos(int x, int y)
+{
+	POINT p{};
+	GetCursorPos(&p);
+
+	int flags{ SWP_NOZORDER | SWP_NOMOVE | SWP_NOSIZE };
+
+	if (x != 0 && y != 0) {
+		x = p.x - x;
+		y = p.y - y;
+
+		flags &= ~SWP_NOMOVE;
+	}
+
+	if (m_width != 0 && m_height != 0)
+		flags &= ~SWP_NOSIZE;
+
+	SetWindowPos(m_hwnd, nullptr, x, y, m_width, m_height, flags);
 }
 
 void Interface::undo()
