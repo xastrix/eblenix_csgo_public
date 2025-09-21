@@ -373,9 +373,11 @@ std::string helpers::xor_encrypt_decrypt(const std::string& data, const std::str
 
 std::string helpers::remove_chars_from_string(std::string string, const std::string& chars)
 {
-	string.erase(std::remove_if(string.begin(), string.end(), [&chars](char c) {
-		return chars.find(c) != std::string::npos;
-	}), string.end());
+	size_t pos{ string.find(chars) };
+
+	if (pos != std::string::npos) {
+		string.erase(pos, chars.length());
+	}
 
 	return string;
 }

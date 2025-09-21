@@ -17,7 +17,7 @@ enum _var_types {
 };
 
 std::string v_types[maxVarTypes] = {
-	"<i32>", "<f32>", "<true>", "<false>",
+	"{i32}", "{f32}", "true", "false",
 };
 
 void config::load_config(const std::wstring& name)
@@ -62,10 +62,21 @@ void config::load_config(const std::wstring& name)
 	}
 
 	g_csgo.m_engine->exec_cmd("record x;stop");
+	ifs.close();
 }
 
 void config::save_config(const std::wstring& name)
 {
+	if (!std::filesystem::exists(CONFIG_DIRECTORY_NAME))
+		std::filesystem::create_directories(CONFIG_DIRECTORY_NAME);
+
+	std::string cfg_path{ CONFIG_DIRECTORY_NAME + std::string{ name.begin(), name.end() } };
+
+	std::ofstream ofs{ cfg_path, std::ios::binary };
+
+	if (!ofs.is_open())
+		return;
+
 	std::ostringstream oss{};
 
 	for (const auto&[k, v] : g_vars.get_vars()) {
@@ -87,13 +98,8 @@ void config::save_config(const std::wstring& name)
 		}, v);
 	}
 
-	if (!std::filesystem::exists(CONFIG_DIRECTORY_NAME))
-		std::filesystem::create_directories(CONFIG_DIRECTORY_NAME);
-
-	std::string cfg_path{ CONFIG_DIRECTORY_NAME + std::string{ name.begin(), name.end() } };
-
 	std::string encrypted{ g_helpers.xor_encrypt_decrypt(oss.str(), cfg_path) };
 
-	std::ofstream ofs{ cfg_path, std::ios::binary };
 	ofs.write(encrypted.c_str(), encrypted.size());
+	ofs.close();
 }
