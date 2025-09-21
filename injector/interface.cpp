@@ -148,34 +148,35 @@ void Interface::on_loop()
 
 					if (game_id != -1)
 					{
-						static std::string dlls[]{ "eblenix_csgo.dll" };
-						static std::string game_processes[]{ "csgo.exe" };
-						static HWND        game_windows[]{ FindWindowA(CSGO_CLASS_NAME, 0) };
+						std::string dlls[]{ "eblenix_csgo.dll" };
+						std::string game_processes[]{ "csgo.exe" };
+						HWND        game_windows[]{ FindWindowA(CSGO_CLASS_NAME, 0) };
 
 						i_group_box Actions{ "Actions", 230, 20, 135, 80 };
 						{
-							if (!util::is_dll_used(dlls[game_id]))
-							{
-								i_button{ &Actions, "Load", 115, 24, [&]() {
-									if (!util::file_exists(dlls[game_id])) {
-										MessageBoxA(0, std::string{ dlls[game_id] + " not found in current directory" }.c_str(), m_window_name.c_str(), MB_OK);
-										return;
+							if (game_id != -1) {
+								bool dll_used{ util::is_dll_used(dlls[game_id]) };
+
+								i_button{ &Actions, dll_used ? "Unload" : "Load", 115, 24, [&]() {
+									switch (dll_used) {
+									case true: {
+										util::send_msg_to_proc(game_windows[game_id], LOADER_UNLOAD_HOOK_MESSAGE);
+										break;
 									}
+									case false: {
+										if (!util::file_exists(dlls[game_id])) {
+											MessageBoxA(0, std::string{ dlls[game_id] + " not found in current directory" }.c_str(), m_window_name.c_str(), MB_OK);
+											return;
+										}
 
-									if (util::is_dll_used(dlls[game_id]))
-										return;
+										const auto pid = util::get_pID(game_processes[game_id]);
 
-									const auto pid = util::get_pID(game_processes[game_id]);
+										if (!pid)
+											return;
 
-									if (!pid)
-										return;
-
-									util::inject(pid, dlls[game_id]);
-								} };
-							}
-							else {
-								i_button{ &Actions, "Unload", 115, 24, []() {
-									util::send_msg_to_proc(game_windows[game_id], LOADER_UNLOAD_HOOK_MESSAGE);
+										util::inject(pid, dlls[game_id]);
+									}
+									}
 								} };
 							}
 
