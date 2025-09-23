@@ -238,12 +238,13 @@ bool Interface::is_focused()
 
 void Interface::set_window_pos(int x, int y)
 {
-	POINT p{};
-	GetCursorPos(&p);
-
 	int flags{ SWP_NOZORDER | SWP_NOMOVE | SWP_NOSIZE };
 
-	if (x != 0 && y != 0) {
+	if (x != 0 && y != 0)
+	{
+		POINT p{};
+		GetCursorPos(&p);
+
 		x = p.x - x;
 		y = p.y - y;
 

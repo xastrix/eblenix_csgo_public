@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../globals.h"
+#include "../font_manager/font_manager.h"
 #include "../var_manager/var_manager.h"
 #include "../input_manager/input_manager.h"
 #include "../helpers/helpers.h"
@@ -12,19 +13,23 @@
 #include "../../csgo/event_manager/event_manager.h"
 
 #include <common.h>
-#include <fonts.h>
 #include <chrono>
 #include <thread>
 
+enum _wait_module_stat {
+	WM_OK,
+	WM_TIMEOUT,
+};
+
 struct dll_t {
-	dll_t(const int32_t reason) : _reason(reason) {};
+	dll_t(const int32_t reason) : m_reason(reason) {};
 	void in(const int32_t reason, std::function<void(void)> fn) {
-		if (_reason == reason) {
+		if (m_reason == reason) {
 			fn();
 		}
 	}
 private:
-	int32_t _reason{};
+	int32_t m_reason{};
 };
 
 namespace mod
@@ -33,48 +38,23 @@ namespace mod
 
 	namespace util
 	{
-		bool wait_for_module(const std::string& module, int ms = 500)
+		_wait_module_stat wait_for_module(const _module_list module_index, std::function<void(void)> fn = []() {}, int ms = 600)
 		{
-			const auto start_time = std::chrono::steady_clock::now();
+			const auto timeout_ms{ 40000 };
+			auto waited_ms{ 0 };
 
-			while (true) {
-				auto modules_loaded = true;
+			while (!GetModuleHandleA(g.module_list[module_index].c_str()))
+			{
+				if (waited_ms >= timeout_ms)
+					return WM_TIMEOUT;
 
-				if (!GetModuleHandleA(module.c_str()))
-					modules_loaded = false;
+				fn();
 
-				if (modules_loaded)
-					return true;
-
-				const auto elapsed_time = std::chrono::steady_clock::now() - start_time;
-				if (std::chrono::duration_cast<std::chrono::milliseconds>(elapsed_time).count() >= ms)
-					break;
-
-				std::this_thread::sleep_for(std::chrono::milliseconds{ 100 });
+				std::this_thread::sleep_for(std::chrono::milliseconds(ms));
+				waited_ms += ms;
 			}
 
-			return false;
-		}
-	}
-
-	namespace fonts
-	{
-		inline HANDLE m_astriumwep{};
-		inline DWORD  m_num{};
-
-		void init()
-		{
-			m_astriumwep = AddFontMemResourceEx(astriumwep_ttf, sizeof(astriumwep_ttf), NULL, &m_num);
-		}
-
-		void undo()
-		{
-			if (m_astriumwep) {
-				RemoveFontMemResourceEx(m_astriumwep);
-				m_astriumwep = NULL;
-			}
-
-			m_num = 0;
+			return WM_OK;
 		}
 	}
 

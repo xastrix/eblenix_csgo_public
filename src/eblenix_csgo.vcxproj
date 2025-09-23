@@ -137,6 +137,7 @@
     <ClCompile Include="hack\features\knifebot\knifebot.cpp" />
     <ClCompile Include="hack\features\triggerbot\triggerbot.cpp" />
     <ClCompile Include="hack\features\visuals\visuals.cpp" />
+    <ClCompile Include="hack\font_manager\font_manager.cpp" />
     <ClCompile Include="hack\hooks\hooks.cpp" />
     <ClCompile Include="hack\input_manager\input_manager.cpp" />
     <ClCompile Include="csgo\interfaces\interfaces.cpp" />
@@ -204,6 +205,7 @@
     <ClInclude Include="hack\features\knifebot\knifebot.h" />
     <ClInclude Include="hack\features\triggerbot\triggerbot.h" />
     <ClInclude Include="hack\features\visuals\visuals.h" />
+    <ClInclude Include="hack\font_manager\font_manager.h" />
     <ClInclude Include="hack\globals.h" />
     <ClInclude Include="hack\hooks\hooks.h" />
     <ClInclude Include="hack\input_manager\input_manager.h" />

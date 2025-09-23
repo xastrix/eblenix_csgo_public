@@ -17,8 +17,13 @@ struct i_group_box {
 	int                       m_element_count{};
 private:
 	void draw() {
-		g_d3d.draw_rect(m_x, m_y, m_w, m_h, D3DCOLOR_RGBA(66, 84, 114, 255));
 		g_d3d.draw_filled_rect(m_x + 1, m_y + 1, m_w - 1, m_h - 1, D3DCOLOR_RGBA(54, 72, 102, 255));
+
+		g_d3d.draw_line(m_x, m_y, m_x + 7, m_y, D3DCOLOR_RGBA(66, 84, 114, 255));
+		g_d3d.draw_line(m_x + g_d3d.get_text_width(m_name) + 12, m_y, m_x + m_w, m_y, D3DCOLOR_RGBA(66, 84, 114, 255));
+		g_d3d.draw_line(m_x, m_y, m_x, m_y + m_h, D3DCOLOR_RGBA(66, 84, 114, 255));
+		g_d3d.draw_line(m_x + m_w, m_y, m_x + m_w, m_y + m_h, D3DCOLOR_RGBA(66, 84, 114, 255));
+		g_d3d.draw_line(m_x, m_y + m_h, m_x + m_w, m_y + m_h, D3DCOLOR_RGBA(66, 84, 114, 255));
 
 		g_d3d.draw_string(m_name, m_x + 10, m_y - 7, D3DCOLOR_RGBA(255, 255, 255, 255));
 	}
@@ -82,8 +87,7 @@ private:
 		if (m_game_name.length() > 28)
 			m_game_name = m_game_name.substr(0, 28) + "..";
 
-		g_d3d.draw_string(m_game_name, m_x + 35, m_y + 3,
-			(*m_selected == m_game_id) ? D3DCOLOR_RGBA(255, 255, 255, 255) : D3DCOLOR_RGBA(200, 200, 200, 255));
+		g_d3d.draw_string(m_game_name, m_x + 35, m_y + 3, D3DCOLOR_RGBA(255, 255, 255, 255));
 	}
 
 	int                       m_x{},
@@ -104,7 +108,7 @@ struct i_button : private i_group_box {
 			m_x = m_parent->m_x + 10;
 			m_y = m_parent->m_y + m_parent->m_ho;
 
-			m_parent->m_ho += (h + 10);
+			m_parent->m_ho += (h + 12);
 			m_parent->m_element_count++;
 		}
 

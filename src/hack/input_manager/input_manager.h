@@ -12,17 +12,14 @@ enum m_state {
 };
 
 struct input_manager {
-	void init();
+	void init(const std::pair<LPCSTR, LPCSTR>& wnd);
 
 	bool is_key_down(unsigned int vk);
 	bool is_key_pressed(unsigned int vk);
 
 	void add_hk(unsigned int vk, std::function<void(void)> fn);
 
-	HWND get_window();
 	WNDPROC get_wnd_proc();
-
-	void set_window(const HWND hwnd);
 
 	bool process_message(UINT m, WPARAM w, LPARAM l);
 	bool process_keybd_message(UINT m, WPARAM w, LPARAM l);

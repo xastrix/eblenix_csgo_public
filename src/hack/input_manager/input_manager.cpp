@@ -14,8 +14,6 @@ static unsigned long WINAPI wnd_proc(HWND h, UINT m, WPARAM w, LPARAM l)
 {
 	if (g.m_initialized)
 	{
-		/* we are waiting for a message from injector about the unloading of the cheat */
-
 		if (m == WM_COPYDATA) {
 			const auto pcds = (PCOPYDATASTRUCT)l;
 
@@ -35,8 +33,13 @@ static unsigned long WINAPI wnd_proc(HWND h, UINT m, WPARAM w, LPARAM l)
 	return CallWindowProcA(g_input.get_wnd_proc(), h, m, w, l);
 }
 
-void input_manager::init()
+void input_manager::init(const std::pair<LPCSTR, LPCSTR>& wnd)
 {
+	m_hwnd = FindWindowA(wnd.first, wnd.second);
+
+	if (m_hwnd == NULL)
+		return;
+
 	m_old_wnd_proc = reinterpret_cast<WNDPROC>(SetWindowLongA(m_hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(wnd_proc)));
 }
 
@@ -58,19 +61,9 @@ void input_manager::add_hk(unsigned int vk, std::function<void(void)> fn)
 	m_hotkeys[vk] = fn;
 }
 
-HWND input_manager::get_window()
-{
-	return m_hwnd;
-}
-
 WNDPROC input_manager::get_wnd_proc()
 {
 	return m_old_wnd_proc;
-}
-
-void input_manager::set_window(const HWND hwnd)
-{
-	m_hwnd = hwnd;
 }
 
 bool input_manager::process_message(UINT m, WPARAM w, LPARAM l)
@@ -142,8 +135,7 @@ bool input_manager::process_keybd_message(UINT m, WPARAM w, LPARAM l)
 std::wstring input_manager::virtual_key_to_wstring(unsigned int vk)
 {
 	std::wstring k{ L"?" };
-
-	auto map = MapVirtualKeyW(vk, MAPVK_VK_TO_VSC);
+	auto map{ MapVirtualKeyW(vk, MAPVK_VK_TO_VSC) };
 
 	switch (vk) {
 	case 0: {

@@ -8,23 +8,18 @@ void mod::init(void* I)
 
 	auto h = CreateThread(0, 0, [](void* I) -> unsigned long __stdcall
 	{
-		do {
-			g_input.set_window(FindWindowA(CSGO_CLASS_NAME, 0));
-			std::this_thread::sleep_for(std::chrono::milliseconds(100));
-		} while (!g_input.get_window());
+		if (util::wait_for_module(serverBrowserDLL) == WM_TIMEOUT)
+			goto _Ex;
 
-		while (!util::wait_for_module(g.module_list[serverBrowserDLL])) {
-			std::this_thread::sleep_for(std::chrono::milliseconds(600));
-		}
-
-		while (!util::wait_for_module(g.module_list[clientDLL])) {
+		if (util::wait_for_module(clientDLL, []() {
 			g.module_list[clientDLL] = g.module_list[clientPanoramaDLL];
-		}
+		}, 200) == WM_TIMEOUT)
+			goto _Ex;
 
 		g_vars.init();
 		g_sig.init();
 		g_csgo.init();
-		fonts::init();
+		g_fonts.init();
 
 		g.m_status = []() {
 			for (int i = noneVersion; i < maxVersions; i++) {
@@ -41,7 +36,7 @@ void mod::init(void* I)
 			return gameVersionOutdated;
 		}();
 
-		g_input.init();
+		g_input.init({ CSGO_CLASS_NAME, 0 });
 		g_hooks.init();
 		g_events.init();
 
@@ -63,6 +58,7 @@ void mod::init(void* I)
 		/* reset vars before unloading */
 		g_vars.reset();
 
+	_Ex:
 		FreeLibraryAndExitThread(static_cast<HMODULE>(I), EXIT_SUCCESS);
 	}, I, 0, 0);
 
@@ -79,7 +75,7 @@ void mod::undo()
 	g_hooks.undo();
 	g_input.undo();
 	g_vars.undo();
-	fonts::undo();
+	g_fonts.undo();
 }
 
 bool __stdcall DllMain(const HMODULE mod, const int32_t r, void*)
