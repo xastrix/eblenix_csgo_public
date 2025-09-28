@@ -3,7 +3,7 @@
 #include "../render_manager.h"
 
 struct sprite_manager {
-	void init(IDirect3DDevice9* device, const byte* img, size_t img_size, int width, int height);
+	void init(IDirect3DDevice9* device, const byte* img, const size_t img_size, const int width, const int height);
 
 	void begin();
 	void end();
@@ -11,7 +11,7 @@ struct sprite_manager {
 	void on_reset();
 	void on_reset_end();
 
-	void draw(int x, int y);
+	void draw(const int x, const int y);
 
 	int get_width();
 	int get_height();

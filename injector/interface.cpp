@@ -70,7 +70,12 @@ _interface_status Interface::init()
 	m_present_params.BackBufferWidth = m_width;
 	m_present_params.BackBufferHeight = m_height;
 
-	if (m_d3d9->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, m_hwnd, D3DCREATE_HARDWARE_VERTEXPROCESSING, &m_present_params, &m_device) < 0) {
+	if (FAILED(m_d3d9->CreateDevice(
+		D3DADAPTER_DEFAULT,
+		D3DDEVTYPE_HAL,
+		m_hwnd,
+		D3DCREATE_HARDWARE_VERTEXPROCESSING,
+		&m_present_params, &m_device))) {
 		m_d3d9->Release();
 		UnregisterClassA(m_class_name.c_str(), m_wc.hInstance);
 		return INTERFACE_FAILED;
@@ -140,45 +145,45 @@ void Interface::on_loop()
 			{
 				g_ui.begin();
 				{
-					static int game_id{ -1 };
+					static auto game_id{ -1 };
+					auto game_selected{ game_id != -1 };
 
-					i_group_box Games{ "Games", 20, 20, (game_id != -1) ? 200 : m_width - 40, 80 }; {
-						i_game_selector{ &Games, g_ui.m_csgo_icon, "CS:GO Release", &game_id, 0 };
+					std::string dlls[]{ "eblenix_csgo.dll" };
+					std::string game_processes[]{ "csgo.exe" };
+					HWND        game_windows[]{ FindWindowA(CSGO_CLASS_NAME, 0) };
+
+					proc_t      process_info{ util::get_proc(game_selected ? game_processes[game_id] : "") };
+
+					i_group_box Games{ "Games", 20, 20, game_selected ? 200 : m_width - 40, 80 }; {
+						i_game_selector{ &Games, g_ui.m_csgo_icon, "CS:GO Release",
+							process_info.active ? true : false, &game_id, 0 };
 					}
 
-					if (game_id != -1)
+					if (game_selected)
 					{
-						std::string dlls[]{ "eblenix_csgo.dll" };
-						std::string game_processes[]{ "csgo.exe" };
-						HWND        game_windows[]{ FindWindowA(CSGO_CLASS_NAME, 0) };
-
 						i_group_box Actions{ "Actions", 230, 20, 135, 80 };
 						{
-							if (game_id != -1) {
-								bool dll_used{ util::is_dll_used(dlls[game_id]) };
+							bool dll_used{ util::is_dll_used(dlls[game_id]) };
 
-								i_button{ &Actions, dll_used ? "Unload" : "Load", 115, 24, [&]() {
-									switch (dll_used) {
-									case true: {
-										util::send_msg_to_proc(game_windows[game_id], LOADER_UNLOAD_HOOK_MESSAGE);
-										break;
+							i_button{ &Actions, dll_used ? "Unload" : "Load", 115, 24, [&]() {
+								switch (dll_used) {
+								case true: {
+									util::send_msg_to_proc(game_windows[game_id], LOADER_UNLOAD_HOOK_MESSAGE);
+									break;
+								}
+								case false: {
+									if (!util::file_exists(dlls[game_id])) {
+										MessageBoxA(0, std::string{ "Module " + dlls[game_id] + " not found in current directory" }.c_str(), "eblenix_injector", MB_OK);
+										return;
 									}
-									case false: {
-										if (!util::file_exists(dlls[game_id])) {
-											MessageBoxA(0, std::string{ dlls[game_id] + " not found in current directory" }.c_str(), m_window_name.c_str(), MB_OK);
-											return;
-										}
 
-										const auto pid = util::get_pID(game_processes[game_id]);
+									if (!process_info.active)
+										return;
 
-										if (!pid)
-											return;
-
-										util::inject(pid, dlls[game_id]);
-									}
-									}
-								} };
-							}
+									util::inject(process_info.id, dlls[game_id]);
+								}
+								}
+							} };
 
 							i_button{ &Actions, "Exit", 115, 24, []() {
 								loop = false;

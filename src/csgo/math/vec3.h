@@ -14,7 +14,7 @@ public:
 	void clamp();
 	vec3 clamped();
 	vec3 normalized();
-	float distance_to(const vec3 & other);
+	float distance_to(const vec3& other);
 	bool is_zero(void);
 	void normalize();
 	float length();
@@ -26,7 +26,7 @@ public:
 	vec3& operator-=(const vec3& v);
 	vec3& operator*=(float v);
 	vec3 operator+(const vec3& v);
-	vec3 operator-(const vec3& v) ;
+	vec3 operator-(const vec3& v);
 	vec3 operator*(float fl) const;
 	vec3 operator*(const vec3& v) const;
 	vec3& operator/=(float fl);
@@ -36,7 +36,7 @@ public:
 	float operator[](int i) const;
 	float length_2d() const;
 	void crossproduct(vec3 v1, vec3 v2, vec3 cross_p) const;
-	vec3 cross(const vec3 & other) const;
+	vec3 cross(const vec3& other) const;
 };
 
 class __declspec(align(16)) vector_aligned : public vec3 {

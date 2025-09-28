@@ -35,17 +35,7 @@ static bool screen_transform(const vec3& in, vec3& out)
 	return true;
 }
 
-vec3 math::calculate_angle_alternative(vec3& a, vec3& b)
-{
-	vec3 angles;
-	vec3 delta = a - b;
-
-	vector_angles(delta, angles);
-
-	return angles;
-}
-
-vec3 math::calculate_angle(vec3& a, vec3& b)
+vec3 math::calculate_angle(const vec3& a, const vec3& b)
 {
 	vec3 angles, delta;
 
@@ -80,26 +70,38 @@ vec3 math::calculate_angle(const vec3& source, const vec3& destination, const ve
 	return angles;
 }
 
+vec3 math::calculate_angle_alternative(const vec3& a, const vec3& b)
+{
+	vec3 angles;
+	vec3 delta = a - b;
+
+	vector_angles(delta, angles);
+
+	return angles;
+}
+
 void math::sin_cos(float r, float* s, float* c)
 {
 	*s = std::sin(r);
 	*c = std::cos(r);
 }
 
-void math::transform_vector(vec3& a, matrix3x4_t& b, vec3& out)
+void math::transform_vector(vec3& a, const matrix3x4_t& b, vec3& out)
 {
 	out.x = a.dot(b.matrix[0]) + b.matrix[0][3];
 	out.y = a.dot(b.matrix[1]) + b.matrix[1][3];
 	out.z = a.dot(b.matrix[2]) + b.matrix[2][3];
 }
 
-void math::vector_angles(vec3& forward, vec3& angles)
+void math::vector_angles(const vec3& forward, vec3& angles)
 {
-	if (forward.y == 0.0f && forward.x == 0.0f) {
+	if ((forward.y == 0.0f && forward.x == 0.0f))
+	{
 		angles.x = (forward.z > 0.0f) ? 270.0f : 90.0f;
 		angles.y = 0.0f;
 	}
-	else {
+	else
+	{
 		angles.x = std::atan2(-forward.z, vec2(forward).length()) * -180 / static_cast<float>(M_PI);
 		angles.y = std::atan2(forward.y, forward.x) * 180 / static_cast<float>(M_PI);
 
@@ -116,7 +118,7 @@ void math::vector_angles(vec3& forward, vec3& angles)
 	angles.z = 0.0f;
 }
 
-void math::angle_vectors(vec3& angles, vec3* forward, vec3* right, vec3* up)
+void math::angle_vectors(const vec3& angles, vec3* forward, vec3* right, vec3* up)
 {
 	float sp, sy, sr, cp, cy, cr;
 
@@ -143,7 +145,7 @@ void math::angle_vectors(vec3& angles, vec3* forward, vec3* right, vec3* up)
 	}
 }
 
-void math::angle_vectors(vec3& angles, vec3& forward)
+void math::angle_vectors(const vec3& angles, vec3& forward)
 {
 	float sp, sy, cp, cy;
 
@@ -157,28 +159,28 @@ void math::angle_vectors(vec3& angles, vec3& forward)
 
 bool math::clamp_angles(vec3& angles)
 {
-	if (std::isfinite(angles.x) && std::isfinite(angles.y) && std::isfinite(angles.z)) {
-		std::clamp(angles.x, -89.f, 89.f);
-		std::clamp(angles.y, -180.f, 180.f);
-		angles.z = 0.f;
-		return true;
-	}
+	if (!(std::isfinite(angles.x) && std::isfinite(angles.y) && std::isfinite(angles.z)))
+		return false;
 
-	return false;
+	angles.x = std::clamp(angles.x, -89.f, 89.f);
+	angles.y = std::clamp(angles.y, -180.f, 180.f);
+	angles.z = 0.f;
+
+	return true;
 }
 
 bool math::normalize_angles(vec3& angles)
 {
-	if (std::isfinite(angles.x) && std::isfinite(angles.y) && std::isfinite(angles.z)) {
-		angles.x = std::remainder(angles.x, 360.f);
-		angles.y = std::remainder(angles.y, 360.f);
-		return true;
-	}
+	if (!(std::isfinite(angles.x) && std::isfinite(angles.y) && std::isfinite(angles.z)))
+		return false;
 
-	return false;
+	angles.x = std::remainder(angles.x, 360.f);
+	angles.y = std::remainder(angles.y, 360.f);
+
+	return true;
 }
 
-float math::distance_based_fov(float distance, vec3 angle, i_user_cmd* cmd)
+float math::distance_based_fov(const float distance, const vec3 angle, const i_user_cmd* cmd)
 {
 	vec3 aiming_at;
 	angle_vectors(cmd->viewangles, aiming_at);
@@ -191,7 +193,7 @@ float math::distance_based_fov(float distance, vec3 angle, i_user_cmd* cmd)
 	return aiming_at.distance_to(aim_at);
 }
 
-float math::get_fov(vec3 vangle, vec3 angle)
+float math::get_fov(const vec3 vangle, const vec3 angle)
 {
 	vec3 a0, a1;
 

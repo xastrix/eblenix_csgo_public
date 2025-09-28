@@ -19,11 +19,18 @@ using _NtCreateThreadEx = NTSTATUS(NTAPI*)(PHANDLE, ACCESS_MASK, POBJECT_ATTRIBU
 
 using _LoadLibraryA = FARPROC(WINAPI*)(LPCSTR);
 
+struct proc_t {
+	bool active{};
+	DWORD id{};
+};
+
 namespace util
 {
-	inline auto get_pID(const std::string& process_name) -> DWORD
+	inline auto get_proc(const std::string& process_name) -> proc_t
 	{
-		auto ret = static_cast<DWORD>(0);
+		proc_t ret{};
+		if (process_name.empty())
+			return ret;
 
 		{
 			PROCESSENTRY32 proc_info{};
@@ -38,7 +45,8 @@ namespace util
 			while (Process32Next(h, &proc_info))
 			{
 				if (proc_info.szExeFile == process_name) {
-					ret = proc_info.th32ProcessID;
+					ret.id = proc_info.th32ProcessID;
+					ret.active = true;
 					break;
 				}
 			}

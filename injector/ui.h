@@ -30,8 +30,8 @@ private:
 };
 
 struct i_game_selector : private i_group_box {
-	i_game_selector(i_group_box* parent, sprite_t game_icon, const std::string& game_name, int* selected, int game_id)
-		: m_parent(parent), m_game_icon(game_icon), m_game_name(game_name), m_selected(selected), m_game_id(game_id) {
+	i_game_selector(i_group_box* parent, sprite_t game_icon, const std::string& game_name, bool game_process_active, int* selected, int game_id)
+		: m_parent(parent), m_game_icon(game_icon), m_game_name(game_name), m_game_process_active(game_process_active), m_selected(selected), m_game_id(game_id) {
 		if (m_parent) {
 			m_x = m_parent->m_x + 1;
 			m_y = m_parent->m_y + m_parent->m_ho;
@@ -81,8 +81,8 @@ private:
 
 		m_game_icon.draw(m_x + 4, m_y + 3);
 
-		g_d3d.draw_rect(m_x + 3, m_y + 2, m_game_icon.get_width() + 1,
-			m_game_icon.get_height() + 1, D3DCOLOR_RGBA(66, 84, 114, 255));
+		g_d3d.draw_rect(m_x + 3, m_y + 2, m_game_icon.get_width() + 1, m_game_icon.get_height() + 1,
+			m_game_process_active ? D3DCOLOR_RGBA(74, 163, 76, 255) : D3DCOLOR_RGBA(66, 84, 114, 255));
 
 		if (m_game_name.length() > 28)
 			m_game_name = m_game_name.substr(0, 28) + "..";
@@ -99,6 +99,7 @@ private:
 	int*                      m_selected{};
 	i_group_box*              m_parent{};
 	int                       m_game_id{};
+	bool                      m_game_process_active{};
 };
 
 struct i_button : private i_group_box {
@@ -132,10 +133,11 @@ private:
 
 		if (g_interface.is_focused() && is_hovered()) {
 			g_d3d.draw_filled_rect(m_x, m_y, m_w, m_h, D3DCOLOR_RGBA(68, 99, 153, 255));
+			g_d3d.draw_rect(m_x, m_y, m_w, m_h, D3DCOLOR_RGBA(58, 87, 137, 255));
 
 			if (GetAsyncKeyState(VK_LBUTTON) & 0x8000) {
 				m_held[m_parent->m_element_count] = true;
-				g_d3d.draw_filled_rect(m_x, m_y, m_w, m_h, D3DCOLOR_RGBA(69, 107, 173, 255));
+				g_d3d.draw_filled_rect(m_x + 1, m_y + 1, m_w - 1, m_h - 1, D3DCOLOR_RGBA(69, 107, 173, 255));
 			}
 			else {
 				if (m_held[m_parent->m_element_count]) {

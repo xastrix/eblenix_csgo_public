@@ -1,6 +1,6 @@
 #include "interface.h"
 
-void sprite_manager::init(IDirect3DDevice9* device, const byte* img, size_t img_size, int width, int height)
+void sprite_manager::init(IDirect3DDevice9* device, const byte* img, const size_t img_size, const int width, const int height)
 {
 	m_width = width;
 	m_height = height;
@@ -48,7 +48,7 @@ void sprite_manager::on_reset_end()
 	m_sprite->OnResetDevice();
 }
 
-void sprite_manager::draw(int x, int y)
+void sprite_manager::draw(const int x, const int y)
 {
 	if (!m_device || !m_texture || !m_sprite)
 		return;

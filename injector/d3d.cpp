@@ -138,7 +138,7 @@ int d3d::get_text_width(const std::string& string)
 	RECT r{};
 	m_font->DrawTextA(0, string.c_str(), -1, &r, DT_CALCRECT, 0xffffffff);
 
-	return r.right - r.left;
+	return (r.right - r.left);
 }
 
 int d3d::get_text_height(const std::string& string)
@@ -146,7 +146,7 @@ int d3d::get_text_height(const std::string& string)
 	RECT r{};
 	m_font->DrawTextA(0, string.c_str(), -1, &r, DT_CALCRECT, 0xffffffff);
 
-	return r.bottom - r.top;
+	return (r.bottom - r.top);
 }
 
 void d3d::undo()

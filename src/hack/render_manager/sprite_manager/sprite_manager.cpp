@@ -1,6 +1,6 @@
 #include "sprite_manager.h"
 
-void sprite_manager::init(IDirect3DDevice9* device, const byte* img, size_t img_size, int width, int height)
+void sprite_manager::init(IDirect3DDevice9* device, const byte* img, const size_t img_size, const int width, const int height)
 {
 	m_width = width;
 	m_height = height;

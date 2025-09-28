@@ -56,8 +56,9 @@ void matrix3x4_t::set_origin(const vec3& p)
 
 void matrix3x4_t::invalidate()
 {
-	for (auto &i : matrix) {
-		for (float &j : i)
-			j = std::numeric_limits< float >::infinity();
+	for (auto& i : matrix)
+	{
+		for (float& j : i)
+			j = std::numeric_limits<float>::infinity();
 	}
 }

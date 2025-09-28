@@ -61,7 +61,6 @@ void config::load_config(const std::wstring& name)
 		}
 	}
 
-	g_csgo.m_engine->exec_cmd("record x;stop");
 	ifs.close();
 }
 
