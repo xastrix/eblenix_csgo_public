@@ -26,7 +26,7 @@ void mod::init(void* I)
 				if (i == noneVersion) continue;
 
 				if (g_csgo.m_engine->get_product_version_string() == g.csgo_versions[i]) {
-					g_vars.set("misc->visual->viewmodel->fov", g_helpers.get_viewmodel_fov());
+					g_vars.set("misc->visual->viewmodel->fov", Helpers::get_viewmodel_fov());
 					g_vars.set("keys->on_toggle->ui", VK_INSERT);
 
 					return gameVersionOK;
@@ -80,15 +80,16 @@ void mod::undo()
 
 bool __stdcall DllMain(const HMODULE mod, const int32_t r, void*)
 {
-	dll_t _dll{ r };
-
-	_dll.in(DLL_PROCESS_ATTACH, [mod]() {
+	switch (r) {
+	case DLL_PROCESS_ATTACH: {
 		mod::init(mod);
-	});
-
-	_dll.in(DLL_PROCESS_DETACH, []() {
+		break;
+	}
+	case DLL_PROCESS_DETACH: {
 		mod::undo();
-	});
+		break;
+	}
+	}
 
 	return true;
 }

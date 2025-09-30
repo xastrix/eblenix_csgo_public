@@ -31,9 +31,6 @@ public:
 private:
 	bool create_interfaces();
 	bool make_pointers();
-
-	template <typename T>
-	T* get_interface(const std::string& module_name, const std::string& interface_name);
 };
 
 extern interfaces g_csgo;

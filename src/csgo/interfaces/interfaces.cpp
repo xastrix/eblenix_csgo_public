@@ -1,7 +1,7 @@
 #include "interfaces.h"
 
 #include "../signatures/signatures.h"
-#include "../mem/mem.h"
+#include "../mem.h"
 
 #ifdef _DEBUG
 #include <common.h>
@@ -9,6 +9,17 @@
 #include "../../hack/globals.h"
 
 interfaces g_csgo;
+
+template <typename T>
+static T* get_interface(const std::string& module_name, const std::string& interface_name)
+{
+	const auto fn = get_export<create_interface_fn>(module_name, "CreateInterface");
+
+	if (!fn)
+		return nullptr;
+
+	return static_cast<T*>(fn(interface_name.c_str(), {}));
+}
 
 void interfaces::init()
 {
@@ -121,7 +132,7 @@ bool interfaces::create_interfaces()
 
 bool interfaces::make_pointers()
 {
-	m_device = *g_mem.read<IDirect3DDevice9**>(reinterpret_cast<uintptr_t>(g_sig.s_device));
+	m_device = *read<IDirect3DDevice9**>(reinterpret_cast<uintptr_t>(g_sig.s_device));
 
 	if (!m_device) {
 #ifdef _DEBUG
@@ -130,7 +141,7 @@ bool interfaces::make_pointers()
 		return false;
 	}
 
-	m_globals = *g_mem.read<c_global_vars**>((*reinterpret_cast<uintptr_t**>(m_client))[11] + 10);
+	m_globals = *read<c_global_vars**>((*reinterpret_cast<uintptr_t**>(m_client))[11] + 10);
 
 	if (!m_globals) {
 #ifdef _DEBUG
@@ -139,7 +150,7 @@ bool interfaces::make_pointers()
 		return false;
 	}
 
-	m_client_mode = *g_mem.read<uintptr_t**>((*reinterpret_cast<uintptr_t**>(m_client))[10] + 5);
+	m_client_mode = *read<uintptr_t**>((*reinterpret_cast<uintptr_t**>(m_client))[10] + 5);
 
 	if (!m_client_mode) {
 #ifdef _DEBUG
@@ -148,7 +159,7 @@ bool interfaces::make_pointers()
 		return false;
 	}
 
-	m_input = g_mem.read<i_input*>(reinterpret_cast<uintptr_t>(g_sig.s_input));
+	m_input = read<i_input*>(reinterpret_cast<uintptr_t>(g_sig.s_input));
 
 	if (!m_input) {
 #ifdef _DEBUG
@@ -157,7 +168,7 @@ bool interfaces::make_pointers()
 		return false;
 	}
 
-	m_weapon_system = g_mem.read<c_weapon_system*>(reinterpret_cast<uintptr_t>(g_sig.s_weapon_system));
+	m_weapon_system = read<c_weapon_system*>(reinterpret_cast<uintptr_t>(g_sig.s_weapon_system));
 
 	if (!m_weapon_system) {
 #ifdef _DEBUG
@@ -166,7 +177,7 @@ bool interfaces::make_pointers()
 		return false;
 	}
 
-	m_glow_manager = g_mem.read_ptr<c_glow_manager*>(*reinterpret_cast<uintptr_t*>(g_sig.s_glow_manager));
+	m_glow_manager = read_ptr<c_glow_manager*>(*reinterpret_cast<uintptr_t*>(g_sig.s_glow_manager));
 
 	if (!m_glow_manager) {
 #ifdef _DEBUG
@@ -176,15 +187,4 @@ bool interfaces::make_pointers()
 	}
 
 	return true;
-}
-
-template <typename T>
-T* interfaces::get_interface(const std::string& module_name, const std::string& interface_name)
-{
-	const auto fn = g_mem.get_export<create_interface_fn>(module_name, "CreateInterface");
-
-	if (!fn)
-		return nullptr;
-
-	return static_cast<T*>(fn(interface_name.c_str(), {}));
 }

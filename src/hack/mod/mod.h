@@ -21,17 +21,6 @@ enum _wait_module_stat {
 	WM_TIMEOUT,
 };
 
-struct dll_t {
-	dll_t(const int32_t reason) : m_reason(reason) {};
-	void in(const int32_t reason, std::function<void(void)> fn) {
-		if (m_reason == reason) {
-			fn();
-		}
-	}
-private:
-	int32_t m_reason{};
-};
-
 namespace mod
 {
 	void init(void* I);

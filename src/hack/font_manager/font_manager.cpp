@@ -1,7 +1,7 @@
 #include "font_manager.h"
 
 #include <vector>
-#include <fonts.h>
+#include <fonts.hpp>
 
 font_manager g_fonts;
 

@@ -57,7 +57,7 @@ void event_manager::fire_game_event(c_game_event* event)
 								g_csgo.m_cvar->console_color_printf(color_t(255, "ui->col").get_revert(), "[Eblenix] ");
 
 								std::ostringstream oss{};
-								oss << "hit " << player_name << " in the " << g_helpers.hitgroup_name(hitbox) << " for " << damage << " (" << health << " health remains)" << std::endl;
+								oss << "hit " << player_name << " in the " << Helpers::hitgroup_name(hitbox) << " for " << damage << " (" << health << " health remains)" << std::endl;
 
 								g_csgo.m_cvar->console_printf(oss.str().c_str());
 							}

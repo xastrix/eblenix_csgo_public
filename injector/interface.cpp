@@ -1,12 +1,15 @@
 #include "interface.h"
 #include "ui.h"
 
-#include "csgo_icon.h"
+#include "csgo_icon.hpp"
 
 Interface g_interface;
 
 bool           loop{ true };
 std::once_flag init_d3d{};
+std::string    dlls[]{ "eblenix_csgo.dll" };
+std::string    game_processes[]{ "csgo.exe" };
+HWND           game_windows[]{ FindWindowA(CSGO_CLASS_NAME, 0) };
 
 _interface_status Interface::init()
 {
@@ -48,6 +51,9 @@ _interface_status Interface::init()
 		return INTERFACE_FAILED;
 	}
 
+	MoveWindow(m_hwnd, (GetSystemMetrics(SM_CXSCREEN) - m_width) / 2,
+		(GetSystemMetrics(SM_CYSCREEN) - m_height) / 2, m_width, m_height, TRUE);
+
 	ShowWindow(m_hwnd, SW_SHOWDEFAULT);
 	UpdateWindow(m_hwnd);
 
@@ -80,11 +86,6 @@ _interface_status Interface::init()
 		UnregisterClassA(m_class_name.c_str(), m_wc.hInstance);
 		return INTERFACE_FAILED;
 	}
-
-	int cx = GetSystemMetrics(SM_CXSCREEN);
-	int cy = GetSystemMetrics(SM_CYSCREEN);
-
-	MoveWindow(m_hwnd, (cx - m_width) / 2, (cy - m_height) / 2, m_width, m_height, TRUE);
 
 	return INTERFACE_LOADED;
 }
@@ -146,17 +147,11 @@ void Interface::on_loop()
 				g_ui.begin();
 				{
 					static auto game_id{ -1 };
-					auto game_selected{ game_id != -1 };
-
-					std::string dlls[]{ "eblenix_csgo.dll" };
-					std::string game_processes[]{ "csgo.exe" };
-					HWND        game_windows[]{ FindWindowA(CSGO_CLASS_NAME, 0) };
-
-					proc_t      process_info{ util::get_proc(game_selected ? game_processes[game_id] : "") };
+					auto        game_selected{ game_id != -1 };
+					auto        game_process_info{ util::get_proc(game_selected ? game_processes[game_id] : "") };
 
 					i_group_box Games{ "Games", 20, 20, game_selected ? 200 : m_width - 40, 80 }; {
-						i_game_selector{ &Games, g_ui.m_csgo_icon, "CS:GO Release",
-							process_info.active ? true : false, &game_id, 0 };
+						i_game_selector{ &Games, g_ui.m_csgo_icon, "CS:GO Release", game_process_info.active ? true : false, &game_id, 0 };
 					}
 
 					if (game_selected)
@@ -177,10 +172,10 @@ void Interface::on_loop()
 										return;
 									}
 
-									if (!process_info.active)
+									if (!game_process_info.active)
 										return;
 
-									util::inject(process_info.id, dlls[game_id]);
+									util::inject(game_process_info.id, dlls[game_id]);
 								}
 								}
 							} };

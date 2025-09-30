@@ -86,7 +86,7 @@ struct ui : public ui_render {
 private:
 	void set_colors();
 	void setup();
-	void pop();
+	void clear();
 };
 
 extern ui g_ui;

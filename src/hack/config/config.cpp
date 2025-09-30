@@ -30,7 +30,7 @@ void config::load_config(const std::wstring& name)
 		return;
 
 	std::string encrypted{ (std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>() };
-	std::string decrypted{ g_helpers.xor_encrypt_decrypt(encrypted, cfg_path) };
+	std::string decrypted{ Helpers::xor_encrypt_decrypt(encrypted, cfg_path) };
 
 	std::istringstream iss{ decrypted };
 	std::string line{};
@@ -53,10 +53,10 @@ void config::load_config(const std::wstring& name)
 		else
 		{
 			if (value.find(v_types[i32]) != std::string::npos) {
-				g_vars.set(key, std::stoi(g_helpers.remove_chars_from_string(value, v_types[i32])));
+				g_vars.set(key, std::stoi(Helpers::remove_chars_from_string(value, v_types[i32])));
 			}
 			else if (value.find(v_types[f32]) != std::string::npos) {
-				g_vars.set(key, std::stof(g_helpers.remove_chars_from_string(value, v_types[f32])));
+				g_vars.set(key, std::stof(Helpers::remove_chars_from_string(value, v_types[f32])));
 			}
 		}
 	}
@@ -97,7 +97,7 @@ void config::save_config(const std::wstring& name)
 		}, v);
 	}
 
-	std::string encrypted{ g_helpers.xor_encrypt_decrypt(oss.str(), cfg_path) };
+	std::string encrypted{ Helpers::xor_encrypt_decrypt(oss.str(), cfg_path) };
 
 	ofs.write(encrypted.c_str(), encrypted.size());
 	ofs.close();

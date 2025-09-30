@@ -19,7 +19,7 @@ void sig::init()
 	s_has_c4                  = scan_sig(g.module_list[clientDLL], "56 8B F1 85 F6 74 31");
 	s_input                   = scan_sig(g.module_list[clientDLL], "B9 ? ? ? ? F3 0F 11 04 24 FF 50 10") + 1;
 	s_cam_think               = scan_sig(g.module_list[clientDLL], "85 C0 75 30 38 86");
-	s_inventory_access        = scan_sig(g.module_list[clientDLL], "84 C0 75 04 B0 01 5F");
+	s_is_loadoutallowed       = scan_sig(g.module_list[clientDLL], "84 C0 75 04 B0 01 5F");
 	s_list_leaves             = scan_sig(g.module_list[clientDLL], "56 52 FF 50 18") + 5;
 }
 

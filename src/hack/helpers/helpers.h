@@ -23,7 +23,8 @@ struct box {
 	}
 };
 
-struct helpers {
+namespace Helpers
+{
 	int get_nearest_bone(c_base_player* entity, i_user_cmd* cmd);
 	int find_target_entity(i_user_cmd* cmd, float& fov, vec3& angle);
 	bool is_weapon_switching(c_base_weapon* weapon);
@@ -48,6 +49,4 @@ struct helpers {
 	std::wstring stws(const std::string& string);
 	std::string xor_encrypt_decrypt(const std::string& data, const std::string& key);
 	std::string remove_chars_from_string(std::string string, const std::string& chars);
-};
-
-extern helpers g_helpers;
+}

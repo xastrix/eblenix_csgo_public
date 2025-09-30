@@ -16,7 +16,7 @@ struct sig {
 	sig_t s_has_c4;
 	sig_t s_input;
 	sig_t s_cam_think;
-	sig_t s_inventory_access;
+	sig_t s_is_loadoutallowed;
 	sig_t s_list_leaves;
 private:
 	sig_t scan_sig(const std::string& module_name, const std::string& signature);

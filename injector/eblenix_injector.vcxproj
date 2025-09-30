@@ -107,7 +107,7 @@
     <ClCompile Include="ui.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="csgo_icon.h" />
+    <ClInclude Include="csgo_icon.hpp" />
     <ClInclude Include="interface.h" />
     <ClInclude Include="ui.h" />
     <ClInclude Include="util.h" />

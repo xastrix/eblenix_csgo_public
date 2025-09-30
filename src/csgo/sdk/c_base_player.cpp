@@ -1,6 +1,6 @@
 #include "c_base_entity.h"
 
-#include "../mem/mem.h"
+#include "../mem.h"
 #include "../signatures/signatures.h"
 #include "../netvar_manager/netvar_manager.h"
 #include "../interfaces/interfaces.h"
@@ -58,12 +58,12 @@ bool c_base_player::is_alive()
 move_type c_base_player::get_move_type()
 {
 	static int type = g_netvars.get_netvar("DT_BaseEntity::m_nRenderMode") + 1;
-	return g_mem.read<move_type>(reinterpret_cast<uintptr_t>(this) + type);
+	return read<move_type>(reinterpret_cast<uintptr_t>(this) + type);
 }
 
 c_base_weapon* c_base_player::get_active_weapon()
 {
-	auto weapon = g_mem.read<uintptr_t>(reinterpret_cast<uintptr_t>(this)
+	auto weapon = read<uintptr_t>(reinterpret_cast<uintptr_t>(this)
 		+ g_netvars.get_netvar("DT_CSPlayer::m_hActiveWeapon")) & 0xFFF;
 
 	if (!weapon)

@@ -1,8 +1,7 @@
 ﻿#include "ui.h"
 
 #include "../config/config.h"
-
-#include <sprites.h>
+#include <sprites.hpp>
 
 ui g_ui;
 
@@ -43,7 +42,7 @@ void ui::set_colors()
 
 void ui::setup()
 {
-	pop();
+	clear();
 
 	add(L"Aim");
 	add(L"Trigger");
@@ -595,7 +594,7 @@ void ui::setup()
 	}
 }
 
-void ui::pop()
+void ui::clear()
 {
 	for (int i = 0; i < m_entry_size; i++)
 	{

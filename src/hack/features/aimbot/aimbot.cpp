@@ -25,7 +25,7 @@ void aimbot::instance(i_user_cmd* cmd)
 		return;
 
 	if (g_vars.get_as<bool>("aimbot->autopistol").value()) {
-		if (g_helpers.is_pistol(weapon) && !g_helpers.is_revolver(weapon)) {
+		if (Helpers::is_pistol(weapon) && !Helpers::is_revolver(weapon)) {
 			static bool shoot{};
 
 			if (cmd->buttons & in_attack) {
@@ -37,17 +37,17 @@ void aimbot::instance(i_user_cmd* cmd)
 		}
 	}
 
-	if (g_helpers.is_knife(weapon) || g_helpers.is_grenade(weapon) ||
-		g_helpers.is_c4(weapon) || g_helpers.is_non_aim(weapon))
+	if (Helpers::is_knife(weapon) || Helpers::is_grenade(weapon) ||
+		Helpers::is_c4(weapon) || Helpers::is_non_aim(weapon))
 		return;
 
-	if (g_helpers.is_weapon_switching(weapon))
+	if (Helpers::is_weapon_switching(weapon))
 		return;
 	
 	m_state = static_cast<_aim_state>(g_vars.get_as<bool>("aimbot->all").value());
 	set_weapon_param(weapon);
 
-	if (const auto target = g_helpers.find_target_entity(cmd, m_aim_fov, m_angle))
+	if (const auto target = Helpers::find_target_entity(cmd, m_aim_fov, m_angle))
 	{
 		auto entity = reinterpret_cast<c_base_player*>(g_csgo.m_entity_list->get_client_entity(target));
 
@@ -72,7 +72,7 @@ void aimbot::instance(i_user_cmd* cmd)
 
 void aimbot::set_weapon_param(c_base_weapon* weapon)
 {
-	if (g_helpers.is_pistol(weapon))
+	if (Helpers::is_pistol(weapon))
 	{
 		switch (m_state) {
 		case as_none: {
@@ -137,7 +137,7 @@ void aimbot::set_weapon_param(c_base_weapon* weapon)
 		}
 		}
 	}
-	else if (g_helpers.is_rifle(weapon))
+	else if (Helpers::is_rifle(weapon))
 	{
 		switch (m_state) {
 		case as_none: {
@@ -202,7 +202,7 @@ void aimbot::set_weapon_param(c_base_weapon* weapon)
 		}
 		}
 	}
-	else if (g_helpers.is_sniper(weapon))
+	else if (Helpers::is_sniper(weapon))
 	{
 		switch (m_state) {
 		case as_none: {
@@ -267,7 +267,7 @@ void aimbot::set_weapon_param(c_base_weapon* weapon)
 		}
 		}
 	}
-	else if (g_helpers.is_heavy(weapon))
+	else if (Helpers::is_heavy(weapon))
 	{
 		switch (m_state) {
 		case as_none: {
@@ -332,7 +332,7 @@ void aimbot::set_weapon_param(c_base_weapon* weapon)
 		}
 		}
 	}
-	else if (g_helpers.is_smg(weapon))
+	else if (Helpers::is_smg(weapon))
 	{
 		switch (m_state) {
 		case as_none: {
@@ -404,7 +404,7 @@ bool aimbot::can_shot(c_base_player* entity, c_base_weapon* weapon)
 	if (g_vars.get_as<bool>("aimbot->visible_check").value() && !g_csgo.m_local->can_see_entity(entity->get_eye_pos()))
 		return false;
 
-	if (!g_vars.get_as<bool>("aimbot->smoke_check").value() && g_helpers.is_behind_smoke(g_csgo.m_local->get_eye_pos(), entity->get_hitbox_position(hitbox_head)))
+	if (!g_vars.get_as<bool>("aimbot->smoke_check").value() && Helpers::is_behind_smoke(g_csgo.m_local->get_eye_pos(), entity->get_hitbox_position(hitbox_head)))
 		return false;
 
 	if (!g_vars.get_as<bool>("aimbot->flash_check").value() && g_csgo.m_local->is_flashed())
@@ -416,7 +416,7 @@ bool aimbot::can_shot(c_base_player* entity, c_base_weapon* weapon)
 	if (!g_vars.get_as<bool>("aimbot->jump_check").value() && g_csgo.m_local->is_in_air())
 		return false;
 
-	if (g_vars.get_as<bool>("aimbot->scope_check").value() && g_helpers.is_sniper(weapon) && !g_csgo.m_local->is_scoped())
+	if (g_vars.get_as<bool>("aimbot->scope_check").value() && Helpers::is_sniper(weapon) && !g_csgo.m_local->is_scoped())
 		return false;
 
 	return true;
@@ -432,7 +432,7 @@ void aimbot::set_aim_angle(i_user_cmd* cmd, c_base_player* entity, const vec3& a
 	}
 	case 1: {
 		m_angle = g_math.calculate_angle(g_csgo.m_local->get_eye_pos(),
-			entity->get_bone_position(g_helpers.get_nearest_bone(entity, cmd)), cmd->viewangles + aim_punch);
+			entity->get_bone_position(Helpers::get_nearest_bone(entity, cmd)), cmd->viewangles + aim_punch);
 		break;
 	}
 	}

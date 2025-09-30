@@ -14,8 +14,8 @@
 #include "../../csgo/interfaces/interfaces.h"
 #include "../../csgo/signatures/signatures.h"
 #include "../../csgo/math/math.h"
-#include "../../csgo/mem/mem.h"
 #include "../../csgo/fnv.h"
+#include "../../csgo/mem.h"
 
 #include <common.h>
 #include <minhook/minhook.h>
@@ -301,7 +301,7 @@ static bool __fastcall is_connected_h(void* _ecx, void*)
 	{
 		if (g_vars.get_as<bool>("misc->visual->inventory_unlock").value())
 		{
-			if (_ReturnAddress() == g_sig.s_inventory_access)
+			if (_ReturnAddress() == g_sig.s_is_loadoutallowed)
 				return false;
 		}
 	}
@@ -319,7 +319,7 @@ static int __fastcall list_leaves_in_box_h(void* bsp, void*, const vec3& mins, c
 	if (!renderable_info || !renderable_info->entity)
 		return o_list_in_leaves_box(bsp, mins, maxs, list, list_max);
 
-	auto entity = g_mem.call_virtual_fn<c_base_entity*>(renderable_info->entity - 0x4, 7);
+	auto entity = call_virtual_fn<c_base_entity*>(renderable_info->entity - 0x4, 7);
 
 	if (!entity || entity->get_client_class()->class_id != ccsplayer)
 		return o_list_in_leaves_box(bsp, mins, maxs, list, list_max);
@@ -352,21 +352,21 @@ void hooks::init()
 {
 	m_stat = MH_Initialize();
 
-	if (!(MH_CreateHook(g_mem.get_virtual_fn<IDirect3DDevice9*>(g_csgo.m_device, present_fn_index),
+	if (!(MH_CreateHook(get_virtual_fn<IDirect3DDevice9*>(g_csgo.m_device, present_fn_index),
 		present_h, reinterpret_cast<void**>(&o_present)) == MH_OK)) {
 #ifdef _DEBUG
 		_DBG_NOTIFY("Failed to create present hook");
 #endif
 	}
 
-	if (!(MH_CreateHook(g_mem.get_virtual_fn<IDirect3DDevice9*>(g_csgo.m_device, reset_fn_index),
+	if (!(MH_CreateHook(get_virtual_fn<IDirect3DDevice9*>(g_csgo.m_device, reset_fn_index),
 		reset_h, reinterpret_cast<void**>(&o_reset)) == MH_OK)) {
 #ifdef _DEBUG
 		_DBG_NOTIFY("Failed to create reset hook");
 #endif
 	}
 
-	if (!(MH_CreateHook(g_mem.get_virtual_fn<c_base_client*>(g_csgo.m_client, shutdown_fn_index),
+	if (!(MH_CreateHook(get_virtual_fn<c_base_client*>(g_csgo.m_client, shutdown_fn_index),
 		on_shutdown_h, reinterpret_cast<void**>(&o_shutdown)) == MH_OK)) {
 #ifdef _DEBUG
 		_DBG_NOTIFY("Failed to create on_shutdown hook");
@@ -375,77 +375,77 @@ void hooks::init()
 
 	if (g.m_status == gameVersionOK)
 	{
-		if (!(MH_CreateHook(g_mem.get_virtual_fn<uintptr_t*>(g_csgo.m_client_mode, create_move_fn_index),
+		if (!(MH_CreateHook(get_virtual_fn<uintptr_t*>(g_csgo.m_client_mode, create_move_fn_index),
 			create_move_h, reinterpret_cast<void**>(&o_create_move)) == MH_OK)) {
 #ifdef _DEBUG
 			_DBG_NOTIFY("Failed to create create_move hook");
 #endif
 		}
 
-		if (!(MH_CreateHook(g_mem.get_virtual_fn<c_panel*>(g_csgo.m_panel, paint_traverse_fn_index),
+		if (!(MH_CreateHook(get_virtual_fn<c_panel*>(g_csgo.m_panel, paint_traverse_fn_index),
 			paint_traverse_h, reinterpret_cast<void**>(&o_paint_traverse)) == MH_OK)) {
 #ifdef _DEBUG
 			_DBG_NOTIFY("Failed to create paint_traverse hook");
 #endif
 		}
 
-		if (!(MH_CreateHook(g_mem.get_virtual_fn<uintptr_t*>(g_csgo.m_client_mode, do_post_screen_effects_fn_index),
+		if (!(MH_CreateHook(get_virtual_fn<uintptr_t*>(g_csgo.m_client_mode, do_post_screen_effects_fn_index),
 			do_post_screen_effects_h, reinterpret_cast<void**>(&o_do_post_screen_effects)) == MH_OK)) {
 #ifdef _DEBUG
 			_DBG_NOTIFY("Failed to create do_post_screen_effects hook");
 #endif
 		}
 
-		if (!(MH_CreateHook(g_mem.get_virtual_fn<c_render_view*>(g_csgo.m_render_view, scene_end_fn_index),
+		if (!(MH_CreateHook(get_virtual_fn<c_render_view*>(g_csgo.m_render_view, scene_end_fn_index),
 			scene_end_h, reinterpret_cast<void**>(&o_scene_end)) == MH_OK)) {
 #ifdef _DEBUG
 			_DBG_NOTIFY("Failed to create scene_end hook");
 #endif
 		}
 
-		if (!(MH_CreateHook(g_mem.get_virtual_fn<uintptr_t*>(g_csgo.m_client_mode, screen_viewmodel_fov_change_fn_index),
+		if (!(MH_CreateHook(get_virtual_fn<uintptr_t*>(g_csgo.m_client_mode, screen_viewmodel_fov_change_fn_index),
 			screen_viewmodel_fov_change_h, reinterpret_cast<void**>(&o_screen_viewmodel_fov_change)) == MH_OK)) {
 #ifdef _DEBUG
 			_DBG_NOTIFY("Failed to create screen_viewmodel_fov_change hook");
 #endif
 		}
 
-		if (!(MH_CreateHook(g_mem.get_virtual_fn<c_engine_client*>(g_csgo.m_engine, get_screen_aspect_ratio_fn_index),
+		if (!(MH_CreateHook(get_virtual_fn<c_engine_client*>(g_csgo.m_engine, get_screen_aspect_ratio_fn_index),
 			get_screen_aspect_ratio_h, reinterpret_cast<void**>(&o_get_screen_aspect_ratio)) == MH_OK)) {
 #ifdef _DEBUG
 			_DBG_NOTIFY("Failed to create get_screen_aspect_ratio hook");
 #endif
 		}
 
-		if (!(MH_CreateHook(g_mem.get_virtual_fn<c_model_render*>(g_csgo.m_model_render, draw_model_execute_fn_index),
+		if (!(MH_CreateHook(get_virtual_fn<c_model_render*>(g_csgo.m_model_render, draw_model_execute_fn_index),
 			draw_model_execute_h, reinterpret_cast<void**>(&o_draw_model_execute)) == MH_OK)) {
 #ifdef _DEBUG
 			_DBG_NOTIFY("Failed to create draw_model_execute hook");
 #endif
 		}
 
-		if (!(MH_CreateHook(g_mem.get_virtual_fn<uintptr_t*>(g_csgo.m_client_mode, override_view_fn_index),
+		if (!(MH_CreateHook(get_virtual_fn<uintptr_t*>(g_csgo.m_client_mode, override_view_fn_index),
 			override_view_h, reinterpret_cast<void**>(&o_override_view)) == MH_OK)) {
 #ifdef _DEBUG
 			_DBG_NOTIFY("Failed to create override_view hook");
 #endif
 		}
 
-		if (!(MH_CreateHook(g_mem.get_virtual_fn<c_engine_client*>(g_csgo.m_engine, is_connected_fn_index),
+		if (!(MH_CreateHook(get_virtual_fn<c_engine_client*>(g_csgo.m_engine, is_connected_fn_index),
 			is_connected_h, reinterpret_cast<void**>(&o_is_connected)) == MH_OK)) {
 #ifdef _DEBUG
 			_DBG_NOTIFY("Failed to create is_connected hook");
 #endif
 		}
 
-		if (!(MH_CreateHook(g_mem.get_virtual_fn<void*>(g_csgo.m_engine->get_bsp_query(), list_in_leaves_box_fn_index),
+		if (!(MH_CreateHook(get_virtual_fn<void*>(g_csgo.m_engine->get_bsp_query(), list_in_leaves_box_fn_index),
 			list_leaves_in_box_h, reinterpret_cast<void**>(&o_list_in_leaves_box)) == MH_OK)) {
 #ifdef _DEBUG
 			_DBG_NOTIFY("Failed to create list_leaves_in_box hook");
 #endif
 		}
 
-		if (!(MH_CreateHook(g_mem.get_virtual_fn<convar*>(g_csgo.m_cvar->get_convar("sv_cheats"), sv_cheats_boolean_fn_index),
+		if (!(MH_CreateHook(get_virtual_fn<convar*>(g_csgo.m_cvar->get_convar("sv_cheats"), sv_cheats_boolean_fn_index),
 			sv_cheats_boolean_h, reinterpret_cast<void**>(&o_sv_cheats_boolean)) == MH_OK)) {
 #ifdef _DEBUG
 			_DBG_NOTIFY("Failed to create sv_cheats_boolean hook");

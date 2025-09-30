@@ -20,7 +20,7 @@ void knifebot::instance(i_user_cmd* cmd)
 
 	const auto weapon = g_csgo.m_local->get_active_weapon();
 
-	if (!weapon || !g_helpers.is_knife(weapon))
+	if (!weapon || !Helpers::is_knife(weapon))
 		return;
 
 	if (!g_vars.get_as<bool>("knifebot->flash_check").value() && g_csgo.m_local->is_flashed())
@@ -33,7 +33,7 @@ void knifebot::instance(i_user_cmd* cmd)
 		if (!entity || entity->get_dormant() || !entity->is_life_state() || entity == g_csgo.m_local)
 			continue;
 
-		if (!g_vars.get_as<bool>("knifebot->smoke_check").value() && g_helpers.is_behind_smoke(g_csgo.m_local->get_eye_pos(), entity->get_hitbox_position(hitbox_head)))
+		if (!g_vars.get_as<bool>("knifebot->smoke_check").value() && Helpers::is_behind_smoke(g_csgo.m_local->get_eye_pos(), entity->get_hitbox_position(hitbox_head)))
 			return;
 
 		if (!g_vars.get_as<bool>("knifebot->teammate_check").value() && g_csgo.m_local->get_team_num() == entity->get_team_num())

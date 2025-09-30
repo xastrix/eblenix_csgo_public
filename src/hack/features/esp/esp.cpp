@@ -96,7 +96,7 @@ void esp::on_create_move(i_user_cmd* cmd)
 
 		auto crosshair_fov = g_vars.get_as<float>("esp->crosshair->fov").value();
 
-		if (vec3 angle; const auto target = g_helpers.find_target_entity(cmd, crosshair_fov, angle))
+		if (vec3 angle; const auto target = Helpers::find_target_entity(cmd, crosshair_fov, angle))
 		{
 			auto entity = reinterpret_cast<c_base_player*>(g_csgo.m_entity_list->get_client_entity(target));
 
@@ -345,7 +345,7 @@ void esp::player_rendering(c_base_player* entity)
 		return;
 
 	box bbox{};
-	if (!g_helpers.get_bbox(entity, bbox, static_cast<bbox_type>(g_vars.get_as<int>("esp->render_type").value())))
+	if (!Helpers::get_bbox(entity, bbox, static_cast<bbox_type>(g_vars.get_as<int>("esp->render_type").value())))
 		return;
 
 	if (g_vars.get_as<bool>("esp->name->enabled").value())
@@ -353,7 +353,7 @@ void esp::player_rendering(c_base_player* entity)
 		player_info_t info{};
 		g_csgo.m_engine->get_player_info(entity->index(), &info);
 
-		auto player_name = g_helpers.stws(std::string{ info.m_player_name });
+		auto player_name = Helpers::stws(std::string{ info.m_player_name });
 
 		switch (g_vars.get_as<int>("esp->name->type").value()) {
 		case 1: {
@@ -471,7 +471,7 @@ void esp::player_rendering(c_base_player* entity)
 				if (g_vars.get_as<bool>("esp->armor->enabled").value() && armor_val > m_armor_min)
 					offset += 3;
 
-				g_render.draw_string(g_helpers.get_weapon_type_by_index(weapon->item_definition_index(), we_text),
+				g_render.draw_string(Helpers::get_weapon_type_by_index(weapon->item_definition_index(), we_text),
 					bbox.x + (bbox.w / 2), bbox.h + bbox.y + offset, g_render.get_font(Tahoma12px), TEXT_OUTLINE | TEXT_CENTER_X, col);
 				break;
 			}
@@ -479,7 +479,7 @@ void esp::player_rendering(c_base_player* entity)
 				if (g_vars.get_as<bool>("esp->armor->enabled").value() && armor_val > m_armor_min)
 					offset += 4;
 
-				g_render.draw_string(g_helpers.get_weapon_type_by_index(weapon->item_definition_index(), we_icon),
+				g_render.draw_string(Helpers::get_weapon_type_by_index(weapon->item_definition_index(), we_icon),
 					bbox.x + (bbox.w / 2), bbox.h + bbox.y + offset, g_render.get_font(Astriumwep16px), TEXT_OUTLINE | TEXT_CENTER_X, col);
 				break;
 			}
@@ -611,9 +611,9 @@ void esp::player_rendering(c_base_player* entity)
 				auto weapon_first_ammo = weapon->clip1_count();
 				auto weapon_second_ammo = weapon->primary_reserve_ammo_acount();
 
-				if (g_helpers.is_knife(weapon) || g_helpers.is_taser(weapon) ||
-					g_helpers.is_c4(weapon) || g_helpers.is_non_aim(weapon) ||
-					g_helpers.is_grenade(weapon))
+				if (Helpers::is_knife(weapon) || Helpers::is_taser(weapon) ||
+					Helpers::is_c4(weapon) || Helpers::is_non_aim(weapon) ||
+					Helpers::is_grenade(weapon))
 					weapon_first_ammo = 0, weapon_second_ammo = 0;
 
 				flags.push_back(std::pair<std::string, color_t>(std::to_string(weapon_first_ammo) + "/" + std::to_string(weapon_second_ammo), col));

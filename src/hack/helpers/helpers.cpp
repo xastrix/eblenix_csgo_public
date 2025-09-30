@@ -7,11 +7,9 @@
 #include <vector>
 #include <codecvt>
 
-helpers g_helpers;
-
 using line_goes_through_smoke = bool(__cdecl*)(vec3, vec3);
 
-int helpers::get_nearest_bone(c_base_player* entity, i_user_cmd* cmd)
+int Helpers::get_nearest_bone(c_base_player* entity, i_user_cmd* cmd)
 {
 	auto aim_bone = 0;
 	auto best_distance = 360.0f;
@@ -55,7 +53,7 @@ int helpers::get_nearest_bone(c_base_player* entity, i_user_cmd* cmd)
 	return aim_bone;
 }
 
-int helpers::find_target_entity(i_user_cmd* cmd, float& fov, vec3& angle)
+int Helpers::find_target_entity(i_user_cmd* cmd, float& fov, vec3& angle)
 {
 	auto best_fov = fov;
 	auto best_target = 0;
@@ -85,7 +83,7 @@ int helpers::find_target_entity(i_user_cmd* cmd, float& fov, vec3& angle)
 	return best_target;
 }
 
-bool helpers::is_weapon_switching(c_base_weapon* weapon)
+bool Helpers::is_weapon_switching(c_base_weapon* weapon)
 {
 	if (is_sniper(weapon) && !is_auto(weapon))
 		return false;
@@ -108,7 +106,7 @@ bool helpers::is_weapon_switching(c_base_weapon* weapon)
 	return weapon_switched;
 }
 
-bool helpers::is_pistol(c_base_weapon* weapon)
+bool Helpers::is_pistol(c_base_weapon* weapon)
 {
 	static const std::vector<int> v = {
 		weapon_glock, weapon_elite, weapon_p250, weapon_tec9, weapon_cz75a, weapon_deagle,
@@ -118,31 +116,31 @@ bool helpers::is_pistol(c_base_weapon* weapon)
 	return (std::find(v.begin(), v.end(), weapon->item_definition_index()) != v.end());
 }
 
-bool helpers::is_sniper(c_base_weapon* weapon)
+bool Helpers::is_sniper(c_base_weapon* weapon)
 {
 	static const std::vector<int> v = { weapon_awp, weapon_ssg08, weapon_g3sg1, weapon_scar20 };
 	return (std::find(v.begin(), v.end(), weapon->item_definition_index()) != v.end());
 }
 
-bool helpers::is_auto(c_base_weapon* weapon)
+bool Helpers::is_auto(c_base_weapon* weapon)
 {
 	static const std::vector<int> v = { weapon_g3sg1, weapon_scar20 };
 	return (std::find(v.begin(), v.end(), weapon->item_definition_index()) != v.end());
 }
 
-bool helpers::is_revolver(c_base_weapon* weapon)
+bool Helpers::is_revolver(c_base_weapon* weapon)
 {
 	static const std::vector<int> v = { weapon_revolver };
 	return (std::find(v.begin(), v.end(), weapon->item_definition_index()) != v.end());
 }
 
-bool helpers::is_taser(c_base_weapon* weapon)
+bool Helpers::is_taser(c_base_weapon* weapon)
 {
 	static const std::vector<int> v = { weapon_taser };
 	return (std::find(v.begin(), v.end(), weapon->item_definition_index()) != v.end());
 }
 
-bool helpers::is_smg(c_base_weapon* weapon)
+bool Helpers::is_smg(c_base_weapon* weapon)
 {
 	static const std::vector<int> v = {
 		weapon_mac10, weapon_mp7, weapon_ump45, weapon_p90, weapon_bizon,
@@ -152,7 +150,7 @@ bool helpers::is_smg(c_base_weapon* weapon)
 	return (std::find(v.begin(), v.end(), weapon->item_definition_index()) != v.end());
 }
 
-bool helpers::is_heavy(c_base_weapon* weapon)
+bool Helpers::is_heavy(c_base_weapon* weapon)
 {
 	static const std::vector<int> v = {
 		weapon_nova, weapon_xm1014, weapon_sawedoff, weapon_m249,
@@ -162,7 +160,7 @@ bool helpers::is_heavy(c_base_weapon* weapon)
 	return (std::find(v.begin(), v.end(), weapon->item_definition_index()) != v.end());
 }
 
-bool helpers::is_rifle(c_base_weapon* weapon)
+bool Helpers::is_rifle(c_base_weapon* weapon)
 {
 	static const std::vector<int> v = {
 		weapon_ak47, weapon_aug, weapon_famas, weapon_galilar, weapon_m249, weapon_m4a1,
@@ -172,7 +170,7 @@ bool helpers::is_rifle(c_base_weapon* weapon)
 	return (std::find(v.begin(), v.end(), weapon->item_definition_index()) != v.end());
 }
 
-bool helpers::is_grenade(c_base_weapon* weapon)
+bool Helpers::is_grenade(c_base_weapon* weapon)
 {
 	static const std::vector<int> v = {
 		weapon_fraggrenade, weapon_hegrenade, weapon_incgrenade,
@@ -182,13 +180,13 @@ bool helpers::is_grenade(c_base_weapon* weapon)
 	return (std::find(v.begin(), v.end(), weapon->item_definition_index()) != v.end());
 }
 
-bool helpers::is_c4(c_base_weapon* weapon)
+bool Helpers::is_c4(c_base_weapon* weapon)
 {
 	static const std::vector<int> v = { weapon_c4 };
 	return (std::find(v.begin(), v.end(), weapon->item_definition_index()) != v.end());
 }
 
-bool helpers::is_knife(c_base_weapon* weapon)
+bool Helpers::is_knife(c_base_weapon* weapon)
 {
 	static const std::vector<int> v = {
 		weapon_knife, weapon_knifegg,
@@ -203,7 +201,7 @@ bool helpers::is_knife(c_base_weapon* weapon)
 	return (std::find(v.begin(), v.end(), weapon->item_definition_index()) != v.end());
 }
 
-bool helpers::is_non_aim(c_base_weapon* weapon)
+bool Helpers::is_non_aim(c_base_weapon* weapon)
 {
 	static const std::vector<int> v = {
 		weapon_fists, weapon_healthshot, weapon_shield,
@@ -214,7 +212,7 @@ bool helpers::is_non_aim(c_base_weapon* weapon)
 	return (std::find(v.begin(), v.end(), weapon->item_definition_index()) != v.end());
 }
 
-bool helpers::get_bbox(c_base_player* entity, box& in, const bbox_type type)
+bool Helpers::get_bbox(c_base_player* entity, box& in, const bbox_type type)
 {
 	vec3 top, down, s[2]{};
 
@@ -249,7 +247,7 @@ bool helpers::get_bbox(c_base_player* entity, box& in, const bbox_type type)
 	return true;
 }
 
-bool helpers::is_behind_smoke(vec3 start_pos, vec3 end_pos)
+bool Helpers::is_behind_smoke(vec3 start_pos, vec3 end_pos)
 {
 	static auto line_goes_through_smoke_fn = reinterpret_cast<line_goes_through_smoke>(g_sig.s_line_goes_through_smoke);
 
@@ -259,17 +257,17 @@ bool helpers::is_behind_smoke(vec3 start_pos, vec3 end_pos)
 	return line_goes_through_smoke_fn(start_pos, end_pos);
 }
 
-int helpers::get_c4_server_time()
+int Helpers::get_c4_server_time()
 {
 	return g_csgo.m_cvar->get_convar("mp_c4timer")->get_int();
 }
 
-float helpers::get_viewmodel_fov()
+float Helpers::get_viewmodel_fov()
 {
 	return g_csgo.m_cvar->get_convar("viewmodel_fov")->get_float();
 }
 
-std::string helpers::hitgroup_name(const int index)
+std::string Helpers::hitgroup_name(const int index)
 {
 	std::vector<std::pair<std::string, int>> hitgroups = {
 		{ "head",      hitgroup_head },
@@ -290,7 +288,7 @@ std::string helpers::hitgroup_name(const int index)
 	return "hitgroup_unknown";
 }
 
-std::string helpers::get_weapon_type_by_index(const int index, const weapon_esp_type type)
+std::string Helpers::get_weapon_type_by_index(const int index, const weapon_esp_type type)
 {
 	std::vector<std::pair<std::string, int>> weapons = {
 		{ type == we_text ? "Knife"      : "[", weapon_knife_t },
@@ -354,13 +352,13 @@ std::string helpers::get_weapon_type_by_index(const int index, const weapon_esp_
 	return "";
 }
 
-std::wstring helpers::stws(const std::string& string)
+std::wstring Helpers::stws(const std::string& string)
 {
 	std::wstring_convert<std::codecvt_utf8<wchar_t>> str{};
 	return str.from_bytes(string);
 }
 
-std::string helpers::xor_encrypt_decrypt(const std::string& data, const std::string& key)
+std::string Helpers::xor_encrypt_decrypt(const std::string& data, const std::string& key)
 {
 	std::string result{ data };
 
@@ -371,7 +369,7 @@ std::string helpers::xor_encrypt_decrypt(const std::string& data, const std::str
 	return result;
 }
 
-std::string helpers::remove_chars_from_string(std::string string, const std::string& chars)
+std::string Helpers::remove_chars_from_string(std::string string, const std::string& chars)
 {
 	size_t pos{ string.find(chars) };
 

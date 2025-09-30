@@ -133,7 +133,7 @@ void visuals::instance()
 			{
 				const auto weapon = g_csgo.m_local->get_active_weapon();
 
-				if (weapon && g_helpers.is_sniper(weapon))
+				if (weapon && Helpers::is_sniper(weapon))
 				{
 					const float X = static_cast<int>(g.m_screen_width * 0.5f);
 					const float Y = static_cast<int>(g.m_screen_height * 0.5f);
@@ -235,7 +235,7 @@ void visuals::draw_spectators()
 		player_info_t info;
 		g_csgo.m_engine->get_player_info(i, &info);
 
-		auto player_name = g_helpers.stws(std::string{ info.m_player_name });
+		auto player_name = Helpers::stws(std::string{ info.m_player_name });
 
 		if (player_name.length() > 14) {
 			player_name = player_name.substr(0, 14) + L"...";
@@ -417,12 +417,12 @@ void visuals::draw_dropped_weapons(c_base_entity* entity)
 
 		switch (g_vars.get_as<int>("visuals->world->weapons->type").value()) {
 		case 0: {
-			g_render.draw_string(g_helpers.get_weapon_type_by_index(weapon->item_definition_index(), we_text), dropped_weapons.get_pos().x,
+			g_render.draw_string(Helpers::get_weapon_type_by_index(weapon->item_definition_index(), we_text), dropped_weapons.get_pos().x,
 				dropped_weapons.get_pos().y, g_render.get_font(Tahoma12px), TEXT_OUTLINE | TEXT_CENTER_X, col);
 			break;
 		}
 		case 1: {
-			g_render.draw_string(g_helpers.get_weapon_type_by_index(weapon->item_definition_index(), we_icon), dropped_weapons.get_pos().x,
+			g_render.draw_string(Helpers::get_weapon_type_by_index(weapon->item_definition_index(), we_icon), dropped_weapons.get_pos().x,
 				dropped_weapons.get_pos().y, g_render.get_font(Astriumwep16px), TEXT_OUTLINE | TEXT_CENTER_X, col);
 
 			y_ammo_bar_pos += 4;
@@ -523,7 +523,7 @@ void visuals::draw_planted_bomb(c_base_plantedc4* entity, const float explode_ti
 	{
 		const auto time_bar_col = color_t("visuals->world->c4->time_bar->col");
 
-		g_render.draw_filled_rect(planted_bomb.get_pos().x - 20, planted_bomb.get_pos().y + time_bar_offset, g_helpers.get_c4_server_time(), 4, background_col);
+		g_render.draw_filled_rect(planted_bomb.get_pos().x - 20, planted_bomb.get_pos().y + time_bar_offset, Helpers::get_c4_server_time(), 4, background_col);
 		g_render.draw_filled_rect(planted_bomb.get_pos().x - 19, planted_bomb.get_pos().y + time_bar_offset + 1, explode_time - 1, 2, time_bar_col);
 	}
 
@@ -536,8 +536,8 @@ void visuals::draw_planted_bomb(c_base_plantedc4* entity, const float explode_ti
 
 			const auto defuse_bar_col = color_t("visuals->world->c4->defuse_bar->col");
 
-			g_render.draw_filled_rect(planted_bomb.get_pos().x - 20, planted_bomb.get_pos().y + defuse_bar_offset, g_helpers.get_c4_server_time(), 4, background_col);
-			g_render.draw_filled_rect(planted_bomb.get_pos().x - 19, planted_bomb.get_pos().y + defuse_bar_offset + 1, g_helpers.get_c4_server_time() * m_flCountDown - 1, 2, defuse_bar_col);
+			g_render.draw_filled_rect(planted_bomb.get_pos().x - 20, planted_bomb.get_pos().y + defuse_bar_offset, Helpers::get_c4_server_time(), 4, background_col);
+			g_render.draw_filled_rect(planted_bomb.get_pos().x - 19, planted_bomb.get_pos().y + defuse_bar_offset + 1, Helpers::get_c4_server_time() * m_flCountDown - 1, 2, defuse_bar_col);
 		}
 	}
 }

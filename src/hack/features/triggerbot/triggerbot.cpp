@@ -24,10 +24,10 @@ void triggerbot::instance(i_user_cmd* cmd)
 	if (!weapon || !weapon->clip1_count())
 		return;
 
-	if (g_helpers.is_knife(weapon) || g_helpers.is_grenade(weapon))
+	if (Helpers::is_knife(weapon) || Helpers::is_grenade(weapon))
 		return;
 
-	if (g_helpers.is_weapon_switching(weapon))
+	if (Helpers::is_weapon_switching(weapon))
 		return;
 
 	const auto weapon_data = weapon->get_weapon_data();
@@ -62,7 +62,7 @@ void triggerbot::instance(i_user_cmd* cmd)
 	if (!g_vars.get_as<bool>("triggerbot->flash_check").value() && g_csgo.m_local->is_flashed())
 		return;
 
-	if (!g_vars.get_as<bool>("triggerbot->smoke_check").value() && g_helpers.is_behind_smoke(g_csgo.m_local->get_eye_pos(), tr.end))
+	if (!g_vars.get_as<bool>("triggerbot->smoke_check").value() && Helpers::is_behind_smoke(g_csgo.m_local->get_eye_pos(), tr.end))
 		return;
 
 	if (!g_vars.get_as<bool>("triggerbot->teammate_check").value() && g_csgo.m_local->get_team_num() == entity->get_team_num())
@@ -71,7 +71,7 @@ void triggerbot::instance(i_user_cmd* cmd)
 	if (!g_vars.get_as<bool>("triggerbot->jump_check").value() && g_csgo.m_local->is_in_air())
 		return;
 
-	if (g_vars.get_as<bool>("triggerbot->scope_check").value() && g_helpers.is_sniper(weapon) && !g_csgo.m_local->is_scoped())
+	if (g_vars.get_as<bool>("triggerbot->scope_check").value() && Helpers::is_sniper(weapon) && !g_csgo.m_local->is_scoped())
 		return;
 
 	if (entity->get_client_class()->class_id != ccsplayer)
@@ -80,13 +80,13 @@ void triggerbot::instance(i_user_cmd* cmd)
 	if (entity == g_csgo.m_local || entity->get_dormant() || !entity->is_alive() || entity->has_gun_game_immunity())
 		return;
 
-	if (!g_helpers.is_taser(weapon))
+	if (!Helpers::is_taser(weapon))
 	{
 		if (g_vars.get_as<bool>("triggerbot->hitbox->head").value())
 		{
 			if (tr.hitgroup == hitgroup_head)
 			{
-				g_helpers.is_revolver(weapon) ?
+				Helpers::is_revolver(weapon) ?
 					cmd->buttons |= in_attack2 : cmd->buttons |= in_attack;
 			}
 		}
@@ -95,7 +95,7 @@ void triggerbot::instance(i_user_cmd* cmd)
 		{
 			if (tr.hitgroup == hitgroup_chest || tr.hitgroup == hitgroup_stomach)
 			{
-				g_helpers.is_revolver(weapon) ?
+				Helpers::is_revolver(weapon) ?
 					cmd->buttons |= in_attack2 : cmd->buttons |= in_attack;
 			}
 		}
@@ -104,7 +104,7 @@ void triggerbot::instance(i_user_cmd* cmd)
 		{
 			if (tr.hitgroup == hitgroup_leftarm || tr.hitgroup == hitgroup_rightarm)
 			{
-				g_helpers.is_revolver(weapon) ?
+				Helpers::is_revolver(weapon) ?
 					cmd->buttons |= in_attack2 : cmd->buttons |= in_attack;
 			}
 		}
@@ -113,7 +113,7 @@ void triggerbot::instance(i_user_cmd* cmd)
 		{
 			if (tr.hitgroup == hitgroup_leftleg || tr.hitgroup == hitgroup_rightleg)
 			{
-				g_helpers.is_revolver(weapon) ?
+				Helpers::is_revolver(weapon) ?
 					cmd->buttons |= in_attack2 : cmd->buttons |= in_attack;
 			}
 		}

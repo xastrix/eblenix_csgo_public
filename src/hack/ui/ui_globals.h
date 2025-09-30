@@ -51,7 +51,7 @@ struct s_entry
 };
 
 struct ui_globals {
-	bool                      s_opened[maxUISubs]{ false, false, false };
+	bool                      s_opened[maxUISubs]{};
 
 	int                       m_entry_position{};
 	int                       m_entry_size{};
