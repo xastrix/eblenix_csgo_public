@@ -44,8 +44,6 @@ void mod::init(void* I)
 			g_input.add_hk(VK_F12, []() {
 				g.done();
 			});
-
-			g.m_ui_opened = true;
 		}
 		else {
 			std::this_thread::sleep_for(std::chrono::seconds(5));

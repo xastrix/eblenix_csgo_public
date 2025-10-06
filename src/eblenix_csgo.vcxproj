@@ -143,12 +143,8 @@
     <ClCompile Include="hack\mod\mod.cpp" />
     <ClCompile Include="hack\render_manager\render_manager.cpp" />
     <ClCompile Include="hack\render_manager\sprite_manager\sprite_manager.cpp" />
-    <ClCompile Include="hack\ui\ui.cpp" />
-    <ClCompile Include="hack\ui\ui_adders.cpp" />
-    <ClCompile Include="hack\ui\ui_input.cpp" />
-    <ClCompile Include="hack\ui\ui_render.cpp" />
     <ClCompile Include="hack\helpers\helpers.cpp" />
-    <ClCompile Include="hack\ui\ui_sprites.cpp" />
+    <ClCompile Include="hack\ui\ui.cpp" />
     <ClCompile Include="hack\var_manager\var_manager.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -212,17 +208,12 @@
     <ClInclude Include="hack\mod\mod.h" />
     <ClInclude Include="hack\render_manager\render_manager.h" />
     <ClInclude Include="hack\render_manager\sprite_manager\sprite_manager.h" />
-    <ClInclude Include="hack\ui\ui_adders.h" />
-    <ClInclude Include="hack\ui\ui_globals.h" />
-    <ClInclude Include="hack\ui\ui_input.h" />
-    <ClInclude Include="hack\ui\ui_render.h" />
     <ClInclude Include="csgo\fnv.h" />
     <ClInclude Include="hack\helpers\helpers.h" />
-    <ClInclude Include="hack\ui\ui_sprites.h" />
+    <ClInclude Include="hack\ui\ui.h" />
     <ClInclude Include="hack\var_manager\var_manager.h" />
     <ClInclude Include="resources\fonts.hpp" />
     <ClInclude Include="resources\sprites.hpp" />
-    <ClInclude Include="hack\ui\ui.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

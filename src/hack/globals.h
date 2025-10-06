@@ -30,7 +30,6 @@ enum _csgo_versions {
 
 struct cs_globals {
 	bool           m_panic_mode{},
-	               m_ui_opened{},
 	               m_console_visible{},
 	               m_chat_visible{};
 	int            m_screen_width{},
@@ -61,7 +60,6 @@ struct globals : public cs_globals {
 	};
 
 	void done() {
-		m_ui_opened = false;
 		m_panic_mode = true;
 		m_done = true;
 	}

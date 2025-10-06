@@ -16,7 +16,7 @@
 #include <chrono>
 #include <thread>
 
-enum _wait_module_stat {
+enum _wfm_stat {
 	WM_OK,
 	WM_TIMEOUT,
 };
@@ -27,7 +27,7 @@ namespace mod
 
 	namespace util
 	{
-		_wait_module_stat wait_for_module(const _module_list module_index, std::function<void(void)> fn = []() {}, int ms = 600)
+		_wfm_stat wait_for_module(const _module_list module_index, std::function<void(void)> fn = []() {}, int ms = 600)
 		{
 			const auto timeout_ms{ 40000 };
 			auto waited_ms{ 0 };
