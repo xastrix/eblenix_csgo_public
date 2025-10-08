@@ -154,7 +154,6 @@
     <ClInclude Include="csgo\math\vec.h" />
     <ClInclude Include="csgo\math\vec2.h" />
     <ClInclude Include="csgo\math\vec3.h" />
-    <ClInclude Include="csgo\mem.h" />
     <ClInclude Include="csgo\netvar_manager\netvar_manager.h" />
     <ClInclude Include="csgo\sdk\c_view_setup.h" />
     <ClInclude Include="csgo\sdk\i_input.h" />

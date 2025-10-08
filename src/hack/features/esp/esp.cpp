@@ -516,7 +516,7 @@ void esp::player_rendering(c_base_player* entity)
 					v_child = entity->get_bone_position(i);
 					v_parent = entity->get_bone_position(bone->parent);
 
-					if (g_math.w2s(v_parent, s_parent) && g_math.w2s(v_child, s_child))
+					if (Math::w2s(v_parent, s_parent) && Math::w2s(v_child, s_child))
 					{
 						switch (g_vars.get_as<int>("esp->skeleton->type").value()) {
 						case 0: {
@@ -539,16 +539,18 @@ void esp::player_rendering(c_base_player* entity)
 
 	if (g_vars.get_as<bool>("esp->barrel->enabled").value())
 	{
-		vec3 start{}, s_screen{},
-			 end{}, e_screen{},
+		vec3 start{},
+			 s_screen{},
+			 end{},
+			 e_screen{},
 			 forward{};
 
-		g_math.angle_vectors(entity->get_eye_angles(), forward);
+		Math::angle_vectors(entity->get_eye_angles(), forward);
 
 		start = entity->get_hitbox_position(hitbox_head);
 		end = start + (forward * 500.0f);
 
-		if (g_math.w2s(start, s_screen) && g_math.w2s(end, e_screen))
+		if (Math::w2s(start, s_screen) && Math::w2s(end, e_screen))
 		{
 			g_render.draw_line(s_screen.x, s_screen.y, e_screen.x, e_screen.y,
 				1.0f, color_t("esp->barrel->col", 255 * m_alpha[entity->index()]));
@@ -559,9 +561,9 @@ void esp::player_rendering(c_base_player* entity)
 	{
 		vec3 pos{};
 
-		if (g_math.w2s(entity->get_hitbox_position(hitbox_head), pos))
+		if (Math::w2s(entity->get_hitbox_position(hitbox_head), pos))
 		{
-			g_math.find_position_rotation(pos.x, pos.y, g.m_screen_width, g.m_screen_height);
+			Math::find_position_rotation(pos.x, pos.y, g.m_screen_width, g.m_screen_height);
 
 			g_render.draw_line(g.m_screen_width / 2, g.m_screen_height / 2, pos.x, pos.y, 1.0f,
 				color_t("esp->offscreen_lines->col", 255 * m_alpha[entity->index()]));

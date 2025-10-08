@@ -426,12 +426,12 @@ void aimbot::set_aim_angle(i_user_cmd* cmd, c_base_player* entity, const vec3& a
 {
 	switch (m_aim_type) {
 	case 0: {
-		m_angle = g_math.calculate_angle(g_csgo.m_local->get_eye_pos(),
+		m_angle = Math::calculate_angle(g_csgo.m_local->get_eye_pos(),
 			entity->get_hitbox_position(m_hitbox_id), cmd->viewangles + aim_punch);
 		break;
 	}
 	case 1: {
-		m_angle = g_math.calculate_angle(g_csgo.m_local->get_eye_pos(),
+		m_angle = Math::calculate_angle(g_csgo.m_local->get_eye_pos(),
 			entity->get_bone_position(Helpers::get_nearest_bone(entity, cmd)), cmd->viewangles + aim_punch);
 		break;
 	}

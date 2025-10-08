@@ -34,7 +34,7 @@ enum _ui_colors {
 	maxUIColors,
 };
 
-enum _ui_sprite_list {
+enum _ui_sprites {
 	UI_SPRITE_NONE,
 	UI_SPRITE_LOGO,
 	maxUISprites

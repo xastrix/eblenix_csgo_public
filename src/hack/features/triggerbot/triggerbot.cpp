@@ -40,7 +40,7 @@ void triggerbot::instance(i_user_cmd* cmd)
 	ray_t ray;
 	trace_filter filter;
 
-	g_math.angle_vectors(cmd->viewangles, forward);
+	Math::angle_vectors(cmd->viewangles, forward);
 	forward *= weapon_data->weapon_range;
 
 	filter.skip = g_csgo.m_local;

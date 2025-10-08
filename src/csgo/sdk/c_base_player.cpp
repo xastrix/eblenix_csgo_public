@@ -1,10 +1,11 @@
 #include "c_base_entity.h"
 
-#include "../mem.h"
 #include "../signatures/signatures.h"
 #include "../netvar_manager/netvar_manager.h"
 #include "../interfaces/interfaces.h"
 #include "../math/math.h"
+
+#include "../../hack/helpers/helpers.h"
 
 int c_base_player::get_health()
 {
@@ -55,15 +56,15 @@ bool c_base_player::is_alive()
 	return get_health() > 0;
 }
 
-move_type c_base_player::get_move_type()
+int c_base_player::get_move_type()
 {
 	static int type = g_netvars.get_netvar("DT_BaseEntity::m_nRenderMode") + 1;
-	return read<move_type>(reinterpret_cast<uintptr_t>(this) + type);
+	return Helpers::read<int>(reinterpret_cast<uintptr_t>(this) + type);
 }
 
 c_base_weapon* c_base_player::get_active_weapon()
 {
-	auto weapon = read<uintptr_t>(reinterpret_cast<uintptr_t>(this)
+	auto weapon = Helpers::read<uintptr_t>(reinterpret_cast<uintptr_t>(this)
 		+ g_netvars.get_netvar("DT_CSPlayer::m_hActiveWeapon")) & 0xFFF;
 
 	if (!weapon)
@@ -119,8 +120,8 @@ vec3 c_base_player::get_hitbox_position(int hitbox_id)
 	vec3 min{};
 	vec3 max{};
 
-	g_math.transform_vector(hitbox->mins, bone_matrix[hitbox->bone], min);
-	g_math.transform_vector(hitbox->maxs, bone_matrix[hitbox->bone], max);
+	Math::transform_vector(hitbox->mins, bone_matrix[hitbox->bone], min);
+	Math::transform_vector(hitbox->maxs, bone_matrix[hitbox->bone], max);
 
 	return vec3{ (min.x + max.x) * 0.5f, (min.y + max.y) * 0.5f, (min.z + max.z) * 0.5f };
 }

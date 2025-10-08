@@ -24,7 +24,7 @@ struct entity_object {
 
 	bool world_to_screen() {
 		_origin = _entity->get_vec_origin();
-		return g_math.w2s(_origin, _pos);
+		return Math::w2s(_origin, _pos);
 	}
 
 	vec3 get_pos() {
@@ -498,7 +498,7 @@ void visuals::draw_planted_bomb(c_base_plantedc4* entity, const float explode_ti
 		const auto gaussian_falloff = std::exp(-distance_to_player * distance_to_player / (2.0f * sigma * sigma));
 
 		int adjust_damage = damage * gaussian_falloff * 1.0f;
-		adjust_damage = g_math.get_damage_armor(adjust_damage, g_csgo.m_local->get_armor_value());
+		adjust_damage = Math::get_damage_armor(adjust_damage, g_csgo.m_local->get_armor_value());
 
 		if (adjust_damage != 0)
 		{

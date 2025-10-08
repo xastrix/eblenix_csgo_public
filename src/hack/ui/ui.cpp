@@ -89,7 +89,7 @@ void ui::instance()
 		m_sprites[i].begin();
 	}
 
-	draw(g_vars.get_as<int>("ui->pos->x").value(), g_vars.get_as<int>("ui->pos->y").value() + 6);
+	draw(g_vars.get_as<int>("ui->pos->x").value(), g_vars.get_as<int>("ui->pos->y").value());
 
 	for (int i = UI_SPRITE_NONE; i < maxUISprites; i++) {
 		if (i == UI_SPRITE_NONE)
@@ -1086,6 +1086,7 @@ void ui::draw(int x, int y)
 	int HeadY = y;
 
 	y += HeadBoxHeight + 4;
+	y += 6;
 
 	int MenuLogoX = x + 1;
 	int MenuLogoY = y - m_sprites[UI_SPRITE_LOGO].get_height() + 1;

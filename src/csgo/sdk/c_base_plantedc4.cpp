@@ -21,9 +21,9 @@ int c_base_plantedc4::bomb_defuser()
 		g_netvars.get_netvar("DT_PlantedC4::m_hBombDefuser"));
 }
 
-bomb_site_nums c_base_plantedc4::bomb_site()
+int c_base_plantedc4::bomb_site()
 {
-	return *reinterpret_cast<bomb_site_nums*>(uintptr_t(this) +
+	return *reinterpret_cast<int*>(uintptr_t(this) +
 		g_netvars.get_netvar("DT_PlantedC4::m_nBombSite"));
 }
 

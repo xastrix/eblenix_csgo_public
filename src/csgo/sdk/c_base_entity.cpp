@@ -24,13 +24,13 @@ bool c_base_entity::get_dormant()
 	return (*static_cast<original_fn**>(get_networkable()))[9](get_networkable());
 }
 
-team_nums c_base_entity::get_team_num()
+int c_base_entity::get_team_num()
 {
-	return *reinterpret_cast<team_nums*>(uintptr_t(this) +
+	return *reinterpret_cast<int*>(uintptr_t(this) +
 		g_netvars.get_netvar("DT_CSPlayer::m_iTeamNum"));
 }
 
-bool c_base_entity::setup_bones(matrix3x4_t * out, int max_bones, int mask, float time)
+bool c_base_entity::setup_bones(matrix3x4_t* out, int max_bones, int mask, float time)
 {
 	if (!this)
 		return false;

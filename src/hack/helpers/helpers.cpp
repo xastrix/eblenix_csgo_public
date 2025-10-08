@@ -39,7 +39,7 @@ int Helpers::get_nearest_bone(c_base_player* entity, i_user_cmd* cmd)
 		if (!hitbox)
 			continue;
 
-		const auto angle = g_math.calculate_angle(g_csgo.m_local->get_eye_pos(), vec3(matrix[hitbox->bone][0][3], matrix[hitbox->bone][1][3], matrix[hitbox->bone][2][3]), cmd->viewangles);
+		const auto angle = Math::calculate_angle(g_csgo.m_local->get_eye_pos(), vec3(matrix[hitbox->bone][0][3], matrix[hitbox->bone][1][3], matrix[hitbox->bone][2][3]), cmd->viewangles);
 		const auto this_distance = std::hypotf(angle.x, angle.y);
 
 		if (best_distance > this_distance)
@@ -69,10 +69,10 @@ int Helpers::find_target_entity(i_user_cmd* cmd, float& fov, vec3& angle)
 		if (!entity || entity == g_csgo.m_local || entity->get_dormant() || !entity->is_life_state() || entity->has_gun_game_immunity())
 			continue;
 
-		angle = g_math.calculate_angle(local_eye_pos, entity_bone_pos, cmd->viewangles);
+		angle = Math::calculate_angle(local_eye_pos, entity_bone_pos, cmd->viewangles);
 
-		const auto fov = g_math.distance_based_fov(distance,
-			g_math.calculate_angle_alternative(local_eye_pos, entity_bone_pos), cmd);
+		const auto fov = Math::distance_based_fov(distance,
+			Math::calculate_angle_alternative(local_eye_pos, entity_bone_pos), cmd);
 
 		if (fov < best_fov) {
 			best_fov = fov;
@@ -233,7 +233,7 @@ bool Helpers::get_bbox(c_base_player* entity, box& in, const bbox_type type)
 	}
 	}
 
-	if (!g_math.w2s(top, s[1]) || !g_math.w2s(down, s[0]))
+	if (!Math::w2s(top, s[1]) || !Math::w2s(down, s[0]))
 		return false;
 
 	vec3 delta{ s[1] - s[0] };

@@ -4,7 +4,7 @@
 
 #define CLIENT_INTERFACE_VERSION "VClient018"
 
-enum cstrike15_user_messages : int {
+enum cstrike15_user_messages {
 	cs_um_vguimenu = 1,
 	cs_um_geiger = 2,
 	cs_um_train = 3,
@@ -67,7 +67,7 @@ enum cstrike15_user_messages : int {
 class c_base_client {
 public:
 	c_client_class* get_client_classes();
-	bool dispatch_user_message(cstrike15_user_messages msg_type, unsigned int arg1 = 0,
+	bool dispatch_user_message(int msg_type, unsigned int arg1 = 0,
 		unsigned int length = 0, const void* data = nullptr);
 	bool is_chat_raised();
 };

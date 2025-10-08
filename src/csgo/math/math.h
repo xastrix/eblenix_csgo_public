@@ -10,7 +10,8 @@
 #define MAX_COORD_FLOAT (16384.0f)
 #define MIN_COORD_FLOAT (-MAX_COORD_FLOAT)
 
-struct math {
+namespace Math
+{
 	vec3 calculate_angle(const vec3& a, const vec3& b);
 	vec3 calculate_angle(const vec3& source, const vec3& destination, const vec3& view_angles);
 	vec3 calculate_angle_alternative(const vec3& a, const vec3& b);
@@ -26,6 +27,4 @@ struct math {
 	bool w2s(const vec3& origin, vec3& screen);
 	float get_damage_armor(float damage, const int armor_value);
 	void find_position_rotation(float& x, float& y, const float& screen_width, const float& screen_height);
-};
-
-extern math g_math;
+}

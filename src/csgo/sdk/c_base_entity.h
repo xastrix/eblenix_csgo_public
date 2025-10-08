@@ -109,7 +109,7 @@ enum item_definition_data {
 	weapon_knife_widowmaker,
 };
 
-enum team_nums : int {
+enum team_nums {
 	teamT = 2,
 	teamCT,
 };
@@ -125,8 +125,8 @@ public:
 	void*                 get_networkable();
 	c_client_class*       get_client_class();
 	bool                  get_dormant();
-	team_nums             get_team_num();
-	bool                  setup_bones(matrix3x4_t * out, int max_bones, int mask, float time);
+	int                   get_team_num();
+	bool                  setup_bones(matrix3x4_t* out, int max_bones, int mask, float time);
 	model_t*              get_model();
 	vec3                  get_absolute_origin();
 	vec3                  get_vec_origin();
@@ -154,7 +154,7 @@ public:
 	int                   get_flags();
 	bool                  is_life_state();
 	bool                  is_alive();
-	move_type             get_move_type();
+	int                   get_move_type();
 	c_base_weapon*        get_active_weapon();
 	bool                  can_see_entity(const vec3& pos);
 	vec3                  get_bone_position(int bone_id);
@@ -190,7 +190,7 @@ public:
 	bool                  bomb_ticking();
 	float                 defuse_count_down();
 	int                   bomb_defuser();
-	bomb_site_nums        bomb_site();
+	int                   bomb_site();
 	bool                  bomb_defused();
 	float                 c4_blow();
 	bool                  is_bomb_planted();

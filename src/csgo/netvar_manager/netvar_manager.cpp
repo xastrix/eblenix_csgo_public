@@ -57,7 +57,8 @@ static std::pair<std::string, std::string> read_netvar_ss(const std::string& net
 	return ret;
 }
 
-static void add_props_for_table(netvar_table_map& table_map,
+static void add_props_for_table(
+	netvar_table_map& table_map,
 	const uint32_t table_name_hash,
 	const std::string& table_name,
 	recv_table* table,

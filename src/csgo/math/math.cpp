@@ -5,8 +5,6 @@
 
 #include "../../hack/globals.h"
 
-math g_math;
-
 static bool screen_transform(const vec3& in, vec3& out)
 {
 	static uintptr_t view_matrix = 0;
@@ -35,7 +33,7 @@ static bool screen_transform(const vec3& in, vec3& out)
 	return true;
 }
 
-vec3 math::calculate_angle(const vec3& a, const vec3& b)
+vec3 Math::calculate_angle(const vec3& a, const vec3& b)
 {
 	vec3 angles, delta;
 
@@ -55,7 +53,7 @@ vec3 math::calculate_angle(const vec3& a, const vec3& b)
 	return angles;
 }
 
-vec3 math::calculate_angle(const vec3& source, const vec3& destination, const vec3& view_angles)
+vec3 Math::calculate_angle(const vec3& source, const vec3& destination, const vec3& view_angles)
 {
 	vec3 delta = source - destination;
 	vec3 angles;
@@ -70,7 +68,7 @@ vec3 math::calculate_angle(const vec3& source, const vec3& destination, const ve
 	return angles;
 }
 
-vec3 math::calculate_angle_alternative(const vec3& a, const vec3& b)
+vec3 Math::calculate_angle_alternative(const vec3& a, const vec3& b)
 {
 	vec3 angles;
 	vec3 delta = a - b;
@@ -80,20 +78,20 @@ vec3 math::calculate_angle_alternative(const vec3& a, const vec3& b)
 	return angles;
 }
 
-void math::sin_cos(float r, float* s, float* c)
+void Math::sin_cos(float r, float* s, float* c)
 {
 	*s = std::sin(r);
 	*c = std::cos(r);
 }
 
-void math::transform_vector(vec3& a, const matrix3x4_t& b, vec3& out)
+void Math::transform_vector(vec3& a, const matrix3x4_t& b, vec3& out)
 {
 	out.x = a.dot(b.matrix[0]) + b.matrix[0][3];
 	out.y = a.dot(b.matrix[1]) + b.matrix[1][3];
 	out.z = a.dot(b.matrix[2]) + b.matrix[2][3];
 }
 
-void math::vector_angles(const vec3& forward, vec3& angles)
+void Math::vector_angles(const vec3& forward, vec3& angles)
 {
 	if ((forward.y == 0.0f && forward.x == 0.0f))
 	{
@@ -118,7 +116,7 @@ void math::vector_angles(const vec3& forward, vec3& angles)
 	angles.z = 0.0f;
 }
 
-void math::angle_vectors(const vec3& angles, vec3* forward, vec3* right, vec3* up)
+void Math::angle_vectors(const vec3& angles, vec3* forward, vec3* right, vec3* up)
 {
 	float sp, sy, sr, cp, cy, cr;
 
@@ -145,7 +143,7 @@ void math::angle_vectors(const vec3& angles, vec3* forward, vec3* right, vec3* u
 	}
 }
 
-void math::angle_vectors(const vec3& angles, vec3& forward)
+void Math::angle_vectors(const vec3& angles, vec3& forward)
 {
 	float sp, sy, cp, cy;
 
@@ -157,7 +155,7 @@ void math::angle_vectors(const vec3& angles, vec3& forward)
 	forward.z = -sp;
 }
 
-bool math::clamp_angles(vec3& angles)
+bool Math::clamp_angles(vec3& angles)
 {
 	if (!(std::isfinite(angles.x) && std::isfinite(angles.y) && std::isfinite(angles.z)))
 		return false;
@@ -169,7 +167,7 @@ bool math::clamp_angles(vec3& angles)
 	return true;
 }
 
-bool math::normalize_angles(vec3& angles)
+bool Math::normalize_angles(vec3& angles)
 {
 	if (!(std::isfinite(angles.x) && std::isfinite(angles.y) && std::isfinite(angles.z)))
 		return false;
@@ -180,7 +178,7 @@ bool math::normalize_angles(vec3& angles)
 	return true;
 }
 
-float math::distance_based_fov(const float distance, const vec3 angle, const i_user_cmd* cmd)
+float Math::distance_based_fov(const float distance, const vec3 angle, const i_user_cmd* cmd)
 {
 	vec3 aiming_at;
 	angle_vectors(cmd->viewangles, aiming_at);
@@ -193,7 +191,7 @@ float math::distance_based_fov(const float distance, const vec3 angle, const i_u
 	return aiming_at.distance_to(aim_at);
 }
 
-float math::get_fov(const vec3 vangle, const vec3 angle)
+float Math::get_fov(const vec3 vangle, const vec3 angle)
 {
 	vec3 a0, a1;
 
@@ -204,7 +202,7 @@ float math::get_fov(const vec3 vangle, const vec3 angle)
 		(a0.x * a0.x + a0.y * a0.y + a0.z * a0.z)));
 }
 
-bool math::w2s(const vec3& origin, vec3& screen)
+bool Math::w2s(const vec3& origin, vec3& screen)
 {
 	if (!screen_transform(origin, screen))
 		return false;
@@ -215,7 +213,7 @@ bool math::w2s(const vec3& origin, vec3& screen)
 	return true;
 }
 
-float math::get_damage_armor(float damage, const int armor_value)
+float Math::get_damage_armor(float damage, const int armor_value)
 {
 	const auto armor_ratio = 0.5f;
 	const auto armor_bonus = 0.5f;
@@ -236,7 +234,7 @@ float math::get_damage_armor(float damage, const int armor_value)
 	return damage;
 }
 
-void math::find_position_rotation(float& x, float& y, const float& screen_width, const float& screen_height)
+void Math::find_position_rotation(float& x, float& y, const float& screen_width, const float& screen_height)
 {
 	const vec2  delta = vec2{ screen_width / 2 - x, screen_height / 2 - y };
 	const float hypot = std::hypot(delta.x, delta.y);

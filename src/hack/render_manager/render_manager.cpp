@@ -7,15 +7,10 @@
 render_manager g_render;
 
 static std::vector<font_t> font_list = {
-	/* ui/interface and some visuals */
-	{ Tahoma12px,     12, "Tahoma",     FW_MEDIUM,    ANTIALIASED_QUALITY },
-    { Verdana12px,    12, "Verdana",    FW_SEMIBOLD,  ANTIALIASED_QUALITY },
-	
-	/* for weapons and other icons */
-	{ Astriumwep16px, 16, "AstriumWep", FW_NORMAL,    CLEARTYPE_QUALITY },
-	
-	/* for c4 icon */
-	{ Astriumwep25px, 25, "AstriumWep", FW_NORMAL,    CLEARTYPE_QUALITY },
+	{ Tahoma12px,     12, "Tahoma",     FW_MEDIUM, ANTIALIASED_QUALITY },
+    { Verdana12px,    12, "Verdana",    FW_SEMIBOLD, ANTIALIASED_QUALITY },
+	{ Astriumwep16px, 16, "AstriumWep", FW_NORMAL, CLEARTYPE_QUALITY },
+	{ Astriumwep25px, 25, "AstriumWep", FW_NORMAL, CLEARTYPE_QUALITY },
 };
 
 bool render_manager::init(IDirect3DDevice9* device)
@@ -217,7 +212,7 @@ int render_manager::get_text_width(const std::string& string, ID3DXFont* font)
 	RECT r{};
 	font->DrawTextA(0, string.c_str(), -1, &r, DT_CALCRECT, 0xffffffff);
 
-	return r.right - r.left;
+	return (r.right - r.left);
 }
 
 int render_manager::get_text_widthW(const std::wstring& string, ID3DXFont* font)
@@ -225,7 +220,7 @@ int render_manager::get_text_widthW(const std::wstring& string, ID3DXFont* font)
 	RECT r{};
 	font->DrawTextW(0, string.c_str(), -1, &r, DT_CALCRECT, 0xffffffff);
 
-	return r.right - r.left;
+	return (r.right - r.left);
 }
 
 ID3DXFont* render_manager::get_font(const _fonts index)
