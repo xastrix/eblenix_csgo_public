@@ -2,30 +2,50 @@
 
 #include "interface.h"
 
-struct i_group_box {
-	i_group_box() = default;
-	i_group_box(const std::string& name, int x, int y, int w, int h)
-		: m_name(name), m_x(x), m_y(y), m_w(w), m_h(h) {
-		draw();
-	};
+struct i_base_item {
+	i_base_item(int x = 0, int y = 0, int w = 0, int h = 0)
+		: m_x(x), m_y(y), m_w(w), m_h(h) {};
+
+	virtual void draw() {}
+
+	virtual bool is_hovered() {
+		const auto mouse_pos_x = g_interface.get_mouse_pos_x();
+		const auto mouse_pos_y = g_interface.get_mouse_pos_y();
+
+		return mouse_pos_x >= m_x && mouse_pos_x <= m_x + m_w
+			&& mouse_pos_y >= m_y && mouse_pos_y <= m_y + m_h;
+	}
 
 	int                       m_x{},
 		                      m_y{},
 		                      m_w{},
-		                      m_h{}, m_ho{ 10 };
+		                      m_h{};
+};
+
+struct i_group_box : public i_base_item {
+	i_group_box() = default;
+	i_group_box(const std::string& name, int x, int y, int w, int h)
+		: i_base_item(x, y, w, h), m_name(name) {
+		draw();
+	};
+
 	std::string               m_name{};
-	int                       m_element_count{};
+	int                       m_ho{ 10 },
+		                      m_element_count{};
 private:
-	void draw() {
+	void draw() override {
 		g_d3d.draw_filled_rect(m_x + 1, m_y + 1, m_w - 1, m_h - 1, D3DCOLOR_RGBA(54, 72, 102, 255));
 
+		const auto font = g_d3d.get_font(Tahoma12px);
+		const auto text_width = g_d3d.get_text_width(m_name, g_d3d.get_font(Tahoma12px));
+
 		g_d3d.draw_line(m_x, m_y, m_x + 7, m_y, D3DCOLOR_RGBA(66, 84, 114, 255));
-		g_d3d.draw_line(m_x + g_d3d.get_text_width(m_name) + 12, m_y, m_x + m_w, m_y, D3DCOLOR_RGBA(66, 84, 114, 255));
+		g_d3d.draw_line(m_x + text_width + 12, m_y, m_x + m_w, m_y, D3DCOLOR_RGBA(66, 84, 114, 255));
 		g_d3d.draw_line(m_x, m_y, m_x, m_y + m_h, D3DCOLOR_RGBA(66, 84, 114, 255));
 		g_d3d.draw_line(m_x + m_w, m_y, m_x + m_w, m_y + m_h, D3DCOLOR_RGBA(66, 84, 114, 255));
 		g_d3d.draw_line(m_x, m_y + m_h, m_x + m_w, m_y + m_h, D3DCOLOR_RGBA(66, 84, 114, 255));
 
-		g_d3d.draw_string(m_name, m_x + 10, m_y - 7, D3DCOLOR_RGBA(255, 255, 255, 255));
+		g_d3d.draw_string(m_name, m_x + 10, m_y - 7, font, D3DCOLOR_RGBA(255, 255, 255, 255));
 	}
 };
 
@@ -45,16 +65,8 @@ struct i_game_selector : private i_group_box {
 		draw();
 	};
 
-private:
-	bool is_hovered() {
-		const auto mouse_pos_x = g_interface.get_mouse_pos_x();
-		const auto mouse_pos_y = g_interface.get_mouse_pos_y();
-
-		return mouse_pos_x >= m_x && mouse_pos_x <= m_x + m_w
-			&& mouse_pos_y >= m_y && mouse_pos_y <= m_y + m_h;
-	}
-
-	void draw() {
+protected:
+	void draw() override {
 		static bool m_held[16]{};
 
 		if (g_interface.is_focused() && is_hovered()) {
@@ -87,13 +99,9 @@ private:
 		if (m_game_name.length() > 28)
 			m_game_name = m_game_name.substr(0, 28) + "..";
 
-		g_d3d.draw_string(m_game_name, m_x + 35, m_y + 3, D3DCOLOR_RGBA(255, 255, 255, 255));
+		g_d3d.draw_string(m_game_name, m_x + 35, m_y + 3, g_d3d.get_font(Tahoma12px), D3DCOLOR_RGBA(255, 255, 255, 255));
 	}
 
-	int                       m_x{},
-		                      m_y{},
-		                      m_w{},
-		                      m_h{};
 	sprite_t                  m_game_icon{};
 	std::string               m_game_name{};
 	int*                      m_selected{};
@@ -119,16 +127,8 @@ struct i_button : private i_group_box {
 		draw();
 	};
 
-private:
-	bool is_hovered() {
-		const auto mouse_pos_x = g_interface.get_mouse_pos_x();
-		const auto mouse_pos_y = g_interface.get_mouse_pos_y();
-
-		return mouse_pos_x >= m_x && mouse_pos_x <= m_x + m_w
-			&& mouse_pos_y >= m_y && mouse_pos_y <= m_y + m_h;
-	}
-
-	void draw() {
+protected:
+	void draw() override {
 		static bool m_held[16]{};
 
 		if (g_interface.is_focused() && is_hovered()) {
@@ -153,27 +153,15 @@ private:
 			g_d3d.draw_filled_rect(m_x, m_y, m_w, m_h, D3DCOLOR_RGBA(68, 90, 129, 255));
 		}
 
-		const auto text_width = g_d3d.get_text_width(m_name);
-		const auto text_height = g_d3d.get_text_height(m_name);
+		const auto font = g_d3d.get_font(VerdanaExtraBold12px);
+		const auto text_width = g_d3d.get_text_width(m_name, font);
+		const auto text_height = g_d3d.get_text_height(m_name, font);
 
 		g_d3d.draw_string(m_name, m_x + m_w / 2 - text_width / 2,
-			m_y + (m_h / 2) - (text_height / 2), D3DCOLOR_RGBA(255, 255, 255, 255));
+			m_y + (m_h / 2) - (text_height / 2), font, D3DCOLOR_RGBA(233, 233, 233, 255));
 	}
 
-	int                       m_x{},
-		                      m_y{},
-		                      m_w{},
-		                      m_h{};
 	std::string               m_name{};
 	std::function<void(void)> m_fn{};
 	i_group_box*              m_parent{};
 };
-
-struct ui {
-	void begin();
-	void end();
-public:
-	sprite_t m_csgo_icon{};
-};
-
-extern ui g_ui;

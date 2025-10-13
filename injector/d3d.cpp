@@ -1,6 +1,13 @@
 #include "interface.h"
 
+#include <vector>
+
 d3d g_d3d;
+
+static std::vector<font_t> font_list = {
+	{ Tahoma12px,           12, "Tahoma",  FW_NORMAL, ANTIALIASED_QUALITY },
+	{ VerdanaExtraBold12px, 12, "Verdana", FW_BOLD, PROOF_QUALITY },
+};
 
 bool d3d::init(IDirect3DDevice9* device)
 {
@@ -15,17 +22,20 @@ bool d3d::create_objects()
 	if (FAILED(D3DXCreateLine(m_device, &m_line)))
 		return false;
 
-	if (FAILED(D3DXCreateFontA(
-		m_device,
-		12, 0,
-		FW_MEDIUM, 1, 0,
-		DEFAULT_CHARSET,
-		OUT_DEFAULT_PRECIS,
-		ANTIALIASED_QUALITY,
-		FIXED_PITCH | FF_DONTCARE,
-		"Tahoma",
-		&m_font)))
-		return false;
+	for (const auto& font : font_list)
+	{
+		if (FAILED(D3DXCreateFontA(
+			m_device,
+			font.m_px, 0,
+			font.m_weight, 1, 0,
+			DEFAULT_CHARSET,
+			OUT_DEFAULT_PRECIS,
+			font.m_quality,
+			FF_DONTCARE,
+			font.m_name.c_str(),
+			&m_fonts[font.m_index])))
+			return false;
+	}
 
 	if (FAILED(m_device->CreateStateBlock(D3DSBT_ALL, &m_block)))
 		return false;
@@ -112,6 +122,16 @@ void d3d::draw_rect(int x, int y, int w, int h, D3DCOLOR color)
 
 void d3d::draw_filled_rect(int x, int y, int w, int h, D3DCOLOR color)
 {
+	struct vertex_t {
+		float    m_x{},
+			m_y{},
+			m_z{};
+		float    m_rhw{};
+		D3DCOLOR m_color{};
+		float    m_tu{},
+			m_tv{};
+	};
+
 	vertex_t v[4] = {
 		{ float(x), float(y + h), 0.0f, 1.0f, color },
 		{ float(x), float(y), 0.0f, 1.0f, color },
@@ -124,29 +144,34 @@ void d3d::draw_filled_rect(int x, int y, int w, int h, D3DCOLOR color)
 	m_device->SetRenderState(D3DRS_MULTISAMPLEANTIALIAS, false);
 }
 
-void d3d::draw_string(const std::string& string, int x, int y, D3DCOLOR color)
+void d3d::draw_string(const std::string& string, int x, int y, ID3DXFont* font, D3DCOLOR color)
 {
 	RECT r{ x, y, x, y };
 	RECT or{ x + 1, y + 1, x + 1, y + 1 };
 
-	m_font->DrawTextA(NULL, string.c_str(), -1, &or, DT_NOCLIP, D3DCOLOR_RGBA(0, 0, 0, 120));
-	m_font->DrawTextA(NULL, string.c_str(), -1, &r, DT_NOCLIP, color);
+	font->DrawTextA(NULL, string.c_str(), -1, &or, DT_NOCLIP, D3DCOLOR_RGBA(0, 0, 0, 120));
+	font->DrawTextA(NULL, string.c_str(), -1, &r, DT_NOCLIP, color);
 }
 
-int d3d::get_text_width(const std::string& string)
+int d3d::get_text_width(const std::string& string, ID3DXFont* font)
 {
 	RECT r{};
-	m_font->DrawTextA(0, string.c_str(), -1, &r, DT_CALCRECT, 0xffffffff);
+	font->DrawTextA(0, string.c_str(), -1, &r, DT_CALCRECT, 0xffffffff);
 
 	return (r.right - r.left);
 }
 
-int d3d::get_text_height(const std::string& string)
+int d3d::get_text_height(const std::string& string, ID3DXFont* font)
 {
 	RECT r{};
-	m_font->DrawTextA(0, string.c_str(), -1, &r, DT_CALCRECT, 0xffffffff);
+	font->DrawTextA(0, string.c_str(), -1, &r, DT_CALCRECT, 0xffffffff);
 
 	return (r.bottom - r.top);
+}
+
+ID3DXFont* d3d::get_font(const _fonts index)
+{
+	return m_fonts[index];
 }
 
 void d3d::undo()
@@ -156,9 +181,12 @@ void d3d::undo()
 		m_line = nullptr;
 	}
 
-	if (m_font) {
-		m_font->Release();
-		m_font = nullptr;
+	for (const auto& font : font_list)
+	{
+		if (m_fonts[font.m_index]) {
+			m_fonts[font.m_index]->Release();
+			m_fonts[font.m_index] = nullptr;
+		}
 	}
 
 	if (m_block) {

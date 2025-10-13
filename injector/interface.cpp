@@ -11,6 +11,8 @@ std::string    dlls[]{ "eblenix_csgo.dll" };
 std::string    game_processes[]{ "csgo.exe" };
 HWND           game_windows[]{ FindWindowA(CSGO_CLASS_NAME, 0) };
 
+sprite_t       csgo_icon{};
+
 _interface_status Interface::init()
 {
 	m_window_name = util::random_string(12);
@@ -135,32 +137,39 @@ void Interface::on_loop()
 			m_mouse_pos_y = 0;
 		}
 
+		m_device->Clear(
+			0, NULL,
+			D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER,
+			D3DCOLOR_ARGB(255, 68, 90, 129),
+			1.0f, 0
+		);
+
 		if (!(FAILED(m_device->BeginScene())))
 		{
 			std::call_once(init_d3d, [&]() {
 				if (g_d3d.init(m_device))
-					g_ui.m_csgo_icon.init(m_device, csgo_ico, sizeof(csgo_ico), 24, 24);
+					csgo_icon.init(m_device, csgo_ico, sizeof(csgo_ico), 24, 24);
 			});
 
 			g_d3d.begin_render_states();
 			{
-				g_ui.begin();
+				csgo_icon.begin();
 				{
 					static auto game_id{ -1 };
 					auto        game_selected{ game_id != -1 };
 					auto        game_process_info{ util::get_proc(game_selected ? game_processes[game_id] : "") };
 
 					i_group_box Games{ "Games", 20, 20, game_selected ? 200 : m_width - 40, 80 }; {
-						i_game_selector{ &Games, g_ui.m_csgo_icon, "CS:GO Release", game_process_info.active ? true : false, &game_id, 0 };
+						i_game_selector CSGO{ &Games, csgo_icon, "CS:GO", game_process_info.active ? true : false, &game_id, 0 };
 					}
 
 					if (game_selected)
 					{
 						i_group_box Actions{ "Actions", 230, 20, 135, 80 };
 						{
-							bool dll_used{ util::is_dll_used(dlls[game_id]) };
+							auto dll_used{ util::is_dll_used(dlls[game_id]) };
 
-							i_button{ &Actions, dll_used ? "Unload" : "Load", 115, 24, [&]() {
+							i_button Load{ &Actions, dll_used ? "Unload" : "Load", 115, 24, [&]() {
 								switch (dll_used) {
 								case true: {
 									util::send_msg_to_proc(game_windows[game_id], LOADER_UNLOAD_HOOK_MESSAGE);
@@ -180,13 +189,13 @@ void Interface::on_loop()
 								}
 							} };
 
-							i_button{ &Actions, "Exit", 115, 24, []() {
+							i_button Exit{ &Actions, "Exit", 115, 24, []() {
 								loop = false;
 							} };
 						}
 					}
 				}
-				g_ui.end();
+				csgo_icon.end();
 			}
 			g_d3d.end_render_states();
 
@@ -203,11 +212,11 @@ void Interface::on_loop()
 void Interface::on_reset()
 {
 	g_d3d.undo();
-	g_ui.m_csgo_icon.on_reset();
+	csgo_icon.on_reset();
 
 	m_device->Reset(&m_present_params);
 
-	g_ui.m_csgo_icon.on_reset_end();
+	csgo_icon.on_reset_end();
 	g_d3d.create_objects();
 }
 
@@ -233,7 +242,7 @@ int Interface::get_mouse_pos_y()
 
 bool Interface::is_focused()
 {
-	return GetForegroundWindow() == m_hwnd && IsWindowVisible(m_hwnd);
+	return (GetForegroundWindow() == m_hwnd && IsWindowVisible(m_hwnd));
 }
 
 void Interface::set_window_pos(int x, int y)
