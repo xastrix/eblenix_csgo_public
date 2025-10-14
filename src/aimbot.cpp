@@ -53,15 +53,14 @@ void aimbot::instance(i_user_cmd* cmd)
 		if (!entity || !entity->is_life_state())
 			return;
 
-		if (!can_shot(entity, weapon))
+		if (!can_aiming(entity, weapon))
 			return;
 
-		const auto aim_punch = g_csgo.m_local->aim_punch_angle() *
-			g_csgo.m_cvar->get_convar("weapon_recoil_scale")->get_float();
+		set_aim_angle(cmd, entity, g_csgo.m_local->aim_punch_angle());
 
-		set_aim_angle(cmd, entity, aim_punch);
+		m_angle.normalize();
+		m_angle.clamp();
 
-		m_angle /= m_aim_smooth;
 		cmd->viewangles += m_angle;
 
 		if (!g_vars.get_as<bool>("aimbot->silent").value())
@@ -398,7 +397,7 @@ void aimbot::set_weapon_param(c_base_weapon* weapon)
 	}
 }
 
-bool aimbot::can_shot(c_base_player* entity, c_base_weapon* weapon)
+bool aimbot::can_aiming(c_base_player* entity, c_base_weapon* weapon)
 {
 	if (g_vars.get_as<bool>("aimbot->visible_check").value() && !g_csgo.m_local->can_see_entity(entity->get_eye_pos()))
 		return false;

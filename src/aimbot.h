@@ -11,7 +11,7 @@ struct aimbot {
 	void instance(i_user_cmd* cmd);
 private:
 	void set_weapon_param(c_base_weapon* weapon);
-	bool can_shot(c_base_player* entity, c_base_weapon* weapon);
+	bool can_aiming(c_base_player* entity, c_base_weapon* weapon);
 	void set_aim_angle(i_user_cmd* cmd, c_base_player* entity, const vec3& aim_punch);
 private:
 	float      m_aim_fov{};

@@ -52,7 +52,6 @@ void vec3::normalize()
 {
 	x = std::isfinite(x) ? std::remainderf(x, 360.0f) : 0.0f;
 	y = std::isfinite(y) ? std::remainderf(y, 360.0f) : 0.0f;
-
 	z = 0.0f;
 }
 

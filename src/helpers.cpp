@@ -349,7 +349,7 @@ std::string Helpers::get_weapon_type_by_index(const int index, const weapon_esp_
 			return ss.first;
 	}
 
-	return "";
+	return weapons[0].first;
 }
 
 std::wstring Helpers::stws(const std::string& string)
