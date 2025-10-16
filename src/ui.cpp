@@ -1086,12 +1086,9 @@ void ui::draw(int x, int y)
 	int HeadY = y;
 
 	y += HeadBoxHeight + 4;
-	y += 6;
 
 	int MenuLogoX = x + 1;
 	int MenuLogoY = y - m_sprites[UI_SPRITE_LOGO].get_height() + 1;
-
-	m_sprites[UI_SPRITE_LOGO].draw(MenuLogoX, MenuLogoY);
 
 	auto draw_float = [](float value, int x, int y, color_t color) {
 		char ss[256];
@@ -1168,6 +1165,8 @@ void ui::draw(int x, int y)
 		if (menu_entry[i].m_space)
 			y += HeadBoxHeight + 1;
 	}
+
+	m_sprites[UI_SPRITE_LOGO].draw(MenuLogoX, MenuLogoY);
 
 	x += HeadBoxWidth + 1;
 
