@@ -26,7 +26,13 @@ static unsigned long WINAPI wnd_proc(HWND h, UINT m, WPARAM w, LPARAM l)
 			}
 		}
 
-		g_input.process_message(m, w, l);
+		if (!g::done)
+		{
+			if (!g::chat_visible && !g::console_visible)
+			{
+				g_input.process_message(m, w, l);
+			}
+		}
 	}
 
 	return CallWindowProcA(g_input.get_wnd_proc(), h, m, w, l);
@@ -40,19 +46,6 @@ void input_manager::init(const std::pair<LPCSTR, LPCSTR>& wnd)
 		return;
 
 	m_old_wnd_proc = reinterpret_cast<WNDPROC>(SetWindowLongA(m_hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(wnd_proc)));
-}
-
-bool input_manager::is_key_down(unsigned int vk)
-{
-	return m_key_map[vk] == state_down;
-}
-
-bool input_manager::is_key_pressed(unsigned int vk)
-{
-	if (m_key_map[vk] != state_pressed)
-		return false;
-
-	return m_key_map[vk] = state_up;
 }
 
 void input_manager::add_hk(unsigned int vk, std::function<void(void)> fn)
@@ -100,32 +93,26 @@ bool input_manager::process_keybd_message(UINT m, WPARAM w, LPARAM l)
 		return false;
 	}
 
-	if (g::initialized && !g::done)
+	if ((state == state_up && m_key_map[key] == state_down))
 	{
-		if (!g::chat_visible && !g::console_visible)
-		{
-			if (state == state_up && m_key_map[key] == state_down)
-			{
-				m_key_map[key] = state_pressed;
+		m_key_map[key] = state_pressed;
 
-				g_ui.handle_toggle_keys(key);
+		g_ui.handle_toggle_keys(key);
 
-				auto& hotkey_callback = m_hotkeys[key];
+		auto& hotkey_callback = m_hotkeys[key];
 
-				if (hotkey_callback)
-					hotkey_callback();
-			}
-			else
-			{
-				m_key_map[key] = state;
-			}
+		if (hotkey_callback)
+			hotkey_callback();
+	}
+	else
+	{
+		m_key_map[key] = state;
+	}
 
-			if (state == state_down)
-			{
-				if (g_ui.get_menu_state())
-					g_ui.handle_input(key);
-			}
-		}
+	if (state == state_down)
+	{
+		if (g_ui.get_menu_state())
+			g_ui.handle_input(key);
 	}
 
 	return true;
@@ -167,6 +154,11 @@ std::wstring input_manager::virtual_key_to_wstring(unsigned int vk)
 	}
 
 	return k;
+}
+
+m_state input_manager::get_key_state(unsigned int vk)
+{
+	return m_key_map[vk];
 }
 
 void input_manager::undo()

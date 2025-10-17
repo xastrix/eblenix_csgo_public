@@ -208,7 +208,6 @@ void var_manager::init()
 	set("misc->movement->bunnyhop", false);
 	set("misc->movement->infinite_duck", false);
 	set("misc->movement->auto_strafe", false);
-	set("misc->movement->blockbot", false);
 	set("misc->event_logs->player_hurt", false);
 	set("misc->event_logs->player_purchase", false);
 
@@ -222,9 +221,9 @@ void var_manager::init()
 	set("keys->on_toggle->aimbot", 0);
 	set("keys->on_toggle->triggerbot", 0);
 	set("keys->on_toggle->thirdperson", 0);
-	set("keys->on_toggle->blockbot", 0);
 	set("keys->on_toggle->panic", 0);
 	set("keys->on_toggle->ui", 0);
+	set("keys->on_hold->blockbot", 0);
 }
 
 void var_manager::reset()

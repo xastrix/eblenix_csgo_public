@@ -16,7 +16,7 @@ enum _interface_status {
 
 enum _fonts {
 	Tahoma12px,
-	VerdanaExtraBold12px,
+	VerdanaBold12px,
 	maxFonts,
 };
 
@@ -26,6 +26,13 @@ struct font_t {
 	std::string m_name{};
 	uint32_t    m_weight{};
 	DWORD       m_quality{};
+};
+
+struct vertex_t {
+	float       m_x{}, m_y{}, m_z{};
+	float       m_rhw{};
+	D3DCOLOR    m_color{};
+	float       m_tu{}, m_tv{};
 };
 
 struct Interface {

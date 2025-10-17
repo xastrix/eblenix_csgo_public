@@ -1,12 +1,10 @@
 #include "interface.h"
 
-#include <vector>
-
 d3d g_d3d;
 
 static std::vector<font_t> font_list = {
-	{ Tahoma12px,           12, "Tahoma",  FW_NORMAL, ANTIALIASED_QUALITY },
-	{ VerdanaExtraBold12px, 12, "Verdana", FW_BOLD, PROOF_QUALITY },
+	{ Tahoma12px,      12, "Tahoma",  FW_NORMAL, ANTIALIASED_QUALITY },
+	{ VerdanaBold12px, 12, "Verdana", FW_BOLD, PROOF_QUALITY },
 };
 
 bool d3d::init(IDirect3DDevice9* device)
@@ -122,16 +120,6 @@ void d3d::draw_rect(int x, int y, int w, int h, D3DCOLOR color)
 
 void d3d::draw_filled_rect(int x, int y, int w, int h, D3DCOLOR color)
 {
-	struct vertex_t {
-		float    m_x{},
-			m_y{},
-			m_z{};
-		float    m_rhw{};
-		D3DCOLOR m_color{};
-		float    m_tu{},
-			m_tv{};
-	};
-
 	vertex_t v[4] = {
 		{ float(x), float(y + h), 0.0f, 1.0f, color },
 		{ float(x), float(y), 0.0f, 1.0f, color },

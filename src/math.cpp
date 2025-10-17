@@ -32,26 +32,6 @@ static bool screen_transform(const vec3& in, vec3& out)
 	return true;
 }
 
-vec3 Math::calculate_angle(const vec3& a, const vec3& b)
-{
-	vec3 angles, delta;
-
-	delta.x = (a.x - b.x);
-	delta.y = (a.y - b.y);
-	delta.z = (a.z - b.z);
-
-	double hyp = std::sqrt(delta.x * delta.x + delta.y * delta.y);
-
-	angles.x = (float)(std::atanf(delta.z / hyp) * M_RADPI);
-	angles.y = (float)(std::atanf(delta.y / delta.x) * M_RADPI);
-	angles.z = 0.0f;
-
-	if (delta.x >= 0.0)
-		angles.y += 180.0f;
-
-	return angles;
-}
-
 vec3 Math::calculate_angle(const vec3& source, const vec3& destination, const vec3& view_angles)
 {
 	vec3 delta = source - destination;
@@ -233,7 +213,7 @@ float Math::get_damage_armor(float damage, const int armor_value)
 	return damage;
 }
 
-void Math::find_position_rotation(float& x, float& y, const float& screen_width, const float& screen_height)
+void Math::find_position_rotation(float& x, float& y, const float screen_width, const float screen_height)
 {
 	const vec2  delta = vec2{ screen_width / 2 - x, screen_height / 2 - y };
 	const float hypot = std::hypot(delta.x, delta.y);
@@ -241,4 +221,23 @@ void Math::find_position_rotation(float& x, float& y, const float& screen_width,
 
 	x += std::sin(rotation);
 	y += std::cos(rotation);
+}
+
+void Math::adjust_sidemove_for_yaw(const vec3& forward, const vec3& local_angle, const float best_speed, i_user_cmd* cmd)
+{
+	auto delta = (std::atan2(forward.y, forward.x) * 180.0f / M_PI) - local_angle.y;
+
+	if (delta > 180) {
+		delta -= 360;
+	}
+	else if (delta < -180) {
+		delta += 360;
+	}
+
+	if (delta > 0.25) {
+		cmd->sidemove = -best_speed;
+	}
+	else if (delta < -0.25) {
+		cmd->sidemove = best_speed;
+	}
 }

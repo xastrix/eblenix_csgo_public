@@ -1,7 +1,6 @@
 #include "movement.h"
 
 #include "var_manager.h"
-#include "input_manager.h"
 #include "interfaces.h"
 #include "math.h"
 
@@ -24,7 +23,7 @@ void movement::instance(i_user_cmd* cmd)
 	if (g_vars.get_as<bool>("misc->movement->auto_strafe").value())
 		auto_strafe(cmd);
 
-	if (g_vars.get_as<bool>("misc->movement->blockbot").value())
+	if (g_vars.get_as<int>("keys->on_hold->blockbot").value())
 		block_players(cmd);
 }
 
@@ -85,6 +84,13 @@ void movement::block_players(i_user_cmd* cmd)
 		if (!entity || entity->get_dormant() || !entity->is_life_state() || entity == g_csgo.m_local)
 			continue;
 
+		/* 
+		   I decided that this would be better since we can use blockbot even when the chat and console are open;
+		   the only downside is that the key will work outside the game
+		*/
+		if (!(GetAsyncKeyState(g_vars.get_as<int>("keys->on_hold->blockbot").value()) & 0x8000))
+			continue;
+
 		const auto dist = g_csgo.m_local->get_vec_origin().distance_to(entity->get_vec_origin());
 		if (dist < best_dist) {
 			best_dist = dist;
@@ -102,9 +108,6 @@ void movement::block_players(i_user_cmd* cmd)
 	auto hitbox_pos  = entity->get_hitbox_position(hitbox_upper_chest);
 	auto best_speed  = entity->get_velocity().length();
 
-	if (g_csgo.m_local->is_in_air())
-		return;
-
 	if (hitbox_pos.z < g_csgo.m_local->get_vec_origin().z)
 	{
 		cmd->forwardmove = ((std::sin(DEG2RAD(local_angle.y)) * vec_forward.y) + (std::cos(DEG2RAD(local_angle.y)) * vec_forward.x)) * best_speed;
@@ -112,20 +115,6 @@ void movement::block_players(i_user_cmd* cmd)
 	}
 	else
 	{
-		auto yaw_delta = (std::atan2(vec_forward.y, vec_forward.x) * 180.0f / M_PI) - local_angle.y;
-
-		if (yaw_delta > 180) {
-			yaw_delta -= 360;
-		}
-		else if (yaw_delta < -180) {
-			yaw_delta += 360;
-		}
-
-		if (yaw_delta > 0.25) {
-			cmd->sidemove = -best_speed;
-		}
-		else if (yaw_delta < -0.25) {
-			cmd->sidemove = best_speed;
-		}
+		Math::adjust_sidemove_for_yaw(vec_forward, local_angle, best_speed, cmd);
 	}
 }

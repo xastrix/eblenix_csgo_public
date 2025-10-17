@@ -31,7 +31,7 @@ struct i_group_box : public i_base_item {
 
 	std::string               m_name{};
 	int                       m_ho{ 10 },
-		                      m_element_count{};
+		                      m_el_pos{};
 private:
 	void draw() override {
 		g_d3d.draw_filled_rect(m_x + 1, m_y + 1, m_w - 1, m_h - 1, D3DCOLOR_RGBA(54, 72, 102, 255));
@@ -59,7 +59,7 @@ struct i_game_selector : private i_group_box {
 			m_h = 30;
 
 			m_parent->m_ho += (m_h + 1);
-			m_parent->m_element_count++;
+			m_parent->m_el_pos++;
 		}
 
 		draw();
@@ -73,19 +73,19 @@ protected:
 			g_d3d.draw_filled_rect(m_x, m_y, m_w, m_h, D3DCOLOR_RGBA(68, 99, 153, 255));
 
 			if (GetAsyncKeyState(VK_LBUTTON) & 0x8000) {
-				m_held[m_parent->m_element_count] = true;
+				m_held[m_parent->m_el_pos] = true;
 				g_d3d.draw_filled_rect(m_x, m_y, m_w, m_h, D3DCOLOR_RGBA(69, 107, 173, 255));
 			}
 			else {
-				if (m_held[m_parent->m_element_count]) {
+				if (m_held[m_parent->m_el_pos]) {
 					*m_selected = !(*m_selected == m_game_id) ? m_game_id : -1;
-					m_held[m_parent->m_element_count] = false;
+					m_held[m_parent->m_el_pos] = false;
 				}
 			}
 		}
 		else {
-			if (m_held[m_parent->m_element_count])
-				m_held[m_parent->m_element_count] = false;
+			if (m_held[m_parent->m_el_pos])
+				m_held[m_parent->m_el_pos] = false;
 
 			if (*m_selected == m_game_id)
 				g_d3d.draw_filled_rect(m_x, m_y, m_w, m_h, D3DCOLOR_RGBA(68, 90, 129, 255));
@@ -104,10 +104,10 @@ protected:
 
 	sprite_t                  m_game_icon{};
 	std::string               m_game_name{};
-	int*                      m_selected{};
-	i_group_box*              m_parent{};
-	int                       m_game_id{};
 	bool                      m_game_process_active{};
+	int*                      m_selected{};
+	int                       m_game_id{};
+	i_group_box*              m_parent{};
 };
 
 struct i_button : private i_group_box {
@@ -118,7 +118,7 @@ struct i_button : private i_group_box {
 			m_y = m_parent->m_y + m_parent->m_ho;
 
 			m_parent->m_ho += (h + 12);
-			m_parent->m_element_count++;
+			m_parent->m_el_pos++;
 		}
 
 		m_w = w;
@@ -136,24 +136,24 @@ protected:
 			g_d3d.draw_rect(m_x, m_y, m_w, m_h, D3DCOLOR_RGBA(58, 87, 137, 255));
 
 			if (GetAsyncKeyState(VK_LBUTTON) & 0x8000) {
-				m_held[m_parent->m_element_count] = true;
+				m_held[m_parent->m_el_pos] = true;
 				g_d3d.draw_filled_rect(m_x + 1, m_y + 1, m_w - 1, m_h - 1, D3DCOLOR_RGBA(69, 107, 173, 255));
 			}
 			else {
-				if (m_held[m_parent->m_element_count]) {
+				if (m_held[m_parent->m_el_pos]) {
 					m_fn();
-					m_held[m_parent->m_element_count] = false;
+					m_held[m_parent->m_el_pos] = false;
 				}
 			}
 		}
 		else {
-			if (m_held[m_parent->m_element_count])
-				m_held[m_parent->m_element_count] = false;
+			if (m_held[m_parent->m_el_pos])
+				m_held[m_parent->m_el_pos] = false;
 
 			g_d3d.draw_filled_rect(m_x, m_y, m_w, m_h, D3DCOLOR_RGBA(68, 90, 129, 255));
 		}
 
-		const auto font = g_d3d.get_font(VerdanaExtraBold12px);
+		const auto font = g_d3d.get_font(VerdanaBold12px);
 		const auto text_width = g_d3d.get_text_width(m_name, font);
 		const auto text_height = g_d3d.get_text_height(m_name, font);
 

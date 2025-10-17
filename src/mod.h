@@ -28,7 +28,7 @@ namespace mod
 	{
 		_wfm_stat wait_for_module(const _module_list module_index, std::function<void(void)> fn = []() {}, int ms = 600)
 		{
-			const auto timeout_ms{ 40000 };
+			const auto timeout_ms{ 50000 };
 			auto waited_ms{ 0 };
 
 			while (!GetModuleHandleA(g::module_list[module_index].c_str()))

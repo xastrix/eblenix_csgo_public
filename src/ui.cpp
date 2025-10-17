@@ -46,6 +46,7 @@ enum _ui_tabs {
 	GLOW_COLOR_TAB = 5,
 
 	KEYS_ON_TOGGLE_TAB = 0,
+	KEYS_ON_HOLD_TAB = 1,
 
 	/* Sub Sub Tabs */
 	AIMBOT_WEAPONS_PISTOL_TAB = 1,
@@ -68,6 +69,7 @@ enum _ui_tabs {
 	KEYS_ON_TOGGLE_AIM_TAB = 0,
 	KEYS_ON_TOGGLE_MISC_TAB = 1,
 	KEYS_ON_TOGGLE_OTHER_TAB = 2,
+	KEYS_ON_HOLD_MISC_TAB = 0,
 };
 
 void ui::instance()
@@ -508,9 +510,7 @@ void ui::setup()
 		case ESSENTIALS_MOVEMENT_TAB: {
 			add_sub_bool(L"Bunnyhop", "misc->movement->bunnyhop");
 			add_sub_bool(L"Infinite Duck", "misc->movement->infinite_duck");
-			add_sub_bool(L"Autostrafe", "misc->movement->auto_strafe", true);
-
-			add_sub_bool(L"Blockbot", "misc->movement->blockbot");
+			add_sub_bool(L"Autostrafe", "misc->movement->auto_strafe");
 			break;
 		}
 		case ESSENTIALS_EVENT_LOGS_TAB: {
@@ -605,6 +605,7 @@ void ui::setup()
 	}
 	case KEYS_TAB: {
 		add_tab(L"On Toggle");
+		add_tab(L"On Hold");
 
 		switch (s_entry_position) {
 		case KEYS_ON_TOGGLE_TAB: {
@@ -620,12 +621,22 @@ void ui::setup()
 			}
 			case KEYS_ON_TOGGLE_MISC_TAB: {
 				add_sub_sub_key(L"Thirdperson", "keys->on_toggle->thirdperson");
-				add_sub_sub_key(L"Blockbot", "keys->on_toggle->blockbot");
 				break;
 			}
 			case KEYS_ON_TOGGLE_OTHER_TAB: {
 				add_sub_sub_key(L"Menu", "keys->on_toggle->ui");
 				add_sub_sub_key(L"Panic", "keys->on_toggle->panic");
+				break;
+			}
+			}
+			break;
+		}
+		case KEYS_ON_HOLD_TAB: {
+			add_sub_tab(L"Misc");
+
+			switch (ss_entry_position) {
+			case KEYS_ON_HOLD_MISC_TAB: {
+				add_sub_sub_key(L"Blockbot", "keys->on_hold->blockbot");
 				break;
 			}
 			}
@@ -666,9 +677,6 @@ void ui::handle_toggle_keys(unsigned int k)
 
 	if (k == g_vars.get_as<int>("keys->on_toggle->thirdperson").value())
 		g_vars.set("misc->visual->thirdperson", !g_vars.get_as<bool>("misc->visual->thirdperson").value());
-
-	if (k == g_vars.get_as<int>("keys->on_toggle->blockbot").value())
-		g_vars.set("misc->movement->blockbot", !g_vars.get_as<bool>("misc->movement->blockbot").value());
 
 	if (k == g_vars.get_as<int>("keys->on_toggle->panic").value())
 		g::panic_mode = !g::panic_mode;

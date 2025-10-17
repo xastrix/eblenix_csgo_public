@@ -13,10 +13,6 @@ enum m_state {
 
 struct input_manager {
 	void init(const std::pair<LPCSTR, LPCSTR>& wnd);
-
-	bool is_key_down(unsigned int vk);
-	bool is_key_pressed(unsigned int vk);
-
 	void add_hk(unsigned int vk, std::function<void(void)> fn);
 
 	WNDPROC get_wnd_proc();
@@ -25,6 +21,7 @@ struct input_manager {
 	bool process_keybd_message(UINT m, WPARAM w, LPARAM l);
 
 	std::wstring virtual_key_to_wstring(unsigned int vk);
+	m_state get_key_state(unsigned int vk);
 
 	void undo();
 private:

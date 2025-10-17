@@ -12,7 +12,6 @@
 
 namespace Math
 {
-	vec3 calculate_angle(const vec3& a, const vec3& b);
 	vec3 calculate_angle(const vec3& source, const vec3& destination, const vec3& view_angles);
 	vec3 calculate_angle_alternative(const vec3& a, const vec3& b);
 	void sin_cos(float r, float* s, float* c);
@@ -26,5 +25,6 @@ namespace Math
 	float get_fov(const vec3 vangle, const vec3 angle);
 	bool w2s(const vec3& origin, vec3& screen);
 	float get_damage_armor(float damage, const int armor_value);
-	void find_position_rotation(float& x, float& y, const float& screen_width, const float& screen_height);
+	void find_position_rotation(float& x, float& y, const float screen_width, const float screen_height);
+	void adjust_sidemove_for_yaw(const vec3& forward, const vec3& local_angle, const float best_speed, i_user_cmd* cmd);
 }
