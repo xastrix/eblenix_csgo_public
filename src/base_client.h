@@ -1,6 +1,6 @@
 #pragma once
 
-#include "c_client_class.h"
+#include "client_class.h"
 
 #define CLIENT_INTERFACE_VERSION "VClient018"
 

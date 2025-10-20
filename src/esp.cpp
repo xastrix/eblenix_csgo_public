@@ -93,9 +93,7 @@ void esp::on_create_move(i_user_cmd* cmd)
 			cl_crosshaircolor_b->set_value(color[2]);
 		};
 
-		auto crosshair_fov = g_vars.get_as<float>("esp->crosshair->fov").value();
-
-		if (vec3 angle; const auto target = Helpers::find_target_entity(cmd, crosshair_fov, angle))
+		if (vec3 angle; const auto target = Helpers::find_target_entity(cmd, g_vars.get_as<float>("esp->crosshair->fov").value(), angle))
 		{
 			auto entity = reinterpret_cast<c_base_player*>(g_csgo.m_entity_list->get_client_entity(target));
 

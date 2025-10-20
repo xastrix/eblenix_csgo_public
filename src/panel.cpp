@@ -1,4 +1,4 @@
-#include "c_panel.h"
+#include "panel.h"
 
 const char* c_panel::get_panel_name(unsigned int panel_id)
 {

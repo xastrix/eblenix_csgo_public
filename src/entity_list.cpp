@@ -1,4 +1,4 @@
-#include "c_entity_list.h"
+#include "entity_list.h"
 
 void* c_entity_list::get_client_entity(int index)
 {

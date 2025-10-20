@@ -1,4 +1,4 @@
-#include "c_weapon_system.h"
+#include "weapon_system.h"
 
 weapon_info_t* c_weapon_system::get_weapon_data(unsigned int i)
 {

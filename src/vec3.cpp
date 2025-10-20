@@ -1,6 +1,6 @@
 #include "vec3.h"
 
-vec3::vec3(void)
+vec3::vec3()
 {
 	x = y = z = 0.0f;
 }
@@ -17,19 +17,11 @@ void vec3::init(float _x, float _y, float _z)
 	x = _x; y = _y; z = _z;
 }
 
-void vec3::clamp(void)
+void vec3::clamp()
 {
 	x = std::clamp(x, -89.0f, 89.0f);
 	y = std::clamp(std::remainder(y, 360.0f), -180.0f, 180.0f);
 	z = std::clamp(z, -50.0f, 50.0f);
-}
-
-vec3 vec3::clamped()
-{
-	vec3 clamped = *this;
-	clamped.clamp();
-
-	return clamped;
 }
 
 float vec3::distance_to(const vec3& other)
@@ -43,11 +35,6 @@ float vec3::distance_to(const vec3& other)
 	return delta.length();
 }
 
-bool vec3::is_zero(void)
-{
-	return (x == 0 && y == 0 && z == 0);
-}
-
 void vec3::normalize()
 {
 	x = std::isfinite(x) ? std::remainderf(x, 360.0f) : 0.0f;
@@ -55,7 +42,7 @@ void vec3::normalize()
 	z = 0.0f;
 }
 
-vec3 vec3::normalized(void)
+vec3 vec3::normalized()
 {
 	vec3 vec(*this);
 	vec.normalize();
@@ -63,7 +50,7 @@ vec3 vec3::normalized(void)
 	return vec;
 }
 
-float vec3::length(void)
+float vec3::length()
 {
 	float root = 0.0f, sqsr = this->length_sqr();
 	root = std::sqrt(sqsr);
@@ -71,7 +58,7 @@ float vec3::length(void)
 	return root;
 }
 
-float vec3::length_sqr(void)
+float vec3::length_sqr()
 {
 	auto sqr = [](float n) {
 		return static_cast<float>(n * n);
@@ -80,7 +67,7 @@ float vec3::length_sqr(void)
 	return { sqr(x) + sqr(y) + sqr(z) };
 }
 
-float vec3::length_2d_sqr(void) const
+float vec3::length_2d_sqr() const
 {
 	return { x * x + y * y };
 }

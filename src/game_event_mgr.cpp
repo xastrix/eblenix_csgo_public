@@ -1,4 +1,4 @@
-#include "c_game_event_mgr.h"
+#include "game_event_mgr.h"
 
 bool c_game_event_manager2::add_listener(c_game_event_listener2* listener, const char* name, bool server_side)
 {

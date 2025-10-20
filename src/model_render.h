@@ -1,7 +1,7 @@
 #pragma once
 
-#include "c_studio.h"
-#include "c_material.h"
+#include "studio.h"
+#include "material.h"
 
 #define ENGINE_MODEL_INTERFACE_VERSION "VEngineModel016"
 

@@ -2,10 +2,10 @@
 
 #include <cstdint>
 
-#include "c_client_class.h"
-#include "i_weapon_info.h"
-#include "i_model.h"
-#include "i_user_cmd.h"
+#include "client_class.h"
+#include "weapon_info.h"
+#include "model.h"
+#include "user_cmd.h"
 #include "matrix.h"
 #include "vec2.h"
 #include "vec3.h"

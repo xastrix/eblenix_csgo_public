@@ -1,4 +1,4 @@
-#include "c_base_entity.h"
+#include "base_entity.h"
 
 #include "signatures.h"
 #include "netvar_manager.h"

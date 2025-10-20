@@ -1,4 +1,4 @@
-#include "c_trace_ray.h"
+#include "trace_ray.h"
 
 void c_trace_ray::trace_ray(const ray_t& ray, unsigned int mask, i_trace_filter* filter, trace_t* trace)
 {

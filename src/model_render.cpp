@@ -1,4 +1,4 @@
-#include "c_model_render.h"
+#include "model_render.h"
 
 void c_model_render::override_material(c_material* material)
 {

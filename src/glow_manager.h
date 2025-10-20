@@ -1,7 +1,7 @@
 #pragma once
 
 #include "vec3.h"
-#include "c_base_entity.h"
+#include "base_entity.h"
 
 struct glow_object_definition_t {
 	c_base_entity* entity;

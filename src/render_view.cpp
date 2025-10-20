@@ -1,4 +1,4 @@
-#include "c_render_view.h"
+#include "render_view.h"
 
 void c_render_view::set_blend(float blend)
 {

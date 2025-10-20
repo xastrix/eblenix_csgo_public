@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-typedef struct player_info_s {
+struct player_info_t {
 	int64_t       u0;
 	int           xuid_low;
 	int           xuid_high;
@@ -15,4 +15,4 @@ typedef struct player_info_s {
 	bool          m_is_hltv;
 	unsigned int  m_custom_files[4];
 	unsigned char m_files_downloaded;
-} player_info_t;
+};

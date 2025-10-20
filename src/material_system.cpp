@@ -1,4 +1,4 @@
-#include "c_material_system.h"
+#include "material_system.h"
 
 c_material* c_material_system::find_material(char const* material_name, const char* group_name, bool complain, const char* complain_prefix)
 {

@@ -1,4 +1,4 @@
-#include "c_base_convars.h"
+#include "base_convars.h"
 
 convar* c_base_convars::get_convar(const char* var_name)
 {

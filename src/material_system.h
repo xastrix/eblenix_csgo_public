@@ -1,6 +1,6 @@
 #pragma once
 
-#include "c_material.h"
+#include "material.h"
 
 #define MATERIAL_SYSTEM_INTERFACE_VERSION "VMaterialSystem080"
 

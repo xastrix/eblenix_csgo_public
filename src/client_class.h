@@ -1,6 +1,6 @@
 #pragma once
 
-#include "c_recv_prop.h"
+#include "recv_prop.h"
 
 class c_client_networkable;
 

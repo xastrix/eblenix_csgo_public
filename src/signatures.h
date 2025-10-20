@@ -3,7 +3,7 @@
 #include <stdint.h>
 #include <string>
 
-typedef uint8_t* sig_t;
+using sig_t = uint8_t*;
 
 struct sig {
 	void init();

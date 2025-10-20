@@ -1,4 +1,4 @@
-#include "c_material.h"
+#include "material.h"
 
 void c_material::increment_reference_count()
 {

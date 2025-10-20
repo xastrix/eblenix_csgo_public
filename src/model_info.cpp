@@ -1,4 +1,4 @@
-#include "c_model_info.h"
+#include "model_info.h"
 
 model_t* c_model_info::get_model(int index)
 {

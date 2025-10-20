@@ -27,7 +27,7 @@ struct box {
 namespace Helpers
 {
 	int get_nearest_bone(c_base_player* entity, i_user_cmd* cmd);
-	int find_target_entity(i_user_cmd* cmd, float& fov, vec3& angle);
+	int find_target_entity(i_user_cmd* cmd, const float fov, vec3& angle);
 
 	bool is_weapon_switching(c_base_weapon* weapon);
 	bool is_pistol(c_base_weapon* weapon);

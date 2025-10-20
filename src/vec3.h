@@ -12,14 +12,12 @@ public:
 
 	void init(float ix, float iy, float iz);
 	void clamp();
-	vec3 clamped();
 	vec3 normalized();
 	float distance_to(const vec3& other);
-	bool is_zero(void);
 	void normalize();
 	float length();
 	float length_sqr();
-	float length_2d_sqr(void) const;
+	float length_2d_sqr() const;
 	float dot(const vec3 other);
 	float dot(const float* other);
 	vec3& operator+=(const vec3& v);

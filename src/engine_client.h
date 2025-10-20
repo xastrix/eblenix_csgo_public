@@ -1,6 +1,6 @@
 #pragma once
 
-#include "i_player_info.h"
+#include "player_info.h"
 #include "vec3.h"
 
 #define ENGINE_INTERFACE_VERSION "VEngineClient014"
