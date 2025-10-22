@@ -3,7 +3,7 @@
 #include "sdk.h"
 
 struct movement {
-	void instance(i_user_cmd* cmd);
+	void run(i_user_cmd* cmd);
 private:
 	void bunny_hop(i_user_cmd* cmd);
 	void infinite_duck(i_user_cmd* cmd);
@@ -11,4 +11,4 @@ private:
 	void block_players(i_user_cmd* cmd);
 };
 
-extern movement g_movement;
+inline movement g_movement;

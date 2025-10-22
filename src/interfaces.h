@@ -33,4 +33,4 @@ private:
 	bool make_pointers();
 };
 
-extern interfaces g_csgo;
+inline interfaces g_csgo;

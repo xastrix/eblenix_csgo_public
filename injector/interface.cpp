@@ -3,11 +3,11 @@
 
 #include "csgo_icon.hpp"
 
-Interface g_interface;
-
 bool           loop{ true };
 std::once_flag init_d3d{};
+
 std::string    dlls[]{ "eblenix_csgo.dll" };
+
 std::string    game_processes[]{ "csgo.exe" };
 HWND           game_windows[]{ FindWindowA(CSGO_CLASS_NAME, 0) };
 

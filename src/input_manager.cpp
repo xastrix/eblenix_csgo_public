@@ -7,8 +7,6 @@
 #include <common.h>
 #include <algorithm>
 
-input_manager g_input;
-
 static unsigned long WINAPI wnd_proc(HWND h, UINT m, WPARAM w, LPARAM l)
 {
 	if (g::initialized)

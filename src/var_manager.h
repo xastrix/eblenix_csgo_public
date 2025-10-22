@@ -11,9 +11,25 @@ using vars_t = std::vector<std::pair<std::string, var_type>>;
 
 struct var_manager {
 	void init();
-	void reset();
+	
+	void reset() {
+		init();
+	}
 
-	void set(const std::string& key, const var_type& value);
+	void set(const std::string& key, const var_type& value) {
+		for (auto& var : vars)
+		{
+			if (var.first == key)
+			{
+				if (var.second != value)
+					var.second = std::move(value);
+
+				return;
+			}
+		}
+
+		vars.emplace_back(std::move(key), std::move(value));
+	}
 
 	template <typename T>
 	std::optional<T> get_as(const std::string& key)
@@ -35,11 +51,13 @@ struct var_manager {
 		return std::nullopt;
 	}
 
-	vars_t get_vars();
+	vars_t get_vars() {
+		return vars;
+	}
 
 	void undo();
 private:
 	vars_t vars{};
 };
 
-extern var_manager g_vars;
+inline var_manager g_vars;

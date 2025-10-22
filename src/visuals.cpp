@@ -7,8 +7,6 @@
 #include "interfaces.h"
 #include "math.h"
 
-visuals g_visuals;
-
 struct entity_object {
 	entity_object(c_base_entity* entity) : _entity(entity) {}
 	entity_object(c_base_plantedc4* entity) : _entity(entity) {}
@@ -39,7 +37,7 @@ private:
 	c_base_entity* _entity{};
 };
 
-void visuals::instance()
+void visuals::run()
 {
 	if (!g_vars.get_as<bool>("visuals->enabled").value())
 		return;

@@ -70,7 +70,7 @@ struct s_entry
 };
 
 struct ui {
-	void instance();
+	void run();
 
 	void init_sprites(IDirect3DDevice9* device) {
 		m_sprites[UI_SPRITE_LOGO].init(device, m_ui_logotype, sizeof(m_ui_logotype), 178, 33);
@@ -379,14 +379,12 @@ private:
 	void setup();
 
 	void clear() {
-		for (int i = 0; i < m_entry_size; i++)
-		{
+		for (int i = 0; i < m_entry_size; i++) {
 			menu_entry[i].m_name.clear();
 			menu_entry[i].m_space = false;
 		}
 
-		for (int i = 0; i < s_entry_size; i++)
-		{
+		for (int i = 0; i < s_entry_size; i++) {
 			subm_entry[i].m_name.clear();
 			subm_entry[i].m_var.clear();
 
@@ -404,8 +402,7 @@ private:
 			subm_entry[i].m_fn = []() {};
 		}
 
-		for (int i = 0; i < ss_entry_size; i++)
-		{
+		for (int i = 0; i < ss_entry_size; i++) {
 			ssubm_entry[i].m_name.clear();
 			ssubm_entry[i].m_var.clear();
 
@@ -423,8 +420,7 @@ private:
 			ssubm_entry[i].m_fn = []() {};
 		}
 
-		for (int i = 0; i < sss_entry_size; i++)
-		{
+		for (int i = 0; i < sss_entry_size; i++) {
 			sssubm_entry[i].m_name.clear();
 			sssubm_entry[i].m_var.clear();
 
@@ -471,4 +467,4 @@ private:
 	std::vector<std::wstring> cfg_list{ L"1", L"2", L"3", L"4", L"5" };
 };
 
-extern ui g_ui;
+inline ui g_ui;

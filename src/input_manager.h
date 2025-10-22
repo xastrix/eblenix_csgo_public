@@ -31,4 +31,4 @@ private:
 	std::function<void(void)> m_hotkeys[256]{};
 };
 
-extern input_manager g_input;
+inline input_manager g_input;

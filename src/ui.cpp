@@ -4,8 +4,6 @@
 #include "config_manager.h"
 #include "input_manager.h"
 
-ui g_ui;
-
 enum _ui_tabs {
 	/* Tabs */
 	AIMBOT_TAB,
@@ -72,7 +70,7 @@ enum _ui_tabs {
 	KEYS_ON_HOLD_MISC_TAB = 0,
 };
 
-void ui::instance()
+void ui::run()
 {
 	m_colors[ UI_MAIN_COL    ] = color_t("ui->col");
 	m_colors[ UI_PRIMARY_COL ] = color_t("ui->col", 130);

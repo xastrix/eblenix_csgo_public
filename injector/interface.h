@@ -120,5 +120,5 @@ private:
 
 using sprite_t = sprite_manager;
 
-extern Interface g_interface;
-extern d3d g_d3d;
+inline Interface g_interface;
+inline d3d g_d3d;

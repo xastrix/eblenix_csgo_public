@@ -4,9 +4,7 @@
 #include "interfaces.h"
 #include "math.h"
 
-movement g_movement;
-
-void movement::instance(i_user_cmd* cmd)
+void movement::run(i_user_cmd* cmd)
 {
 	if (!g_csgo.m_engine->is_playing())
 		return;

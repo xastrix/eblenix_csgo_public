@@ -7,8 +7,6 @@
 #endif
 #include "globals.h"
 
-sig g_sig;
-
 void sig::init()
 {
 	s_device                  = scan_sig(g::module_list[shaderapidx9DLL], "A1 ? ? ? ? 50 8B 08 FF 51 0C") + 1;

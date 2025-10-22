@@ -1,17 +1,10 @@
 #pragma once
 
-#include "globals.h"
 #include "font_manager.h"
-#include "var_manager.h"
-#include "input_manager.h"
-#include "helpers.h"
 #include "hooks.h"
-#include "fnv.h"
-#include "interfaces.h"
-#include "signatures.h"
+#include "input_manager.h"
 #include "event_manager.h"
 
-#include <common.h>
 #include <chrono>
 #include <thread>
 
@@ -26,7 +19,7 @@ namespace mod
 
 	namespace util
 	{
-		_wfm_stat wait_for_module(const _module_list module_index, std::function<void(void)> fn = []() {}, int ms = 600)
+		_wfm_stat wait_for_module(const _module_list module_index, const _module_list fallback_module_index = maxModules, int ms = 600)
 		{
 			const auto timeout_ms{ 50000 };
 			auto waited_ms{ 0 };
@@ -36,7 +29,8 @@ namespace mod
 				if (waited_ms >= timeout_ms)
 					return WM_TIMEOUT;
 
-				fn();
+				if (fallback_module_index != maxModules)
+					g::module_list[module_index] = g::module_list[fallback_module_index];
 
 				std::this_thread::sleep_for(std::chrono::milliseconds(ms));
 				waited_ms += ms;

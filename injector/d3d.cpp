@@ -1,7 +1,5 @@
 #include "interface.h"
 
-d3d g_d3d;
-
 static std::vector<font_t> font_list = {
 	{ Tahoma12px,      12, "Tahoma",  FW_NORMAL, ANTIALIASED_QUALITY },
 	{ VerdanaBold12px, 12, "Verdana", FW_BOLD, PROOF_QUALITY },

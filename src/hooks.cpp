@@ -1,42 +1,5 @@
 #include "hooks.h"
 
-#include "globals.h"
-#include "ui.h"
-#include "var_manager.h"
-#include "helpers.h"
-#include "aimbot.h"
-#include "triggerbot.h"
-#include "knifebot.h"
-#include "esp.h"
-#include "visuals.h"
-#include "movement.h"
-#include "interfaces.h"
-#include "signatures.h"
-#include "math.h"
-#include "fnv.h"
-
-#include <common.h>
-#include <MinHook.h>
-#include <intrin.h>
-#include <sstream>
-
-hooks g_hooks;
-
-using create_move_fn = bool(__stdcall*)(float, i_user_cmd*);
-using paint_traverse_fn = void(__thiscall*)(c_panel*, unsigned int, bool, bool);
-using present_fn = long(D3DAPI*)(IDirect3DDevice9*, RECT*, RECT*, HWND, RGNDATA*);
-using reset_fn = long(D3DAPI*)(IDirect3DDevice9*, D3DPRESENT_PARAMETERS*);
-using do_post_screen_effects_fn = int(__thiscall*)(void*, int);
-using scene_end_fn = void(__thiscall*)(void*);
-using screen_viewmodel_fov_change_fn = float(__thiscall*)(uintptr_t*);
-using get_screen_aspect_ratio_fn = float(__thiscall*)(void*, int, int);
-using draw_model_execute_fn = void(__thiscall*)(c_model_render*, i_mat_render_ctx*, const draw_model_state_t&, const model_render_info_t&, matrix3x4_t*);
-using override_view_fn = void(__fastcall*)(uintptr_t*, void*, c_view_setup*);
-using is_connected_fn = bool(__fastcall*)(void*);
-using list_in_leaves_box_fn = int(__thiscall*)(void*, const vec3&, const vec3&, unsigned short*, int);
-using sv_cheats_boolean_fn = bool(__thiscall*)(convar*);
-using shutdown_fn = void(__fastcall*)(void*, void*);
-
 create_move_fn o_create_move{};
 paint_traverse_fn o_paint_traverse{};
 present_fn o_present{};
@@ -52,8 +15,6 @@ list_in_leaves_box_fn o_list_in_leaves_box{};
 sv_cheats_boolean_fn o_sv_cheats_boolean{};
 shutdown_fn o_shutdown{};
 
-MH_STATUS m_stat{ MH_UNKNOWN };
-
 static bool __stdcall create_move_h(float input_sample_frametime, i_user_cmd* cmd)
 {
 	auto ret = o_create_move(input_sample_frametime, cmd);
@@ -67,10 +28,11 @@ static bool __stdcall create_move_h(float input_sample_frametime, i_user_cmd* cm
 	{
 		if (!g::panic_mode)
 		{
-			g_movement.instance(cmd);
-			g_aimbot.instance(cmd);
-			g_triggerbot.instance(cmd);
-			g_knifebot.instance(cmd);
+			g_movement.run(cmd);
+			g_aimbot.run(cmd);
+			g_triggerbot.run(cmd);
+			g_knifebot.run(cmd);
+
 			g_esp.on_create_move(cmd);
 
 			if (g_csgo.m_engine->is_connected())
@@ -129,9 +91,9 @@ static long D3DAPI present_h(IDirect3DDevice9* device, RECT* source_rect, RECT* 
 	switch (g::status) {
 	case gameVersionOK: {
 		if (!g::panic_mode) {
-			g_esp.instance();
-			g_visuals.instance();
-			g_ui.instance();
+			g_esp.run();
+			g_visuals.run();
+			g_ui.run();
 		}
 		break;
 	}
@@ -348,7 +310,7 @@ static void __fastcall on_shutdown_h(void* _ecx, void* _edx)
 
 void hooks::init()
 {
-	m_stat = MH_Initialize();
+	m_status = MH_Initialize();
 
 	if (!(MH_CreateHook(Helpers::get_virtual_fn<IDirect3DDevice9*>(g_csgo.m_device, present_fn_index),
 		present_h, reinterpret_cast<void**>(&o_present)) == MH_OK)) {
@@ -456,7 +418,7 @@ void hooks::init()
 
 void hooks::undo()
 {
-	if (!(m_stat == MH_OK)) {
+	if (!(m_status == MH_OK)) {
 #ifdef _DEBUG
 		_DBG_NOTIFY("Are you sure that you called hooks::init before calling this function?");
 #endif

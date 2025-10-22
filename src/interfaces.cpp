@@ -8,8 +8,6 @@
 #include <common.h>
 #endif
 
-interfaces g_csgo;
-
 void interfaces::init()
 {
 	if (!create_interfaces() || !make_pointers()) {}

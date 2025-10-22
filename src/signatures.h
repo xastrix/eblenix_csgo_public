@@ -22,4 +22,4 @@ private:
 	sig_t scan_sig(const std::string& module_name, const std::string& signature);
 };
 
-extern sig g_sig;
+inline sig g_sig;

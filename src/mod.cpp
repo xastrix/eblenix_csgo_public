@@ -11,9 +11,7 @@ void mod::init(void* I)
 		if (util::wait_for_module(serverBrowserDLL) == WM_TIMEOUT)
 			goto _Ex;
 
-		if (util::wait_for_module(clientDLL, []() {
-			g::module_list[clientDLL] = g::module_list[clientPanoramaDLL];
-		}, 200) == WM_TIMEOUT)
+		if (util::wait_for_module(clientDLL, clientPanoramaDLL, 200) == WM_TIMEOUT)
 			goto _Ex;
 
 		g_vars.init();

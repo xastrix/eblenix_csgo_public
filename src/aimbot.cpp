@@ -5,9 +5,7 @@
 #include "interfaces.h"
 #include "math.h"
 
-aimbot g_aimbot;
-
-void aimbot::instance(i_user_cmd* cmd)
+void aimbot::run(i_user_cmd* cmd)
 {
 	if (!g_vars.get_as<bool>("aimbot->enabled").value())
 		return;

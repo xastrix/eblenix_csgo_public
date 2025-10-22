@@ -39,7 +39,7 @@ struct ray_t {
 		m_start = start;
 	}
 
-	void initialize(vec3 & vecStart, vec3 & vecEnd, vec3 min, vec3 max) {
+	void initialize(vec3& vecStart, vec3& vecEnd, vec3 min, vec3 max) {
 		m_delta = vecEnd - vecStart;
 
 		m_is_swept = (m_delta.length_sqr() != 0);

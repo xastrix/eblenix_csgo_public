@@ -4,9 +4,7 @@
 #include "helpers.h"
 #include "interfaces.h"
 
-knifebot g_knifebot;
-
-void knifebot::instance(i_user_cmd* cmd)
+void knifebot::run(i_user_cmd* cmd)
 {
 	if (!g_vars.get_as<bool>("knifebot->enabled").value())
 		return;

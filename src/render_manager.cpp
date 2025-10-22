@@ -3,8 +3,6 @@
 #include "globals.h"
 #include "interfaces.h"
 
-render_manager g_render;
-
 static std::vector<font_t> font_list = {
 	{ Tahoma12px,     12, "Tahoma",     FW_MEDIUM, ANTIALIASED_QUALITY },
     { Verdana12px,    12, "Verdana",    FW_SEMIBOLD, ANTIALIASED_QUALITY },

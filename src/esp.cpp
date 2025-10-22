@@ -9,9 +9,7 @@
 
 #include <array>
 
-esp g_esp;
-
-void esp::instance()
+void esp::run()
 {
 	if (!g_vars.get_as<bool>("esp->enabled").value())
 		return;

@@ -21,4 +21,4 @@ private:
 	DWORD  m_num{};
 };
 
-extern font_manager g_fonts;
+inline font_manager g_fonts;

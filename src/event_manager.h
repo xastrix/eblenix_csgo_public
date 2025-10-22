@@ -9,4 +9,4 @@ private:
 	void fire_game_event(c_game_event* event);
 };
 
-extern event_manager g_events;
+inline event_manager g_events;

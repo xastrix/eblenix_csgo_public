@@ -5,7 +5,7 @@
 #include <vector>
 
 struct visuals {
-	void instance();
+	void run();
 private:
 	void draw_status(const char* title, int x_offset);
 	void draw_spectators();
@@ -16,4 +16,4 @@ private:
 	void draw_planted_bomb(c_base_plantedc4* entity, const float explode_time);
 };
 
-extern visuals g_visuals;
+inline visuals g_visuals;

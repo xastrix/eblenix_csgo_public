@@ -5,9 +5,7 @@
 #include "interfaces.h"
 #include "math.h"
 
-triggerbot g_triggerbot;
-
-void triggerbot::instance(i_user_cmd* cmd)
+void triggerbot::run(i_user_cmd* cmd)
 {
 	if (!g_vars.get_as<bool>("triggerbot->enabled").value())
 		return;

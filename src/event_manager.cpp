@@ -9,8 +9,6 @@
 
 #include <sstream>
 
-event_manager g_events;
-
 void event_manager::init()
 {
 	g_csgo.m_event_manager->add_listener(this, "player_hurt");

@@ -1,7 +1,5 @@
 #include "var_manager.h"
 
-var_manager g_vars;
-
 void var_manager::init()
 {
 	set("aimbot->enabled", false);
@@ -224,32 +222,6 @@ void var_manager::init()
 	set("keys->on_toggle->panic", 0);
 	set("keys->on_toggle->ui", 0);
 	set("keys->on_hold->blockbot", 0);
-}
-
-void var_manager::reset()
-{
-	init();
-}
-
-void var_manager::set(const std::string& key, const var_type& value)
-{
-	for (auto& var : vars)
-	{
-		if (var.first == key)
-		{
-			if (var.second != value)
-				var.second = std::move(value);
-
-			return;
-		}
-	}
-
-	vars.emplace_back(std::move(key), std::move(value));
-}
-
-vars_t var_manager::get_vars()
-{
-	return vars;
 }
 
 void var_manager::undo()

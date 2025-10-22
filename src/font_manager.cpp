@@ -3,8 +3,6 @@
 
 #include <vector>
 
-font_manager g_fonts;
-
 static std::vector<font_res_t> font_res_list = {
 	{ AstriumwepRes, astriumwep_ttf, 47320 },
 };

@@ -111,4 +111,4 @@ private:
 	ID3DXFont*            m_fonts[maxFonts]{};
 };
 
-extern render_manager g_render;
+inline render_manager g_render;

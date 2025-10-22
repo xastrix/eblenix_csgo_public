@@ -8,7 +8,7 @@ enum _aim_state {
 };
 
 struct aimbot {
-	void instance(i_user_cmd* cmd);
+	void run(i_user_cmd* cmd);
 private:
 	void set_weapon_param(c_base_weapon* weapon);
 	bool can_aiming(c_base_player* entity, c_base_weapon* weapon);
@@ -22,4 +22,4 @@ private:
 	_aim_state m_state{};
 };
 
-extern aimbot g_aimbot;
+inline aimbot g_aimbot;

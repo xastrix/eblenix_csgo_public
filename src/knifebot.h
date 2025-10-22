@@ -3,7 +3,7 @@
 #include "sdk.h"
 
 struct knifebot {
-	void instance(i_user_cmd* cmd);
+	void run(i_user_cmd* cmd);
 };
 
-extern knifebot g_knifebot;
+inline knifebot g_knifebot;
