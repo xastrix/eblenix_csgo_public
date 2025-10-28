@@ -4,10 +4,6 @@
 #include "globals.h"
 #include "helpers.h"
 
-#ifdef _DEBUG
-#include <common.h>
-#endif
-
 void interfaces::init()
 {
 	if (!create_interfaces() || !make_pointers()) {}

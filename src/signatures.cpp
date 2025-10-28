@@ -1,10 +1,6 @@
 #include "signatures.h"
 
-#include <windows.h>
-
-#ifdef _DEBUG
-#include <common.h>
-#endif
+#include "helpers.h"
 #include "globals.h"
 
 void sig::init()

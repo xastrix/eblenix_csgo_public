@@ -15,7 +15,7 @@
 #include "math.h"
 #include "fnv.h"
 
-#include <common.h>
+#include <shared_defines.h>
 #include <MinHook.h>
 #include <intrin.h>
 #include <sstream>

@@ -1,13 +1,8 @@
 #pragma once
 
-#define CONFIG_DIRECTORY_NAME          "ebl/cfg/"
+#define CONFIG_DIRECTORY_PATHS         "ebl/cfg/"
 #define CSGO_CLASS_NAME                "Valve001"
 #define LOADER_UNLOAD_HOOK_MESSAGE     "UNLOAD_EBLENIX_MSG"
-
-#ifdef _DEBUG
-#define _DBG_NOTIFY(ss) OutputDebugStringA(ss); \
-                        DebugBreak();
-#endif
 
 enum fn_num {
 	create_move_fn_index                 = 24,

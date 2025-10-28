@@ -1,6 +1,6 @@
 #include "engine_client.h"
 
-#include <common.h>
+#include <shared_defines.h>
 
 int c_engine_client::get_local_player()
 {

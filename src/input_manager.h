@@ -13,7 +13,7 @@ enum m_state {
 
 struct input_manager {
 	void init(const std::pair<LPCSTR, LPCSTR>& wnd);
-	void add_hk(unsigned int vk, std::function<void(void)> fn);
+	void add_hk(unsigned int vk, std::function<void()> fn);
 
 	WNDPROC get_wnd_proc();
 
@@ -28,7 +28,7 @@ private:
 	HWND                      m_hwnd{};
 	WNDPROC                   m_old_wnd_proc{};
 	m_state                   m_key_map[256]{};
-	std::function<void(void)> m_hotkeys[256]{};
+	std::function<void()> m_hotkeys[256]{};
 };
 
 inline input_manager g_input;

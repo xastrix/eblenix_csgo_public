@@ -5,6 +5,11 @@
 
 #include "sdk.h"
 
+#ifdef _DEBUG
+#define _DBG_NOTIFY(ss) OutputDebugStringA(ss); \
+                        DebugBreak();
+#endif
+
 enum bbox_type {
 	bb_static,
 	bb_dynamic,

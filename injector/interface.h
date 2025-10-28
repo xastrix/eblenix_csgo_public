@@ -1,12 +1,11 @@
 #pragma once
 
-#include <common.h>
-#include <string>
 #include <vector>
 #include <mutex>
 #include <d3d9.h>
 #include <d3dx9.h>
 
+#include "globals.h"
 #include "util.h"
 
 enum _interface_status {

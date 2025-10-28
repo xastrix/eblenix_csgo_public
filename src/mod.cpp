@@ -2,10 +2,6 @@
 
 void mod::init(void* I)
 {
-#ifdef _DEBUG
-	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-#endif
-
 	auto h = CreateThread(0, 0, [](void* I) -> unsigned long __stdcall
 	{
 		if (util::wait_for_module(serverBrowserDLL) == WM_TIMEOUT)

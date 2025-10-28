@@ -23,6 +23,7 @@
     <ClInclude Include="ui.h">
       <Filter>interface</Filter>
     </ClInclude>
+    <ClInclude Include="globals.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="resources">

@@ -65,7 +65,7 @@ struct s_entry
 
 	_ui_states m_state{};
 
-	std::function<void(void)> m_fn{};
+	std::function<void()> m_fn{};
 	std::vector<std::wstring> m_items{};
 };
 
@@ -180,7 +180,7 @@ private:
 		++s_entry_size;
 	}
 
-	void add_function(const std::wstring& name, std::function<void(void)> fn, bool space = false) {
+	void add_function(const std::wstring& name, std::function<void()> fn, bool space = false) {
 		subm_entry[s_entry_size].m_name = name;
 
 		subm_entry[s_entry_size].m_state = UI_FUNCTION_STATE;
@@ -272,7 +272,7 @@ private:
 		++ss_entry_size;
 	}
 
-	void add_sub_function(const std::wstring& name, std::function<void(void)> fn, bool space = false) {
+	void add_sub_function(const std::wstring& name, std::function<void()> fn, bool space = false) {
 		ssubm_entry[ss_entry_size].m_name = name;
 
 		ssubm_entry[ss_entry_size].m_state = UI_FUNCTION_STATE;
@@ -364,7 +364,7 @@ private:
 		++sss_entry_size;
 	}
 
-	void add_sub_sub_function(const std::wstring& name, std::function<void(void)> fn, bool space = false) {
+	void add_sub_sub_function(const std::wstring& name, std::function<void()> fn, bool space = false) {
 		sssubm_entry[sss_entry_size].m_name = name;
 
 		sssubm_entry[sss_entry_size].m_state = UI_FUNCTION_STATE;

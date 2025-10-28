@@ -4,14 +4,14 @@
 #include "helpers.h"
 #include "interfaces.h"
 
-#include <common.h>
+#include <shared_defines.h>
 #include <fstream>
 #include <sstream>
 #include <filesystem>
 
 void config_manager::load_config(const std::wstring& name)
 {
-	std::string cfg_path{ CONFIG_DIRECTORY_NAME + std::string{ name.begin(), name.end() } };
+	std::string cfg_path{ CONFIG_DIRECTORY_PATHS + std::string{ name.begin(), name.end() } };
 
 	std::ifstream ifs{ cfg_path, std::ios::binary };
 
@@ -55,10 +55,10 @@ void config_manager::load_config(const std::wstring& name)
 
 void config_manager::save_config(const std::wstring& name)
 {
-	if (!std::filesystem::exists(CONFIG_DIRECTORY_NAME))
-		std::filesystem::create_directories(CONFIG_DIRECTORY_NAME);
+	if (!std::filesystem::exists(CONFIG_DIRECTORY_PATHS))
+		std::filesystem::create_directories(CONFIG_DIRECTORY_PATHS);
 
-	std::string cfg_path{ CONFIG_DIRECTORY_NAME + std::string{ name.begin(), name.end() } };
+	std::string cfg_path{ CONFIG_DIRECTORY_PATHS + std::string{ name.begin(), name.end() } };
 
 	std::ofstream ofs{ cfg_path, std::ios::binary };
 

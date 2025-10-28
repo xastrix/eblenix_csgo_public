@@ -5,12 +5,6 @@
 
 bool           loop{ true };
 std::once_flag init_d3d{};
-
-std::string    dlls[]{ "eblenix_csgo.dll" };
-
-std::string    game_processes[]{ "csgo.exe" };
-HWND           game_windows[]{ FindWindowA(CSGO_CLASS_NAME, 0) };
-
 sprite_t       csgo_icon{};
 
 _interface_status Interface::init()
@@ -157,7 +151,7 @@ void Interface::on_loop()
 				{
 					static auto game_id{ -1 };
 					auto        game_selected{ game_id != -1 };
-					auto        game_process_info{ util::get_proc(game_selected ? game_processes[game_id] : "") };
+					auto        game_process_info{ util::get_proc(game_selected ? g::game_processes[game_id] : "") };
 
 					i_group_box Games{ "Games", 20, 20, game_selected ? 200 : m_width - 40, 80 }; {
 						i_game_selector CSGO{ &Games, csgo_icon, "CS:GO", game_process_info.active ? true : false, &game_id, 0 };
@@ -165,27 +159,31 @@ void Interface::on_loop()
 
 					if (game_selected)
 					{
+						static auto loaded{ false };
+
 						i_group_box Actions{ "Actions", 230, 20, 135, 80 };
 						{
-							auto dll_used{ util::is_dll_used(dlls[game_id]) };
-
-							i_button Load{ &Actions, dll_used ? "Unload" : "Load", 115, 24, [&]() {
-								switch (dll_used) {
-								case true: {
-									util::send_msg_to_proc(game_windows[game_id], LOADER_UNLOAD_HOOK_MESSAGE);
-									break;
-								}
-								case false: {
-									if (!util::file_exists(dlls[game_id])) {
-										MessageBoxA(0, std::string{ "Module " + dlls[game_id] + " not found in current directory" }.c_str(), "eblenix_injector", MB_OK);
-										return;
+							i_button Load{ &Actions, loaded ? "Unload" : "Load", 115, 24, [&]() {
+								if (util::file_exists(g::dlls[game_id])) {
+									if (game_process_info.active) {
+										switch (util::is_dll_used(game_process_info, g::dlls[game_id])) {
+										case true: {
+											util::send_msg_to_proc(g::game_windows[game_id], LOADER_UNLOAD_HOOK_MESSAGE);
+											loaded = false;
+											break;
+										}
+										case false: {
+											loaded = util::inject(game_process_info.id, g::dlls[game_id]);
+											break;
+										}
+										}
 									}
-
-									if (!game_process_info.active)
-										return;
-
-									util::inject(game_process_info.id, dlls[game_id]);
+									else {
+										MessageBoxA(0, std::string{ g::game_processes[game_id] + " not found, run game and inject" }.c_str(), "eblenix_injector", MB_OK);
+									}
 								}
+								else {
+									MessageBoxA(0, std::string{ "Module " + g::dlls[game_id] + " not found in current directory" }.c_str(), "eblenix_injector", MB_OK);
 								}
 							} };
 

@@ -4,7 +4,7 @@
 #include "ui.h"
 #include "fnv.h"
 
-#include <common.h>
+#include <shared_defines.h>
 #include <algorithm>
 
 static unsigned long WINAPI wnd_proc(HWND h, UINT m, WPARAM w, LPARAM l)
@@ -46,7 +46,7 @@ void input_manager::init(const std::pair<LPCSTR, LPCSTR>& wnd)
 	m_old_wnd_proc = reinterpret_cast<WNDPROC>(SetWindowLongA(m_hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(wnd_proc)));
 }
 
-void input_manager::add_hk(unsigned int vk, std::function<void(void)> fn)
+void input_manager::add_hk(unsigned int vk, std::function<void()> fn)
 {
 	m_hotkeys[vk] = fn;
 }

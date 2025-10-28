@@ -111,7 +111,7 @@ protected:
 };
 
 struct i_button : private i_group_box {
-	i_button(i_group_box* parent, const std::string& name, int w, int h, std::function<void(void)> fn)
+	i_button(i_group_box* parent, const std::string& name, int w, int h, std::function<void()> fn)
 		: m_parent(parent), m_name(name), m_fn(fn) {
 		if (m_parent) {
 			m_x = m_parent->m_x + 10;
@@ -162,6 +162,6 @@ protected:
 	}
 
 	std::string               m_name{};
-	std::function<void(void)> m_fn{};
+	std::function<void()>     m_fn{};
 	i_group_box*              m_parent{};
 };

@@ -12,24 +12,24 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{9CFAA9FF-15A1-441B-ABAE-E111D1DA856C}</ProjectGuid>
-    <RootNamespace>eblenix_injector</RootNamespace>
+    <ProjectGuid>{4FB076F5-0B77-47CD-B04F-C94211ECDB25}</ProjectGuid>
+    <RootNamespace>eblenix_shared</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
-    <ProjectName>eblenix_injector</ProjectName>
+    <ProjectName>Shared</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>Utility</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>Utility</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+    <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -46,15 +46,15 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)obj\$(ProjectName)\$(Configuration)\</IntDir>
-    <LibraryPath>$(SolutionDir)shared\dxsdk\lib\x86;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)shared;$(SolutionDir)shared\dxsdk\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <IncludePath>$(IncludePath)</IncludePath>
     <TargetName>$(ProjectName)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)obj\$(ProjectName)\$(Configuration)\</IntDir>
-    <LibraryPath>$(SolutionDir)shared\dxsdk\lib\x86;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)shared;$(SolutionDir)shared\dxsdk\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <IncludePath>$(IncludePath)</IncludePath>
     <TargetName>$(ProjectName)</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -63,14 +63,14 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>false</ConformanceMode>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>d3d9.lib;d3dx9.lib;shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <UACExecutionLevel>AsInvoker</UACExecutionLevel>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -81,7 +81,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>false</ConformanceMode>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <WholeProgramOptimization>false</WholeProgramOptimization>
@@ -93,28 +93,34 @@
       <OptimizeReferences>true</OptimizeReferences>
       <EntryPointSymbol>
       </EntryPointSymbol>
-      <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
+      <UACExecutionLevel>AsInvoker</UACExecutionLevel>
       <StackReserveSize>
       </StackReserveSize>
-      <AdditionalDependencies>d3d9.lib;d3dx9.lib;shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="d3d.cpp" />
-    <ClCompile Include="interface.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="sprites.cpp" />
+    <Library Include="dxsdk\lib\x86\d3d9.lib" />
+    <Library Include="dxsdk\lib\x86\d3dx9.lib" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="csgo_icon.hpp" />
-    <ClInclude Include="globals.h" />
-    <ClInclude Include="interface.h" />
-    <ClInclude Include="ui.h" />
-    <ClInclude Include="util.h" />
+    <ClInclude Include="shared_defines.h" />
+    <ClInclude Include="dxsdk\include\d3d9.h" />
+    <ClInclude Include="dxsdk\include\d3d9caps.h" />
+    <ClInclude Include="dxsdk\include\d3d9types.h" />
+    <ClInclude Include="dxsdk\include\d3dx9.h" />
+    <ClInclude Include="dxsdk\include\d3dx9anim.h" />
+    <ClInclude Include="dxsdk\include\d3dx9core.h" />
+    <ClInclude Include="dxsdk\include\d3dx9effect.h" />
+    <ClInclude Include="dxsdk\include\d3dx9math.h" />
+    <ClInclude Include="dxsdk\include\d3dx9mesh.h" />
+    <ClInclude Include="dxsdk\include\d3dx9shader.h" />
+    <ClInclude Include="dxsdk\include\d3dx9shape.h" />
+    <ClInclude Include="dxsdk\include\d3dx9tex.h" />
+    <ClInclude Include="dxsdk\include\d3dx9xof.h" />
   </ItemGroup>
   <ItemGroup>
-  </ItemGroup>
-  <ItemGroup>
+    <None Include="dxsdk\include\d3dx9math.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -6,6 +6,8 @@
 #include <winternl.h>
 #include <tlhelp32.h>
 #include <time.h>
+#include <psapi.h>
+#include <shlwapi.h>
 
 #ifndef STATUS_SUCCESS
 #define STATUS_SUCCESS (NTSTATUS)0L
@@ -29,6 +31,7 @@ namespace util
 	inline auto get_proc(const std::string& process_name) -> proc_t
 	{
 		proc_t ret{};
+
 		if (process_name.empty())
 			return ret;
 
@@ -81,25 +84,36 @@ namespace util
 		return std::string{ path } + "\\";
 	}
 
-	inline auto is_dll_used(const std::string& dll_path) -> bool
+	inline auto is_dll_used(const proc_t proc, const std::string& dll_name) -> bool
 	{
-		bool ret{};
+		if (!proc.active)
+			return false;
 
-		auto h = CreateFileA(
-			dll_path.c_str(),
-			GENERIC_WRITE,
-			0,
-			nullptr,
-			OPEN_EXISTING,
-			FILE_ATTRIBUTE_NORMAL,
-			nullptr);
+		auto h = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, proc.id);
+		
+		if (h == NULL)
+			return false;
 
-		if (h == INVALID_HANDLE_VALUE)
-			ret = (GetLastError() == ERROR_SHARING_VIOLATION || GetLastError() == ERROR_LOCK_VIOLATION);
+		HMODULE mods[1024]{};
+		DWORD sz{};
+
+		if (EnumProcessModules(h, mods, sizeof(mods), &sz))
+		{
+			TCHAR mod_name[MAX_PATH]{};
+
+			for (unsigned int i{}; i < (sz / sizeof(HMODULE)); i++) {
+				GetModuleFileNameEx(h, mods[i], mod_name, sizeof(mod_name) / sizeof(TCHAR));
+
+				if (strcmp(PathFindFileNameA(mod_name), dll_name.c_str()) == 0) {
+					CloseHandle(h);
+					return true;
+				}
+			}
+		}
 
 		CloseHandle(h);
 
-		return ret;
+		return false;
 	}
 
 	inline auto random_string(int len, const std::string& chars = "qwertyuiopasdfghjklzxcvbnm") -> std::string

@@ -5,7 +5,9 @@ VisualStudioVersion = 15.0.28307.2092
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "eblenix_csgo", "src\eblenix_csgo.vcxproj", "{AF041675-F00D-4A72-B40F-78D0C4BB72D9}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "eblenix_injector", "injector\eblenix_injector.vcxproj", "{4FB076F5-0B77-47CD-B04F-C94211ECDB25}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "eblenix_shared", "shared\eblenix_shared.vcxproj", "{4FB076F5-0B77-47CD-B04F-C94211ECDB25}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "eblenix_injector", "injector\eblenix_injector.vcxproj", "{9CFAA9FF-15A1-441B-ABAE-E111D1DA856C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,10 +23,10 @@ Global
 		{4FB076F5-0B77-47CD-B04F-C94211ECDB25}.Debug|x86.Build.0 = Debug|Win32
 		{4FB076F5-0B77-47CD-B04F-C94211ECDB25}.Release|x86.ActiveCfg = Release|Win32
 		{4FB076F5-0B77-47CD-B04F-C94211ECDB25}.Release|x86.Build.0 = Release|Win32
-		{421D4864-7DF9-47AB-B55C-1CBBBE9FB58F}.Debug|x86.ActiveCfg = Debug|Win32
-		{421D4864-7DF9-47AB-B55C-1CBBBE9FB58F}.Debug|x86.Build.0 = Debug|Win32
-		{421D4864-7DF9-47AB-B55C-1CBBBE9FB58F}.Release|x86.ActiveCfg = Release|Win32
-		{421D4864-7DF9-47AB-B55C-1CBBBE9FB58F}.Release|x86.Build.0 = Release|Win32
+		{9CFAA9FF-15A1-441B-ABAE-E111D1DA856C}.Debug|x86.ActiveCfg = Debug|Win32
+		{9CFAA9FF-15A1-441B-ABAE-E111D1DA856C}.Debug|x86.Build.0 = Debug|Win32
+		{9CFAA9FF-15A1-441B-ABAE-E111D1DA856C}.Release|x86.ActiveCfg = Release|Win32
+		{9CFAA9FF-15A1-441B-ABAE-E111D1DA856C}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
