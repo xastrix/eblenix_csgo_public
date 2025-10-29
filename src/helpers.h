@@ -10,6 +10,8 @@
                         DebugBreak();
 #endif
 
+using create_interface_fn = void*(*)(const char*, int*);
+
 enum bbox_type {
 	bb_static,
 	bb_dynamic,

@@ -17,22 +17,22 @@ void esp::run()
 	if (!g_csgo.m_engine->is_connected())
 		return;
 
-	if (!g_csgo.m_local)
+	if (!g_csgo.get_local())
 		return;
 
 	for (int i = 0; i <= 65; i++)
 	{
 		auto entity = reinterpret_cast<c_base_player*>(g_csgo.m_entity_list->get_client_entity(i));
 
-		if (!entity || entity->get_health() <= 0 || entity == g_csgo.m_local) {
+		if (!entity || entity->get_health() <= 0 || entity == g_csgo.get_local()) {
 			reset_position(i);
 			continue;
 		}
 
-		if ((entity->get_team_num() == g_csgo.m_local->get_team_num()) & !g_vars.get_as<bool>("esp->team").value())
+		if ((entity->get_team_num() == g_csgo.get_local()->get_team_num()) & !g_vars.get_as<bool>("esp->team").value())
 			continue;
 
-		if (!g_csgo.m_local->can_see_entity(entity->get_eye_pos()) & g_vars.get_as<bool>("esp->visible_only").value())
+		if (!g_csgo.get_local()->can_see_entity(entity->get_eye_pos()) & g_vars.get_as<bool>("esp->visible_only").value())
 			continue;
 
 		if (!entity->is_moving() & g_vars.get_as<bool>("esp->walking_only").value())
@@ -56,7 +56,7 @@ void esp::on_create_move(i_user_cmd* cmd)
 	if (!g_csgo.m_engine->is_connected())
 		return;
 
-	if (!g_csgo.m_local)
+	if (!g_csgo.get_local())
 		return;
 
 	if (g_vars.get_as<bool>("esp->crosshair->enabled").value())
@@ -95,13 +95,13 @@ void esp::on_create_move(i_user_cmd* cmd)
 		{
 			auto entity = reinterpret_cast<c_base_player*>(g_csgo.m_entity_list->get_client_entity(target));
 
-			if (!entity || entity->get_health() <= 0 || entity == g_csgo.m_local)
+			if (!entity || entity->get_health() <= 0 || entity == g_csgo.get_local())
 				return;
 
-			if ((entity->get_team_num() == g_csgo.m_local->get_team_num()) & !g_vars.get_as<bool>("esp->team").value())
+			if ((entity->get_team_num() == g_csgo.get_local()->get_team_num()) & !g_vars.get_as<bool>("esp->team").value())
 				return;
 
-			if (!g_csgo.m_local->can_see_entity(entity->get_eye_pos()) & g_vars.get_as<bool>("esp->visible_only").value())
+			if (!g_csgo.get_local()->can_see_entity(entity->get_eye_pos()) & g_vars.get_as<bool>("esp->visible_only").value())
 				return;
 
 			set_col({
@@ -129,7 +129,7 @@ void esp::on_do_post_screen_effects()
 	if (!g_csgo.m_engine->is_connected())
 		return;
 
-	if (!g_csgo.m_local)
+	if (!g_csgo.get_local())
 		return;
 
 	for (int i = 0; i < g_csgo.m_glow_manager->size; i++)
@@ -144,7 +144,7 @@ void esp::on_do_post_screen_effects()
 		if (!glow_object || glow_object->get_dormant())
 			continue;
 
-		if (!g_csgo.m_local->can_see_entity(glow_object->get_eye_pos()) & g_vars.get_as<bool>("glow->visible_only").value())
+		if (!g_csgo.get_local()->can_see_entity(glow_object->get_eye_pos()) & g_vars.get_as<bool>("glow->visible_only").value())
 			continue;
 
 		const auto client_class = glow_object->get_client_class();
@@ -170,8 +170,8 @@ void esp::on_do_post_screen_effects()
 
 		if (client_class->class_id == ccsplayer)
 		{
-			const auto is_enemy = glow_object->get_team_num() != g_csgo.m_local->get_team_num();
-			const auto is_teammate = glow_object->get_team_num() == g_csgo.m_local->get_team_num();
+			const auto is_enemy = glow_object->get_team_num() != g_csgo.get_local()->get_team_num();
+			const auto is_teammate = glow_object->get_team_num() == g_csgo.get_local()->get_team_num();
 
 			float glow_enemy_col[4];
 			float glow_team_col[4];
@@ -227,7 +227,7 @@ void esp::on_scene_end()
 	if (!g_csgo.m_engine->is_connected())
 		return;
 
-	if (!g_csgo.m_local)
+	if (!g_csgo.get_local())
 		return;
 
 	for (int i = 1; i <= g_csgo.m_globals->max_clients; i++)
@@ -237,13 +237,13 @@ void esp::on_scene_end()
 		if (!entity)
 			continue;
 
-		if (entity == g_csgo.m_local)
+		if (entity == g_csgo.get_local())
 			continue;
 
 		if (entity->get_health() <= 0)
 			continue;
 
-		if (entity->get_team_num() == g_csgo.m_local->get_team_num() & !g_vars.get_as<bool>("chams->team").value())
+		if (entity->get_team_num() == g_csgo.get_local()->get_team_num() & !g_vars.get_as<bool>("chams->team").value())
 			continue;
 
 		if (!entity->is_moving() & g_vars.get_as<bool>("chams->walking_only").value())
@@ -319,7 +319,7 @@ bool esp::can_draw_player(int index, float& anim, c_base_player* entity)
 		m_has_seen[index] = true;
 	}
 	else {
-		if (anim < 0.30f && !(entity->get_vec_origin().distance_to(g_csgo.m_local->get_vec_origin()) > 1499.0f)) {
+		if (anim < 0.30f && !(entity->get_vec_origin().distance_to(g_csgo.get_local()->get_vec_origin()) > 1499.0f)) {
 			rate *= 0.02f;
 		}
 
@@ -336,7 +336,7 @@ bool esp::can_draw_player(int index, float& anim, c_base_player* entity)
 
 void esp::player_rendering(c_base_player* entity)
 {
-	if (!g_csgo.m_local)
+	if (!g_csgo.get_local())
 		return;
 
 	box bbox{};
@@ -639,7 +639,7 @@ void esp::player_rendering(c_base_player* entity)
 
 		if (g_vars.get_as<bool>("esp->flags->distance").value())
 		{
-			const auto dist = g_csgo.m_local->get_vec_origin().distance_to(entity->get_vec_origin());
+			const auto dist = g_csgo.get_local()->get_vec_origin().distance_to(entity->get_vec_origin());
 
 			if (dist)
 			{

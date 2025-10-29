@@ -68,12 +68,14 @@ namespace util
 		return (s.st_mode & S_IFREG);
 	}
 
-	inline auto send_msg_to_proc(const HWND target, const char* msg) -> void
+	inline auto send_msg_to_proc(const HWND target, const char* msg) -> bool
 	{
 		SIZE_T         cb_data{ static_cast<DWORD>(strlen(msg) + 1) };
 		COPYDATASTRUCT cds{ 1, cb_data, const_cast<char*>(msg) };
 
-		SendMessageA(target, WM_COPYDATA, (WPARAM)nullptr, (LPARAM)&cds);
+		auto result = SendMessageA(target, WM_COPYDATA, (WPARAM)nullptr, (LPARAM)&cds);
+
+		return (result != 0);
 	}
 
 	inline auto get_current_path() -> std::string

@@ -25,7 +25,7 @@ void event_manager::fire_game_event(c_game_event* event)
 				g_csgo.m_engine->get_player_for_user_id(event->get_int("attacker"))
 			);
 
-			if (attacker_ent_id == g_csgo.m_local)
+			if (attacker_ent_id == g_csgo.get_local())
 			{
 				auto ent_index = g_csgo.m_engine->get_player_for_user_id(event->get_int("userid"));
 				auto entity = reinterpret_cast<c_base_player*>(g_csgo.m_entity_list->get_client_entity(ent_index));
@@ -73,7 +73,7 @@ void event_manager::fire_game_event(c_game_event* event)
 			{
 				auto entity = reinterpret_cast<c_base_player*>(g_csgo.m_entity_list->get_client_entity(ent_index));
 
-				if (entity->get_team_num() != g_csgo.m_local->get_team_num())
+				if (entity->get_team_num() != g_csgo.get_local()->get_team_num())
 				{
 					player_info_t info{};
 					g_csgo.m_engine->get_player_info(ent_index, &info);

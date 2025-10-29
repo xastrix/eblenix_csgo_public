@@ -54,7 +54,7 @@ void visuals::run()
 	if (!g_csgo.m_engine->is_connected())
 		return;
 
-	if (!g_csgo.m_local)
+	if (!g_csgo.get_local())
 		return;
 
 	if (g_vars.get_as<bool>("visuals->interface->spectators").value())
@@ -67,7 +67,7 @@ void visuals::run()
 		if (!entity)
 			continue;
 
-		if (entity == g_csgo.m_local)
+		if (entity == g_csgo.get_local())
 			continue;
 
 		if (g_vars.get_as<bool>("misc->visual->engine_radar").value())
@@ -124,11 +124,11 @@ void visuals::run()
 
 	if (g_vars.get_as<bool>("visuals->removals->scope").value())
 	{
-		if (g_csgo.m_local->is_life_state())
+		if (g_csgo.get_local()->is_life_state())
 		{
-			if (g_csgo.m_local->is_scoped())
+			if (g_csgo.get_local()->is_scoped())
 			{
-				const auto weapon = g_csgo.m_local->get_active_weapon();
+				const auto weapon = g_csgo.get_local()->get_active_weapon();
 
 				if (weapon && Helpers::is_sniper(weapon))
 				{
@@ -204,7 +204,7 @@ void visuals::draw_spectators()
 		if (!entity)
 			continue;
 
-		if (entity == g_csgo.m_local)
+		if (entity == g_csgo.get_local())
 			continue;
 
 		if (entity->is_life_state())
@@ -220,7 +220,7 @@ void visuals::draw_spectators()
 
 		const auto spectator_target = g_csgo.m_entity_list->get_client_entity_handle(target);
 
-		if (spectator_target != g_csgo.m_local)
+		if (spectator_target != g_csgo.get_local())
 			continue;
 
 		g_render.draw_filled_rect(g::screen_width - 105, Y + (19 * offset), g::screen_width, 18,
@@ -356,7 +356,7 @@ void visuals::draw_projectiles(c_base_entity* entity)
 	if (g_vars.get_as<bool>("visuals->world->projectlines->distance").value())
 	{
 		char distance[256];
-		sprintf_s(distance, "%im", static_cast<int>(g_csgo.m_local->get_vec_origin().distance_to(projectlines.get_origin())));
+		sprintf_s(distance, "%im", static_cast<int>(g_csgo.get_local()->get_vec_origin().distance_to(projectlines.get_origin())));
 
 		g_render.draw_string(distance, projectlines.get_pos().x, projectlines.get_pos().y + y_dist_pos,
 			g_render.get_font(Tahoma12px), TEXT_OUTLINE | TEXT_CENTER_X, col);
@@ -373,7 +373,7 @@ void visuals::draw_entity_objects(c_base_entity* entity, std::vector<std::pair<s
 	const auto col = color_t("visuals->world->items->col");
 
 	char distance[256];
-	sprintf_s(distance, "%im", static_cast<int>(g_csgo.m_local->get_vec_origin().distance_to(entity_objects.get_origin())));
+	sprintf_s(distance, "%im", static_cast<int>(g_csgo.get_local()->get_vec_origin().distance_to(entity_objects.get_origin())));
 
 	for (const auto& obj : objects)
 	{
@@ -444,7 +444,7 @@ void visuals::draw_dropped_weapons(c_base_entity* entity)
 		if (g_vars.get_as<bool>("visuals->world->weapons->distance").value())
 		{
 			char distance[256];
-			sprintf_s(distance, "%im", static_cast<int>(g_csgo.m_local->get_vec_origin().distance_to(dropped_weapons.get_origin())));
+			sprintf_s(distance, "%im", static_cast<int>(g_csgo.get_local()->get_vec_origin().distance_to(dropped_weapons.get_origin())));
 
 			g_render.draw_string(distance, dropped_weapons.get_pos().x, dropped_weapons.get_pos().y + y_dist_pos,
 				g_render.get_font(Tahoma12px), TEXT_OUTLINE | TEXT_CENTER_X, col);
@@ -490,16 +490,16 @@ void visuals::draw_planted_bomb(c_base_plantedc4* entity, const float explode_ti
 	{
 		const auto damage = 500.f;
 		const auto bomb_radius = damage * 3.5f;
-		const auto distance_to_player = (planted_bomb.get_origin() - g_csgo.m_local->get_eye_pos()).length();
+		const auto distance_to_player = (planted_bomb.get_origin() - g_csgo.get_local()->get_eye_pos()).length();
 		const auto sigma = bomb_radius / 3.0f;
 		const auto gaussian_falloff = std::exp(-distance_to_player * distance_to_player / (2.0f * sigma * sigma));
 
 		int adjust_damage = damage * gaussian_falloff * 1.0f;
-		adjust_damage = Math::get_damage_armor(adjust_damage, g_csgo.m_local->get_armor_value());
+		adjust_damage = Math::get_damage_armor(adjust_damage, g_csgo.get_local()->get_armor_value());
 
 		if (adjust_damage != 0)
 		{
-			if (adjust_damage > g_csgo.m_local->get_health() || adjust_damage == 100)
+			if (adjust_damage > g_csgo.get_local()->get_health() || adjust_damage == 100)
 			{
 				g_render.draw_string("Dead", planted_bomb.get_pos().x, planted_bomb.get_pos().y - 12, g_render.get_font(Tahoma12px),
 					TEXT_OUTLINE | TEXT_CENTER_X, color_t(245, 92, 108, 255));
@@ -528,7 +528,7 @@ void visuals::draw_planted_bomb(c_base_plantedc4* entity, const float explode_ti
 	{
 		if (entity->bomb_defuser() > 0)
 		{
-			float m_flCountDown = entity->defuse_count_down() - (g_csgo.m_local->get_tick_base() * g_csgo.m_globals->interval_per_tick);
+			float m_flCountDown = entity->defuse_count_down() - (g_csgo.get_local()->get_tick_base() * g_csgo.m_globals->interval_per_tick);
 			m_flCountDown /= 10;
 
 			const auto defuse_bar_col = color_t("visuals->world->c4->defuse_bar->col");

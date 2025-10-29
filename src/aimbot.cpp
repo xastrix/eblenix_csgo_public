@@ -13,10 +13,10 @@ void aimbot::run(i_user_cmd* cmd)
 	if (!g_csgo.m_engine->is_playing())
 		return;
 
-	if (!g_csgo.m_local || !g_csgo.m_local->is_life_state())
+	if (!g_csgo.get_local() || !g_csgo.get_local()->is_life_state())
 		return;
 
-	const auto weapon = g_csgo.m_local->get_active_weapon();
+	const auto weapon = g_csgo.get_local()->get_active_weapon();
 
 	if (!weapon || !weapon->clip1_count())
 		return;
@@ -54,11 +54,12 @@ void aimbot::run(i_user_cmd* cmd)
 		if (!can_aiming(entity, weapon))
 			return;
 
-		set_aim_angle(cmd, entity, g_csgo.m_local->aim_punch_angle());
+		set_aim_angle(cmd, entity, g_csgo.get_local()->aim_punch_angle());
 
 		m_angle.normalize();
 		m_angle.clamp();
 
+		m_angle /= m_aim_smooth;
 		cmd->viewangles += m_angle;
 
 		if (!g_vars.get_as<bool>("aimbot->silent").value())
@@ -397,22 +398,22 @@ void aimbot::set_weapon_param(c_base_weapon* weapon)
 
 bool aimbot::can_aiming(c_base_player* entity, c_base_weapon* weapon)
 {
-	if (g_vars.get_as<bool>("aimbot->visible_check").value() && !g_csgo.m_local->can_see_entity(entity->get_eye_pos()))
+	if (g_vars.get_as<bool>("aimbot->visible_check").value() && !g_csgo.get_local()->can_see_entity(entity->get_eye_pos()))
 		return false;
 
-	if (!g_vars.get_as<bool>("aimbot->smoke_check").value() && Helpers::is_behind_smoke(g_csgo.m_local->get_eye_pos(), entity->get_hitbox_position(hitbox_head)))
+	if (!g_vars.get_as<bool>("aimbot->smoke_check").value() && Helpers::is_behind_smoke(g_csgo.get_local()->get_eye_pos(), entity->get_hitbox_position(hitbox_head)))
 		return false;
 
-	if (!g_vars.get_as<bool>("aimbot->flash_check").value() && g_csgo.m_local->is_flashed())
+	if (!g_vars.get_as<bool>("aimbot->flash_check").value() && g_csgo.get_local()->is_flashed())
 		return false;
 
-	if (!g_vars.get_as<bool>("aimbot->teammate_check").value() && g_csgo.m_local->get_team_num() == entity->get_team_num())
+	if (!g_vars.get_as<bool>("aimbot->teammate_check").value() && g_csgo.get_local()->get_team_num() == entity->get_team_num())
 		return false;
 
-	if (!g_vars.get_as<bool>("aimbot->jump_check").value() && g_csgo.m_local->is_in_air())
+	if (!g_vars.get_as<bool>("aimbot->jump_check").value() && g_csgo.get_local()->is_in_air())
 		return false;
 
-	if (g_vars.get_as<bool>("aimbot->scope_check").value() && Helpers::is_sniper(weapon) && !g_csgo.m_local->is_scoped())
+	if (g_vars.get_as<bool>("aimbot->scope_check").value() && Helpers::is_sniper(weapon) && !g_csgo.get_local()->is_scoped())
 		return false;
 
 	return true;
@@ -422,12 +423,12 @@ void aimbot::set_aim_angle(i_user_cmd* cmd, c_base_player* entity, const vec3& a
 {
 	switch (m_aim_type) {
 	case 0: {
-		m_angle = Math::calculate_angle(g_csgo.m_local->get_eye_pos(),
+		m_angle = Math::calculate_angle(g_csgo.get_local()->get_eye_pos(),
 			entity->get_hitbox_position(m_hitbox_id), cmd->viewangles + aim_punch);
 		break;
 	}
 	case 1: {
-		m_angle = Math::calculate_angle(g_csgo.m_local->get_eye_pos(),
+		m_angle = Math::calculate_angle(g_csgo.get_local()->get_eye_pos(),
 			entity->get_bone_position(Helpers::get_nearest_bone(entity, cmd)), cmd->viewangles + aim_punch);
 		break;
 	}

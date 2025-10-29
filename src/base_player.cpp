@@ -47,14 +47,6 @@ bool c_base_player::is_life_state()
 		netvar_manager::get_address("DT_CSPlayer::m_lifeState")) == 0;
 }
 
-bool c_base_player::is_alive()
-{
-	if (!this)
-		return false;
-
-	return get_health() > 0;
-}
-
 int c_base_player::get_move_type()
 {
 	static int type = netvar_manager::get_address("DT_BaseEntity::m_nRenderMode") + 1;
@@ -80,10 +72,9 @@ bool c_base_player::can_see_entity(const vec3& pos)
 
 	filter.skip = this;
 
-	auto start = get_eye_pos();
-	auto dir = (pos - start).normalized();
+	auto spos = get_eye_pos();
 
-	ray.initialize(start, pos);
+	ray.initialize(spos, pos);
 	g_csgo.m_trace->trace_ray(ray, MASK_SHOT | CONTENTS_GRATE, &filter, &tr);
 
 	return tr.entity == this || tr.flFraction > 0.97f;

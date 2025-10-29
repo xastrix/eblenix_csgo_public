@@ -5,11 +5,7 @@
 
 #include "sdk.h"
 
-using create_interface_fn = void*(*)(const char*, int*);
-
 struct interfaces {
-	void init();
-public:
 	c_base_client* m_client;
 	c_entity_list* m_entity_list;
 	c_engine_client* m_engine;
@@ -27,10 +23,14 @@ public:
 	i_input* m_input;
 	c_weapon_system* m_weapon_system;
 	c_glow_manager* m_glow_manager;
-	c_base_player* m_local;
-private:
-	bool create_interfaces();
-	bool make_pointers();
 };
 
-inline interfaces g_csgo;
+struct CSGO : public interfaces {
+	void init();
+	c_base_player* get_local();
+	void set_local(c_base_player* local_player);
+private:
+	c_base_player* m_local;
+};
+
+inline CSGO g_csgo;

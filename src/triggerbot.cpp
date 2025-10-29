@@ -13,10 +13,10 @@ void triggerbot::run(i_user_cmd* cmd)
 	if (!g_csgo.m_engine->is_playing())
 		return;
 
-	if (!g_csgo.m_local || !g_csgo.m_local->is_life_state())
+	if (!g_csgo.get_local() || !g_csgo.get_local()->is_life_state())
 		return;
 
-	const auto weapon = g_csgo.m_local->get_active_weapon();
+	const auto weapon = g_csgo.get_local()->get_active_weapon();
 
 	if (!weapon || !weapon->clip1_count())
 		return;
@@ -40,9 +40,9 @@ void triggerbot::run(i_user_cmd* cmd)
 	Math::angle_vectors(cmd->viewangles, forward);
 	forward *= weapon_data->weapon_range;
 
-	filter.skip = g_csgo.m_local;
+	filter.skip = g_csgo.get_local();
 
-	src = g_csgo.m_local->get_eye_pos();
+	src = g_csgo.get_local()->get_eye_pos();
 	dst = src + forward;
 
 	ray.initialize(src, dst);
@@ -56,25 +56,25 @@ void triggerbot::run(i_user_cmd* cmd)
 	if (!entity)
 		return;
 
-	if (!g_vars.get_as<bool>("triggerbot->flash_check").value() && g_csgo.m_local->is_flashed())
+	if (!g_vars.get_as<bool>("triggerbot->flash_check").value() && g_csgo.get_local()->is_flashed())
 		return;
 
-	if (!g_vars.get_as<bool>("triggerbot->smoke_check").value() && Helpers::is_behind_smoke(g_csgo.m_local->get_eye_pos(), tr.end))
+	if (!g_vars.get_as<bool>("triggerbot->smoke_check").value() && Helpers::is_behind_smoke(g_csgo.get_local()->get_eye_pos(), tr.end))
 		return;
 
-	if (!g_vars.get_as<bool>("triggerbot->teammate_check").value() && g_csgo.m_local->get_team_num() == entity->get_team_num())
+	if (!g_vars.get_as<bool>("triggerbot->teammate_check").value() && g_csgo.get_local()->get_team_num() == entity->get_team_num())
 		return;
 
-	if (!g_vars.get_as<bool>("triggerbot->jump_check").value() && g_csgo.m_local->is_in_air())
+	if (!g_vars.get_as<bool>("triggerbot->jump_check").value() && g_csgo.get_local()->is_in_air())
 		return;
 
-	if (g_vars.get_as<bool>("triggerbot->scope_check").value() && Helpers::is_sniper(weapon) && !g_csgo.m_local->is_scoped())
+	if (g_vars.get_as<bool>("triggerbot->scope_check").value() && Helpers::is_sniper(weapon) && !g_csgo.get_local()->is_scoped())
 		return;
 
 	if (entity->get_client_class()->class_id != ccsplayer)
 		return;
 
-	if (entity == g_csgo.m_local || entity->get_dormant() || !entity->is_alive() || entity->has_gun_game_immunity())
+	if (entity == g_csgo.get_local() || entity->get_dormant() || !entity->is_life_state() || entity->has_gun_game_immunity())
 		return;
 
 	if (!Helpers::is_taser(weapon))

@@ -168,8 +168,7 @@ void Interface::on_loop()
 									if (game_process_info.active) {
 										switch (util::is_dll_used(game_process_info, g::dlls[game_id])) {
 										case true: {
-											util::send_msg_to_proc(g::game_windows[game_id], LOADER_UNLOAD_HOOK_MESSAGE);
-											loaded = false;
+											loaded = !(util::send_msg_to_proc(g::game_windows[game_id], LOADER_UNLOAD_HOOK_MESSAGE));
 											break;
 										}
 										case false: {

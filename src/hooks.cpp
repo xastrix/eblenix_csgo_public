@@ -22,7 +22,9 @@ static bool __stdcall create_move_h(float input_sample_frametime, i_user_cmd* cm
 	if (!cmd || !cmd->command_number)
 		return ret;
 
-	g_csgo.m_local = reinterpret_cast<c_base_player*>(g_csgo.m_entity_list->get_client_entity(g_csgo.m_engine->get_local_player()));
+	g_csgo.set_local(
+		reinterpret_cast<c_base_player*>(g_csgo.m_entity_list->get_client_entity(g_csgo.m_engine->get_local_player()))
+	);
 
 	if (g::initialized)
 	{
@@ -235,11 +237,11 @@ static void __fastcall override_view_h(void* _this, void*, c_view_setup* view_se
 	{
 		if (g_csgo.m_engine->is_playing())
 		{
-			if (g_csgo.m_local && g_csgo.m_local->is_life_state())
+			if (g_csgo.get_local() && g_csgo.get_local()->is_life_state())
 			{
 				g_csgo.m_input->camera_in_third_person = [view_setup]() -> bool
 				{
-					const auto ret = (g_vars.get_as<bool>("misc->visual->thirdperson").value()) && !g_csgo.m_local->is_scoped();
+					const auto ret = (g_vars.get_as<bool>("misc->visual->thirdperson").value()) && !g_csgo.get_local()->is_scoped();
 
 					if (ret)
 						view_setup->fov = g_vars.get_as<float>("misc->visual->thirdperson->fov").value();

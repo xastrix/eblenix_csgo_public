@@ -25,9 +25,9 @@ struct input_manager {
 
 	void undo();
 private:
-	HWND                      m_hwnd{};
-	WNDPROC                   m_old_wnd_proc{};
-	m_state                   m_key_map[256]{};
+	HWND                  m_hwnd{};
+	WNDPROC               m_old_wnd_proc{};
+	m_state               m_key_map[256]{};
 	std::function<void()> m_hotkeys[256]{};
 };
 

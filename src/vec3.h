@@ -7,19 +7,23 @@ public:
 	float x, y, z;
 
 	vec3();
-	vec3(float, float, float);
+	vec3(float _x, float _y, float _z);
 	~vec3() {};
 
 	void init(float ix, float iy, float iz);
 	void clamp();
-	vec3 normalized();
-	float distance_to(const vec3& other);
 	void normalize();
+
+	float distance_to(const vec3& other);
+
 	float length();
 	float length_sqr();
-	float length_2d_sqr() const;
+	float length_2d();
+	float length_2d_sqr();
+
 	float dot(const vec3 other);
 	float dot(const float* other);
+
 	vec3& operator+=(const vec3& v);
 	vec3& operator-=(const vec3& v);
 	vec3& operator*=(float v);
@@ -32,9 +36,6 @@ public:
 	auto operator/(float other) const;
 	float& operator[](int i);
 	float operator[](int i) const;
-	float length_2d() const;
-	void crossproduct(vec3 v1, vec3 v2, vec3 cross_p) const;
-	vec3 cross(const vec3& other) const;
 };
 
 class __declspec(align(16)) vector_aligned : public vec3 {

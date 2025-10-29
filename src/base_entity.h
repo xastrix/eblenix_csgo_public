@@ -152,7 +152,6 @@ public:
 	int                   get_tick_base();
 	int                   get_flags();
 	bool                  is_life_state();
-	bool                  is_alive();
 	int                   get_move_type();
 	c_base_weapon*        get_active_weapon();
 	bool                  can_see_entity(const vec3& pos);

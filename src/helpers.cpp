@@ -39,7 +39,7 @@ int Helpers::get_nearest_bone(c_base_player* entity, i_user_cmd* cmd)
 		if (!hitbox)
 			continue;
 
-		const auto angle = Math::calculate_angle(g_csgo.m_local->get_eye_pos(), vec3(matrix[hitbox->bone][0][3], matrix[hitbox->bone][1][3], matrix[hitbox->bone][2][3]), cmd->viewangles);
+		const auto angle = Math::calculate_angle(g_csgo.get_local()->get_eye_pos(), vec3(matrix[hitbox->bone][0][3], matrix[hitbox->bone][1][3], matrix[hitbox->bone][2][3]), cmd->viewangles);
 		const auto this_distance = std::hypotf(angle.x, angle.y);
 
 		if (best_distance > this_distance) {
@@ -61,9 +61,9 @@ int Helpers::find_target_entity(i_user_cmd* cmd, const float fov, vec3& angle)
 		auto entity = reinterpret_cast<c_base_player*>(g_csgo.m_entity_list->get_client_entity(i));
 
 		auto entity_bone_pos = entity->get_bone_position(get_nearest_bone(entity, cmd));
-		auto local_eye_pos = g_csgo.m_local->get_eye_pos();
+		auto local_eye_pos = g_csgo.get_local()->get_eye_pos();
 
-		if (!entity || entity == g_csgo.m_local || entity->get_dormant() || !entity->is_life_state() || entity->has_gun_game_immunity())
+		if (!entity || entity == g_csgo.get_local() || entity->get_dormant() || !entity->is_life_state() || entity->has_gun_game_immunity())
 			continue;
 
 		angle = Math::calculate_angle(local_eye_pos, entity_bone_pos, cmd->viewangles);
@@ -94,7 +94,7 @@ bool Helpers::is_weapon_switching(c_base_weapon* weapon)
 		last_weap = weapon->item_definition_index();
 	}
 
-	const float server_time = g_csgo.m_local->get_tick_base() * g_csgo.m_globals->interval_per_tick;
+	const float server_time = g_csgo.get_local()->get_tick_base() * g_csgo.m_globals->interval_per_tick;
 	const auto next_attach_time = weapon->next_primary_attack();
 
 	if (server_time - next_attach_time >= 1.f && weapon_switched)

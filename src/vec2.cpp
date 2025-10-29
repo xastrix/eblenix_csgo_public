@@ -15,6 +15,11 @@ vec2::vec2(vec3 vec)
 	x = vec.x; y = vec.y;
 }
 
+float vec2::length()
+{
+	return std::sqrt((x * x) + (y * y));
+}
+
 vec2 vec2::operator*(const float n) const
 {
 	return vec2(x * n, y * n);
@@ -50,9 +55,4 @@ bool vec2::operator==(const vec2 & v) const
 bool vec2::operator!=(const vec2 & v) const
 {
 	return (v.x != x || v.y != y);
-}
-
-float vec2::length()
-{
-	return std::sqrt((x * x) + (y * y));
 }

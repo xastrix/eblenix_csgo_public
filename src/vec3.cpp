@@ -24,6 +24,13 @@ void vec3::clamp()
 	z = std::clamp(z, -50.0f, 50.0f);
 }
 
+void vec3::normalize()
+{
+	x = std::isfinite(x) ? std::remainderf(x, 360.0f) : 0.0f;
+	y = std::isfinite(y) ? std::remainderf(y, 360.0f) : 0.0f;
+	z = 0.0f;
+}
+
 float vec3::distance_to(const vec3& other)
 {
 	vec3 delta;
@@ -33,21 +40,6 @@ float vec3::distance_to(const vec3& other)
 	delta.z = z - other.z;
 
 	return delta.length();
-}
-
-void vec3::normalize()
-{
-	x = std::isfinite(x) ? std::remainderf(x, 360.0f) : 0.0f;
-	y = std::isfinite(y) ? std::remainderf(y, 360.0f) : 0.0f;
-	z = 0.0f;
-}
-
-vec3 vec3::normalized()
-{
-	vec3 vec(*this);
-	vec.normalize();
-
-	return vec;
 }
 
 float vec3::length()
@@ -60,14 +52,15 @@ float vec3::length()
 
 float vec3::length_sqr()
 {
-	auto sqr = [](float n) {
-		return static_cast<float>(n * n);
-	};
-
-	return { sqr(x) + sqr(y) + sqr(z) };
+	return { x * x + y * y + z * z };
 }
 
-float vec3::length_2d_sqr() const
+float vec3::length_2d()
+{
+	return std::sqrtf(x * x + y * y);
+}
+
+float vec3::length_2d_sqr()
 {
 	return { x * x + y * y };
 }
@@ -160,23 +153,4 @@ float& vec3::operator[](int i)
 float vec3::operator[](int i) const
 {
 	return ((float*)this)[i];
-}
-
-float vec3::length_2d() const
-{
-	return std::sqrtf(x * x + y * y);
-}
-
-void vec3::crossproduct(vec3 v1, vec3 v2, vec3 cross_p) const
-{
-	cross_p.x = (v1.y * v2.z) - (v1.z * v2.y);
-	cross_p.y = -((v1.x * v2.z) - (v1.z * v2.x));
-	cross_p.z = (v1.x * v2.y) - (v1.y * v2.x);
-}
-
-vec3 vec3::cross(const vec3 & other) const
-{
-	vec3 res;
-	crossproduct(*this, other, res);
-	return res;
 }
