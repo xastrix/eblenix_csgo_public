@@ -116,9 +116,9 @@ void visuals::run()
 
 				draw_planted_bomb(bomb, explode_time);
 
-				if (explode_time >= 0.1f)
+				if (g_vars.get_as<bool>(V_VISUALS_INTERFACE_STATUS).value())
 				{
-					if (g_vars.get_as<bool>(V_VISUALS_INTERFACE_STATUS).value())
+					if (!bomb->bomb_defused())
 						draw_status_bomb_info(bomb, explode_time);
 				}
 			}
@@ -529,17 +529,20 @@ void visuals::draw_planted_bomb(c_base_plantedc4* entity, const float explode_ti
 
 	if (g_vars.get_as<bool>(V_VISUALS_WORLD_C4_DEFUSE_BAR).value())
 	{
-		if (entity->bomb_defuser() > 0)
-		{
-			float count_down = entity->defuse_count_down() -
-				(g_csgo.get_local()->get_tick_base() * g_csgo.m_globals->interval_per_tick);
+		auto defuser = reinterpret_cast<c_base_player*>(g_csgo.m_entity_list->get_client_entity_handle(entity->bomb_defuser()));
 
-			count_down /= 10;
+		if (defuser > 0)
+		{
+			auto defuse_time_with_kits = 10.0f;
+			auto defuse_time_without_kits = (defuse_time_with_kits - 5.0f);
+
+			auto count_down = entity->defuse_count_down() - (g_csgo.get_local()->get_tick_base() * g_csgo.m_globals->interval_per_tick);
+			auto max_defuse_time = defuser->has_defuser() ? defuse_time_without_kits : defuse_time_with_kits;
 
 			const auto defuse_bar_col = color_t(V_VISUALS_WORLD_C4_COL_DEFUSE_BAR);
 
 			g_render.draw_filled_rect(planted_bomb.get_pos().x - 20, planted_bomb.get_pos().y + defuse_bar_offset, Helpers::get_c4_server_time(), 4, background_col);
-			g_render.draw_filled_rect(planted_bomb.get_pos().x - 19, planted_bomb.get_pos().y + defuse_bar_offset + 1, Helpers::get_c4_server_time() * count_down - 1, 2, defuse_bar_col);
+			g_render.draw_filled_rect(planted_bomb.get_pos().x - 19, planted_bomb.get_pos().y + defuse_bar_offset + 1, (Helpers::get_c4_server_time() * count_down / max_defuse_time) - 1, 2, defuse_bar_col);
 		}
 	}
 }
