@@ -6,6 +6,7 @@
 static std::vector<font_t> font_list = {
 	{ Tahoma12px,     12, "Tahoma",     FW_MEDIUM, ANTIALIASED_QUALITY },
     { Verdana12px,    12, "Verdana",    FW_SEMIBOLD, ANTIALIASED_QUALITY },
+	{ Astriumwep12px, 12, "AstriumWep", FW_NORMAL, CLEARTYPE_QUALITY },
 	{ Astriumwep16px, 16, "AstriumWep", FW_NORMAL, CLEARTYPE_QUALITY },
 	{ Astriumwep25px, 25, "AstriumWep", FW_NORMAL, CLEARTYPE_QUALITY },
 };

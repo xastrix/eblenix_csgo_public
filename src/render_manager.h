@@ -11,6 +11,7 @@
 enum _fonts {
 	Tahoma12px,
 	Verdana12px,
+	Astriumwep12px,
 	Astriumwep16px,
 	Astriumwep25px,
 	maxFonts,

@@ -277,7 +277,7 @@ void esp::player_rendering(c_base_player* entity)
 		{
 			const auto col = color_t(V_ESP_WEAPON_COL, 255 * m_alpha[entity->index()]);
 
-			auto offset = 3;
+			auto offset = 4;
 			switch (g_vars.get_as<int>(V_ESP_WEAPON_TYPE).value()) {
 			case 0: {
 				if (g_vars.get_as<bool>(V_ESP_ARMOR_ENABLED).value() && armor_val > m_armor_min)
@@ -289,10 +289,10 @@ void esp::player_rendering(c_base_player* entity)
 			}
 			case 1: {
 				if (g_vars.get_as<bool>(V_ESP_ARMOR_ENABLED).value() && armor_val > m_armor_min)
-					offset += 4;
+					offset += 5;
 
 				g_render.draw_string(Helpers::get_weapon_type_by_index(weapon->item_definition_index(), we_icon),
-					bbox.x + (bbox.w / 2), bbox.h + bbox.y + offset, g_render.get_font(Astriumwep16px), TEXT_OUTLINE | TEXT_CENTER_X, col);
+					bbox.x + (bbox.w / 2), bbox.h + bbox.y + offset, g_render.get_font(Astriumwep12px), TEXT_OUTLINE | TEXT_CENTER_X, col);
 				break;
 			}
 			}
