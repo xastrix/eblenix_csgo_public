@@ -533,11 +533,11 @@ void visuals::draw_planted_bomb(c_base_plantedc4* entity, const float explode_ti
 
 		if (defuser > 0)
 		{
-			auto defuse_time_with_kits = 10.0f;
-			auto defuse_time_without_kits = (defuse_time_with_kits - 5.0f);
+			auto defuse_time_without_kits = 10.0f;
+			auto defuse_time_with_kits = (defuse_time_without_kits - 5.0f);
 
 			auto count_down = entity->defuse_count_down() - (g_csgo.get_local()->get_tick_base() * g_csgo.m_globals->interval_per_tick);
-			auto max_defuse_time = defuser->has_defuser() ? defuse_time_without_kits : defuse_time_with_kits;
+			auto max_defuse_time = defuser->has_defuser() ? defuse_time_with_kits : defuse_time_without_kits;
 
 			const auto defuse_bar_col = color_t(V_VISUALS_WORLD_C4_COL_DEFUSE_BAR);
 
