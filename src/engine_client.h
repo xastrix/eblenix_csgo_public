@@ -18,5 +18,4 @@ public:
 	void set_view_angles(vec3& angles);
 	vec3 get_view_angles();
 	void* get_bsp_query();
-	void exec_cmd(const char* cmd);
 };
