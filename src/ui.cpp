@@ -222,7 +222,7 @@ void ui::setup()
 		add_tab(L"Armor");
 		add_tab(L"Barrel");
 		add_tab(L"Crosshair");
-		add_tab(L"Offscreen Lines", true);
+		add_tab(L"Snap Lines", true);
 
 		add_tab(L"Flags");
 
@@ -315,12 +315,12 @@ void ui::setup()
 			add_sub_int(L"Crosshair On Target B", V_ESP_CROSSHAIR_COL_ON_TARGET_B, 0, 255, 1);
 			break;
 		}
-		case ESP_OFFSCREEN_LINES_TAB: {
-			add_sub_bool(L"Enable", V_ESP_OFFSCREEN_LINES_ENABLED, true);
+		case ESP_SNAP_LINES_TAB: {
+			add_sub_bool(L"Enable", V_ESP_SNAP_LINES_ENABLED, true);
 
-			add_sub_int(L"Offscreen Lines R", V_ESP_OFFSCREEN_LINES_COL_R, 0, 255, 1);
-			add_sub_int(L"Offscreen Lines G", V_ESP_OFFSCREEN_LINES_COL_G, 0, 255, 1);
-			add_sub_int(L"Offscreen Lines B", V_ESP_OFFSCREEN_LINES_COL_B, 0, 255, 1);
+			add_sub_int(L"Snap Lines R", V_ESP_SNAP_LINES_COL_R, 0, 255, 1);
+			add_sub_int(L"Snap Lines G", V_ESP_SNAP_LINES_COL_G, 0, 255, 1);
+			add_sub_int(L"Snap Lines B", V_ESP_SNAP_LINES_COL_B, 0, 255, 1);
 			break;
 		}
 		case ESP_FLAGS_TAB: {

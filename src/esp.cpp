@@ -369,7 +369,7 @@ void esp::player_rendering(c_base_player* entity)
 		}
 	}
 
-	if (g_vars.get_as<bool>(V_ESP_OFFSCREEN_LINES_ENABLED).value())
+	if (g_vars.get_as<bool>(V_ESP_SNAP_LINES_ENABLED).value())
 	{
 		vec3 pos{};
 
@@ -378,7 +378,7 @@ void esp::player_rendering(c_base_player* entity)
 			Math::find_position_rotation(pos.x, pos.y, GLOBAL(screen_width), GLOBAL(screen_height));
 
 			g_render.draw_line(GLOBAL(screen_width) / 2, GLOBAL(screen_height) / 2, pos.x, pos.y, 1.0f,
-				color_t(V_ESP_OFFSCREEN_LINES_COL, 255 * m_alpha[entity->index()]));
+				color_t(V_ESP_SNAP_LINES_COL, 255 * m_alpha[entity->index()]));
 		}
 	}
 
@@ -576,7 +576,6 @@ void esp::update_position(int index, const vec3& pos)
 {
 	m_stored_pos[index] = pos;
 
-	if (m_anim_progress[index] > 0.0f && m_anim_progress[index] <= 0.30f && m_has_seen[index]) {
+	if (m_anim_progress[index] > 0.0f && m_anim_progress[index] <= 0.30f && m_has_seen[index])
 		m_anim_progress[index] = 0.30f;
-	}
 }
