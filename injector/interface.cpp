@@ -5,8 +5,7 @@
 #include "resource.h"
 
 bool           loop{ true };
-std::once_flag init_d3d{},
-               init_loaded_stat{};
+std::once_flag init_d3d{};
 sprite_t       csgo_icon{};
 
 _interface_status Interface::init()
@@ -154,18 +153,27 @@ void Interface::render()
 			{
 				csgo_icon.begin();
 				{
-					i_group_box Games{ "Games", 20, 20, game_selected ? 200 : m_width - 40, 80 }; {
+					i_group_box Games{ "Games", 20, 20, 200, 80 }; {
 						i_game_selector CSGO{ &Games, csgo_icon, "CS:GO", game_process_info.active ? true : false, &game_id, 0 };
 					}
 
-					if (game_selected)
+					i_group_box Actions{ "Actions", 230, 20, 135, 80 };
 					{
-						std::call_once(init_loaded_stat, [&]() {
-							loaded = util::is_dll_used(game_process_info, g::dlls[game_id]);
-						});
+						static bool set_loaded_once{};
 
-						i_group_box Actions{ "Actions", 230, 20, 135, 80 };
+						if (game_selected)
 						{
+							if (!set_loaded_once) {
+								/* @xastrix:
+								 * I decided to use a bool variable instead of call_once() because ->
+								 *  1. I need the loaded variable to be updated every time the game is selected
+								 *  2. with call_once, this implementation would be impossible
+								 */
+
+								loaded = util::is_dll_used(game_process_info, g::dlls[game_id]);
+								set_loaded_once = true;
+							}
+
 							i_button Load{ &Actions, loaded ? "Unload" : "Load", 115, 24, [&]() {
 								if (util::file_exists(g::dlls[game_id])) {
 									if (game_process_info.active) {
@@ -188,11 +196,14 @@ void Interface::render()
 									MessageBoxA(0, std::string{ "Module " + g::dlls[game_id] + " not found in current directory" }.c_str(), "eblenix_injector", MB_OK);
 								}
 							} };
-
-							i_button Exit{ &Actions, "Exit", 115, 24, []() {
-								loop = false;
-							} };
 						}
+						else {
+							set_loaded_once = false;
+						}
+
+						i_button Exit{ &Actions, "Exit", 115, 24, []() {
+							loop = false;
+						} };
 					}
 				}
 				csgo_icon.end();
