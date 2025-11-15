@@ -44,7 +44,7 @@ _interface_status Interface::init()
 	m_wc.hCursor = LoadCursorA(0, IDC_ARROW);
 	m_wc.lpszMenuName = 0;
 	m_wc.lpszClassName = m_class_name.c_str();
-	m_wc.hIconSm = 0;
+	m_wc.hIconSm = m_wc.hIcon;
 
 	RegisterClassExA(&m_wc);
 
@@ -116,7 +116,7 @@ void Interface::render()
 		GetCursorPos(&point);
 		GetWindowRect(m_hwnd, &rect);
 
-		if (is_window_visible()) {
+		if (is_window_active()) {
 			if ((g_mouse.get_mouse_pos_x() <= m_width && g_mouse.get_mouse_pos_y() <= 25)
 				&& g_mouse.is_button_held(M1_BUTTON)) {
 				set_window_pos(g_mouse.get_mouse_pos_x(), g_mouse.get_mouse_pos_y());
@@ -153,11 +153,11 @@ void Interface::render()
 			{
 				csgo_icon.begin();
 				{
-					i_group_box Games{ "Games", 20, 20, 200, 80 }; {
-						i_game_selector CSGO{ &Games, csgo_icon, "CS:GO", game_process_info.active ? true : false, &game_id, 0 };
+					i_group_box games{ "Games", 20, 20, 200, 80 }; {
+						i_game_selector csgo{ &games, "CS:GO", csgo_icon, game_process_info.active ? true : false, &game_id, 0 };
 					}
 
-					i_group_box Actions{ "Actions", 230, 20, 135, 80 };
+					i_group_box actions{ "Actions", 230, 20, 135, 80 };
 					{
 						static bool set_loaded_once{};
 
@@ -174,7 +174,7 @@ void Interface::render()
 								set_loaded_once = true;
 							}
 
-							i_button Load{ &Actions, loaded ? "Unload" : "Load", 115, 24, [&]() {
+							i_button Load{ &actions, loaded ? "Unload" : "Load", 115, 24, [&]() {
 								if (util::file_exists(g::dlls[game_id])) {
 									if (game_process_info.active) {
 										switch (util::is_dll_used(game_process_info, g::dlls[game_id])) {
@@ -201,7 +201,7 @@ void Interface::render()
 							set_loaded_once = false;
 						}
 
-						i_button Exit{ &Actions, "Exit", 115, 24, []() {
+						i_button exit{ &actions, "Exit", 115, 24, []() {
 							loop = false;
 						} };
 					}
@@ -243,9 +243,9 @@ int Interface::get_height()
 	return m_height;
 }
 
-bool Interface::is_window_visible()
+bool Interface::is_window_active()
 {
-	return IsWindowVisible(m_hwnd);
+	return (m_hwnd == GetForegroundWindow());
 }
 
 void Interface::set_window_pos(int x, int y)

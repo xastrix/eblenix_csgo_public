@@ -48,7 +48,7 @@ struct Interface {
 	int get_width();
 	int get_height();
 
-	bool is_window_visible();
+	bool is_window_active();
 
 	void set_window_pos(int x, int y);
 
