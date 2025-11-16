@@ -27,14 +27,14 @@ void mod::init(void* I)
 		}
 		case CS_CHECKING_GAME_VERSION: {
 
-			GLOBAL(status) = []() {
+			auto setup_vars = []() {
+				g_vars.set(V_MISC_VISUAL_VIEWMODEL_FOV, Helpers::get_viewmodel_fov());
+				g_vars.set(V_KEYS_ON_TOGGLE_UI, VK_INSERT);
+			};
+
+			GLOBAL(status) = [setup_vars]() {
 #ifndef DISABLE_CSGO_VERSION_CHECK
 				const auto current_game_vers = std::string{ g_csgo.m_engine->get_product_version_string() };
-
-				auto set_vars = []() {
-					g_vars.set(V_MISC_VISUAL_VIEWMODEL_FOV, Helpers::get_viewmodel_fov());
-					g_vars.set(V_KEYS_ON_TOGGLE_UI, VK_INSERT);
-				};
 
 				for (int i = 0; i < maxVersions; i++) {
 					const auto target_ver = GLOBAL(csgo_version_list[i]);
@@ -42,7 +42,7 @@ void mod::init(void* I)
 					size_t pos = target_ver.find('*');
 					if (pos == std::string::npos) {
 						if (current_game_vers.compare(0, target_ver.size(), target_ver) == 0) {
-							set_vars();
+							setup_vars();
 							return gameVersionOK;
 						}
 
@@ -58,7 +58,7 @@ void mod::init(void* I)
 
 					if (current_game_vers.compare(0, pat_ver.size(), pat_ver) == 0) {
 #endif
-						set_vars();
+						setup_vars();
 
 						return gameVersionOK;
 #ifndef DISABLE_CSGO_VERSION_CHECK
