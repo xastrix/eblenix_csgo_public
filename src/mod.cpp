@@ -29,11 +29,23 @@ void mod::init(void* I)
 
 			GLOBAL(status) = []() {
 #ifndef DISABLE_CSGO_VERSION_CHECK
-				for (int i = noneVersion; i < maxVersions; i++) {
-					if (i == noneVersion)
+				const auto current_game_vers = std::string{ g_csgo.m_engine->get_product_version_string() };
+
+				for (int i = 0; i < maxVersions; i++) {
+					const auto target_ver = GLOBAL(csgo_version_list[i]);
+
+					size_t pos = target_ver.find('*');
+					if (pos == std::string::npos)
 						continue;
 
-					if (g_csgo.m_engine->get_product_version_string() == GLOBAL(csgo_version_list[i])) {
+					auto pat_ver = target_ver.substr(0, pos);
+					if (pat_ver.empty())
+						continue;
+
+					if (pat_ver.back() == '.')
+						pat_ver.pop_back();
+
+					if (current_game_vers.compare(0, pat_ver.size(), pat_ver) == 0) {
 #endif
 						g_vars.set(V_MISC_VISUAL_VIEWMODEL_FOV, Helpers::get_viewmodel_fov());
 						g_vars.set(V_KEYS_ON_TOGGLE_UI, VK_INSERT);

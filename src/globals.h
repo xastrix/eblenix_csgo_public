@@ -34,9 +34,7 @@ enum _module_list {
 };
 
 enum _csgo_versions {
-	noneVersion,
-	firstVersion,
-	lastVersion,
+	CSGO_2020_PATCH,
 	maxVersions,
 };
 
@@ -68,8 +66,7 @@ namespace g
 	};
 
 	inline std::string csgo_version_list[maxVersions] = {
-		"1.37.3.1",
-		"1.37.3.8",
+		"1.37.3.*",
 	};
 
 	void Unload();

@@ -99,6 +99,7 @@ static long D3DAPI present_h(IDirect3DDevice9* device, RECT* source_rect, RECT* 
 		}
 		break;
 	}
+#ifndef DISABLE_CSGO_VERSION_CHECK
 	case gameVersionOutdated: {
 		std::ostringstream oss{};
 		oss << "Hack has not been updated [" << g_csgo.m_engine->get_product_version_string() << "]";
@@ -106,6 +107,7 @@ static long D3DAPI present_h(IDirect3DDevice9* device, RECT* source_rect, RECT* 
 		g_render.draw_status(oss.str(), color_t(164, 164, 164));
 		break;
 	}
+#endif
 	}
 
 	g_render.end_render_states();
