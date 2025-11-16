@@ -161,10 +161,10 @@ void render_manager::draw_string(const std::string& string, float x, float y, ID
 	RECT o_r{ x + 1, y + 1, x + 1, y + 1 };
 
 	if (flags & TEXT_CENTER_X) {
-		const auto half_width = get_text_width(string, font) / 2;
+		const auto half_width = static_cast<LONG>(get_text_width(string, font) / 2);
 
-		r = { LONG(x - half_width), LONG(y), LONG(x - half_width), LONG(y) };
-		o_r = { LONG(x - half_width + 1), LONG(y + 1), LONG(x - half_width + 1), LONG(y + 1) };
+		r = { static_cast<LONG>(x) - half_width, static_cast<LONG>(y), static_cast<LONG>(x) - half_width, static_cast<LONG>(y) };
+		o_r = { static_cast<LONG>(x) - half_width + 1, static_cast<LONG>(y) + 1, static_cast<LONG>(x) - half_width + 1, static_cast<LONG>(y) + 1 };
 	}
 
 	if (flags & TEXT_OUTLINE) {
@@ -180,10 +180,10 @@ void render_manager::draw_stringW(const std::wstring& string, float x, float y, 
 	RECT o_r{ x + 1, y + 1, x + 1, y + 1 };
 
 	if (flags & TEXT_CENTER_X) {
-		const auto half_width = get_text_widthW(string, font) / 2;
+		const auto half_width = static_cast<LONG>(get_text_widthW(string, font) / 2);
 
-		r = { LONG(x - half_width), LONG(y), LONG(x - half_width), LONG(y) };
-		o_r = { LONG(x - half_width + 1), LONG(y + 1), LONG(x - half_width + 1), LONG(y + 1) };
+		r = { static_cast<LONG>(x) - half_width, static_cast<LONG>(y), static_cast<LONG>(x) - half_width, static_cast<LONG>(y) };
+		o_r = { static_cast<LONG>(x) - half_width + 1, static_cast<LONG>(y) + 1, static_cast<LONG>(x) - half_width + 1, static_cast<LONG>(y) + 1 };
 	}
 
 	if (flags & TEXT_OUTLINE) {
