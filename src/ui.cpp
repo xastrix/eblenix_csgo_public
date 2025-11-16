@@ -8,11 +8,6 @@
 
 void ui::init(IDirect3DDevice9* device)
 {
-	m_colors[UI_MAIN_COL] = color_t(V_UI_COL);
-	m_colors[UI_PRIMARY_COL] = color_t(V_UI_COL, 130);
-	m_colors[UI_SHADOW_COL] = color_t(20, 20, 20, g_vars.get_as<int>(V_UI_COL_A).value());
-	m_colors[UI_TEXT_COL] = color_t(253, 253, 253);
-
 	m_sprites[UI_SPRITE_LOGO].init(device, m_ui_logotype, sizeof(m_ui_logotype), 178, 33);
 }
 
@@ -1115,6 +1110,13 @@ void ui::draw(int x, int y)
 		g_render.draw_stringW(item, x - string_width - 20, y - 11, font, TEXT_OUTLINE, color);
 	};
 
+	m_colors[UI_MAIN_COL] = color_t(V_UI_COL);
+	m_colors[UI_PRIMARY_COL] = color_t(V_UI_COL, 130);
+	m_colors[UI_SHADOW_COL] = color_t(20, 20, 20, g_vars.get_as<int>(V_UI_COL_A).value());
+	m_colors[UI_TEXT_COL] = color_t(253, 253, 253);
+
+	m_sprites[UI_SPRITE_LOGO].draw(MenuLogoX, MenuLogoY);
+
 	for (int i = 0; i < m_entry_size; i++)
 	{
 		MenuBoxY = y + 1;
@@ -1140,8 +1142,6 @@ void ui::draw(int x, int y)
 		if (menu_entry[i].m_space)
 			y += HeadBoxHeight + 1;
 	}
-
-	m_sprites[UI_SPRITE_LOGO].draw(MenuLogoX, MenuLogoY);
 
 	x += HeadBoxWidth + 1;
 
