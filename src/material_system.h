@@ -13,4 +13,8 @@ class c_material_system {
 public:
 	c_material* find_material(char const* material_name, const char* group_name,
 		bool complain = true, const char* complain_prefix = 0);
+	unsigned short first_material();
+	unsigned short next_material(unsigned short handle);
+	unsigned short invalid_material_handle();
+	c_material* get_material(unsigned short handle);
 };

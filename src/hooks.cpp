@@ -66,6 +66,56 @@ static void __stdcall paint_traverse_h(unsigned int panel, bool force_repaint, b
 		GLOBAL(console_opened) = g_csgo.m_engine->is_console_visible();
 		GLOBAL(chat_opened) = g_csgo.m_client->is_chat_raised();
 
+		if (g_csgo.m_engine->is_playing())
+		{
+			if (g_vars.get_as<bool>(V_VISUALS_ENABLED).value() &&
+				g_vars.get_as<bool>(V_VISUALS_WORLD_NIGHTMODE_ENABLED).value())
+			{
+				if (!GLOBAL(visuals_nightmode_state))
+				{
+					auto world_brightness = g_vars.get_as<float>(V_VISUALS_WORLD_NIGHTMODE_WORLD_BRIGHTNESS).value();
+					auto sky_brightness = g_vars.get_as<float>(V_VISUALS_WORLD_NIGHTMODE_SKY_BRIGHTNESS).value();
+
+					for (auto i = g_csgo.m_mat_system->first_material();
+						i != g_csgo.m_mat_system->invalid_material_handle(); i = g_csgo.m_mat_system->next_material(i)) {
+						auto material = g_csgo.m_mat_system->get_material(i);
+
+						if (!material)
+							continue;
+
+						if (std::string{ material->get_texture_group_name() }.find("World") != std::string::npos)
+							material->color_modulate(world_brightness, world_brightness, world_brightness);
+
+						if (std::string{ material->get_texture_group_name() }.find("SkyBox") != std::string::npos)
+							material->color_modulate(sky_brightness, sky_brightness, sky_brightness);
+					}
+
+					GLOBAL(visuals_nightmode_state) = true;
+				}
+			}
+			else
+			{
+				if (GLOBAL(visuals_nightmode_state))
+				{
+					for (auto i = g_csgo.m_mat_system->first_material();
+						i != g_csgo.m_mat_system->invalid_material_handle(); i = g_csgo.m_mat_system->next_material(i)) {
+						auto material = g_csgo.m_mat_system->get_material(i);
+
+						if (!material)
+							continue;
+
+						if (std::string{ material->get_texture_group_name() }.find("World") != std::string::npos)
+							material->color_modulate(/* 1.0f */);
+
+						if (std::string{ material->get_texture_group_name() }.find("SkyBox") != std::string::npos)
+							material->color_modulate(/* 1.0f */);
+					}
+
+					GLOBAL(visuals_nightmode_state) = false;
+				}
+			}
+		}
+
 		switch (fnv::hash(g_csgo.m_panel->get_panel_name(panel))) {
 		case fnv::hash("HudZoom"): {
 			if (g_csgo.m_engine->is_connected()) {

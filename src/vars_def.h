@@ -211,6 +211,10 @@
 #define V_VISUALS_WORLD_C4_COL_DEFUSE_BAR_G V_VISUALS_WORLD_C4_COL_DEFUSE_BAR G_COL_P
 #define V_VISUALS_WORLD_C4_COL_DEFUSE_BAR_B V_VISUALS_WORLD_C4_COL_DEFUSE_BAR B_COL_P
 
+#define V_VISUALS_WORLD_NIGHTMODE_ENABLED "visuals->world->nightmode->enabled"
+#define V_VISUALS_WORLD_NIGHTMODE_WORLD_BRIGHTNESS "visuals->world->nightmode->world->brightness"
+#define V_VISUALS_WORLD_NIGHTMODE_SKY_BRIGHTNESS "visuals->world->nightmode->sky->brightness"
+
 #define V_VISUALS_REMOVALS_SMOKE "visuals->removals->smoke"
 #define V_VISUALS_REMOVALS_FLASH "visuals->removals->flash"
 #define V_VISUALS_REMOVALS_SCOPE "visuals->removals->scope"

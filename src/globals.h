@@ -51,6 +51,8 @@ namespace g
 	inline std::once_flag init_render_stuff{},
 	                      update_crosshair_col{};
 
+	inline bool visuals_nightmode_state{};
+
 	inline int state{};
 	inline _game_status status{};
 

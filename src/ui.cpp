@@ -369,6 +369,7 @@ void ui::setup()
 			add_sub_tab(L"Grenades (In use)");
 			add_sub_tab(L"Weapons");
 			add_sub_tab(L"Bomb (Planted)");
+			add_sub_tab(L"Nightmode");
 
 			switch (ss_entry_position) {
 			case VISUALS_WORLD_ITEMS_TAB: {
@@ -430,6 +431,17 @@ void ui::setup()
 				add_sub_sub_int(L"Bomb Defuse Bar R", V_VISUALS_WORLD_C4_COL_DEFUSE_BAR_R, 0, 255, 1);
 				add_sub_sub_int(L"Bomb Defuse Bar G", V_VISUALS_WORLD_C4_COL_DEFUSE_BAR_G, 0, 255, 1);
 				add_sub_sub_int(L"Bomb Defuse Bar B", V_VISUALS_WORLD_C4_COL_DEFUSE_BAR_B, 0, 255, 1);
+				break;
+			}
+			case VISUALS_WORLD_NIGHTMODE_TAB: {
+				add_sub_sub_bool(L"Enable", V_VISUALS_WORLD_NIGHTMODE_ENABLED, true);
+
+				add_sub_sub_float(L"World Brightness", V_VISUALS_WORLD_NIGHTMODE_WORLD_BRIGHTNESS, 0.1f, 1.0f, 0.01f);
+				add_sub_sub_float(L"Sky Brightness", V_VISUALS_WORLD_NIGHTMODE_SKY_BRIGHTNESS, 0.1f, 1.0f, 0.01f, true);
+
+				add_sub_sub_function(L"Apply Changes", []() {
+					GLOBAL(visuals_nightmode_state) = false;
+				});
 				break;
 			}
 			}

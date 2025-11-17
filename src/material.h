@@ -39,6 +39,8 @@ enum material_var_flags
 
 class c_material {
 public:
+	const char* get_texture_group_name();
 	void increment_reference_count();
 	void set_material_var_flag(material_var_flags flag, bool visible);
+	void color_modulate(float r = 1.0f, float g = 1.0f, float b = 1.0f);
 };
