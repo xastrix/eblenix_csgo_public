@@ -66,7 +66,7 @@ static void __stdcall paint_traverse_h(unsigned int panel, bool force_repaint, b
 		GLOBAL(console_opened) = g_csgo.m_engine->is_console_visible();
 		GLOBAL(chat_opened) = g_csgo.m_client->is_chat_raised();
 
-		if (g_csgo.m_engine->is_playing())
+		if (g_csgo.m_engine->is_connected())
 		{
 			if (g_vars.get_as<bool>(V_VISUALS_ENABLED).value() &&
 				g_vars.get_as<bool>(V_VISUALS_WORLD_NIGHTMODE_ENABLED).value())
