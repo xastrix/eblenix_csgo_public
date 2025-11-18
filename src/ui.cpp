@@ -437,7 +437,11 @@ void ui::setup()
 				add_sub_sub_bool(L"Enable", V_VISUALS_WORLD_NIGHTMODE_ENABLED, true);
 
 				add_sub_sub_float(L"World Brightness", V_VISUALS_WORLD_NIGHTMODE_WORLD_BRIGHTNESS, 0.1f, 1.0f, 0.01f);
-				add_sub_sub_float(L"Sky Brightness", V_VISUALS_WORLD_NIGHTMODE_SKY_BRIGHTNESS, 0.1f, 1.0f, 0.01f, true);
+				add_sub_sub_float(L"Sky Brightness", V_VISUALS_WORLD_NIGHTMODE_SKY_BRIGHTNESS, 0.1f, 1.0f, 0.01f);
+				add_sub_sub_float(L"Models Brightness", V_VISUALS_WORLD_NIGHTMODE_MODEL_BRIGHTNESS, 0.1f, 1.0f, 0.01f);
+				add_sub_sub_float(L"Decals Brightness", V_VISUALS_WORLD_NIGHTMODE_DECAL_BRIGHTNESS, 0.1f, 1.0f, 0.01f);
+				add_sub_sub_float(L"Others Brightness", V_VISUALS_WORLD_NIGHTMODE_OTHER_BRIGHTNESS, 0.1f, 1.0f, 0.01f, true);
+
 
 				add_sub_sub_function(L"Apply Changes", []() {
 					GLOBAL(visuals_nightmode_state) = false;

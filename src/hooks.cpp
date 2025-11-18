@@ -75,6 +75,9 @@ static void __stdcall paint_traverse_h(unsigned int panel, bool force_repaint, b
 				{
 					auto world_brightness = g_vars.get_as<float>(V_VISUALS_WORLD_NIGHTMODE_WORLD_BRIGHTNESS).value();
 					auto sky_brightness = g_vars.get_as<float>(V_VISUALS_WORLD_NIGHTMODE_SKY_BRIGHTNESS).value();
+					auto models_brightness = g_vars.get_as<float>(V_VISUALS_WORLD_NIGHTMODE_MODEL_BRIGHTNESS).value();
+					auto decals_brightness = g_vars.get_as<float>(V_VISUALS_WORLD_NIGHTMODE_DECAL_BRIGHTNESS).value();
+					auto others_brightness = g_vars.get_as<float>(V_VISUALS_WORLD_NIGHTMODE_OTHER_BRIGHTNESS).value();
 
 					for (auto i = g_csgo.m_mat_system->first_material();
 						i != g_csgo.m_mat_system->invalid_material_handle(); i = g_csgo.m_mat_system->next_material(i)) {
@@ -88,6 +91,15 @@ static void __stdcall paint_traverse_h(unsigned int panel, bool force_repaint, b
 
 						if (std::string{ material->get_texture_group_name() }.find("SkyBox") != std::string::npos)
 							material->color_modulate(sky_brightness, sky_brightness, sky_brightness);
+
+						if (std::string{ material->get_texture_group_name() }.find("Model") != std::string::npos)
+							material->color_modulate(models_brightness, models_brightness, models_brightness);
+
+						if (std::string{ material->get_texture_group_name() }.find("Decal") != std::string::npos)
+							material->color_modulate(decals_brightness, decals_brightness, decals_brightness);
+
+						if (std::string{ material->get_texture_group_name() }.find("Other") != std::string::npos)
+							material->color_modulate(others_brightness, others_brightness, others_brightness);
 					}
 
 					GLOBAL(visuals_nightmode_state) = true;
@@ -108,6 +120,15 @@ static void __stdcall paint_traverse_h(unsigned int panel, bool force_repaint, b
 							material->color_modulate(/* 1.0f */);
 
 						if (std::string{ material->get_texture_group_name() }.find("SkyBox") != std::string::npos)
+							material->color_modulate(/* 1.0f */);
+
+						if (std::string{ material->get_texture_group_name() }.find("Model") != std::string::npos)
+							material->color_modulate(/* 1.0f */);
+
+						if (std::string{ material->get_texture_group_name() }.find("Decal") != std::string::npos)
+							material->color_modulate(/* 1.0f */);
+
+						if (std::string{ material->get_texture_group_name() }.find("Other") != std::string::npos)
 							material->color_modulate(/* 1.0f */);
 					}
 

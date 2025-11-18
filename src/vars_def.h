@@ -214,6 +214,10 @@
 #define V_VISUALS_WORLD_NIGHTMODE_ENABLED "visuals->world->nightmode->enabled"
 #define V_VISUALS_WORLD_NIGHTMODE_WORLD_BRIGHTNESS "visuals->world->nightmode->world->brightness"
 #define V_VISUALS_WORLD_NIGHTMODE_SKY_BRIGHTNESS "visuals->world->nightmode->sky->brightness"
+#define V_VISUALS_WORLD_NIGHTMODE_MODEL_BRIGHTNESS "visuals->world->nightmode->model_textures->brightness"
+#define V_VISUALS_WORLD_NIGHTMODE_DECAL_BRIGHTNESS "visuals->world->nightmode->decal_textures->brightness"
+#define V_VISUALS_WORLD_NIGHTMODE_OTHER_BRIGHTNESS "visuals->world->nightmode->other_textures->brightness"
+
 
 #define V_VISUALS_REMOVALS_SMOKE "visuals->removals->smoke"
 #define V_VISUALS_REMOVALS_FLASH "visuals->removals->flash"
