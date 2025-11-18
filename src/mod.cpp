@@ -85,6 +85,8 @@ void mod::init(void* I)
 				g_input.add_hk(VK_F12, []() {
 					g::Unload();
 				});
+
+				g_ui.set_menu_state(true);
 			}
 			else {
 				std::this_thread::sleep_for(std::chrono::seconds(5));
