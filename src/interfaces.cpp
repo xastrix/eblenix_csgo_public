@@ -10,7 +10,7 @@ void CSGO::init()
 
 	if (!m_client) {
 #ifdef _DEBUG
-		_DBG_NOTIFY("Failed to create client interface");
+		printf("Failed to create client interface\n");
 #endif
 		return;
 	}
@@ -19,7 +19,7 @@ void CSGO::init()
 
 	if (!m_entity_list) {
 #ifdef _DEBUG
-		_DBG_NOTIFY("Failed to create entity list interface");
+		printf("Failed to create entity list interface\n");
 #endif
 		return;
 	}
@@ -28,7 +28,7 @@ void CSGO::init()
 
 	if (!m_engine) {
 #ifdef _DEBUG
-		_DBG_NOTIFY("Failed to create engine interface");
+		printf("Failed to create engine interface\n");
 #endif
 		return;
 	}
@@ -37,7 +37,7 @@ void CSGO::init()
 
 	if (!m_panel) {
 #ifdef _DEBUG
-		_DBG_NOTIFY("Failed to create vgui panel interface");
+		printf("Failed to create vgui panel interface\n");
 #endif
 		return;
 	}
@@ -46,7 +46,7 @@ void CSGO::init()
 
 	if (!m_mat_system) {
 #ifdef _DEBUG
-		_DBG_NOTIFY("Failed to create material system interface");
+		printf("Failed to create material system interface\n");
 #endif
 		return;
 	}
@@ -55,7 +55,7 @@ void CSGO::init()
 
 	if (!m_cvar) {
 #ifdef _DEBUG
-		_DBG_NOTIFY("Failed to create engine cvar interface");
+		printf("Failed to create engine cvar interface\n");
 #endif
 		return;
 	}
@@ -64,7 +64,7 @@ void CSGO::init()
 
 	if (!m_trace) {
 #ifdef _DEBUG
-		_DBG_NOTIFY("Failed to create engine trace interface");
+		printf("Failed to create engine trace interface\n");
 #endif
 		return;
 	}
@@ -73,7 +73,7 @@ void CSGO::init()
 
 	if (!m_model_info) {
 #ifdef _DEBUG
-		_DBG_NOTIFY("Failed to create model info interface");
+		printf("Failed to create model info interface\n");
 #endif
 		return;
 	}
@@ -82,7 +82,7 @@ void CSGO::init()
 
 	if (!m_model_render) {
 #ifdef _DEBUG
-		_DBG_NOTIFY("Failed to create model render interface");
+		printf("Failed to create model render interface\n");
 #endif
 		return;
 	}
@@ -91,7 +91,7 @@ void CSGO::init()
 
 	if (!m_render_view) {
 #ifdef _DEBUG
-		_DBG_NOTIFY("Failed to create engine render view interface");
+		printf("Failed to create engine render view interface\n");
 #endif
 		return;
 	}
@@ -100,7 +100,7 @@ void CSGO::init()
 
 	if (!m_event_manager) {
 #ifdef _DEBUG
-		_DBG_NOTIFY("Failed to create game event manager interface");
+		printf("Failed to create game event manager interface\n");
 #endif
 		return;
 	}
@@ -109,7 +109,7 @@ void CSGO::init()
 
 	if (!m_device) {
 #ifdef _DEBUG
-		_DBG_NOTIFY("Failed to make device pointer");
+		printf("Failed to make device pointer\n");
 #endif
 		return;
 	}
@@ -118,7 +118,7 @@ void CSGO::init()
 
 	if (!m_globals) {
 #ifdef _DEBUG
-		_DBG_NOTIFY("Failed to make global vars pointer");
+		printf("Failed to make global vars pointer\n");
 #endif
 		return;
 	}
@@ -127,7 +127,7 @@ void CSGO::init()
 
 	if (!m_client_mode) {
 #ifdef _DEBUG
-		_DBG_NOTIFY("Failed to make client mode pointer");
+		printf("Failed to make client mode pointer\n");
 #endif
 		return;
 	}
@@ -136,7 +136,7 @@ void CSGO::init()
 
 	if (!m_input) {
 #ifdef _DEBUG
-		_DBG_NOTIFY("Failed to make input pointer");
+		printf("Failed to make input pointer\n");
 #endif
 		return;
 	}
@@ -145,7 +145,7 @@ void CSGO::init()
 
 	if (!m_weapon_system) {
 #ifdef _DEBUG
-		_DBG_NOTIFY("Failed to make weapon system pointer");
+		printf("Failed to make weapon system pointer\n");
 #endif
 		return;
 	}
@@ -154,17 +154,20 @@ void CSGO::init()
 
 	if (!m_glow_manager) {
 #ifdef _DEBUG
-		_DBG_NOTIFY("Failed to make glow manager pointer");
+		printf("Failed to make glow manager pointer\n");
 #endif
 	}
 }
 
-c_base_player* CSGO::get_local()
+void CSGO::init_local(const local_t& local)
 {
-	return m_local;
+	m_local = local;
 }
 
-void CSGO::set_local(c_base_player* local_player)
+c_base_player* CSGO::get_local()
 {
-	m_local = local_player;
+	if (!m_local)
+		return nullptr;
+
+	return m_local.get();
 }

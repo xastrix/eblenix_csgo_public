@@ -19,26 +19,175 @@
 #include <intrin.h>
 #include <sstream>
 
-using create_move_fn = bool(__stdcall*)(float, i_user_cmd*);
-using paint_traverse_fn = void(__thiscall*)(c_panel*, unsigned int, bool, bool);
-using present_fn = long(D3DAPI*)(IDirect3DDevice9*, RECT*, RECT*, HWND, RGNDATA*);
-using reset_fn = long(D3DAPI*)(IDirect3DDevice9*, D3DPRESENT_PARAMETERS*);
-using do_post_screen_effects_fn = int(__thiscall*)(void*, int);
-using scene_end_fn = void(__thiscall*)(void*);
-using screen_viewmodel_fov_change_fn = float(__thiscall*)(uintptr_t*);
-using get_screen_aspect_ratio_fn = float(__thiscall*)(void*, int, int);
-using draw_model_execute_fn = void(__thiscall*)(c_model_render*, i_mat_render_ctx*, const draw_model_state_t&, const model_render_info_t&, matrix_t*);
-using override_view_fn = void(__fastcall*)(uintptr_t*, void*, c_view_setup*);
-using is_connected_fn = bool(__fastcall*)(void*);
-using list_in_leaves_box_fn = int(__thiscall*)(void*, const vec3&, const vec3&, unsigned short*, int);
-using sv_cheats_boolean_fn = bool(__thiscall*)(convar*);
-using shutdown_fn = void(__fastcall*)(void*, void*);
+enum _hk_list {
+	HK_CREATEMOVE,
+	HK_PAINTTRAVERSE,
+	HK_PRESENT,
+	HK_RESET,
+	HK_DOPOSTSCREENEFFECTS,
+	HK_SCENEEND,
+	HK_SCREENMODELFOVCHANGE,
+	HK_GETSCREENASPECTRATIO,
+	HK_DRAWMODELEXECUTE,
+	HK_OVERRIDEVIEW,
+	HK_ISCONNECTED,
+	HK_LISTLEAVESINBOX,
+	HK_SVCHEATSBOOLEAN,
+	HK_SHUTDOWN,
+	maxHooks,
+};
+
+struct hook_t {
+	template <typename T, int index>
+	void hook(void* addr, void* target, void** orig) {
+		if (m_hooked)
+			return;
+
+		m_index = index;
+		m_addr = addr;
+		m_src = Helpers::get_virtual_fn<T>(m_addr, m_index);
+		m_target = target;
+		m_orig = orig;
+
+		MH_STATUS status{};
+
+		status = MH_CreateHook(m_src, m_target, m_orig);
+
+		if (status != MH_OK) {
+#ifdef _DEBUG
+			printf("Failed to create %s hook\n", get_hook_name_by_id(get_hook_id_by_index(m_index)));
+#endif
+			return;
+		}
+
+		status = MH_EnableHook(m_src);
+
+		if (status != MH_OK) {
+#ifdef _DEBUG
+			printf("Failed to enable %s hook\n", get_hook_name_by_id(get_hook_id_by_index(m_index)));
+#endif
+			return;
+		}
+
+		m_hooked = true;
+	}
+
+	int get_index() {
+		return m_index;
+	}
+
+	bool is_hooked() {
+		return m_hooked;
+	}
+
+	void unhook() {
+		if (!m_hooked)
+			return;
+
+		MH_STATUS status{};
+
+		status = MH_DisableHook(m_src);
+
+		if (status != MH_OK) {
+#ifdef _DEBUG
+			printf("Failed to disable %s hook\n", get_hook_name_by_id(get_hook_id_by_index(m_index)));
+#endif
+			return;
+		}
+
+		status = MH_RemoveHook(m_src);
+
+		if (status != MH_OK) {
+#ifdef _DEBUG
+			printf("Failed to remove %s hook\n", get_hook_name_by_id(get_hook_id_by_index(m_index)));
+#endif
+			return;
+		}
+
+		m_hooked = false;
+	}
+
+private:
+	const char* get_hook_name_by_id(_hk_list id) {
+		switch (id) {
+		case HK_CREATEMOVE:
+			return "Create move";
+		case HK_PAINTTRAVERSE:
+			return "Paint traverse";
+		case HK_PRESENT:
+			return "Present";
+		case HK_RESET:
+			return "Reset";
+		case HK_DOPOSTSCREENEFFECTS:
+			return "Do post screen effects";
+		case HK_SCENEEND:
+			return "Scene end";
+		case HK_SCREENMODELFOVCHANGE:
+			return "Screen model fov change";
+		case HK_GETSCREENASPECTRATIO:
+			return "Get aspect ratio";
+		case HK_DRAWMODELEXECUTE:
+			return "Draw model execute";
+		case HK_OVERRIDEVIEW:
+			return "Override view";
+		case HK_ISCONNECTED:
+			return "Is connected";
+		case HK_LISTLEAVESINBOX:
+			return "List leaves in box";
+		case HK_SVCHEATSBOOLEAN:
+			return "Sv cheats boolean";
+		case HK_SHUTDOWN:
+			return "Shutdown";
+		}
+	}
+
+	_hk_list get_hook_id_by_index(int index) {
+		switch (index) {
+		case CREATE_MOVE_FN_INDEX:
+			return HK_CREATEMOVE;
+		case PAINT_TRAVERSE_FN_INDEX:
+			return HK_PAINTTRAVERSE;
+		case PRESENT_FN_INDEX:
+			return HK_PRESENT;
+		case RESET_FN_INDEX:
+			return HK_RESET;
+		case DO_POST_SCREEN_EFFECTS_FN_INDEX:
+			return HK_DOPOSTSCREENEFFECTS;
+		case SCENE_END_FN_INDEX:
+			return HK_SCENEEND;
+		case SCREEN_VIEWMODEL_FOV_CHANGE_FN_INDEX:
+			return HK_SCREENMODELFOVCHANGE;
+		case GET_SCREEN_ASPECT_RATIO_FN_INDEX:
+			return HK_GETSCREENASPECTRATIO;
+		case DRAW_MODEL_EXECUTE_FN_INDEX:
+			return HK_DRAWMODELEXECUTE;
+		case OVERRIDE_VIEW_FN_INDEX:
+			return HK_OVERRIDEVIEW;
+		case IS_CONNECTED_FN_INDEX:
+			return HK_ISCONNECTED;
+		case LIST_IN_LEAVES_BOX_FN_INDEX:
+			return HK_LISTLEAVESINBOX;
+		case SV_CHEATS_BOOLEAN_FN_INDEX:
+			return HK_SVCHEATSBOOLEAN;
+		case SHUTDOWN_FN_INDEX:
+			return HK_SHUTDOWN;
+		}
+	}
+
+private:
+	int    m_index{};
+	void*  m_addr{};
+	void*  m_src{};
+	void*  m_target{};
+	void** m_orig{};
+	bool   m_hooked{};
+};
 
 struct hooks {
 	void init();
 	void undo();
 private:
-	MH_STATUS m_status{ MH_UNKNOWN };
+	hook_t m_hooks[maxHooks];
 };
 
 inline hooks g_hooks;

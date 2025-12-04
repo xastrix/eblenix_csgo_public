@@ -178,7 +178,6 @@ public:
 class c_base_attributable_item : public c_base_entity {
 public:
 	short                 item_definition_index();
-
 };
 
 class c_base_plantedc4 : public c_base_entity {

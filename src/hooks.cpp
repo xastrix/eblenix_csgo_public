@@ -1,20 +1,21 @@
 #include "hooks.h"
 
-static create_move_fn o_create_move{};
-static paint_traverse_fn o_paint_traverse{};
-static present_fn o_present{};
-static reset_fn o_reset{};
-static do_post_screen_effects_fn o_do_post_screen_effects{};
-static scene_end_fn o_scene_end{};
-static screen_viewmodel_fov_change_fn o_screen_viewmodel_fov_change{};
-static get_screen_aspect_ratio_fn o_get_screen_aspect_ratio{};
-static draw_model_execute_fn o_draw_model_execute{};
-static override_view_fn o_override_view{};
-static is_connected_fn o_is_connected{};
-static list_in_leaves_box_fn o_list_in_leaves_box{};
-static sv_cheats_boolean_fn o_sv_cheats_boolean{};
-static shutdown_fn o_shutdown{};
+using create_move_fn = bool(__stdcall*)(float, i_user_cmd*);
+using paint_traverse_fn = void(__thiscall*)(c_panel*, unsigned int, bool, bool);
+using present_fn = long(D3DAPI*)(IDirect3DDevice9*, RECT*, RECT*, HWND, RGNDATA*);
+using reset_fn = long(D3DAPI*)(IDirect3DDevice9*, D3DPRESENT_PARAMETERS*);
+using do_post_screen_effects_fn = int(__thiscall*)(void*, int);
+using scene_end_fn = void(__thiscall*)(void*);
+using screen_viewmodel_fov_change_fn = float(__thiscall*)(uintptr_t*);
+using get_screen_aspect_ratio_fn = float(__thiscall*)(c_engine_client*, int, int);
+using draw_model_execute_fn = void(__thiscall*)(c_model_render*, i_mat_render_ctx*, const draw_model_state_t&, const model_render_info_t&, matrix_t*);
+using override_view_fn = void(__fastcall*)(uintptr_t*, void*, c_view_setup*);
+using is_connected_fn = bool(__fastcall*)(void*);
+using list_in_leaves_box_fn = int(__thiscall*)(void*, const vec3&, const vec3&, unsigned short*, int);
+using sv_cheats_boolean_fn = bool(__thiscall*)(convar*);
+using shutdown_fn = void(__fastcall*)(void*, void*);
 
+static create_move_fn o_create_move{};
 static bool __stdcall create_move_h(float input_sample_frametime, i_user_cmd* cmd)
 {
 	auto ret = o_create_move(input_sample_frametime, cmd);
@@ -22,9 +23,7 @@ static bool __stdcall create_move_h(float input_sample_frametime, i_user_cmd* cm
 	if (!cmd || !cmd->command_number)
 		return ret;
 
-	g_csgo.set_local(
-		reinterpret_cast<c_base_player*>(g_csgo.m_entity_list->get_client_entity(g_csgo.m_engine->get_local_player()))
-	);
+	g_csgo.init_local({ reinterpret_cast<c_base_player*>(g_csgo.m_entity_list->get_client_entity(g_csgo.m_engine->get_local_player())) });
 
 	if (GLOBAL(initialised))
 	{
@@ -56,6 +55,7 @@ static bool __stdcall create_move_h(float input_sample_frametime, i_user_cmd* cm
 	return ret;
 }
 
+static paint_traverse_fn o_paint_traverse{};
 static void __stdcall paint_traverse_h(unsigned int panel, bool force_repaint, bool allow_force)
 {
 	if (GLOBAL(initialised) && !GLOBAL(panic))
@@ -152,6 +152,7 @@ static void __stdcall paint_traverse_h(unsigned int panel, bool force_repaint, b
 	return o_paint_traverse(g_csgo.m_panel, panel, force_repaint, allow_force);
 }
 
+static present_fn o_present{};
 static long D3DAPI present_h(IDirect3DDevice9* device, RECT* source_rect, RECT* dest_rect, HWND dest_window_override, RGNDATA* dirty_region)
 {
 	std::call_once(GLOBAL(init_render_stuff), [device]() {
@@ -186,6 +187,7 @@ static long D3DAPI present_h(IDirect3DDevice9* device, RECT* source_rect, RECT* 
 	return o_present(device, source_rect, dest_rect, dest_window_override, dirty_region);
 }
 
+static reset_fn o_reset{};
 static long D3DAPI reset_h(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* present_parameters)
 {
 	g_ui.on_reset_sprites();
@@ -193,12 +195,16 @@ static long D3DAPI reset_h(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* pres
 
 	auto ret = o_reset(device, present_parameters);
 
-	g_render.create_objects(device);
-	g_ui.on_reset_end_sprites();
+	if (ret == D3D_OK)
+	{
+		g_render.create_objects(device);
+		g_ui.on_reset_end_sprites();
+	}
 
 	return ret;
 }
 
+static do_post_screen_effects_fn o_do_post_screen_effects{};
 static int __stdcall do_post_screen_effects_h(int v)
 {
 	if (GLOBAL(initialised) && !GLOBAL(panic))
@@ -302,6 +308,7 @@ static int __stdcall do_post_screen_effects_h(int v)
 	return o_do_post_screen_effects(g_csgo.m_client_mode, v);
 }
 
+static scene_end_fn o_scene_end{};
 static void __stdcall scene_end_h()
 {
 	if (GLOBAL(initialised) && !GLOBAL(panic))
@@ -419,6 +426,7 @@ static void __stdcall scene_end_h()
 	return o_scene_end(g_csgo.m_render_view);
 }
 
+static screen_viewmodel_fov_change_fn o_screen_viewmodel_fov_change{};
 static float __stdcall screen_viewmodel_fov_change_h()
 {
 	auto ret = o_screen_viewmodel_fov_change(g_csgo.m_client_mode);
@@ -431,9 +439,10 @@ static float __stdcall screen_viewmodel_fov_change_h()
 	return ret;
 }
 
-static float __fastcall get_screen_aspect_ratio_h(void* _ecx, void*, int width, int height)
+static get_screen_aspect_ratio_fn o_get_screen_aspect_ratio{};
+static float __stdcall get_screen_aspect_ratio_h(int width, int height)
 {
-	auto ret = o_get_screen_aspect_ratio(_ecx, width, height);
+	auto ret = o_get_screen_aspect_ratio(g_csgo.m_engine, width, height);
 
 	if (GLOBAL(initialised) && !GLOBAL(panic))
 	{
@@ -446,6 +455,7 @@ static float __fastcall get_screen_aspect_ratio_h(void* _ecx, void*, int width, 
 	return ret;
 }
 
+static draw_model_execute_fn o_draw_model_execute{};
 static void __stdcall draw_model_execute_h(i_mat_render_ctx* ctx, const draw_model_state_t& state, const model_render_info_t& info, matrix_t* bone_to_world)
 {
 	if (GLOBAL(initialised) && !GLOBAL(panic))
@@ -476,6 +486,7 @@ static void __stdcall draw_model_execute_h(i_mat_render_ctx* ctx, const draw_mod
 	return o_draw_model_execute(g_csgo.m_model_render, ctx, state, info, bone_to_world);
 }
 
+static override_view_fn o_override_view{};
 static void __fastcall override_view_h(void* _this, void*, c_view_setup* view_setup)
 {
 	if (GLOBAL(initialised) && !GLOBAL(panic))
@@ -500,6 +511,7 @@ static void __fastcall override_view_h(void* _this, void*, c_view_setup* view_se
 	return o_override_view(g_csgo.m_client_mode, _this, view_setup);
 }
 
+static is_connected_fn o_is_connected{};
 static bool __fastcall is_connected_h(void* _ecx, void*)
 {
 	auto ret = o_is_connected(_ecx);
@@ -516,6 +528,7 @@ static bool __fastcall is_connected_h(void* _ecx, void*)
 	return ret;
 }
 
+static list_in_leaves_box_fn o_list_in_leaves_box{};
 static int __fastcall list_leaves_in_box_h(void* bsp, void*, const vec3& mins, const vec3& maxs, unsigned short* list, int list_max)
 {
 	if (_ReturnAddress() != g_sig.s_list_leaves)
@@ -540,6 +553,7 @@ static int __fastcall list_leaves_in_box_h(void* bsp, void*, const vec3& mins, c
 	return o_list_in_leaves_box(bsp, map_min, map_max, list, list_max);
 }
 
+static sv_cheats_boolean_fn o_sv_cheats_boolean{};
 static bool __fastcall sv_cheats_boolean_h(convar* convar, int)
 {
 	if (_ReturnAddress() == g_sig.s_cam_think)
@@ -548,6 +562,7 @@ static bool __fastcall sv_cheats_boolean_h(convar* convar, int)
 	return o_sv_cheats_boolean(convar);
 }
 
+static shutdown_fn o_shutdown{};
 static void __fastcall on_shutdown_h(void* _ecx, void* _edx)
 {
 	GLOBAL(panic) = true;
@@ -557,119 +572,58 @@ static void __fastcall on_shutdown_h(void* _ecx, void* _edx)
 
 void hooks::init()
 {
-	m_status = MH_Initialize();
+	MH_Initialize();
 
-	if (!(MH_CreateHook(Helpers::get_virtual_fn<IDirect3DDevice9*>(g_csgo.m_device, present_fn_index),
-		present_h, reinterpret_cast<void**>(&o_present)) == MH_OK)) {
-#ifdef _DEBUG
-		_DBG_NOTIFY("Failed to create present hook");
-#endif
-	}
+	m_hooks[HK_PRESENT].hook<IDirect3DDevice9*, PRESENT_FN_INDEX>(g_csgo.m_device,
+		present_h, reinterpret_cast<void**>(&o_present));
 
-	if (!(MH_CreateHook(Helpers::get_virtual_fn<IDirect3DDevice9*>(g_csgo.m_device, reset_fn_index),
-		reset_h, reinterpret_cast<void**>(&o_reset)) == MH_OK)) {
-#ifdef _DEBUG
-		_DBG_NOTIFY("Failed to create reset hook");
-#endif
-	}
+	m_hooks[HK_RESET].hook<IDirect3DDevice9*, RESET_FN_INDEX>(g_csgo.m_device,
+		reset_h, reinterpret_cast<void**>(&o_reset));
 
-	if (!(MH_CreateHook(Helpers::get_virtual_fn<c_base_client*>(g_csgo.m_client, shutdown_fn_index),
-		on_shutdown_h, reinterpret_cast<void**>(&o_shutdown)) == MH_OK)) {
-#ifdef _DEBUG
-		_DBG_NOTIFY("Failed to create on_shutdown hook");
-#endif
-	}
+	m_hooks[HK_SHUTDOWN].hook<c_base_client*, SHUTDOWN_FN_INDEX>(g_csgo.m_client,
+		on_shutdown_h, reinterpret_cast<void**>(&o_shutdown));
 
 	if (GLOBAL(status) == gameVersionOK)
 	{
-		if (!(MH_CreateHook(Helpers::get_virtual_fn<uintptr_t*>(g_csgo.m_client_mode, create_move_fn_index),
-			create_move_h, reinterpret_cast<void**>(&o_create_move)) == MH_OK)) {
-#ifdef _DEBUG
-			_DBG_NOTIFY("Failed to create create_move hook");
-#endif
-		}
+		m_hooks[HK_CREATEMOVE].hook<uintptr_t*, CREATE_MOVE_FN_INDEX>(g_csgo.m_client_mode,
+			create_move_h, reinterpret_cast<void**>(&o_create_move));
 
-		if (!(MH_CreateHook(Helpers::get_virtual_fn<c_panel*>(g_csgo.m_panel, paint_traverse_fn_index),
-			paint_traverse_h, reinterpret_cast<void**>(&o_paint_traverse)) == MH_OK)) {
-#ifdef _DEBUG
-			_DBG_NOTIFY("Failed to create paint_traverse hook");
-#endif
-		}
+		m_hooks[HK_PAINTTRAVERSE].hook<c_panel*, PAINT_TRAVERSE_FN_INDEX>(g_csgo.m_panel,
+			paint_traverse_h, reinterpret_cast<void**>(&o_paint_traverse));
 
-		if (!(MH_CreateHook(Helpers::get_virtual_fn<uintptr_t*>(g_csgo.m_client_mode, do_post_screen_effects_fn_index),
-			do_post_screen_effects_h, reinterpret_cast<void**>(&o_do_post_screen_effects)) == MH_OK)) {
-#ifdef _DEBUG
-			_DBG_NOTIFY("Failed to create do_post_screen_effects hook");
-#endif
-		}
+		m_hooks[HK_DOPOSTSCREENEFFECTS].hook<uintptr_t*, DO_POST_SCREEN_EFFECTS_FN_INDEX>(g_csgo.m_client_mode,
+			do_post_screen_effects_h, reinterpret_cast<void**>(&o_do_post_screen_effects));
 
-		if (!(MH_CreateHook(Helpers::get_virtual_fn<c_render_view*>(g_csgo.m_render_view, scene_end_fn_index),
-			scene_end_h, reinterpret_cast<void**>(&o_scene_end)) == MH_OK)) {
-#ifdef _DEBUG
-			_DBG_NOTIFY("Failed to create scene_end hook");
-#endif
-		}
+		m_hooks[HK_SCENEEND].hook<c_render_view*, SCENE_END_FN_INDEX>(g_csgo.m_render_view,
+			scene_end_h, reinterpret_cast<void**>(&o_scene_end));
 
-		if (!(MH_CreateHook(Helpers::get_virtual_fn<uintptr_t*>(g_csgo.m_client_mode, screen_viewmodel_fov_change_fn_index),
-			screen_viewmodel_fov_change_h, reinterpret_cast<void**>(&o_screen_viewmodel_fov_change)) == MH_OK)) {
-#ifdef _DEBUG
-			_DBG_NOTIFY("Failed to create screen_viewmodel_fov_change hook");
-#endif
-		}
+		m_hooks[HK_SCREENMODELFOVCHANGE].hook<uintptr_t*, SCREEN_VIEWMODEL_FOV_CHANGE_FN_INDEX>(g_csgo.m_client_mode,
+			screen_viewmodel_fov_change_h, reinterpret_cast<void**>(&o_screen_viewmodel_fov_change));
 
-		if (!(MH_CreateHook(Helpers::get_virtual_fn<c_engine_client*>(g_csgo.m_engine, get_screen_aspect_ratio_fn_index),
-			get_screen_aspect_ratio_h, reinterpret_cast<void**>(&o_get_screen_aspect_ratio)) == MH_OK)) {
-#ifdef _DEBUG
-			_DBG_NOTIFY("Failed to create get_screen_aspect_ratio hook");
-#endif
-		}
+		m_hooks[HK_GETSCREENASPECTRATIO].hook<c_engine_client*, GET_SCREEN_ASPECT_RATIO_FN_INDEX>(g_csgo.m_engine,
+			get_screen_aspect_ratio_h, reinterpret_cast<void**>(&o_get_screen_aspect_ratio));
 
-		if (!(MH_CreateHook(Helpers::get_virtual_fn<c_model_render*>(g_csgo.m_model_render, draw_model_execute_fn_index),
-			draw_model_execute_h, reinterpret_cast<void**>(&o_draw_model_execute)) == MH_OK)) {
-#ifdef _DEBUG
-			_DBG_NOTIFY("Failed to create draw_model_execute hook");
-#endif
-		}
+		m_hooks[HK_DRAWMODELEXECUTE].hook<c_model_render*, DRAW_MODEL_EXECUTE_FN_INDEX>(g_csgo.m_model_render,
+			draw_model_execute_h, reinterpret_cast<void**>(&o_draw_model_execute));
 
-		if (!(MH_CreateHook(Helpers::get_virtual_fn<uintptr_t*>(g_csgo.m_client_mode, override_view_fn_index),
-			override_view_h, reinterpret_cast<void**>(&o_override_view)) == MH_OK)) {
-#ifdef _DEBUG
-			_DBG_NOTIFY("Failed to create override_view hook");
-#endif
-		}
+		m_hooks[HK_OVERRIDEVIEW].hook<uintptr_t*, OVERRIDE_VIEW_FN_INDEX>(g_csgo.m_client_mode,
+			override_view_h, reinterpret_cast<void**>(&o_override_view));
 
-		if (!(MH_CreateHook(Helpers::get_virtual_fn<c_engine_client*>(g_csgo.m_engine, is_connected_fn_index),
-			is_connected_h, reinterpret_cast<void**>(&o_is_connected)) == MH_OK)) {
-#ifdef _DEBUG
-			_DBG_NOTIFY("Failed to create is_connected hook");
-#endif
-		}
+		m_hooks[HK_ISCONNECTED].hook<c_engine_client*, IS_CONNECTED_FN_INDEX>(g_csgo.m_engine,
+			is_connected_h, reinterpret_cast<void**>(&o_is_connected));
 
-		if (!(MH_CreateHook(Helpers::get_virtual_fn<void*>(g_csgo.m_engine->get_bsp_query(), list_in_leaves_box_fn_index),
-			list_leaves_in_box_h, reinterpret_cast<void**>(&o_list_in_leaves_box)) == MH_OK)) {
-#ifdef _DEBUG
-			_DBG_NOTIFY("Failed to create list_leaves_in_box hook");
-#endif
-		}
+		m_hooks[HK_LISTLEAVESINBOX].hook<void*, LIST_IN_LEAVES_BOX_FN_INDEX>(g_csgo.m_engine->get_bsp_query(),
+			list_leaves_in_box_h, reinterpret_cast<void**>(&o_list_in_leaves_box));
 
-		if (!(MH_CreateHook(Helpers::get_virtual_fn<convar*>(g_csgo.m_cvar->get_convar("sv_cheats"), sv_cheats_boolean_fn_index),
-			sv_cheats_boolean_h, reinterpret_cast<void**>(&o_sv_cheats_boolean)) == MH_OK)) {
-#ifdef _DEBUG
-			_DBG_NOTIFY("Failed to create sv_cheats_boolean hook");
-#endif
-		}
+		m_hooks[HK_SVCHEATSBOOLEAN].hook<convar*, SV_CHEATS_BOOLEAN_FN_INDEX>(g_csgo.m_cvar->get_convar("sv_cheats"),
+			sv_cheats_boolean_h, reinterpret_cast<void**>(&o_sv_cheats_boolean));
 	}
-
-	MH_EnableHook(MH_ALL_HOOKS);
 }
 
 void hooks::undo()
 {
-	if (!(m_status == MH_OK))
-		return;
-
-	MH_DisableHook(MH_ALL_HOOKS);
-	MH_RemoveHook(MH_ALL_HOOKS);
+	for (int i = 0; i < maxHooks; i++)
+		m_hooks[i].unhook();
 
 	MH_Uninitialize();
 }

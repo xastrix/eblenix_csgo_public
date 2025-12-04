@@ -71,7 +71,7 @@ sig_t sig::scan_sig(const std::string& module_name, const std::string& signature
 	}
 
 #ifdef _DEBUG
-	_DBG_NOTIFY(std::string{ "Wrong signature: " + signature }.c_str());
+	printf("Wrong signature: %s\n", signature.c_str());
 #endif
 
 	return {};

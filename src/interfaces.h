@@ -25,12 +25,29 @@ struct interfaces {
 	c_glow_manager* m_glow_manager;
 };
 
+struct local_t {
+	local_t() = default;
+	local_t(c_base_player* ptr) : m_ptr(ptr) {};
+
+	c_base_player* get() const {
+		return m_ptr;
+	}
+
+	bool operator!() const {
+		return (m_ptr == nullptr);
+	}
+private:
+	c_base_player* m_ptr{};
+};
+
 struct CSGO : public interfaces {
 	void init();
+
+	void init_local(const local_t& local);
 	c_base_player* get_local();
-	void set_local(c_base_player* local_player);
+
 private:
-	c_base_player* m_local;
+	local_t m_local{};
 };
 
 inline CSGO g_csgo;

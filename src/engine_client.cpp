@@ -28,7 +28,7 @@ bool c_engine_client::is_in_game()
 bool c_engine_client::is_connected()
 {
 	using original_fn = bool(__thiscall*)(c_engine_client*);
-	return (*(original_fn**)this)[is_connected_fn_index](this);
+	return (*(original_fn**)this)[IS_CONNECTED_FN_INDEX](this);
 }
 
 bool c_engine_client::is_playing()
