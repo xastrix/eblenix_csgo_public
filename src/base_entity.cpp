@@ -30,12 +30,12 @@ int c_base_entity::get_team_num()
 		netvar_manager::get_address("DT_CSPlayer::m_iTeamNum"));
 }
 
-bool c_base_entity::setup_bones(matrix_t* out, int max_bones, int mask, float time)
+bool c_base_entity::setup_bones(matrix3x4_t* out, int max_bones, int mask, float time)
 {
 	if (!this)
 		return false;
 
-	using original_fn = bool(__thiscall*)(void*, matrix_t*, int, int, float);
+	using original_fn = bool(__thiscall*)(void*, matrix3x4_t*, int, int, float);
 	return (*(original_fn**)get_renderable())[13](get_renderable(), out, max_bones, mask, time);
 }
 

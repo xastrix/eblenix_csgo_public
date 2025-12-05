@@ -13,7 +13,7 @@ static bool screen_transform(const vec3& in, vec3& out)
 		view_matrix = *reinterpret_cast<uintptr_t*>(view_matrix + 0x3) + 0xB0;
 	}
 
-	auto matrix = (*(matrix_t*)view_matrix).get_matrix();
+	auto matrix = (*(matrix3x4_t*)view_matrix).m;
 
 	out.x = matrix[0][0] * in.x + matrix[0][1] * in.y + matrix[0][2] * in.z + matrix[0][3];
 	out.y = matrix[1][0] * in.x + matrix[1][1] * in.y + matrix[1][2] * in.z + matrix[1][3];
@@ -63,18 +63,16 @@ void Math::sin_cos(float r, float* s, float* c)
 	*c = std::cos(r);
 }
 
-void Math::transform_vector(vec3& a, matrix_t& b, vec3& out)
+void Math::transform_vector(vec3& a, matrix3x4_t& b, vec3& out)
 {
-	auto matrix = b.get_matrix();
-
-	out.x = a.dot(matrix[0]) + matrix[0][3];
-	out.y = a.dot(matrix[1]) + matrix[1][3];
-	out.z = a.dot(matrix[2]) + matrix[2][3];
+	out.x = a.dot(b.m[0]) + b.m[0][3];
+	out.y = a.dot(b.m[1]) + b.m[1][3];
+	out.z = a.dot(b.m[2]) + b.m[2][3];
 }
 
 void Math::vector_angles(const vec3& forward, vec3& angles)
 {
-	if ((forward.y == 0.0f && forward.x == 0.0f))
+	if (forward.y == 0.0f && forward.x == 0.0f)
 	{
 		angles.x = (forward.z > 0.0f) ? 270.0f : 90.0f;
 		angles.y = 0.0f;

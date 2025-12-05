@@ -14,7 +14,7 @@ int Helpers::get_nearest_bone(c_base_player* entity, i_user_cmd* cmd)
 	auto aim_bone = 0;
 	auto best_distance = 360.0f;
 
-	matrix_t matrix[max_studio_bones];
+	matrix3x4_t matrix[max_studio_bones];
 
 	if (!entity->setup_bones(matrix, max_studio_bones, bone_used_by_hitbox, 0.0f))
 		return -1;
@@ -39,7 +39,7 @@ int Helpers::get_nearest_bone(c_base_player* entity, i_user_cmd* cmd)
 		if (!hitbox)
 			continue;
 
-		const auto angle = Math::calculate_angle(g_csgo.get_local()->get_eye_pos(), vec3(matrix[hitbox->bone][0][3], matrix[hitbox->bone][1][3], matrix[hitbox->bone][2][3]), cmd->viewangles);
+		const auto angle = Math::calculate_angle(g_csgo.get_local()->get_eye_pos(), vec3(matrix[hitbox->bone].m[0][3], matrix[hitbox->bone].m[1][3], matrix[hitbox->bone].m[2][3]), cmd->viewangles);
 		const auto this_distance = std::hypotf(angle.x, angle.y);
 
 		if (best_distance > this_distance) {

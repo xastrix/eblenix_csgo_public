@@ -15,20 +15,20 @@ struct model_t {
 };
 
 struct model_render_info_t {
-	vec3		    origin;
-	vec3		    angles;
-	char		    u0[0x4];
-	void*           renderable;
-	const model_t*  model;
-	const matrix_t* model_to_world;
-	const matrix_t* lighting_offset;
-	const vec3*     lighting_origin;
-	int		        flags;
-	int		        entity_index;
-	int		        skin;
-	int		        body;
-	int		        hitboxset;
-	unsigned short  instance;
+	vec3		       origin;
+	vec3		       angles;
+	char		       u0[0x4];
+	void*              renderable;
+	const model_t*     model;
+	const matrix3x4_t* model_to_world;
+	const matrix3x4_t* lighting_offset;
+	const vec3*        lighting_origin;
+	int		           flags;
+	int		           entity_index;
+	int		           skin;
+	int		           body;
+	int		           hitboxset;
+	unsigned short     instance;
 
 	model_render_info_t() {
 		model_to_world = nullptr;

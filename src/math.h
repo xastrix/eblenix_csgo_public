@@ -15,7 +15,7 @@ namespace Math
 	vec3 calculate_angle(const vec3& source, const vec3& destination, const vec3& view_angles);
 	vec3 calculate_angle_alternative(const vec3& a, const vec3& b);
 	void sin_cos(float r, float* s, float* c);
-	void transform_vector(vec3& a, matrix_t& b, vec3& out);
+	void transform_vector(vec3& a, matrix3x4_t& b, vec3& out);
 	void vector_angles(const vec3& forward, vec3& angles);
 	void angle_vectors(const vec3& angles, vec3& forward);
 	bool clamp_angles(vec3& angles);

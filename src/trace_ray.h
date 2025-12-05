@@ -9,8 +9,7 @@
 
 class c_base_player;
 
-enum trace_type_t
-{
+enum trace_type_t {
 	TRACE_EVERYTHING = 0,
 	TRACE_WORLD_ONLY,
 	TRACE_ENTITIES_ONLY,
@@ -18,11 +17,11 @@ enum trace_type_t
 };
 
 struct ray_t {
-	vector_aligned m_start;
-	vector_aligned m_delta;
-	vector_aligned m_start_offset;
-	vector_aligned m_extents;
-	const matrix_t* m_world_axis_transform;
+	vec_aligned m_start;
+	vec_aligned m_delta;
+	vec_aligned m_start_offset;
+	vec_aligned m_extents;
+	const matrix3x4_t* m_world_axis_transform;
 	bool m_is_ray;
 	bool m_is_swept;
 

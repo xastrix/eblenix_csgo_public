@@ -123,7 +123,7 @@ public:
 	c_client_class*       get_client_class();
 	bool                  get_dormant();
 	int                   get_team_num();
-	bool                  setup_bones(matrix_t* out, int max_bones, int mask, float time);
+	bool                  setup_bones(matrix3x4_t* out, int max_bones, int mask, float time);
 	model_t*              get_model();
 	vec3                  get_absolute_origin();
 	vec3                  get_vec_origin();

@@ -80,17 +80,17 @@ bool c_base_player::can_see_entity(const vec3& pos)
 
 vec3 c_base_player::get_bone_position(int bone_id)
 {
-	matrix_t bone_matrix[max_studio_bones];
+	matrix3x4_t bone_matrix[max_studio_bones];
 
 	if (!setup_bones(bone_matrix, max_studio_bones, bone_used_by_hitbox, 0.0f))
 		return vec3{ 0, 0, 0 };
 
-	return vec3{ bone_matrix[bone_id][0][3], bone_matrix[bone_id][1][3], bone_matrix[bone_id][2][3] };
+	return vec3{ bone_matrix[bone_id].m[0][3], bone_matrix[bone_id].m[1][3], bone_matrix[bone_id].m[2][3] };
 }
 
 vec3 c_base_player::get_hitbox_position(int hitbox_id)
 {
-	matrix_t bone_matrix[max_studio_bones];
+	matrix3x4_t bone_matrix[max_studio_bones];
 
 	if (!setup_bones(bone_matrix, max_studio_bones, bone_used_by_hitbox, 0.0f))
 		return vec3{ 0, 0, 0 };
@@ -191,8 +191,7 @@ bool c_base_player::has_defuser()
 
 bool c_base_player::has_c4()
 {
-	static auto ret = reinterpret_cast<bool(__thiscall*)(void*)>(g_sig.s_has_c4);
-	return ret(this);
+	return reinterpret_cast<bool(__thiscall*)(void*)>(g_sig.s_has_c4)(this);
 }
 
 int c_base_player::get_cash()

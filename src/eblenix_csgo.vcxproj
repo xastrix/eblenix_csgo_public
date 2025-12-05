@@ -106,9 +106,6 @@
     <ClCompile Include="..\external\minhook\src\trampoline.c" />
     <ClCompile Include="event_manager.cpp" />
     <ClCompile Include="math.cpp" />
-    <ClCompile Include="matrix.cpp" />
-    <ClCompile Include="vec2.cpp" />
-    <ClCompile Include="vec3.cpp" />
     <ClCompile Include="netvar_manager.cpp" />
     <ClCompile Include="game_event_mgr.cpp" />
     <ClCompile Include="render_view.cpp" />
@@ -161,10 +158,10 @@
     <ClInclude Include="math.h" />
     <ClInclude Include="matrix.h" />
     <ClInclude Include="vars_def.h" />
-    <ClInclude Include="vec.h" />
     <ClInclude Include="vec2.h" />
     <ClInclude Include="vec3.h" />
     <ClInclude Include="netvar_manager.h" />
+    <ClInclude Include="vec4.h" />
     <ClInclude Include="view_setup.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="signatures.h" />

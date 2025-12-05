@@ -10,15 +10,6 @@
     <ClCompile Include="math.cpp">
       <Filter>csgo\math</Filter>
     </ClCompile>
-    <ClCompile Include="matrix.cpp">
-      <Filter>csgo\math</Filter>
-    </ClCompile>
-    <ClCompile Include="vec2.cpp">
-      <Filter>csgo\math</Filter>
-    </ClCompile>
-    <ClCompile Include="vec3.cpp">
-      <Filter>csgo\math</Filter>
-    </ClCompile>
     <ClCompile Include="aimbot.cpp">
       <Filter>features\aimbot</Filter>
     </ClCompile>
@@ -154,9 +145,6 @@
       <Filter>csgo\math</Filter>
     </ClInclude>
     <ClInclude Include="matrix.h">
-      <Filter>csgo\math</Filter>
-    </ClInclude>
-    <ClInclude Include="vec.h">
       <Filter>csgo\math</Filter>
     </ClInclude>
     <ClInclude Include="vec2.h">
@@ -339,6 +327,9 @@
     <ClInclude Include="vars.h" />
     <ClInclude Include="vars_def.h" />
     <ClInclude Include="common.h" />
+    <ClInclude Include="vec4.h">
+      <Filter>csgo\math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="csgo">

@@ -8,7 +8,7 @@ using do_post_screen_effects_fn = int(__thiscall*)(void*, int);
 using scene_end_fn = void(__thiscall*)(void*);
 using screen_viewmodel_fov_change_fn = float(__thiscall*)(uintptr_t*);
 using get_screen_aspect_ratio_fn = float(__thiscall*)(c_engine_client*, int, int);
-using draw_model_execute_fn = void(__thiscall*)(c_model_render*, i_mat_render_ctx*, const draw_model_state_t&, const model_render_info_t&, matrix_t*);
+using draw_model_execute_fn = void(__thiscall*)(c_model_render*, i_mat_render_ctx*, const draw_model_state_t&, const model_render_info_t&, matrix3x4_t*);
 using override_view_fn = void(__fastcall*)(uintptr_t*, void*, c_view_setup*);
 using is_connected_fn = bool(__fastcall*)(void*);
 using list_in_leaves_box_fn = int(__thiscall*)(void*, const vec3&, const vec3&, unsigned short*, int);
@@ -456,7 +456,7 @@ static float __stdcall get_screen_aspect_ratio_h(int width, int height)
 }
 
 static draw_model_execute_fn o_draw_model_execute{};
-static void __stdcall draw_model_execute_h(i_mat_render_ctx* ctx, const draw_model_state_t& state, const model_render_info_t& info, matrix_t* bone_to_world)
+static void __stdcall draw_model_execute_h(i_mat_render_ctx* ctx, const draw_model_state_t& state, const model_render_info_t& info, matrix3x4_t* bone_to_world)
 {
 	if (GLOBAL(initialised) && !GLOBAL(panic))
 	{
