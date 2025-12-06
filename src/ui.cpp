@@ -477,7 +477,7 @@ void ui::setup()
 			add_sub_float(L"Viewmodel Fov", V_MISC_VISUAL_VIEWMODEL_FOV, 54.0f, 130.0f, 1.0f, true);
 
 			add_sub_bool(L"Aspect Ratio", V_MISC_VISUAL_ASPECT_RATIO);
-			add_sub_int(L"Aspect Ratio Value", V_MISC_VISUAL_ASPECT_RATIO_VALUE, 10.0f, 30.0f, 0.5f, true);
+			add_sub_float(L"Aspect Ratio Value", V_MISC_VISUAL_ASPECT_RATIO_VALUE, 10.0f, 30.0f, 0.5f, true);
 
 			add_sub_bool(L"Thirdperson", V_MISC_VISUAL_THIRDPERSON);
 			add_sub_float(L"Thirdperson Fov", V_MISC_VISUAL_THIRDPERSON_FOV, 20.0f, 90.0f, 1.0f);

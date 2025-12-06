@@ -1,21 +1,6 @@
 #include "hooks.h"
 
-using create_move_fn = bool(__stdcall*)(float, i_user_cmd*);
-using paint_traverse_fn = void(__thiscall*)(c_panel*, unsigned int, bool, bool);
-using present_fn = long(D3DAPI*)(IDirect3DDevice9*, RECT*, RECT*, HWND, RGNDATA*);
-using reset_fn = long(D3DAPI*)(IDirect3DDevice9*, D3DPRESENT_PARAMETERS*);
-using do_post_screen_effects_fn = int(__thiscall*)(void*, int);
-using scene_end_fn = void(__thiscall*)(void*);
-using screen_viewmodel_fov_change_fn = float(__thiscall*)(uintptr_t*);
-using get_screen_aspect_ratio_fn = float(__thiscall*)(c_engine_client*, int, int);
-using draw_model_execute_fn = void(__thiscall*)(c_model_render*, i_mat_render_ctx*, const draw_model_state_t&, const model_render_info_t&, matrix3x4_t*);
-using override_view_fn = void(__fastcall*)(uintptr_t*, void*, c_view_setup*);
-using is_connected_fn = bool(__fastcall*)(void*);
-using list_in_leaves_box_fn = int(__thiscall*)(void*, const vec3&, const vec3&, unsigned short*, int);
-using sv_cheats_boolean_fn = bool(__thiscall*)(convar*);
-using shutdown_fn = void(__fastcall*)(void*, void*);
-
-static create_move_fn o_create_move{};
+static bool(__stdcall *o_create_move)(float, i_user_cmd*);
 static bool __stdcall create_move_h(float input_sample_frametime, i_user_cmd* cmd)
 {
 	auto ret = o_create_move(input_sample_frametime, cmd);
@@ -55,7 +40,7 @@ static bool __stdcall create_move_h(float input_sample_frametime, i_user_cmd* cm
 	return ret;
 }
 
-static paint_traverse_fn o_paint_traverse{};
+static void(__thiscall *o_paint_traverse)(c_panel*, unsigned int, bool, bool);
 static void __stdcall paint_traverse_h(unsigned int panel, bool force_repaint, bool allow_force)
 {
 	if (GLOBAL(initialised) && !GLOBAL(panic))
@@ -152,7 +137,7 @@ static void __stdcall paint_traverse_h(unsigned int panel, bool force_repaint, b
 	return o_paint_traverse(g_csgo.m_panel, panel, force_repaint, allow_force);
 }
 
-static present_fn o_present{};
+static long(D3DAPI *o_present)(IDirect3DDevice9*, RECT*, RECT*, HWND, RGNDATA*);
 static long D3DAPI present_h(IDirect3DDevice9* device, RECT* source_rect, RECT* dest_rect, HWND dest_window_override, RGNDATA* dirty_region)
 {
 	std::call_once(GLOBAL(init_render_stuff), [device]() {
@@ -187,7 +172,7 @@ static long D3DAPI present_h(IDirect3DDevice9* device, RECT* source_rect, RECT* 
 	return o_present(device, source_rect, dest_rect, dest_window_override, dirty_region);
 }
 
-static reset_fn o_reset{};
+static long(D3DAPI *o_reset)(IDirect3DDevice9*, D3DPRESENT_PARAMETERS*);
 static long D3DAPI reset_h(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* present_parameters)
 {
 	g_ui.on_reset_sprites();
@@ -204,7 +189,7 @@ static long D3DAPI reset_h(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* pres
 	return ret;
 }
 
-static do_post_screen_effects_fn o_do_post_screen_effects{};
+static int(__thiscall *o_do_post_screen_effects)(void*, int);
 static int __stdcall do_post_screen_effects_h(int v)
 {
 	if (GLOBAL(initialised) && !GLOBAL(panic))
@@ -308,7 +293,7 @@ static int __stdcall do_post_screen_effects_h(int v)
 	return o_do_post_screen_effects(g_csgo.m_client_mode, v);
 }
 
-static scene_end_fn o_scene_end{};
+static void(__thiscall *o_scene_end)(void*);
 static void __stdcall scene_end_h()
 {
 	if (GLOBAL(initialised) && !GLOBAL(panic))
@@ -426,7 +411,7 @@ static void __stdcall scene_end_h()
 	return o_scene_end(g_csgo.m_render_view);
 }
 
-static screen_viewmodel_fov_change_fn o_screen_viewmodel_fov_change{};
+static float(__thiscall *o_screen_viewmodel_fov_change)(uintptr_t*);
 static float __stdcall screen_viewmodel_fov_change_h()
 {
 	auto ret = o_screen_viewmodel_fov_change(g_csgo.m_client_mode);
@@ -439,7 +424,7 @@ static float __stdcall screen_viewmodel_fov_change_h()
 	return ret;
 }
 
-static get_screen_aspect_ratio_fn o_get_screen_aspect_ratio{};
+static float(__thiscall *o_get_screen_aspect_ratio)(c_engine_client*, int, int);
 static float __stdcall get_screen_aspect_ratio_h(int width, int height)
 {
 	auto ret = o_get_screen_aspect_ratio(g_csgo.m_engine, width, height);
@@ -455,7 +440,7 @@ static float __stdcall get_screen_aspect_ratio_h(int width, int height)
 	return ret;
 }
 
-static draw_model_execute_fn o_draw_model_execute{};
+static void(__thiscall *o_draw_model_execute)(c_model_render*, i_mat_render_ctx*, const draw_model_state_t&, const model_render_info_t&, matrix3x4_t*);
 static void __stdcall draw_model_execute_h(i_mat_render_ctx* ctx, const draw_model_state_t& state, const model_render_info_t& info, matrix3x4_t* bone_to_world)
 {
 	if (GLOBAL(initialised) && !GLOBAL(panic))
@@ -486,7 +471,7 @@ static void __stdcall draw_model_execute_h(i_mat_render_ctx* ctx, const draw_mod
 	return o_draw_model_execute(g_csgo.m_model_render, ctx, state, info, bone_to_world);
 }
 
-static override_view_fn o_override_view{};
+static void(__fastcall *o_override_view)(uintptr_t*, void*, c_view_setup*);
 static void __fastcall override_view_h(void* _this, void*, c_view_setup* view_setup)
 {
 	if (GLOBAL(initialised) && !GLOBAL(panic))
@@ -511,7 +496,7 @@ static void __fastcall override_view_h(void* _this, void*, c_view_setup* view_se
 	return o_override_view(g_csgo.m_client_mode, _this, view_setup);
 }
 
-static is_connected_fn o_is_connected{};
+static bool(__fastcall *o_is_connected)(void*);
 static bool __fastcall is_connected_h(void* _ecx, void*)
 {
 	auto ret = o_is_connected(_ecx);
@@ -528,7 +513,7 @@ static bool __fastcall is_connected_h(void* _ecx, void*)
 	return ret;
 }
 
-static list_in_leaves_box_fn o_list_in_leaves_box{};
+static int(__thiscall *o_list_in_leaves_box)(void*, const vec3&, const vec3&, unsigned short*, int);
 static int __fastcall list_leaves_in_box_h(void* bsp, void*, const vec3& mins, const vec3& maxs, unsigned short* list, int list_max)
 {
 	if (_ReturnAddress() != g_sig.s_list_leaves)
@@ -553,7 +538,7 @@ static int __fastcall list_leaves_in_box_h(void* bsp, void*, const vec3& mins, c
 	return o_list_in_leaves_box(bsp, map_min, map_max, list, list_max);
 }
 
-static sv_cheats_boolean_fn o_sv_cheats_boolean{};
+static bool(__thiscall *o_sv_cheats_boolean)(convar*);
 static bool __fastcall sv_cheats_boolean_h(convar* convar, int)
 {
 	if (_ReturnAddress() == g_sig.s_cam_think)
@@ -562,7 +547,7 @@ static bool __fastcall sv_cheats_boolean_h(convar* convar, int)
 	return o_sv_cheats_boolean(convar);
 }
 
-static shutdown_fn o_shutdown{};
+static void(__fastcall *o_shutdown)(void*, void*);
 static void __fastcall on_shutdown_h(void* _ecx, void* _edx)
 {
 	GLOBAL(panic) = true;
