@@ -448,7 +448,7 @@ static float __stdcall get_screen_aspect_ratio_h(int width, int height)
 	{
 		if (g_vars.get_as<bool>(V_MISC_VISUAL_ASPECT_RATIO).value())
 		{
-			return g_vars.get_as<float>(V_MISC_VISUAL_ASPECT_RATIO_VALUE).value();
+			return (g_vars.get_as<float>(V_MISC_VISUAL_ASPECT_RATIO_VALUE).value() * 0.1) / 2;
 		}
 	}
 
