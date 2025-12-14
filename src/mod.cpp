@@ -1,5 +1,10 @@
 #include "mod.h"
 
+#include "fonts.hpp"
+static std::vector<font_resource_t> font_list = {
+	{ AstriumwepRes, astriumwep_ttf, ASTRIUMWEP_TTF_SZ },
+};
+
 void mod::init(void* I)
 {
 	auto h = CreateThread(0, 0, [](void* I) -> unsigned long __stdcall
@@ -13,7 +18,7 @@ void mod::init(void* I)
 			if (util::wait_for_module(clientDLL, clientPanoramaDLL, 200) == WM_TIMEOUT)
 				GLOBAL(state) = CS_SHUTDOWN;
 
-			g_fonts.init();
+			g_fonts.init(font_list);
 			g_vars.init();
 
 			GLOBAL(state)++;
@@ -119,7 +124,7 @@ void mod::undo()
 	g_hooks.undo();
 	g_input.undo();
 	g_vars.undo();
-	g_fonts.undo();
+	g_fonts.undo(font_list);
 }
 
 bool __stdcall DllMain(const HMODULE mod, const int32_t r, void*)
