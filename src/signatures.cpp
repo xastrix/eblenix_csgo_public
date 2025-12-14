@@ -5,16 +5,21 @@
 
 void sig::init()
 {
-	s_device                  = scan_sig(GLOBAL(module_list[shaderapidx9DLL]), "A1 ? ? ? ? 50 8B 08 FF 51 0C") + 1;
-	s_glow_manager            = scan_sig(GLOBAL(module_list[clientDLL]), "0F 11 05 ? ? ? ? 83 C8 01 C7 05 ? ? ? ? 00 00 00 00") + 3;
-	s_weapon_system           = scan_sig(GLOBAL(module_list[clientDLL]), "8B 35 ? ? ? ? FF 10 0F B7 C0") + 2;
-	s_view_matrix             = scan_sig(GLOBAL(module_list[clientDLL]), "0F 10 05 ? ? ? ? 8D 85 ? ? ? ? B9");
-	s_line_goes_through_smoke = scan_sig(GLOBAL(module_list[clientDLL]), "55 8B EC 83 EC 08 8B 15 ? ? ? ? 0F 57 C0");
-	s_has_c4                  = scan_sig(GLOBAL(module_list[clientDLL]), "56 8B F1 85 F6 74 31");
-	s_input                   = scan_sig(GLOBAL(module_list[clientDLL]), "B9 ? ? ? ? F3 0F 11 04 24 FF 50 10") + 1;
-	s_cam_think               = scan_sig(GLOBAL(module_list[clientDLL]), "85 C0 75 30 38 86");
-	s_is_loadoutallowed       = scan_sig(GLOBAL(module_list[clientDLL]), "84 C0 75 04 B0 01 5F");
-	s_list_leaves             = scan_sig(GLOBAL(module_list[clientDLL]), "56 52 FF 50 18") + 5;
+	m_signatures[S_DEVICE]                  = scan_sig(GLOBAL(module_list[shaderapidx9DLL]), "A1 ? ? ? ? 50 8B 08 FF 51 0C") + 1;
+	m_signatures[S_GLOW_MANAGER]            = scan_sig(GLOBAL(module_list[clientDLL]), "0F 11 05 ? ? ? ? 83 C8 01 C7 05 ? ? ? ? 00 00 00 00") + 3;
+	m_signatures[S_WEAPON_SYSTEM]           = scan_sig(GLOBAL(module_list[clientDLL]), "8B 35 ? ? ? ? FF 10 0F B7 C0") + 2;
+	m_signatures[S_VIEW_MATRIX]             = scan_sig(GLOBAL(module_list[clientDLL]), "0F 10 05 ? ? ? ? 8D 85 ? ? ? ? B9");
+	m_signatures[S_LINE_GOES_THROUGH_SMOKE] = scan_sig(GLOBAL(module_list[clientDLL]), "55 8B EC 83 EC 08 8B 15 ? ? ? ? 0F 57 C0");
+	m_signatures[S_HAS_C4]                  = scan_sig(GLOBAL(module_list[clientDLL]), "56 8B F1 85 F6 74 31");
+	m_signatures[S_INPUT]                   = scan_sig(GLOBAL(module_list[clientDLL]), "B9 ? ? ? ? F3 0F 11 04 24 FF 50 10") + 1;
+	m_signatures[S_CAM_THINK]               = scan_sig(GLOBAL(module_list[clientDLL]), "85 C0 75 30 38 86");
+	m_signatures[S_IS_LOADOUTALLOWED]       = scan_sig(GLOBAL(module_list[clientDLL]), "84 C0 75 04 B0 01 5F");
+	m_signatures[S_LIST_LEAVES]             = scan_sig(GLOBAL(module_list[clientDLL]), "56 52 FF 50 18") + 5;
+}
+
+sig_t sig::get_sig(_signature_list index)
+{
+	return m_signatures[index];
 }
 
 sig_t sig::scan_sig(const std::string& module_name, const std::string& signature)

@@ -191,7 +191,7 @@ bool c_base_player::has_defuser()
 
 bool c_base_player::has_c4()
 {
-	return reinterpret_cast<bool(__thiscall*)(void*)>(g_sig.s_has_c4)(this);
+	return reinterpret_cast<bool(__thiscall*)(void*)>(g_sig.get_sig(S_HAS_C4))(this);
 }
 
 int c_base_player::get_cash()

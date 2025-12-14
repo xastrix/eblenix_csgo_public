@@ -3,11 +3,6 @@
 #include <windows.h>
 #include <vector>
 
-enum _font_resources {
-	AstriumwepRes,
-	maxFontResources,
-};
-
 struct font_resource_t {
 	int m_index{};
 	unsigned char* m_data{};
@@ -19,7 +14,7 @@ struct font_manager {
 	void undo(const std::vector<font_resource_t>& fonts);
 
 private:
-	HANDLE m_handles[maxFontResources]{};
+	HANDLE m_handles[4]{};
 	DWORD  m_num{};
 };
 

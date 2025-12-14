@@ -1,6 +1,11 @@
 #include "mod.h"
 
 #include "fonts.hpp"
+
+enum _font_resources {
+	AstriumwepRes,
+};
+
 static std::vector<font_resource_t> font_list = {
 	{ AstriumwepRes, astriumwep_ttf, ASTRIUMWEP_TTF_SZ },
 };

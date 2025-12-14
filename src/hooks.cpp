@@ -505,7 +505,7 @@ static bool __fastcall is_connected_h(void* _ecx, void*)
 	{
 		if (g_vars.get_as<bool>(V_MISC_VISUAL_INVENTORY_UNLOCK).value())
 		{
-			if (_ReturnAddress() == g_sig.s_is_loadoutallowed)
+			if (_ReturnAddress() == g_sig.get_sig(S_IS_LOADOUTALLOWED))
 				return false;
 		}
 	}
@@ -516,7 +516,7 @@ static bool __fastcall is_connected_h(void* _ecx, void*)
 static int(__thiscall *o_list_in_leaves_box)(void*, const vec3&, const vec3&, unsigned short*, int);
 static int __fastcall list_leaves_in_box_h(void* bsp, void*, const vec3& mins, const vec3& maxs, unsigned short* list, int list_max)
 {
-	if (_ReturnAddress() != g_sig.s_list_leaves)
+	if (_ReturnAddress() != g_sig.get_sig(S_LIST_LEAVES))
 		return o_list_in_leaves_box(bsp, mins, maxs, list, list_max);
 
 	const auto renderable_info = *reinterpret_cast<renderable_info_t**>(reinterpret_cast<uintptr_t>(_AddressOfReturnAddress()) + 0x14);
@@ -541,7 +541,7 @@ static int __fastcall list_leaves_in_box_h(void* bsp, void*, const vec3& mins, c
 static bool(__thiscall *o_sv_cheats_boolean)(convar*);
 static bool __fastcall sv_cheats_boolean_h(convar* convar, int)
 {
-	if (_ReturnAddress() == g_sig.s_cam_think)
+	if (_ReturnAddress() == g_sig.get_sig(S_CAM_THINK))
 		return true;
 
 	return o_sv_cheats_boolean(convar);

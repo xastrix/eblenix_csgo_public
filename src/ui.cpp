@@ -442,7 +442,6 @@ void ui::setup()
 				add_sub_sub_float(L"Decals Brightness", V_VISUALS_WORLD_NIGHTMODE_DECAL_BRIGHTNESS, 0.1f, 1.0f, 0.01f);
 				add_sub_sub_float(L"Others Brightness", V_VISUALS_WORLD_NIGHTMODE_OTHER_BRIGHTNESS, 0.1f, 1.0f, 0.01f, true);
 
-
 				add_sub_sub_function(L"Apply Changes", []() {
 					GLOBAL(visuals_nightmode_state) = false;
 				});

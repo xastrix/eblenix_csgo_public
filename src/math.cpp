@@ -9,7 +9,7 @@ static bool screen_transform(const vec3& in, vec3& out)
 	static uintptr_t view_matrix = 0;
 
 	if (!view_matrix) {
-		view_matrix = (uintptr_t)g_sig.s_view_matrix;
+		view_matrix = (uintptr_t)g_sig.get_sig(S_VIEW_MATRIX);
 		view_matrix = *reinterpret_cast<uintptr_t*>(view_matrix + 0x3) + 0xB0;
 	}
 

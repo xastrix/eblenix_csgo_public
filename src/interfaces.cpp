@@ -105,7 +105,7 @@ void CSGO::init()
 		return;
 	}
 
-	m_device = *Helpers::read<IDirect3DDevice9**>(reinterpret_cast<uintptr_t>(g_sig.s_device));
+	m_device = *Helpers::read<IDirect3DDevice9**>(reinterpret_cast<uintptr_t>(g_sig.get_sig(S_DEVICE)));
 
 	if (!m_device) {
 #ifdef _DEBUG
@@ -132,7 +132,7 @@ void CSGO::init()
 		return;
 	}
 
-	m_input = Helpers::read<i_input*>(reinterpret_cast<uintptr_t>(g_sig.s_input));
+	m_input = Helpers::read<i_input*>(reinterpret_cast<uintptr_t>(g_sig.get_sig(S_INPUT)));
 
 	if (!m_input) {
 #ifdef _DEBUG
@@ -141,7 +141,7 @@ void CSGO::init()
 		return;
 	}
 
-	m_weapon_system = Helpers::read<c_weapon_system*>(reinterpret_cast<uintptr_t>(g_sig.s_weapon_system));
+	m_weapon_system = Helpers::read<c_weapon_system*>(reinterpret_cast<uintptr_t>(g_sig.get_sig(S_WEAPON_SYSTEM)));
 
 	if (!m_weapon_system) {
 #ifdef _DEBUG
@@ -150,7 +150,7 @@ void CSGO::init()
 		return;
 	}
 
-	m_glow_manager = Helpers::read_ptr<c_glow_manager*>(*reinterpret_cast<uintptr_t*>(g_sig.s_glow_manager));
+	m_glow_manager = Helpers::read_ptr<c_glow_manager*>(*reinterpret_cast<uintptr_t*>(g_sig.get_sig(S_GLOW_MANAGER)));
 
 	if (!m_glow_manager) {
 #ifdef _DEBUG

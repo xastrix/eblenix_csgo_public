@@ -246,7 +246,7 @@ bool Helpers::get_bbox(c_base_player* entity, box& in, const bbox_type type)
 
 bool Helpers::is_behind_smoke(const vec3 start_pos, const vec3 end_pos)
 {
-	static auto line_goes_through_smoke_fn = reinterpret_cast<line_goes_through_smoke>(g_sig.s_line_goes_through_smoke);
+	static auto line_goes_through_smoke_fn = reinterpret_cast<line_goes_through_smoke>(g_sig.get_sig(S_LINE_GOES_THROUGH_SMOKE));
 
 	if (!line_goes_through_smoke_fn)
 		return false;
