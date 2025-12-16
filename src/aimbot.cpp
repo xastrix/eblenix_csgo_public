@@ -410,7 +410,7 @@ bool aimbot::can_aiming(c_base_player* entity, c_base_weapon* weapon)
 	if (!g_vars.get_as<bool>(V_AIMBOT_TEAMMATE_CHECK).value() && g_csgo.get_local()->get_team_num() == entity->get_team_num())
 		return false;
 
-	if (!g_vars.get_as<bool>(V_AIMBOT_JUMP_CHECK).value() && g_csgo.get_local()->is_in_air())
+	if (!g_vars.get_as<bool>(V_AIMBOT_JUMP_CHECK).value() && !(g_csgo.get_local()->get_flags() & fl_onground))
 		return false;
 
 	if (g_vars.get_as<bool>(V_AIMBOT_SCOPE_CHECK).value() && Helpers::is_sniper(weapon) && !g_csgo.get_local()->is_scoped())

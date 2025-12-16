@@ -32,7 +32,7 @@ void movement::bunny_hop(i_user_cmd* cmd)
 		g_csgo.get_local()->get_move_type() == movetype_observer)
 		return;
 
-	if (cmd->buttons & in_jump && g_csgo.get_local()->is_in_air())
+	if (cmd->buttons & in_jump && !(g_csgo.get_local()->get_flags() & fl_onground))
 		cmd->buttons &= ~in_jump;
 }
 
@@ -59,7 +59,7 @@ void movement::auto_strafe(i_user_cmd* cmd)
 
 	const auto velocity = g_csgo.get_local()->get_velocity().length_2d();
 
-	if (velocity > 1.0f && g_csgo.get_local()->is_in_air())
+	if (velocity > 1.0f && !(g_csgo.get_local()->get_flags() & fl_onground))
 	{
 		if (!cmd->mousedx) {
 			cmd->forwardmove = std::min<float>(450.0f, 5850.0f / velocity);

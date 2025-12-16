@@ -106,20 +106,23 @@ enum item_definition_data {
 	weapon_knife_widowmaker,
 };
 
-enum team_nums {
+enum _teams {
 	teamT = 2,
 	teamCT,
 };
 
-enum bomb_site_nums {
+enum _bomb_sites {
 	bombA,
 	bombB,
 };
 
+class c_client_renderable {};
+class c_client_networkable {};
+
 class c_base_entity {
 public:
-	void*                 get_renderable();
-	void*                 get_networkable();
+	c_client_renderable*  get_renderable();
+	c_client_networkable* get_networkable();
 	c_client_class*       get_client_class();
 	bool                  get_dormant();
 	int                   get_team_num();
@@ -156,7 +159,6 @@ public:
 	vec3                  get_bone_position(int bone_id);
 	vec3                  get_hitbox_position(int hitbox_id);
 	bool                  is_moving();
-	bool                  is_in_air();
 	bool                  has_gun_game_immunity();
 	int                   hitbox_set();
 	vec3                  aim_punch_angle();

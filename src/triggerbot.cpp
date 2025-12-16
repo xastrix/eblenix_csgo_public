@@ -65,7 +65,7 @@ void triggerbot::run(i_user_cmd* cmd)
 	if (!g_vars.get_as<bool>(V_TRIGGERBOT_TEAMMATE_CHECK).value() && g_csgo.get_local()->get_team_num() == entity->get_team_num())
 		return;
 
-	if (!g_vars.get_as<bool>(V_TRIGGERBOT_JUMP_CHECK).value() && g_csgo.get_local()->is_in_air())
+	if (!g_vars.get_as<bool>(V_TRIGGERBOT_JUMP_CHECK).value() && !(g_csgo.get_local()->get_flags() & fl_onground))
 		return;
 
 	if (g_vars.get_as<bool>(V_TRIGGERBOT_SCOPE_CHECK).value() && Helpers::is_sniper(weapon) && !g_csgo.get_local()->is_scoped())

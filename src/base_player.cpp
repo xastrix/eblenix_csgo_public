@@ -119,14 +119,6 @@ bool c_base_player::is_moving()
 	return (get_velocity().length() > 0.1f);
 }
 
-bool c_base_player::is_in_air()
-{
-	if (!this)
-		return false;
-
-	return !(get_flags() & fl_onground);
-}
-
 bool c_base_player::has_gun_game_immunity()
 {
 	return *reinterpret_cast<bool*>(uintptr_t(this) +

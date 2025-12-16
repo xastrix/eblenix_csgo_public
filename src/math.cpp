@@ -6,28 +6,24 @@
 
 static bool screen_transform(const vec3& in, vec3& out)
 {
-	static uintptr_t view_matrix = 0;
+	static uintptr_t view_matrix{};
 
-	if (!view_matrix) {
-		view_matrix = (uintptr_t)g_sig.get_sig(S_VIEW_MATRIX);
-		view_matrix = *reinterpret_cast<uintptr_t*>(view_matrix + 0x3) + 0xB0;
-	}
+	view_matrix = reinterpret_cast<uintptr_t>(g_sig.get_sig(S_VIEW_MATRIX));
+	view_matrix = *reinterpret_cast<uintptr_t*>(view_matrix) + 0xB0;
 
-	auto matrix = (*(matrix3x4_t*)view_matrix).m;
+	auto& matrix = (*(matrix3x4_t*)view_matrix);
 
-	out.x = matrix[0][0] * in.x + matrix[0][1] * in.y + matrix[0][2] * in.z + matrix[0][3];
-	out.y = matrix[1][0] * in.x + matrix[1][1] * in.y + matrix[1][2] * in.z + matrix[1][3];
+	out.x = matrix.m[0][0] * in.x + matrix.m[0][1] * in.y + matrix.m[0][2] * in.z + matrix.m[0][3];
+	out.y = matrix.m[1][0] * in.x + matrix.m[1][1] * in.y + matrix.m[1][2] * in.z + matrix.m[1][3];
 	out.z = 0.0f;
 
-	auto w = matrix[3][0] * in.x + matrix[3][1] * in.y + matrix[3][2] * in.z + matrix[3][3];
+	auto w = matrix.m[3][0] * in.x + matrix.m[3][1] * in.y + matrix.m[3][2] * in.z + matrix.m[3][3];
 
 	if (w < 0.001f)
 		return false;
 
-	auto invw = 1.0f / w;
-
-	out.x *= invw;
-	out.y *= invw;
+	out.x *= 1.0f / w;
+	out.y *= 1.0f / w;
 
 	return true;
 }

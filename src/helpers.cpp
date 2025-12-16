@@ -223,7 +223,7 @@ bool Helpers::get_bbox(c_base_player* entity, box& in, const bbox_type type)
 		vec3 air, adjust;
 
 		adjust = vec3(0, 0, -18) * entity->get_duck_amount();
-		air = vec3(0, 0, (entity->is_in_air() && (entity->get_move_type() != movetype_ladder)) ? 10 : 0);
+		air = vec3(0, 0, (!(entity->get_flags() & fl_onground) && (entity->get_move_type() != movetype_ladder)) ? 10 : 0);
 
 		down = entity->get_vec_origin() + air;
 		top = down + vec3(0, 0, 72) + adjust;

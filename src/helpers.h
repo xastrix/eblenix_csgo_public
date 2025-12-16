@@ -18,9 +18,10 @@ enum weapon_esp_type {
 };
 
 struct box {
-	int x, y, w, h;
 	box() = default;
 	box(int x, int y, int w, int h) : x(x), y(y), w(w), h(h) {};
+
+	int x, y, w, h;
 };
 
 namespace Helpers

@@ -8,7 +8,7 @@ void sig::init()
 	m_signatures[S_DEVICE]                  = scan_sig(GLOBAL(module_list[shaderapidx9DLL]), "A1 ? ? ? ? 50 8B 08 FF 51 0C") + 1;
 	m_signatures[S_GLOW_MANAGER]            = scan_sig(GLOBAL(module_list[clientDLL]), "0F 11 05 ? ? ? ? 83 C8 01 C7 05 ? ? ? ? 00 00 00 00") + 3;
 	m_signatures[S_WEAPON_SYSTEM]           = scan_sig(GLOBAL(module_list[clientDLL]), "8B 35 ? ? ? ? FF 10 0F B7 C0") + 2;
-	m_signatures[S_VIEW_MATRIX]             = scan_sig(GLOBAL(module_list[clientDLL]), "0F 10 05 ? ? ? ? 8D 85 ? ? ? ? B9");
+	m_signatures[S_VIEW_MATRIX]             = scan_sig(GLOBAL(module_list[clientDLL]), "0F 10 05 ? ? ? ? 8D 85 ? ? ? ? B9") + 3;
 	m_signatures[S_LINE_GOES_THROUGH_SMOKE] = scan_sig(GLOBAL(module_list[clientDLL]), "55 8B EC 83 EC 08 8B 15 ? ? ? ? 0F 57 C0");
 	m_signatures[S_HAS_C4]                  = scan_sig(GLOBAL(module_list[clientDLL]), "56 8B F1 85 F6 74 31");
 	m_signatures[S_INPUT]                   = scan_sig(GLOBAL(module_list[clientDLL]), "B9 ? ? ? ? F3 0F 11 04 24 FF 50 10") + 1;
