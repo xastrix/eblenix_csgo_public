@@ -12,8 +12,8 @@ struct i_base_item {
 		if (!g_interface.is_window_active())
 			return false;
 
-		const auto mouse_pos_x = g_mouse.get_mouse_pos_x();
-		const auto mouse_pos_y = g_mouse.get_mouse_pos_y();
+		const auto mouse_pos_x = g_interface.get_mouse_pos_x();
+		const auto mouse_pos_y = g_interface.get_mouse_pos_y();
 
 		return (mouse_pos_x >= m_x && mouse_pos_x <= m_x + m_w
 			&& mouse_pos_y >= m_y && mouse_pos_y <= m_y + m_h);
@@ -79,7 +79,7 @@ protected:
 		if (is_hovered()) {
 			g_d3d.draw_filled_rect(m_x, m_y, m_w, m_h, D3DCOLOR_RGBA(68, 99, 153, 255));
 
-			if (g_mouse.is_button_held(M1_BUTTON)) {
+			if (GetAsyncKeyState(VK_LBUTTON) & 0x8000) {
 				m_held[m_parent->m_el_pos] = true;
 				g_d3d.draw_filled_rect(m_x, m_y, m_w, m_h, D3DCOLOR_RGBA(69, 107, 173, 255));
 			}
@@ -143,7 +143,7 @@ protected:
 			g_d3d.draw_filled_rect(m_x, m_y, m_w, m_h, D3DCOLOR_RGBA(68, 99, 153, 255));
 			g_d3d.draw_rect(m_x, m_y, m_w, m_h, D3DCOLOR_RGBA(58, 87, 137, 255));
 
-			if (g_mouse.is_button_held(M1_BUTTON)) {
+			if (GetAsyncKeyState(VK_LBUTTON) & 0x8000) {
 				m_held[m_parent->m_el_pos] = true;
 				g_d3d.draw_filled_rect(m_x + 1, m_y + 1, m_w - 1, m_h - 1, D3DCOLOR_RGBA(69, 107, 173, 255));
 			}

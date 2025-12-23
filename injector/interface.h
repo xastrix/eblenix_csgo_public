@@ -48,6 +48,9 @@ struct Interface {
 	int get_width();
 	int get_height();
 
+	int get_mouse_pos_x();
+	int get_mouse_pos_y();
+
 	bool is_window_active();
 
 	void set_window_pos(int x, int y);
@@ -63,6 +66,8 @@ private:
 	std::string           m_class_name{};
 	int                   m_width{ 385 };
 	int                   m_height{ 120 };
+	int                   m_mouse_pos_x{},
+		                  m_mouse_pos_y{};
 };
 
 struct d3d {
@@ -115,26 +120,5 @@ private:
 
 using sprite_t = sprite_manager;
 
-struct mouse {
-	void on_m1_down();
-	void on_m1_up();
-
-	bool is_button_held(const mouseButtons index);
-
-	void reset_states();
-
-	void set_mouse_pos(int x, int y);
-
-	int get_mouse_pos_x();
-	int get_mouse_pos_y();
-private:
-	bool m_state[maxMouseButtons]{},
-	     m_prev_state[maxMouseButtons]{};
-
-	int m_mouse_pos_x{},
-		m_mouse_pos_y{};
-};
-
 inline Interface g_interface;
 inline d3d g_d3d;
-inline mouse g_mouse;

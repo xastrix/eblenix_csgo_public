@@ -103,7 +103,6 @@
     <ClCompile Include="d3d.cpp" />
     <ClCompile Include="interface.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="mouse.cpp" />
     <ClCompile Include="sprites.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -11,9 +11,6 @@
     <ClCompile Include="sprites.cpp">
       <Filter>interface</Filter>
     </ClCompile>
-    <ClCompile Include="mouse.cpp">
-      <Filter>interface</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="util.h" />

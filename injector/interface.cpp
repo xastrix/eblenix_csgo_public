@@ -22,14 +22,6 @@ _interface_status Interface::init()
 				return 0;
 			break;
 		}
-		case WM_LBUTTONDOWN: {
-			g_mouse.on_m1_down();
-			break;
-		}
-		case WM_LBUTTONUP: {
-			g_mouse.on_m1_up();
-			break;
-		}
 		case WM_DESTROY: {
 			loop = false;
 		}
@@ -117,16 +109,18 @@ void Interface::render()
 		GetWindowRect(m_hwnd, &rect);
 
 		if (is_window_active()) {
-			if ((g_mouse.get_mouse_pos_x() <= m_width && g_mouse.get_mouse_pos_y() <= 25)
-				&& g_mouse.is_button_held(M1_BUTTON)) {
-				set_window_pos(g_mouse.get_mouse_pos_x(), g_mouse.get_mouse_pos_y());
+			if ((m_mouse_pos_x <= m_width && m_mouse_pos_y <= 25)
+				&& GetAsyncKeyState(VK_LBUTTON) & 0x8000) {
+				set_window_pos(m_mouse_pos_x, m_mouse_pos_y);
 			}
 			else {
-				g_mouse.set_mouse_pos((point.x - rect.left), (point.y - rect.top));
+				m_mouse_pos_x = (point.x - rect.left);
+				m_mouse_pos_y = (point.y - rect.top);
 			}
 		}
 		else {
-			g_mouse.set_mouse_pos(0, 0);
+			m_mouse_pos_x = 0;
+			m_mouse_pos_y = 0;
 		}
 
 		std::call_once(init_d3d, [&]() {
@@ -217,8 +211,6 @@ void Interface::render()
 
 		if ((result == D3DERR_DEVICELOST && m_device->TestCooperativeLevel() == D3DERR_DEVICENOTRESET))
 			on_reset();
-
-		g_mouse.reset_states();
 	}
 }
 
@@ -241,6 +233,16 @@ int Interface::get_width()
 int Interface::get_height()
 {
 	return m_height;
+}
+
+int Interface::get_mouse_pos_x()
+{
+	return m_mouse_pos_x;
+}
+
+int Interface::get_mouse_pos_y()
+{
+	return m_mouse_pos_y;
 }
 
 bool Interface::is_window_active()
