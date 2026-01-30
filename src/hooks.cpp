@@ -384,30 +384,24 @@ static void __stdcall scene_end_h()
 		{
 			if (g_csgo.m_engine->is_connected())
 			{
-				if (g_vars.get_as<bool>(V_VISUALS_REMOVALS_SMOKE).value())
-				{
-					std::vector<c_material*> smoke_materials = {
-						g_csgo.m_mat_system->find_material("particle/vistasmokev1/vistasmokev1_fire", TEXTURE_GROUP_OTHER),
-						g_csgo.m_mat_system->find_material("particle/vistasmokev1/vistasmokev1_smokegrenade", TEXTURE_GROUP_OTHER),
-						g_csgo.m_mat_system->find_material("particle/vistasmokev1/vistasmokev1_emods", TEXTURE_GROUP_OTHER),
-						g_csgo.m_mat_system->find_material("particle/vistasmokev1/vistasmokev1_emods_impactdust", TEXTURE_GROUP_OTHER)
-					};
+				std::vector<c_material*> smoke_materials = {
+					g_csgo.m_mat_system->find_material("particle/vistasmokev1/vistasmokev1_fire", TEXTURE_GROUP_OTHER),
+					g_csgo.m_mat_system->find_material("particle/vistasmokev1/vistasmokev1_smokegrenade", TEXTURE_GROUP_OTHER),
+					g_csgo.m_mat_system->find_material("particle/vistasmokev1/vistasmokev1_emods", TEXTURE_GROUP_OTHER),
+					g_csgo.m_mat_system->find_material("particle/vistasmokev1/vistasmokev1_emods_impactdust", TEXTURE_GROUP_OTHER)
+				};
 
-					for (const auto& mat : smoke_materials) {
-						if (mat) mat->set_material_var_flag(material_var_no_draw, true);
-					}
+				std::vector<c_material*> flash_materials = {
+					g_csgo.m_mat_system->find_material("effects/flashbang", TEXTURE_GROUP_OTHER),
+					g_csgo.m_mat_system->find_material("effects/flashbang_white", TEXTURE_GROUP_OTHER)
+				};
+
+				for (const auto& mat : smoke_materials) {
+					if (mat) mat->set_material_var_flag(material_var_no_draw, g_vars.get_as<bool>(V_VISUALS_REMOVALS_SMOKE).value());
 				}
 
-				if (g_vars.get_as<bool>(V_VISUALS_REMOVALS_FLASH).value())
-				{
-					std::vector<c_material*> flash_materials = {
-						g_csgo.m_mat_system->find_material("effects/flashbang", TEXTURE_GROUP_OTHER),
-						g_csgo.m_mat_system->find_material("effects/flashbang_white", TEXTURE_GROUP_OTHER)
-					};
-
-					for (const auto& mat : flash_materials) {
-						if (mat) mat->set_material_var_flag(material_var_no_draw, true);
-					}
+				for (const auto& mat : flash_materials) {
+					if (mat) mat->set_material_var_flag(material_var_no_draw, g_vars.get_as<bool>(V_VISUALS_REMOVALS_FLASH).value());
 				}
 			}
 		}
