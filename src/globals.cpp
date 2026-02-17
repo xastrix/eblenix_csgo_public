@@ -1,21 +1,12 @@
 #include "globals.h"
 
 #include "ui.h"
-
-bool g::is_state(int index)
-{
-	return state == index;
-}
-
-void g::set_state(int index)
-{
-	state = index;
-}
+#include "state_mgr.h"
 
 void g::unload()
 {
 	if (g_ui.get_menu_state())
 		g_ui.set_menu_state(false);
 
-	state = CS_SHUTDOWN;
+	g_state->set_current_state(SL_SHUTDOWN);
 }

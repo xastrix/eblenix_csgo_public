@@ -43,9 +43,6 @@
     <ClCompile Include="ui.cpp">
       <Filter>helpers\ui</Filter>
     </ClCompile>
-    <ClCompile Include="mod.cpp">
-      <Filter>mod</Filter>
-    </ClCompile>
     <ClCompile Include="..\external\minhook\src\buffer.c">
       <Filter>external\minhook\src</Filter>
     </ClCompile>
@@ -142,6 +139,7 @@
     <ClCompile Include="game_event_mgr.cpp">
       <Filter>csgo\engine</Filter>
     </ClCompile>
+    <ClCompile Include="dllmain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="netvar_manager.h">
@@ -206,9 +204,6 @@
     </ClInclude>
     <ClInclude Include="fonts.hpp">
       <Filter>resources</Filter>
-    </ClInclude>
-    <ClInclude Include="mod.h">
-      <Filter>mod</Filter>
     </ClInclude>
     <ClInclude Include="..\external\minhook\include\MinHook.h">
       <Filter>external\minhook\include</Filter>
@@ -346,6 +341,9 @@
     <ClInclude Include="studio.h">
       <Filter>csgo\structs</Filter>
     </ClInclude>
+    <ClInclude Include="state_mgr.h">
+      <Filter>helpers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="csgo">
@@ -416,9 +414,6 @@
     </Filter>
     <Filter Include="hooks">
       <UniqueIdentifier>{5601a5a9-2392-4b36-bc21-1239adf33119}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="mod">
-      <UniqueIdentifier>{5fb4bed6-b571-46bd-8f2c-bc1d56b22ad9}</UniqueIdentifier>
     </Filter>
     <Filter Include="resources">
       <UniqueIdentifier>{d6b9b801-07a9-442a-a6e9-ae56e04b233a}</UniqueIdentifier>

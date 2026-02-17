@@ -3,6 +3,7 @@
 #include "globals.h"
 #include "ui.h"
 #include "fnv.h"
+#include "state_mgr.h"
 
 #include <algorithm>
 
@@ -24,7 +25,7 @@ static unsigned long WINAPI wnd_proc(HWND h, UINT m, WPARAM w, LPARAM l)
 			}
 		}
 
-		if (!g::is_state(CS_SHUTDOWN))
+		if (!(g_state->get_current_state() == SL_SHUTDOWN))
 		{
 			if (!GLOBAL(b_flags[BF_CONSOLE_OPENED]) && !GLOBAL(b_flags[BF_CHAT_OPENED]))
 			{

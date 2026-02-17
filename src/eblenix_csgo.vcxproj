@@ -188,7 +188,7 @@
     <ClCompile Include="hooks.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="interfaces.cpp" />
-    <ClCompile Include="mod.cpp" />
+    <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="sprites.cpp" />
     <ClCompile Include="helpers.cpp" />
@@ -210,6 +210,7 @@
     <ClInclude Include="font.h" />
     <ClInclude Include="math.h" />
     <ClInclude Include="matrix.h" />
+    <ClInclude Include="state_mgr.h" />
     <ClInclude Include="surface.h" />
     <ClInclude Include="var_defines.h" />
     <ClInclude Include="vec2.h" />
@@ -255,7 +256,6 @@
     <ClInclude Include="hooks.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="interfaces.h" />
-    <ClInclude Include="mod.h" />
     <ClInclude Include="renderer.h" />
     <ClInclude Include="fnv.h" />
     <ClInclude Include="helpers.h" />

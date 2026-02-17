@@ -7,14 +7,6 @@
 #include <vector>
 #include <mutex>
 
-enum _cheat_state {
-	CS_INIT_BASE,
-	CS_CHECK_GAME_VERSION,
-	CS_INIT_HOOKS,
-	CS_WAITING_FOR_SHUTDOWN,
-	CS_SHUTDOWN,
-};
-
 enum _game_status {
 	gameVersionOutdated,
 	gameVersionOK,
@@ -66,7 +58,6 @@ namespace g
 	inline int screen_width{},
 		       screen_height{};
 
-	inline int state{};
 	inline _game_status status{};
 
 	inline std::string module_list[maxModules] = {
@@ -90,20 +81,6 @@ namespace g
 		"1.38.8.1", // Oct 12 2023 build
 #endif
 	};
-
-	template <typename T>
-	void init_state(int index, T fn, bool increment_state = true) {
-		if (state != index)
-			return;
-
-		fn();
-
-		if (increment_state)
-			state++;
-	}
-
-	bool is_state(int index);
-	void set_state(int index);
 
 	void unload();
 }
