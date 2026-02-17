@@ -2,7 +2,7 @@
 
 static std::vector<font_t> g_font_list{};
 
-void fonts::init(IDirect3DDevice9* device, const std::vector<font_t> list)
+void c_fonts::init(IDirect3DDevice9* device, const std::vector<font_t> list)
 {
 	if (g_font_list.empty())
 		g_font_list = list;
@@ -22,7 +22,12 @@ void fonts::init(IDirect3DDevice9* device, const std::vector<font_t> list)
 	}
 }
 
-void fonts::draw_string(const std::string& string, float x, float y, ID3DXFont* font, uint8_t flags, color_t color)
+void c_fonts::restore(IDirect3DDevice9* device)
+{
+	init(device, {});
+}
+
+void c_fonts::draw_string(const std::string& string, float x, float y, ID3DXFont* font, uint8_t flags, color_t color)
 {
 	RECT r{ x, y, x, y };
 	RECT o_r{ x + 1, y + 1, x + 1, y + 1 };
@@ -41,7 +46,7 @@ void fonts::draw_string(const std::string& string, float x, float y, ID3DXFont* 
 	font->DrawTextA(NULL, string.c_str(), -1, &r, DT_NOCLIP, color.get());
 }
 
-void fonts::draw_stringW(const std::wstring& string, float x, float y, ID3DXFont* font, uint8_t flags, color_t color)
+void c_fonts::draw_stringW(const std::wstring& string, float x, float y, ID3DXFont* font, uint8_t flags, color_t color)
 {
 	RECT r{ x, y, x, y };
 	RECT o_r{ x + 1, y + 1, x + 1, y + 1 };
@@ -60,7 +65,7 @@ void fonts::draw_stringW(const std::wstring& string, float x, float y, ID3DXFont
 	font->DrawTextW(NULL, string.c_str(), -1, &r, DT_NOCLIP, color.get());
 }
 
-float fonts::get_text_width(const std::string& string, ID3DXFont* font)
+float c_fonts::get_text_width(const std::string& string, ID3DXFont* font)
 {
 	RECT r{};
 	font->DrawTextA(0, string.c_str(), -1, &r, DT_CALCRECT, 0xffffffff);
@@ -68,7 +73,7 @@ float fonts::get_text_width(const std::string& string, ID3DXFont* font)
 	return (r.right - r.left);
 }
 
-float fonts::get_text_widthW(const std::wstring& string, ID3DXFont* font)
+float c_fonts::get_text_widthW(const std::wstring& string, ID3DXFont* font)
 {
 	RECT r{};
 	font->DrawTextW(0, string.c_str(), -1, &r, DT_CALCRECT, 0xffffffff);
@@ -76,7 +81,21 @@ float fonts::get_text_widthW(const std::wstring& string, ID3DXFont* font)
 	return (r.right - r.left);
 }
 
-void fonts::undo()
+float c_fonts::get_text_height(const std::string& string, ID3DXFont* font)
+{
+	RECT r{};
+	font->DrawTextA(0, string.c_str(), -1, &r, DT_CALCRECT, 0xffffffff);
+	return (r.bottom - r.top);
+}
+
+float c_fonts::get_text_heightW(const std::wstring& string, ID3DXFont* font)
+{
+	RECT r{};
+	font->DrawTextW(0, string.c_str(), -1, &r, DT_CALCRECT, 0xffffffff);
+	return (r.bottom - r.top);
+}
+
+void c_fonts::undo()
 {
 	for (const auto& font : g_font_list)
 	{

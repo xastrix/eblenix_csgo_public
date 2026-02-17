@@ -2,25 +2,18 @@
 
 #include "font.h"
 
-enum gradient_flags {
-	GRADIENT_HORIZONTAL,
-	GRADIENT_VERTICAL,
-};
+#include "vec2.h"
+#include "vec3.h"
 
-struct vertex_t {
-	float    m_x{},
-		     m_y{},
-		     m_z{};
-	float    m_rhw{};
-	D3DCOLOR m_color{};
-	float    m_tu{},
-		     m_tv{};
-};
+#define CIRCLE_POINTS           64
+#define POINTS_SPHERE_LATITUDE  16
+#define POINTS_SPHERE_LONGITUDE 24
 
-struct sprite_manager {
+class c_sprite_mgr {
+public:
 	void init(IDirect3DDevice9* device, const byte* img, const size_t img_size, int width, int height);
 
-	void begin();
+	void begin(DWORD flags);
 	void end();
 
 	void on_reset();
@@ -28,8 +21,14 @@ struct sprite_manager {
 
 	void draw(int x, int y, color_t color);
 
-	int get_width();
-	int get_height();
+	int get_width() {
+		return m_width;
+	}
+
+	int get_height() {
+		return m_height;
+	}
+
 private:
 	int                m_width{};
 	int                m_height{};
@@ -39,25 +38,101 @@ private:
 	const byte*        m_image{};
 	size_t             m_image_size{};
 };
-using sprite_t = sprite_manager;
 
-struct renderer {
+class c_renderer {
+public:
 	bool init(IDirect3DDevice9* device);
-	bool create_objects(IDirect3DDevice9* device);
+	bool restore(IDirect3DDevice9* device);
 
-	void begin_render_states();
-	void end_render_states();
+	void set_render_states();
 
-	void draw_line(float x0, float y0, float x1, float y1, float thickness, color_t color);
-	void draw_filled_rect(float x, float y, float w, float h, color_t color);
-	void draw_filled_rect_fade(float x, float y, float w, float h, uint8_t flags, color_t first, color_t second);
-	void draw_corner_box(float x, float y, float w, float h, float cx, float cy, color_t color);
+	void set_viewport(D3DVIEWPORT9 vp);
+	D3DVIEWPORT9 get_viewport();
+
+	void rect(vec2 pos, vec2 size, color_t c);
+	void rect(float x, float y, float w, float h, color_t c) {
+		return rect({ x, y }, { w, h }, c);
+	}
+
+	void rect_fill(vec2 pos, vec2 size, color_t c);
+	void rect_fill(float x, float y, float w, float h, color_t c) {
+		return rect_fill({ x, y }, { w, h }, c);
+	}
+
+	void rect_cornered(vec2 pos, vec2 size, float radii, color_t c);
+	void rect_cornered(float x, float y, float w, float h, float radii, color_t c) {
+		return rect_cornered({ x, y }, { w, h }, radii, c);
+	}
+
+	void rect_fill_cornered(vec2 pos, vec2 size, float radii, color_t c);
+	void rect_fill_cornered(float x, float y, float w, float h, float radii, color_t c) {
+		return rect_fill_cornered({ x, y }, { w, h }, radii, c);
+	}
+
+	void gradient_v(vec2 pos, vec2 size, color_t c_a, color_t c_b);
+	void gradient_v(float x, float y, float w, float h, color_t c_a, color_t c_b) {
+		return gradient_v({ x, y }, { w, h }, c_a, c_b);
+	}
+
+	void gradient_h(vec2 pos, vec2 size, color_t c_a, color_t c_b);
+	void gradient_h(float x, float y, float w, float h, color_t c_a, color_t c_b) {
+		return gradient_h({ x, y }, { w, h }, c_a, c_b);
+	}
+
+	void gradient_multi_fill(vec2 pos, vec2 size, color_t c_a, color_t c_b, color_t c_c, color_t c_d);
+	void gradient_multi_fill(float x, float y, float w, float h, color_t c_a, color_t c_b, color_t c_c, color_t c_d) {
+		return gradient_multi_fill({ x, y }, { w, h }, c_a, c_b, c_c, c_d);
+	}
+
+	void gradient_multi(vec2 pos, vec2 size, color_t c_a, color_t c_b, color_t c_c, color_t c_d);
+	void gradient_multi(float x, float y, float w, float h, color_t c_a, color_t c_b, color_t c_c, color_t c_d) {
+		return gradient_multi({ x, y }, { w, h }, c_a, c_b, c_c, c_d);
+	}
+
+	void line(vec2 a, vec2 b, color_t c);
+	void line(float x, float y, float w, float h, color_t c) {
+		return line({ x, y }, { w, h }, c);
+	}
+
+	void circle(vec2 center, float radius, color_t c);
+	void circle(float x, float y, float radius, color_t c) {
+		return circle({ x, y }, radius, c);
+	}
+
+	void circle_fill(vec2 center, float radius, color_t c);
+	void circle_fill(float x, float y, float radius, color_t c) {
+		return circle_fill({ x, y }, radius, c);
+	}
+
+	void corner_box(vec2 pos, vec2 size, float cx, float cy, color_t c);
+	void corner_box(float x, float y, float w, float h, float cx, float cy, color_t c) {
+		return corner_box({ x, y }, { w, h }, cx, cy, c);
+	}
+
+	void build_lookup_table();
+
+	IDirect3DDevice9* get_device() {
+		return m_device;
+	}
+
+	vec2 get_screen_size() {
+		return m_screen_size;
+	}
+
+	void begin();
+	void end();
 
 	void undo();
+
 private:
-	IDirect3DDevice9*     m_device{};
-	ID3DXLine*            m_line{};
-	IDirect3DStateBlock9* m_block{};
+	IDirect3DDevice9*            m_device;
+	IDirect3DStateBlock9*        m_state_block;
+	IDirect3DVertexDeclaration9* m_vert_dec;
+	IDirect3DVertexShader9*      m_vert_shader;
+	std::vector<vec2>            m_lookup_table;
+	std::vector<vec3>            m_lookup_sphere;
+	vec2                         m_screen_size;
 };
 
-inline renderer g_render;
+using sprite_t = c_sprite_mgr;
+inline c_renderer g_renderer;

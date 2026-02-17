@@ -1,6 +1,6 @@
 #include "renderer.h"
 
-void sprite_manager::init(IDirect3DDevice9* device, const byte* img, const size_t img_size, int width, int height)
+void c_sprite_mgr::init(IDirect3DDevice9* device, const byte* img, const size_t img_size, int width, int height)
 {
 	m_width = width;
 	m_height = height;
@@ -9,7 +9,7 @@ void sprite_manager::init(IDirect3DDevice9* device, const byte* img, const size_
 	m_image_size = img_size;
 }
 
-void sprite_manager::begin()
+void c_sprite_mgr::begin(DWORD flags)
 {
 	if (!m_device || !m_sprite)
 		D3DXCreateSprite(m_device, &m_sprite);
@@ -18,10 +18,10 @@ void sprite_manager::begin()
 		D3DXCreateTextureFromFileInMemoryEx(m_device, m_image, m_image_size, m_width, m_height,
 			D3DX_DEFAULT, 0, D3DFMT_A8B8G8R8, D3DPOOL_DEFAULT, D3DX_DEFAULT, D3DX_DEFAULT, 0, 0, 0, &m_texture);
 
-	m_sprite->Begin(D3DXSPRITE_DONOTMODIFY_RENDERSTATE);
+	m_sprite->Begin(flags);
 }
 
-void sprite_manager::end()
+void c_sprite_mgr::end()
 {
 	if (!m_device || !m_sprite)
 		return;
@@ -29,7 +29,7 @@ void sprite_manager::end()
 	m_sprite->End();
 }
 
-void sprite_manager::on_reset()
+void c_sprite_mgr::on_reset()
 {
 	if (!m_device || !m_sprite || !m_texture)
 		return;
@@ -42,7 +42,7 @@ void sprite_manager::on_reset()
 	}
 }
 
-void sprite_manager::on_reset_end()
+void c_sprite_mgr::on_reset_end()
 {
 	if (!m_device || !m_sprite)
 		return;
@@ -50,7 +50,7 @@ void sprite_manager::on_reset_end()
 	m_sprite->OnResetDevice();
 }
 
-void sprite_manager::draw(int x, int y, color_t color)
+void c_sprite_mgr::draw(int x, int y, color_t color)
 {
 	if (!m_device || !m_texture || !m_sprite)
 		return;
@@ -60,14 +60,4 @@ void sprite_manager::draw(int x, int y, color_t color)
 
 	m_sprite->SetTransform(&matrix);
 	m_sprite->Draw(m_texture, 0, 0, 0, color.get());
-}
-
-int sprite_manager::get_width()
-{
-	return m_width;
-}
-
-int sprite_manager::get_height()
-{
-	return m_height;
 }

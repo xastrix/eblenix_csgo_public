@@ -54,7 +54,9 @@ void visuals::run()
 	if (!g_csgo.get_local())
 		return;
 
-	const float center_y = GLOBAL(screen_height) * 0.5f;
+	vec2 screen_size = g_renderer.get_screen_size();
+	const float center_y = screen_size.y * 0.5f;
+
 	if (g_vars.get_as<bool>(V_VISUALS_INTERFACE_SPECTATORS).value())
 		draw_spectators(center_y);
 
@@ -130,10 +132,10 @@ void visuals::run()
 
 				if (weapon && Helpers::is_sniper(weapon))
 				{
-					const float center_x = GLOBAL(screen_width) * 0.5f;
+					const float center_x = screen_size.x * 0.5f;
 
-					g_render.draw_line(0, center_y, GLOBAL(screen_width), center_y, 1.0f, color_t(0, 0, 0, 155));
-					g_render.draw_line(center_x, 0, center_x, GLOBAL(screen_height), 1.0f, color_t(0, 0, 0, 155));
+					g_renderer.line(0, center_y, screen_size.x, center_y, color_t(0, 0, 0, 155));
+					g_renderer.line(center_x, 0, center_x, screen_size.y, color_t(0, 0, 0, 155));
 				}
 			}
 		}
@@ -142,53 +144,56 @@ void visuals::run()
 
 void visuals::draw_status()
 {
+	vec2 screen_size = g_renderer.get_screen_size();
+
 	const auto string_width = g_font.get_text_width("EBLENIX", g_font[Tahoma12px]) + 40;
 	const auto ui_shadow_col = color_t(20, 20, 20, g_vars.get_as<int>(V_UI_COL_A).value());
 
-	g_render.draw_filled_rect(GLOBAL(screen_width) - string_width - 15, 10, GLOBAL(screen_width), 17, ui_shadow_col);
+	g_renderer.rect_fill(screen_size.x - string_width - 15, 10, screen_size.x, 17, ui_shadow_col);
 
-	g_render.draw_filled_rect(GLOBAL(screen_width) - string_width - 12, 13, 2, 11,
+	g_renderer.rect_fill(screen_size.x - string_width - 12, 13, 2, 11,
 		GLOBAL(b_flags[BF_INITIALISED]) ? color_t(V_UI_COL) : color_t(164, 164, 164));
 
-	g_font.draw_string("EBLENIX", GLOBAL(screen_width) - string_width - 5, 12, g_font[Tahoma12px], TEXT_OUTLINE, color_t(255, 255, 255));
+	g_font.draw_string("EBLENIX", screen_size.x - string_width - 5, 12, g_font[Tahoma12px], TEXT_OUTLINE, color_t(255, 255, 255));
 
 	if (g_csgo.m_engine->is_connected())
 	{
-		g_render.draw_filled_rect(GLOBAL(screen_width) - string_width - 37, 10, 20, 17, ui_shadow_col);
-		g_render.draw_filled_rect(GLOBAL(screen_width) - string_width - 59, 10, 20, 17, ui_shadow_col);
-		g_render.draw_filled_rect(GLOBAL(screen_width) - string_width - 81, 10, 20, 17, ui_shadow_col);
+		g_renderer.rect_fill(screen_size.x - string_width - 37, 10, 20, 17, ui_shadow_col);
+		g_renderer.rect_fill(screen_size.x - string_width - 59, 10, 20, 17, ui_shadow_col);
+		g_renderer.rect_fill(screen_size.x - string_width - 81, 10, 20, 17, ui_shadow_col);
 
-		g_render.draw_filled_rect(GLOBAL(screen_width) - string_width - 34, 13, 2, 11,
+		g_renderer.rect_fill(screen_size.x - string_width - 34, 13, 2, 11,
 			g_vars.get_as<bool>(V_ESP_ENABLED).value() ? color_t(V_UI_COL) : color_t(164, 164, 164));
 
-		g_render.draw_filled_rect(GLOBAL(screen_width) - string_width - 56, 13, 2, 11,
+		g_renderer.rect_fill(screen_size.x - string_width - 56, 13, 2, 11,
 			g_vars.get_as<bool>(V_TRIGGERBOT_ENABLED).value() ? color_t(V_UI_COL) : color_t(164, 164, 164));
 
-		g_render.draw_filled_rect(GLOBAL(screen_width) - string_width - 78, 13, 2, 11,
+		g_renderer.rect_fill(screen_size.x - string_width - 78, 13, 2, 11,
 			g_vars.get_as<bool>(V_AIMBOT_ENABLED).value() ? color_t(V_UI_COL) : color_t(164, 164, 164));
 
-		g_font.draw_string("E", GLOBAL(screen_width) - string_width - 30, 12,
+		g_font.draw_string("E", screen_size.x - string_width - 30, 12,
 			g_font[Verdana12px], TEXT_OUTLINE, color_t(255, 255, 255));
 
-		g_font.draw_string("T", GLOBAL(screen_width) - string_width - 52, 12,
+		g_font.draw_string("T", screen_size.x - string_width - 52, 12,
 			g_font[Verdana12px], TEXT_OUTLINE, color_t(255, 255, 255));
 
-		g_font.draw_string("A", GLOBAL(screen_width) - string_width - 74, 12,
+		g_font.draw_string("A", screen_size.x - string_width - 74, 12,
 			g_font[Verdana12px], TEXT_OUTLINE, color_t(255, 255, 255));
 	}
 }
 
 void visuals::draw_spectators(int y)
 {
+	vec2 screen_size = g_renderer.get_screen_size();
+	const auto ui_shadow_col = color_t(20, 20, 20, g_vars.get_as<int>(V_UI_COL_A).value());
+
 	if (!g_csgo.m_engine->is_in_game())
 		return;
 
-	const auto ui_shadow_col = color_t(20, 20, 20, g_vars.get_as<int>(V_UI_COL_A).value());
+	g_renderer.rect_fill(screen_size.x - 105, y, screen_size.x, 18, ui_shadow_col);
+	g_renderer.rect_fill(screen_size.x - 102, y + 3, 2, 12, color_t(V_UI_COL));
 
-	g_render.draw_filled_rect(GLOBAL(screen_width) - 105, y, GLOBAL(screen_width), 18, ui_shadow_col);
-	g_render.draw_filled_rect(GLOBAL(screen_width) - 102, y + 3, 2, 12, color_t(V_UI_COL));
-
-	g_font.draw_string("Spectators", GLOBAL(screen_width) - 96, y + 2,
+	g_font.draw_string("Spectators", screen_size.x - 96, y + 2,
 		g_font[Tahoma12px], TEXT_OUTLINE, color_t(255, 255, 255));
 
 	auto offset = 1;
@@ -218,9 +223,8 @@ void visuals::draw_spectators(int y)
 		if (spectator_target != g_csgo.get_local())
 			continue;
 
-		g_render.draw_filled_rect(GLOBAL(screen_width) - 105, y + (19 * offset), GLOBAL(screen_width), 18, ui_shadow_col);
-		g_render.draw_filled_rect(GLOBAL(screen_width) - 102, y + 3 + (19 * offset), 2, 12,
-			color_t(164, 164, 164));
+		g_renderer.rect_fill(screen_size.x - 105, y + (19 * offset), screen_size.x, 18, ui_shadow_col);
+		g_renderer.rect_fill(screen_size.x - 102, y + 3 + (19 * offset), 2, 12, color_t(164, 164, 164));
 
 		player_info_t info;
 		g_csgo.m_engine->get_player_info(i, &info);
@@ -231,7 +235,7 @@ void visuals::draw_spectators(int y)
 			player_name = player_name.substr(0, 14) + L"...";
 		}
 
-		g_font.draw_stringW(player_name, GLOBAL(screen_width) - 96, y + 2 + (19 * offset),
+		g_font.draw_stringW(player_name, screen_size.x - 96, y + 2 + (19 * offset),
 			g_font[Tahoma12px], TEXT_OUTLINE, color_t(255, 255, 255));
 
 		offset++;
@@ -240,7 +244,8 @@ void visuals::draw_spectators(int y)
 
 void visuals::draw_status_bomb_info(c_base_plantedc4* entity, const float explode_time)
 {
-	std::string bomb_info{};
+	vec2 screen_size = g_renderer.get_screen_size();
+	std::string bomb_info;
 
 	switch (entity->bomb_site()) {
 	case BS_A: {
@@ -255,12 +260,12 @@ void visuals::draw_status_bomb_info(c_base_plantedc4* entity, const float explod
 
 	const auto string_width = g_font.get_text_width(bomb_info, g_font[Tahoma12px]);
 
-	g_render.draw_filled_rect(GLOBAL(screen_width) - 175 - string_width, 10, string_width + 12, 17,
+	g_renderer.rect_fill(screen_size.x - 175 - string_width, 10, string_width + 12, 17,
 		color_t(20, 20, 20, g_vars.get_as<int>(V_UI_COL_A).value()));
 
-	g_render.draw_filled_rect(GLOBAL(screen_width) - 172 - string_width, 13, 2, 11, color_t(V_UI_COL));
+	g_renderer.rect_fill(screen_size.x - 172 - string_width, 13, 2, 11, color_t(V_UI_COL));
 
-	g_font.draw_string(bomb_info, GLOBAL(screen_width) - 167 - string_width, 12,
+	g_font.draw_string(bomb_info, screen_size.x - 167 - string_width, 12,
 		g_font[Tahoma12px], TEXT_OUTLINE, color_t(255, 255, 255));
 }
 
@@ -430,8 +435,8 @@ void visuals::draw_dropped_weapons(c_base_entity* entity)
 
 			const auto ammo_bar_col = color_t(V_VISUALS_WORLD_WEAPONS_AMMO_BAR_COL);
 
-			g_render.draw_filled_rect(dropped_weapons.get_pos().x - 20, dropped_weapons.get_pos().y + y_ammo_bar_pos, 42, 4, color_t(3, 3, 3));
-			g_render.draw_filled_rect(dropped_weapons.get_pos().x - 19, dropped_weapons.get_pos().y + y_ammo_bar_pos + 1, width, 2, ammo_bar_col);
+			g_renderer.rect_fill(dropped_weapons.get_pos().x - 20, dropped_weapons.get_pos().y + y_ammo_bar_pos, 42, 4, color_t(3, 3, 3));
+			g_renderer.rect_fill(dropped_weapons.get_pos().x - 19, dropped_weapons.get_pos().y + y_ammo_bar_pos + 1, width, 2, ammo_bar_col);
 		}
 
 		if (g_vars.get_as<bool>(V_VISUALS_WORLD_WEAPONS_DISTANCE).value())
@@ -513,8 +518,8 @@ void visuals::draw_planted_bomb(c_base_plantedc4* entity, const float explode_ti
 	{
 		const auto time_bar_col = color_t(V_VISUALS_WORLD_C4_COL_TIME_BAR);
 
-		g_render.draw_filled_rect(planted_bomb.get_pos().x - 20, planted_bomb.get_pos().y + time_bar_offset, Helpers::get_c4_server_time(), 4, background_col);
-		g_render.draw_filled_rect(planted_bomb.get_pos().x - 19, planted_bomb.get_pos().y + time_bar_offset + 1, explode_time - 1, 2, time_bar_col);
+		g_renderer.rect_fill(planted_bomb.get_pos().x - 20, planted_bomb.get_pos().y + time_bar_offset, Helpers::get_c4_server_time(), 4, background_col);
+		g_renderer.rect_fill(planted_bomb.get_pos().x - 19, planted_bomb.get_pos().y + time_bar_offset + 1, explode_time - 1, 2, time_bar_col);
 	}
 
 	if (g_vars.get_as<bool>(V_VISUALS_WORLD_C4_DEFUSE_BAR).value())
@@ -531,8 +536,8 @@ void visuals::draw_planted_bomb(c_base_plantedc4* entity, const float explode_ti
 
 			const auto defuse_bar_col = color_t(V_VISUALS_WORLD_C4_COL_DEFUSE_BAR);
 
-			g_render.draw_filled_rect(planted_bomb.get_pos().x - 20, planted_bomb.get_pos().y + defuse_bar_offset, Helpers::get_c4_server_time(), 4, background_col);
-			g_render.draw_filled_rect(planted_bomb.get_pos().x - 19, planted_bomb.get_pos().y + defuse_bar_offset + 1, (Helpers::get_c4_server_time() * count_down / max_defuse_time) - 1, 2, defuse_bar_col);
+			g_renderer.rect_fill(planted_bomb.get_pos().x - 20, planted_bomb.get_pos().y + defuse_bar_offset, Helpers::get_c4_server_time(), 4, background_col);
+			g_renderer.rect_fill(planted_bomb.get_pos().x - 19, planted_bomb.get_pos().y + defuse_bar_offset + 1, (Helpers::get_c4_server_time() * count_down / max_defuse_time) - 1, 2, defuse_bar_col);
 		}
 	}
 }

@@ -30,6 +30,17 @@ static void __stdcall init(HMODULE I)
 		g_sig.init();
 		g_csgo.init();
 
+		g_font.init(g_csgo.m_device, {
+			{ Tahoma12px,     12, "Tahoma",     FW_MEDIUM, ANTIALIASED_QUALITY },
+			{ Verdana12px,    12, "Verdana",    FW_SEMIBOLD, ANTIALIASED_QUALITY },
+			{ Astriumwep12px, 12, "AstriumWep", FW_NORMAL, CLEARTYPE_QUALITY },
+			{ Astriumwep16px, 16, "AstriumWep", FW_NORMAL, CLEARTYPE_QUALITY },
+			{ Astriumwep25px, 25, "AstriumWep", FW_NORMAL, CLEARTYPE_QUALITY },
+	    });
+
+		if (g_renderer.init(g_csgo.m_device))
+			g_ui.init(g_csgo.m_device);
+
 #ifndef CSGO_2020_BUILD
 		// patch 'STEAM validation rejected' msgbox in the (non-steam) csgo
 		Helpers::write<unsigned char>(reinterpret_cast<uintptr_t>(g_sig[S_STEAM_VALIDATION_REJECTED]), 0x75);
@@ -157,7 +168,7 @@ static void __stdcall init(HMODULE I)
 		// free loaded fonts
 		if (g_astriumwepFont) {
 			RemoveFontMemResourceEx(g_astriumwepFont);
-			g_astriumwepFont = NULL;
+			g_astriumwepFont = nullptr;
 		}
 
 		// exit thread

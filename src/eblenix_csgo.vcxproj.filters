@@ -133,9 +133,6 @@
     <ClCompile Include="font.cpp">
       <Filter>helpers\renderer</Filter>
     </ClCompile>
-    <ClCompile Include="sprites.cpp">
-      <Filter>helpers\renderer</Filter>
-    </ClCompile>
     <ClCompile Include="game_event_mgr.cpp">
       <Filter>csgo\engine</Filter>
     </ClCompile>
@@ -147,6 +144,9 @@
       <Filter>csgo\math</Filter>
     </ClCompile>
     <ClCompile Include="color.cpp">
+      <Filter>helpers\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="sprite_mgr.cpp">
       <Filter>helpers\renderer</Filter>
     </ClCompile>
   </ItemGroup>

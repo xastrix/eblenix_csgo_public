@@ -120,20 +120,7 @@ static void __stdcall paint_traverse_h(uint32_t panel, bool force_repaint, bool 
 static long(D3DAPI *o_present)(IDirect3DDevice9*, RECT*, RECT*, HWND, RGNDATA*);
 static long D3DAPI present_h(IDirect3DDevice9* device, RECT* source_rect, RECT* dest_rect, HWND dest_window_override, RGNDATA* dirty_region)
 {
-	std::call_once(GLOBAL(of_flags[OF_INIT_RENDER_STUFF]), [device]() {
-		g_font.init(device, {
-			{ Tahoma12px,     12, "Tahoma",     FW_MEDIUM, ANTIALIASED_QUALITY },
-			{ Verdana12px,    12, "Verdana",    FW_SEMIBOLD, ANTIALIASED_QUALITY },
-			{ Astriumwep12px, 12, "AstriumWep", FW_NORMAL, CLEARTYPE_QUALITY },
-			{ Astriumwep16px, 16, "AstriumWep", FW_NORMAL, CLEARTYPE_QUALITY },
-			{ Astriumwep25px, 25, "AstriumWep", FW_NORMAL, CLEARTYPE_QUALITY },
-		});
-
-		if (g_render.init(device))
-			g_ui.init(device);
-	});
-
-	g_render.begin_render_states();
+	g_renderer.begin();
 
 	switch (GLOBAL(status)) {
 	case gameVersionOK: {
@@ -146,22 +133,24 @@ static long D3DAPI present_h(IDirect3DDevice9* device, RECT* source_rect, RECT* 
 	}
 #ifndef DISABLE_CSGO_VERSION_CHECK
 	case gameVersionOutdated: {
+		vec2 screen_size = g_renderer.get_screen_size();
+
 		std::string string_ver = g_csgo.m_engine->get_product_version_string();
 		std::string ss = "Hack has not been updated for " + string_ver;
 
 		const auto string_font = g_font[Tahoma12px];
 		const auto string_width = g_font.get_text_width(ss, string_font);
 
-		g_render.draw_filled_rect(GLOBAL(screen_width) - string_width - 15, 10, GLOBAL(screen_width), 17, color_t(20, 20, 20, 140));
-		g_render.draw_filled_rect(GLOBAL(screen_width) - string_width - 12, 13, 2, 11, color_t(164, 164, 164));
+		g_renderer.rect_fill(screen_size.x - string_width - 15, 10, screen_size.x, 17, color_t(20, 20, 20, 140));
+		g_renderer.rect_fill(screen_size.x - string_width - 12, 13, 2, 11, color_t(164, 164, 164));
 
-		g_font.draw_string(ss, GLOBAL(screen_width) - string_width - 5, 12, string_font, TEXT_OUTLINE, color_t(255, 255, 255));
+		g_font.draw_string(ss, screen_size.x - string_width - 5, 12, string_font, TEXT_OUTLINE, color_t(255, 255, 255));
 		break;
 	}
 #endif
 	}
 
-	g_render.end_render_states();
+	g_renderer.end();
 
 	return o_present(device, source_rect, dest_rect, dest_window_override, dirty_region);
 }
@@ -171,14 +160,14 @@ static long D3DAPI reset_h(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* pres
 {
 	g_font.undo();
 	g_ui.on_reset();
-	g_render.undo();
+	g_renderer.undo();
 
 	auto ret = o_reset(device, present_parameters);
 
 	if (ret == D3D_OK)
 	{
-		g_font.init(device, {});
-		g_render.create_objects(device);
+		g_font.restore(device);
+		g_renderer.restore(device);
 		g_ui.on_reset_end();
 	}
 
@@ -568,8 +557,8 @@ static void __stdcall draw_set_color_h(int r, int g, int b, int a)
 							box bbox{};
 							if (Helpers::get_bbox(entity, bbox, BT_STATIC))
 							{
-								vec2 center{ static_cast<float>(GLOBAL(screen_width)) / 2,
-									static_cast<float>(GLOBAL(screen_height)) / 2 };
+								vec2 screen_size = g_renderer.get_screen_size();
+								vec2 center = { screen_size.x / 2, screen_size.y / 2 };
 
 								if ((center.x >= bbox.x && center.x <= bbox.x + bbox.w &&
 									center.y >= bbox.y && center.y <= bbox.y + bbox.h))

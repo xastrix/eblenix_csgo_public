@@ -37,7 +37,7 @@ void ui::run()
 		setup();
 
 		for (int i = 0; i < maxUISprites; i++)
-			m_sprites[i].begin();
+			m_sprites[i].begin(D3DXSPRITE_DONOTMODIFY_RENDERSTATE);
 
 		draw(g_vars.get_as<int>(V_UI_POS_X).value(), g_vars.get_as<int>(V_UI_POS_Y).value());
 

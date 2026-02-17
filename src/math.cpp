@@ -3,6 +3,7 @@
 #include "globals.h"
 #include "interfaces.h"
 #include "signatures.h"
+#include "renderer.h"
 
 static bool screen_transform(const vec3& in, vec3& out)
 {
@@ -145,8 +146,10 @@ bool Math::w2s(const vec3& origin, vec3& screen)
 	if (!screen_transform(origin, screen))
 		return false;
 
-	screen.x = (GLOBAL(screen_width) / 2.0f) + (screen.x * GLOBAL(screen_width)) / 2.0f;
-	screen.y = (GLOBAL(screen_height) / 2.0f) - (screen.y * GLOBAL(screen_height)) / 2.0f;
+	vec2 screen_size = g_renderer.get_screen_size();
+
+	screen.x = (screen_size.x / 2.0f) + (screen.x * screen_size.x) / 2.0f;
+	screen.y = (screen_size.y / 2.0f) - (screen.y * screen_size.y) / 2.0f;
 
 	return true;
 }

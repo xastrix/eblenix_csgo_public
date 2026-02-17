@@ -11,7 +11,7 @@ enum _font_list {
 	maxFonts,
 };
 
-enum draw_string_flags {
+enum _draw_string_flags {
 	TEXT_NONE,
 	TEXT_OUTLINE,
 	TEXT_CENTER_X,
@@ -25,8 +25,10 @@ struct font_t {
 	DWORD       m_quality{};
 };
 
-struct fonts {
+class c_fonts {
+public:
 	void init(IDirect3DDevice9* device, const std::vector<font_t> list);
+	void restore(IDirect3DDevice9* device);
 
 	void draw_string(const std::string& string, float x, float y, ID3DXFont* font, uint8_t flags, color_t color);
 	void draw_stringW(const std::wstring& string, float x, float y, ID3DXFont* font, uint8_t flags, color_t color);
@@ -34,13 +36,17 @@ struct fonts {
 	float get_text_width(const std::string& string, ID3DXFont* font);
 	float get_text_widthW(const std::wstring& string, ID3DXFont* font);
 
+	float get_text_height(const std::string& string, ID3DXFont* font);
+	float get_text_heightW(const std::wstring& string, ID3DXFont* font);
+
 	ID3DXFont* operator[](_font_list index) const {
 		return m_fonts[index];
 	}
 
 	void undo();
+
 private:
 	ID3DXFont* m_fonts[maxFonts]{};
 };
 
-inline fonts g_font;
+inline c_fonts g_font;

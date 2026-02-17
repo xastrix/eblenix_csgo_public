@@ -5,7 +5,6 @@
 
 #include <string>
 #include <vector>
-#include <mutex>
 
 enum _game_status {
 	gameVersionOutdated,
@@ -45,18 +44,9 @@ enum _boolean_flags {
 	maxBooleanFlags,
 };
 
-enum _once_flags {
-	OF_INIT_RENDER_STUFF,
-	maxOnceFlags,
-};
-
 namespace g
 {
 	inline bool b_flags[maxBooleanFlags];
-	inline std::once_flag of_flags[maxOnceFlags];
-
-	inline int screen_width{},
-		       screen_height{};
 
 	inline _game_status status{};
 

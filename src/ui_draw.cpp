@@ -42,9 +42,9 @@ void ui::draw(int x, int y)
 		float switched_x = value ? max_x[idx] : min_x[idx];
 		anim_x[idx] += (switched_x - anim_x[idx]) * 0.1f;
 
-		g_render.draw_filled_rect(x - 38, y - 11, 26, 14, m_colors[UI_OUTLINE_COL]);
-		g_render.draw_filled_rect_fade(x - static_cast<int>(anim_x[idx]), y - 10, 12, 12,
-			GRADIENT_HORIZONTAL, value ? first : second, value ? second : first);
+		g_renderer.rect_fill(x - 38, y - 11, 26, 14, m_colors[UI_OUTLINE_COL]);
+		g_renderer.gradient_h(x - static_cast<int>(anim_x[idx]), y - 10, 12, 12,
+			value ? first : second, value ? second : first);
 
 		++idx;
 	};
@@ -62,7 +62,7 @@ void ui::draw(int x, int y)
 		const auto font = g_font[Tahoma12px];
 		const auto key_string_width = g_font.get_text_widthW(hold ? L"---" : kss, font);
 
-		g_render.draw_filled_rect(x - key_string_width - 47, y, 47 + key_string_width, h, background_color);
+		g_renderer.rect_fill(x - key_string_width - 47, y, 47 + key_string_width, h, background_color);
 
 		g_font.draw_stringW(hold ? L"---" : kss, x_text - key_string_width - 30,
 			y_text - 11, font, TEXT_OUTLINE, color);
@@ -86,14 +86,14 @@ void ui::draw(int x, int y)
 		menu_box_y = y + 1;
 		menu_text_y = menu_box_y + int(head_box_height / 2.0f) + 4;
 
-		g_render.draw_filled_rect(menu_box_x, menu_box_y, head_box_width, head_box_height, m_colors[UI_SHADOW_COL]);
+		g_renderer.rect_fill(menu_box_x, menu_box_y, head_box_width, head_box_height, m_colors[UI_SHADOW_COL]);
 
 		if (i == m_entry_pos)
 		{
 			if (!s_opened[UI_SUB_POS])
-				g_render.draw_filled_rect(menu_box_x, menu_box_y, head_box_width, head_box_height, m_colors[UI_PRIMARY_COL]);
+				g_renderer.rect_fill(menu_box_x, menu_box_y, head_box_width, head_box_height, m_colors[UI_PRIMARY_COL]);
 
-			g_render.draw_filled_rect(menu_box_x, menu_box_y, 2, head_box_height, m_colors[UI_MAIN_COL]);
+			g_renderer.rect_fill(menu_box_x, menu_box_y, 2, head_box_height, m_colors[UI_MAIN_COL]);
 		}
 
 		g_font.draw_stringW(m_entry[i].m_name, menu_text_x + 3, menu_text_y - 11, g_font[Tahoma12px], TEXT_OUTLINE, m_colors[UI_TEXT_COL]);
@@ -118,14 +118,14 @@ void ui::draw(int x, int y)
 
 		for (int i = 0; i < s_entry_sz[UI_SUB_POS]; i++)
 		{
-			g_render.draw_filled_rect(sub_menu_box_x, sub_menu_box_y, head_box_width, head_box_height, m_colors[UI_SHADOW_COL]);
+			g_renderer.rect_fill(sub_menu_box_x, sub_menu_box_y, head_box_width, head_box_height, m_colors[UI_SHADOW_COL]);
 
 			if (i == s_entry_pos[UI_SUB_POS])
 			{
 				if (!s_opened[UI_SUB_SUB_POS])
-					g_render.draw_filled_rect(sub_menu_box_x, sub_menu_box_y, head_box_width, head_box_height, m_colors[UI_PRIMARY_COL]);
+					g_renderer.rect_fill(sub_menu_box_x, sub_menu_box_y, head_box_width, head_box_height, m_colors[UI_PRIMARY_COL]);
 
-				g_render.draw_filled_rect(sub_menu_box_x, sub_menu_box_y, 2, head_box_height, m_colors[UI_MAIN_COL]);
+				g_renderer.rect_fill(sub_menu_box_x, sub_menu_box_y, 2, head_box_height, m_colors[UI_MAIN_COL]);
 			}
 
 			g_font.draw_stringW(s_entries[i][UI_SUB_POS].m_name, sub_menu_text_x + 3, sub_menu_text_y - 11,
@@ -191,14 +191,14 @@ void ui::draw(int x, int y)
 
 		for (int i = 0; i < s_entry_sz[UI_SUB_SUB_POS]; i++)
 		{
-			g_render.draw_filled_rect(sub_sub_menu_box_x, sub_sub_menu_box_y, head_box_width, head_box_height, m_colors[UI_SHADOW_COL]);
+			g_renderer.rect_fill(sub_sub_menu_box_x, sub_sub_menu_box_y, head_box_width, head_box_height, m_colors[UI_SHADOW_COL]);
 
 			if (i == s_entry_pos[UI_SUB_SUB_POS])
 			{
 				if (!s_opened[UI_SUB_SUB_SUB_POS])
-					g_render.draw_filled_rect(sub_sub_menu_box_x, sub_sub_menu_box_y, head_box_width, head_box_height, m_colors[UI_PRIMARY_COL]);
+					g_renderer.rect_fill(sub_sub_menu_box_x, sub_sub_menu_box_y, head_box_width, head_box_height, m_colors[UI_PRIMARY_COL]);
 
-				g_render.draw_filled_rect(sub_sub_menu_box_x, sub_sub_menu_box_y, 2, head_box_height, m_colors[UI_MAIN_COL]);
+				g_renderer.rect_fill(sub_sub_menu_box_x, sub_sub_menu_box_y, 2, head_box_height, m_colors[UI_MAIN_COL]);
 			}
 
 			g_font.draw_stringW(s_entries[i][UI_SUB_SUB_POS].m_name, sub_sub_menu_text_x + 3, sub_sub_menu_text_y - 11, g_font[Tahoma12px], TEXT_OUTLINE, m_colors[UI_TEXT_COL]);
@@ -263,12 +263,12 @@ void ui::draw(int x, int y)
 
 		for (int i = 0; i < s_entry_sz[UI_SUB_SUB_SUB_POS]; i++)
 		{
-			g_render.draw_filled_rect(sub_sub_sub_menu_box_x, sub_sub_sub_menu_box_y, head_box_width, head_box_height, m_colors[UI_SHADOW_COL]);
+			g_renderer.rect_fill(sub_sub_sub_menu_box_x, sub_sub_sub_menu_box_y, head_box_width, head_box_height, m_colors[UI_SHADOW_COL]);
 
 			if (i == s_entry_pos[UI_SUB_SUB_SUB_POS])
 			{
-				g_render.draw_filled_rect(sub_sub_sub_menu_box_x, sub_sub_sub_menu_box_y, head_box_width, head_box_height, m_colors[UI_PRIMARY_COL]);
-				g_render.draw_filled_rect(sub_sub_sub_menu_box_x, sub_sub_sub_menu_box_y, 2, head_box_height, m_colors[UI_MAIN_COL]);
+				g_renderer.rect_fill(sub_sub_sub_menu_box_x, sub_sub_sub_menu_box_y, head_box_width, head_box_height, m_colors[UI_PRIMARY_COL]);
+				g_renderer.rect_fill(sub_sub_sub_menu_box_x, sub_sub_sub_menu_box_y, 2, head_box_height, m_colors[UI_MAIN_COL]);
 			}
 
 			g_font.draw_stringW(s_entries[i][UI_SUB_SUB_SUB_POS].m_name, sub_sub_sub_menu_text_x + 3, sub_sub_sub_menu_text_y - 11, g_font[Tahoma12px], TEXT_OUTLINE, m_colors[UI_TEXT_COL]);

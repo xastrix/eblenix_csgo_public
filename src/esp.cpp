@@ -127,40 +127,41 @@ void esp::player_rendering(int index, c_base_player* entity, box bbox)
 
 		switch (g_vars.get_as<int>(V_ESP_BOX_TYPE).value()) {
 		case 0: {
-			g_render.draw_line(bbox.x - 1, bbox.y - 1, bbox.x + bbox.w + 1, bbox.y - 1, 1.0f, background_col);
-			g_render.draw_line(bbox.x - 1, bbox.y + bbox.h + 1, bbox.x + bbox.w + 1, bbox.y + bbox.h + 1, 1.0f, background_col);
-			g_render.draw_line(bbox.x - 1, bbox.y - 1, bbox.x - 1, bbox.y + bbox.h + 1, 1.0f, background_col);
-			g_render.draw_line(bbox.x + bbox.w + 1, bbox.y - 1, bbox.x + bbox.w + 1, bbox.y + bbox.h + 1, 1.0f, background_col);
+			g_renderer.line(bbox.x - 1, bbox.y - 1, bbox.x + bbox.w + 1, bbox.y - 1, background_col);
+			g_renderer.line(bbox.x - 1, bbox.y + bbox.h + 1, bbox.x + bbox.w + 1, bbox.y + bbox.h + 1, background_col);
+			g_renderer.line(bbox.x - 1, bbox.y - 1, bbox.x - 1, bbox.y + bbox.h + 1, background_col);
+			g_renderer.line(bbox.x + bbox.w + 1, bbox.y - 1, bbox.x + bbox.w + 1, bbox.y + bbox.h + 1, background_col);
 			
-			g_render.draw_line(bbox.x, bbox.y, bbox.x + bbox.w, bbox.y, 1.0f, col);
-			g_render.draw_line(bbox.x, bbox.y + bbox.h, bbox.x + bbox.w, bbox.y + bbox.h, 1.0f, col);
-			g_render.draw_line(bbox.x, bbox.y, bbox.x, bbox.y + bbox.h, 1.0f, col);
-			g_render.draw_line(bbox.x + bbox.w, bbox.y, bbox.x + bbox.w, bbox.y + bbox.h, 1.0f, col);
+			g_renderer.line(bbox.x, bbox.y, bbox.x + bbox.w, bbox.y, col);
+			g_renderer.line(bbox.x, bbox.y + bbox.h, bbox.x + bbox.w, bbox.y + bbox.h, col);
+			g_renderer.line(bbox.x, bbox.y, bbox.x, bbox.y + bbox.h, col);
+			g_renderer.line(bbox.x + bbox.w, bbox.y, bbox.x + bbox.w, bbox.y + bbox.h, col);
 			break;
 		}
 		case 1: {
-			g_render.draw_line(bbox.x - 1, bbox.y - 1, bbox.x + bbox.w + 1, bbox.y - 1, 1.0f, background_col);
-			g_render.draw_line(bbox.x - 1, bbox.y + bbox.h + 1, bbox.x + bbox.w + 1, bbox.y + bbox.h + 1, 1.0f, background_col);
-			g_render.draw_line(bbox.x - 1, bbox.y - 1, bbox.x - 1, bbox.y + bbox.h + 1, 1.0f, background_col);
-			g_render.draw_line(bbox.x + bbox.w + 1, bbox.y - 1, bbox.x + bbox.w + 1, bbox.y + bbox.h + 1, 1.0f, background_col);
+			g_renderer.line(bbox.x - 1, bbox.y - 1, bbox.x + bbox.w + 1, bbox.y - 1, background_col);
+			g_renderer.line(bbox.x - 1, bbox.y + bbox.h + 1, bbox.x + bbox.w + 1, bbox.y + bbox.h + 1, background_col);
+			g_renderer.line(bbox.x - 1, bbox.y - 1, bbox.x - 1, bbox.y + bbox.h + 1, background_col);
+			g_renderer.line(bbox.x + bbox.w + 1, bbox.y - 1, bbox.x + bbox.w + 1, bbox.y + bbox.h + 1, background_col);
 
-			g_render.draw_filled_rect(bbox.x, bbox.y, bbox.w, bbox.h - 1, outline_col);
+			g_renderer.rect_fill(bbox.x, bbox.y, bbox.w, bbox.h - 1, outline_col);
 
-			g_render.draw_line(bbox.x, bbox.y, bbox.x + bbox.w, bbox.y, 1.0f, col);
-			g_render.draw_line(bbox.x, bbox.y + bbox.h, bbox.x + bbox.w, bbox.y + bbox.h, 1.0f, col);
-			g_render.draw_line(bbox.x, bbox.y, bbox.x, bbox.y + bbox.h, 1.0f, col);
-			g_render.draw_line(bbox.x + bbox.w, bbox.y, bbox.x + bbox.w, bbox.y + bbox.h, 1.0f, col);
+			g_renderer.line(bbox.x, bbox.y, bbox.x + bbox.w, bbox.y, col);
+			g_renderer.line(bbox.x, bbox.y + bbox.h, bbox.x + bbox.w, bbox.y + bbox.h, col);
+			g_renderer.line(bbox.x, bbox.y, bbox.x, bbox.y + bbox.h, col);
+			g_renderer.line(bbox.x + bbox.w, bbox.y, bbox.x + bbox.w, bbox.y + bbox.h, col);
 			break;
 		}
 		case 2: {
-			g_render.draw_corner_box(bbox.x - 1, bbox.y - 1, bbox.w + 2, bbox.h + 2, 3, 5, background_col);
-			g_render.draw_corner_box(bbox.x, bbox.y, bbox.w, bbox.h, 3, 5, col);
+			g_renderer.corner_box(bbox.x - 1, bbox.y - 1, bbox.w + 2, bbox.h + 2, 3, 5, background_col);
+			g_renderer.corner_box(bbox.x, bbox.y, bbox.w, bbox.h, 3, 5, col);
 			break;
 		}
 		case 3: {
-			g_render.draw_filled_rect(bbox.x, bbox.y, bbox.w, bbox.h - 1, outline_col);
-			g_render.draw_corner_box(bbox.x - 1, bbox.y - 1, bbox.w + 2, bbox.h + 2, 3, 5, background_col);
-			g_render.draw_corner_box(bbox.x, bbox.y, bbox.w, bbox.h, 3, 5, col);
+			g_renderer.rect_fill(bbox.x, bbox.y, bbox.w, bbox.h - 1, outline_col);
+			
+			g_renderer.corner_box(bbox.x - 1, bbox.y - 1, bbox.w + 2, bbox.h + 2, 3, 5, background_col);
+			g_renderer.corner_box(bbox.x, bbox.y, bbox.w, bbox.h, 3, 5, col);
 			break;
 		}
 		}
@@ -180,13 +181,13 @@ void esp::player_rendering(int index, c_base_player* entity, box bbox)
 			case 0: {
 				const auto col = color_t(V_ESP_HEALTH_COL, 255 * m_alpha[index]);
 
-				g_render.draw_filled_rect(bbox.x - 6, bbox.y - 1, 4, bbox.h + 3, background_col);
-				g_render.draw_filled_rect(bbox.x - 5, bbox.y + (bbox.h + 1) - pixel_value, 2, pixel_value, col);
+				g_renderer.rect_fill(bbox.x - 6, bbox.y - 1, 4, bbox.h + 3, background_col);
+				g_renderer.rect_fill(bbox.x - 5, bbox.y + (bbox.h + 1) - pixel_value, 2, pixel_value, col);
 				break;
 			}
 			case 1: {
-				g_render.draw_filled_rect(bbox.x - 6, bbox.y - 1, 4, bbox.h + 3, background_col);
-				g_render.draw_filled_rect(bbox.x - 5, bbox.y + (bbox.h + 1) - pixel_value, 2, pixel_value,
+				g_renderer.rect_fill(bbox.x - 6, bbox.y - 1, 4, bbox.h + 3, background_col);
+				g_renderer.rect_fill(bbox.x - 5, bbox.y + (bbox.h + 1) - pixel_value, 2, pixel_value,
 					color_t::calc_health_color(hp, 255 * m_alpha[index]));
 				break;
 			}
@@ -195,8 +196,8 @@ void esp::player_rendering(int index, c_base_player* entity, box bbox)
 			if (g_vars.get_as<bool>(V_ESP_HEALTH_BATTERY).value())
 			{
 				for (int i = 0; i < 9; i++) {
-					g_render.draw_line(bbox.x - 5, bbox.y + i * ((bbox.h + 1) / 9.0f) - 1.0f, bbox.x - 3,
-						bbox.y + i * ((bbox.h + 1) / 9.0f) - 1.0f, 0.0f, background_col);
+					g_renderer.line(bbox.x - 5, bbox.y + i * ((bbox.h + 1) / 9.0f) - 1.0f, bbox.x - 3,
+						bbox.y + i * ((bbox.h + 1) / 9.0f) - 1.0f, background_col);
 				}
 			}
 		}
@@ -238,8 +239,8 @@ void esp::player_rendering(int index, c_base_player* entity, box bbox)
 	{
 		if (armor_val > m_armor_min)
 		{
-			g_render.draw_filled_rect(bbox.x - 1, bbox.y + bbox.h + 3, bbox.w + 3, 4, background_col);
-			g_render.draw_filled_rect(bbox.x, bbox.y + bbox.h + 4, ((bbox.w + 1) * armor_val) / 100, 2, color_t(V_ESP_ARMOR_COL, 255 * m_alpha[index]));
+			g_renderer.rect_fill(bbox.x - 1, bbox.y + bbox.h + 3, bbox.w + 3, 4, background_col);
+			g_renderer.rect_fill(bbox.x, bbox.y + bbox.h + 4, ((bbox.w + 1) * armor_val) / 100, 2, color_t(V_ESP_ARMOR_COL, 255 * m_alpha[index]));
 		}
 	}
 
@@ -267,13 +268,13 @@ void esp::player_rendering(int index, c_base_player* entity, box bbox)
 					{
 						switch (g_vars.get_as<int>(V_ESP_SKELETON_TYPE).value()) {
 						case 0: {
-							g_render.draw_line(s_parent[0], s_parent[1], s_child[0], s_child[1],
-								1.0f, color_t(V_ESP_SKELETON_COL, 255 * m_alpha[index]));
+							g_renderer.line(s_parent[0], s_parent[1], s_child[0], s_child[1],
+								color_t(V_ESP_SKELETON_COL, 255 * m_alpha[index]));
 							break;
 						}
 						case 1: {
-							g_render.draw_line(s_parent[0], s_parent[1], s_child[0], s_child[1],
-								1.0f, color_t(99, std::min(255, entity->get_health() * 225 / 100), 0, 255 * m_alpha[index])
+							g_renderer.line(s_parent[0], s_parent[1], s_child[0], s_child[1],
+								color_t::calc_health_color(entity->get_health(), 255 * m_alpha[index])
 							);
 							break;
 						}
@@ -299,8 +300,8 @@ void esp::player_rendering(int index, c_base_player* entity, box bbox)
 
 		if (Math::w2s(start, s_screen) && Math::w2s(end, e_screen))
 		{
-			g_render.draw_line(s_screen.x, s_screen.y, e_screen.x, e_screen.y,
-				1.0f, color_t(V_ESP_BARREL_COL, 255 * m_alpha[index]));
+			g_renderer.line(s_screen.x, s_screen.y, e_screen.x, e_screen.y,
+				color_t(V_ESP_BARREL_COL, 255 * m_alpha[index]));
 		}
 	}
 
@@ -310,9 +311,11 @@ void esp::player_rendering(int index, c_base_player* entity, box bbox)
 
 		if (Math::w2s(entity->get_hitbox_position(hitbox_head), pos))
 		{
-			Math::find_position_rotation(pos.x, pos.y, GLOBAL(screen_width), GLOBAL(screen_height));
+			vec2 screen_size = g_renderer.get_screen_size();
 
-			g_render.draw_line(GLOBAL(screen_width) / 2, GLOBAL(screen_height) / 2, pos.x, pos.y, 1.0f,
+			Math::find_position_rotation(pos.x, pos.y, screen_size.x, screen_size.y);
+
+			g_renderer.line(screen_size.x / 2, screen_size.y / 2, pos.x, pos.y,
 				color_t(V_ESP_SNAP_LINES_COL, 255 * m_alpha[index]));
 		}
 	}
