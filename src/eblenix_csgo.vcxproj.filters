@@ -146,6 +146,9 @@
     <ClCompile Include="vec3.cpp">
       <Filter>csgo\math</Filter>
     </ClCompile>
+    <ClCompile Include="color.cpp">
+      <Filter>helpers\renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="netvar_manager.h">

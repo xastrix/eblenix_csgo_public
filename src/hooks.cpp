@@ -239,13 +239,15 @@ static int __stdcall do_post_screen_effects_h(int v)
 
 							if (g_vars.get_as<bool>(V_GLOW_HEALTH_BASED).value())
 							{
-								glow_enemy_col[0] = 99 / 255.0f;
-								glow_enemy_col[1] = std::min(255, glow_object->get_health() * 225 / 100) / 255.0f;
-								glow_enemy_col[2] = 0.0f;
+								color_t health_col = color_t::calc_health_color(glow_object->get_health());
 
-								glow_team_col[0] = 99 / 255.0f;
-								glow_team_col[1] = std::min(255, glow_object->get_health() * 225 / 100) / 255.0f;
-								glow_team_col[2] = 0.0f;
+								glow_enemy_col[0] = health_col.get_arr()[0] / 255.0f;
+								glow_enemy_col[1] = health_col.get_arr()[1] / 255.0f;
+								glow_enemy_col[2] = health_col.get_arr()[2] / 255.0f;
+
+								glow_team_col[0] = health_col.get_arr()[0] / 255.0f;
+								glow_team_col[1] = health_col.get_arr()[1] / 255.0f;
+								glow_team_col[2] = health_col.get_arr()[2] / 255.0f;
 							}
 							else
 							{
@@ -355,9 +357,11 @@ static void __stdcall scene_end_h()
 						float col[3];
 						if (g_vars.get_as<bool>(V_CHAMS_HEALTH_BASED).value())
 						{
-							col[0] = 99 / 255.0f;
-							col[1] = std::min(255, entity->get_health() * 225 / 100) / 255.0f;
-							col[2] = 0.0f;
+							color_t health_col = color_t::calc_health_color(entity->get_health());
+
+							col[0] = health_col.get_arr()[0] / 255.0f;
+							col[1] = health_col.get_arr()[1] / 255.0f;
+							col[2] = health_col.get_arr()[2] / 255.0f;
 						}
 						else
 						{
@@ -562,7 +566,7 @@ static void __stdcall draw_set_color_h(int r, int g, int b, int a)
 								continue;
 
 							box bbox{};
-							if (g_esp.get_player_bbox(entity, bbox))
+							if (Helpers::get_bbox(entity, bbox, BT_STATIC))
 							{
 								vec2 center{ static_cast<float>(GLOBAL(screen_width)) / 2,
 									static_cast<float>(GLOBAL(screen_height)) / 2 };

@@ -39,6 +39,8 @@ public:
 		return m_color[3];
 	}
 
+	static color_t calc_health_color(int hp, int alpha = 255);
+
 	const std::array<int, 4>& get_arr() const { return m_color; }
 
 private:
@@ -52,4 +54,10 @@ private:
 
 		return opt.value();
 	}
+};
+
+struct range_clr_t {
+	int     m_max_health;
+	int     m_min_health;
+	color_t m_color;
 };

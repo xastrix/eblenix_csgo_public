@@ -40,11 +40,10 @@ void esp::run()
 		float& am{ m_anim_progress[i] };
 		m_alpha[i] = am;
 
-		// calculate alpha of esp when we can see players
 		calc_player_animation_progress(i, am, entity);
 
 		box bbox{};
-		if (get_player_bbox(entity, bbox))
+		if (Helpers::get_bbox(entity, bbox, static_cast<bbox_type>(g_vars.get_as<int>(V_ESP_RENDER_TYPE).value())))
 			player_rendering(i, entity, bbox);
 	}
 }
@@ -59,6 +58,7 @@ void esp::on_round_start_e()
 void esp::calc_player_animation_progress(int index, float& anim, c_base_player* entity)
 {
 	float rate = g_csgo.m_globals->frame_time * 1.0f / 0.5f;
+	auto& health_anim = m_health_anims[index];
 
 	if (!entity->get_dormant()) {
 		update_position(index, entity->get_absolute_origin());
@@ -77,14 +77,18 @@ void esp::calc_player_animation_progress(int index, float& anim, c_base_player* 
 			m_has_seen[index] = false;
 		}
 	}
-}
 
-bool esp::get_player_bbox(c_base_player* entity, box& out)
-{
-	if (!Helpers::get_bbox(entity, out, static_cast<bbox_type>(g_vars.get_as<int>(V_ESP_RENDER_TYPE).value())))
-		return false;
+	if (!health_anim.m_confirmed) {
+		health_anim.m_elapsed += rate;
+		float t = health_anim.m_elapsed / 0.5f;
 
-	return true;
+		if (t > 1.0f) {
+			t = 1.0f;
+			health_anim.m_confirmed = true;
+		}
+
+		health_anim.m_final_hp = t * 100.0f;
+	}
 }
 
 void esp::player_rendering(int index, c_base_player* entity, box bbox)
@@ -164,7 +168,9 @@ void esp::player_rendering(int index, c_base_player* entity, box bbox)
 
 	if (g_vars.get_as<bool>(V_ESP_HEALTH_ENABLED).value())
 	{
-		const auto hp = entity->get_health() > 100 ? 100 : entity->get_health();
+		const auto max_hp = 100;
+		const auto inner_hp = std::min(entity->get_health(), max_hp);
+		const auto hp = m_health_anims[index].m_confirmed ? inner_hp : m_health_anims[index].m_final_hp;
 
 		if (hp)
 		{
@@ -181,7 +187,7 @@ void esp::player_rendering(int index, c_base_player* entity, box bbox)
 			case 1: {
 				g_render.draw_filled_rect(bbox.x - 6, bbox.y - 1, 4, bbox.h + 3, background_col);
 				g_render.draw_filled_rect(bbox.x - 5, bbox.y + (bbox.h + 1) - pixel_value, 2, pixel_value,
-					color_t(99, std::min(255, hp * 225 / 100), 0, 255 * m_alpha[index]));
+					color_t::calc_health_color(hp, 255 * m_alpha[index]));
 				break;
 			}
 			}
@@ -499,6 +505,9 @@ void esp::reset_position(int index)
 {
 	m_has_seen[index] = false;
 	m_anim_progress[index] = 0.0f;
+
+	m_health_anims[index].m_confirmed = false;
+	m_health_anims[index].m_elapsed = 0.0f;
 }
 
 void esp::update_position(int index, const vec3& pos)

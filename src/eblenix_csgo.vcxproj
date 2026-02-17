@@ -152,6 +152,7 @@
     <ClCompile Include="..\external\minhook\src\hde\hde64.c" />
     <ClCompile Include="..\external\minhook\src\hook.c" />
     <ClCompile Include="..\external\minhook\src\trampoline.c" />
+    <ClCompile Include="color.cpp" />
     <ClCompile Include="events.cpp" />
     <ClCompile Include="font.cpp" />
     <ClCompile Include="math.cpp" />
