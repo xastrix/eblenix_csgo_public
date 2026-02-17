@@ -73,7 +73,7 @@ void movement::auto_strafe(user_cmd_t* cmd)
 		cmd->buttons & in_moveleft || cmd->buttons & in_moveright)
 		return;
 
-	const auto velocity = g_csgo.get_local()->get_velocity().length_2d();
+	const auto velocity = length_2d(g_csgo.get_local()->get_velocity());
 
 	if (velocity > 1.0f && !(g_csgo.get_local()->get_flags() & fl_onground))
 	{
@@ -120,7 +120,7 @@ void movement::block_players(user_cmd_t* cmd)
 	auto local_angle = g_csgo.m_engine->get_view_angles();
 	auto vec_forward = entity->get_absolute_origin() - g_csgo.get_local()->get_absolute_origin();
 	auto hitbox_pos  = entity->get_hitbox_position(hitbox_upper_chest);
-	auto best_speed  = entity->get_velocity().length();
+	auto best_speed  = length(entity->get_velocity());
 
 	if (hitbox_pos.z < g_csgo.get_local()->get_vec_origin().z)
 	{

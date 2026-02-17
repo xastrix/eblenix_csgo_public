@@ -26,7 +26,7 @@ struct ray_t {
 	void init(const vec3& start, const vec3& end) {
 		m_delta = end - start;
 
-		m_is_swept = (m_delta.length_sqr() != 0);
+		m_is_swept = (length(m_delta) != 0);
 
 		m_extents.x = m_extents.y = m_extents.z = 0.0f;
 		m_is_ray = true;

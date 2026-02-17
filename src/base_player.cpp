@@ -116,7 +116,7 @@ vec3 c_base_player::get_hitbox_position(int hitbox_id)
 
 bool c_base_player::is_moving()
 {
-	return get_velocity().length() > 0.1f;
+	return length(get_velocity()) > 0.1f;
 }
 
 bool c_base_player::has_gun_game_immunity()

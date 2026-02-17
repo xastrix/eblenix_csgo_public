@@ -2,13 +2,13 @@
 
 #include "sdk.h"
 
+#include <algorithm>
+
 #define M_PI            3.14159265358979323846
 #define M_RADPI         57.295779513082f
 #define M_PI_F          (static_cast<float>(M_PI))
 #define RAD2DEG(x)      (static_cast<float>(x) * static_cast<float>(180.f / M_PI_F))
 #define DEG2RAD(x)      (static_cast<float>(x) * static_cast<float>(M_PI_F / 180.f))
-#define MAX_COORD_FLOAT (16384.0f)
-#define MIN_COORD_FLOAT (-MAX_COORD_FLOAT)
 
 namespace Math
 {

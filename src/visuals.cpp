@@ -483,7 +483,7 @@ void visuals::draw_planted_bomb(c_base_plantedc4* entity, const float explode_ti
 	{
 		const auto damage = 500.f;
 		const auto bomb_radius = damage * 3.5f;
-		const auto distance_to_player = (planted_bomb.get_origin() - g_csgo.get_local()->get_eye_pos()).length();
+		const auto distance_to_player = length(planted_bomb.get_origin() - g_csgo.get_local()->get_eye_pos());
 		const auto sigma = bomb_radius / 3.0f;
 		const auto gaussian_falloff = std::exp(-distance_to_player * distance_to_player / (2.0f * sigma * sigma));
 

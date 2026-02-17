@@ -162,6 +162,8 @@
     <ClCompile Include="trace_ray.cpp" />
     <ClCompile Include="ui_draw.cpp" />
     <ClCompile Include="ui_input.cpp" />
+    <ClCompile Include="vec2.cpp" />
+    <ClCompile Include="vec3.cpp" />
     <ClCompile Include="weapon_system.cpp" />
     <ClCompile Include="material.cpp" />
     <ClCompile Include="signatures.cpp" />
@@ -217,6 +219,7 @@
     <ClInclude Include="vec3.h" />
     <ClInclude Include="netvar_manager.h" />
     <ClInclude Include="vec4.h" />
+    <ClInclude Include="vec_util.h" />
     <ClInclude Include="view_setup.h" />
     <ClInclude Include="iinput.h" />
     <ClInclude Include="signatures.h" />

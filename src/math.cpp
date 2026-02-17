@@ -51,9 +51,9 @@ void Math::sin_cos(float r, float* s, float* c)
 
 void Math::transform_vector(vec3& a, matrix3x4_t& b, vec3& out)
 {
-	out.x = a.dot(b.m[0]) + b.m[0][3];
-	out.y = a.dot(b.m[1]) + b.m[1][3];
-	out.z = a.dot(b.m[2]) + b.m[2][3];
+	out.x = dot(a, b.m[0]) + b.m[0][3];
+	out.y = dot(a, b.m[1]) + b.m[1][3];
+	out.z = dot(a, b.m[2]) + b.m[2][3];
 }
 
 void Math::vector_angles(const vec3& forward, vec3& angles)
@@ -65,7 +65,7 @@ void Math::vector_angles(const vec3& forward, vec3& angles)
 	}
 	else
 	{
-		angles.x = std::atan2(-forward.z, vec2(forward).length()) * -180 / static_cast<float>(M_PI);
+		angles.x = std::atan2(-forward.z, std::sqrt(forward.x * forward.x + forward.z * forward.z)) * -180 / static_cast<float>(M_PI);
 		angles.y = std::atan2(forward.y, forward.x) * 180 / static_cast<float>(M_PI);
 
 		if (angles.y > 90)

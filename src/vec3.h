@@ -1,154 +1,319 @@
-#pragma once
+#ifndef _VEC3_H_
+#define _VEC3_H_
 
-#include <limits>
-#include <algorithm>
+#include <cmath>
 
 class vec3 {
 public:
-	vec3(float x = 0.0f, float y = 0.0f, float z = 0.0f) : x(x), y(y), z(z) {}
+	/** Constants related to the class. */
+	enum Constants
+	{
+		/** Number of dimensions in this vector. */
+		SIZE = 3,
+	};
 
-	void init(float _x, float _y, float _z) {
-		x = _x;
-		y = _y;
-		z = _z;
-	}
+	/** The first component of the vector. */
+	float x;
 
-	void clamp() {
-		x = std::clamp(x, -89.0f, 89.0f);
-		y = std::clamp(std::remainder(y, 360.0f), -180.0f, 180.0f);
-		z = std::clamp(z, -50.0f, 50.0f);
-	}
+	/** The second component of the vector. */
+	float y;
 
-	float distance_to(const vec3& other) {
-		vec3 delta{};
+	/** The third component of the vector. */
+	float z;
 
-		delta.x = x - other.x;
-		delta.y = y - other.y;
-		delta.z = z - other.z;
+	/**
+	 * Constructs undefined 3-vector. In _DEBUG build the vector is initialized to NaN.
+	 */
+	vec3() {};
 
-		return delta.length();
-	}
+	/**
+	 * Constructs vector with all components set to the same value.
+	 * @param v Each of the vector components will be set to this value.
+	 */
+	explicit vec3(float v) { z = y = x = v; }
 
-	void normalize() {
-		x = std::isfinite(x) ? std::remainderf(x, 360.0f) : 0.0f;
-		y = std::isfinite(y) ? std::remainderf(y, 360.0f) : 0.0f;
-		z = 0.0f;
-	}
+	/**
+	 * Constructs the vector from scalars.
+	 * @param x0 The vector X-component (0)
+	 * @param y0 The vector Y-component (1)
+	 * @param z0 The vector Z-component (2)
+	 */
+	vec3(float x0, float y0, float z0) : x(x0), y(y0), z(z0) {}
 
-	float length() {
-		return std::sqrt(length_sqr());
-	}
+	/** Sets vector value. */
+	void		set(float x0, float y0, float z0);
 
-	float length_2d() {
-		return std::sqrtf(x * x + y * y);
-	}
+	/** Component wise addition. */
+	vec3&		operator+=(const vec3& o);
 
-	float length_sqr() {
-		return { x * x + y * y + z * z };
-	}
+	/** Component wise subtraction. */
+	vec3&		operator-=(const vec3& o);
 
-	float length_2d_sqr() {
-		return { x * x + y * y };
-	}
+	/** Component wise scalar subtract */
+	vec3&        operator-=(float s);
 
-	float dot(const vec3 other) {
-		return { x * other.x + y * other.y + z * other.z };
-	}
+	/** Component wise scalar addition */
+	vec3&        operator+=(float s);
 
-	float dot(const float* other) {
-		const vec3& a = *this;
-		return { a.x * other[0] + a.y * other[1] + a.z * other[2] };
-	}
+	/** Component wise scalar multiplication. */
+	vec3&		operator*=(float s);
 
-	vec3& operator+=(const vec3& v) {
-		x += v.x;
-		y += v.y;
-		z += v.z;
+	/** Component wise scalar division. */
+	vec3&		operator/=(float s);
 
-		return *this;
-	}
+	/** Component wise multiplication. */
+	vec3&		operator*=(const vec3& o);
 
-	vec3& operator-=(const vec3& v) {
-		x -= v.x;
-		y -= v.y;
-		z -= v.z;
+	/** Component wise division. */
+	vec3&		operator/=(const vec3& o);
 
-		return *this;
-	}
+	/** Returns component at specified index. */
+	float&		operator[](size_t i) { return (&x)[i]; }
 
-	vec3& operator*=(float v) {
-		x *= v;
-		y *= v;
-		z *= v;
+	/** Returns pointer to the first float. */
+	float*		begin() { return &x; }
 
-		return *this;
-	}
+	/** Returns pointer to one beyond the last float. */
+	float*		end() { return &x + SIZE; }
 
-	vec3 operator+(const vec3& v) {
-		return vec3{ x + v.x, y + v.y, z + v.z };
-	}
+	/** Normalizes this vector. */
+	void		normalize();
 
-	vec3 operator-(const vec3& v) {
-		return vec3{ x - v.x, y - v.y, z - v.z };
-	}
+	/**
+	* Calculates the Euclidean distance from this vector to another vector 'o'.
+	*
+	* @param o The other vector to which the distance is calculated.
+	* @return The straight-line distance between this vector and vector 'o'.
+	*/
+	float distance_to(const vec3& o);
 
-	auto operator-(const vec3& other) const -> vec3 {
-		vec3 vec{ *this };
+	/** Component wise multiplication. */
+	vec3		operator*(const vec3& o) const;
 
-		vec.x -= other.x;
-		vec.y -= other.y;
-		vec.z -= other.z;
+	/** Component wise division. */
+	vec3		operator/(const vec3& o) const;
 
-		return vec;
-	}
+	/** Component wise addition. */
+	vec3		operator+(const vec3& o) const;
 
-	vec3 operator*(float fl) const {
-		return vec3{ x * fl, y * fl, z * fl };
-	}
+	/** Component wise subtraction. */
+	vec3		operator-(const vec3& o) const;
 
-	vec3 operator*(const vec3& v) const {
-		return vec3{ x * v.x, y * v.y, z * v.z };
-	}
+	/** Component wise subtraction. */
+	vec3		operator-() const;
 
-	vec3& operator/=(float fl) {
-		x /= fl;
-		y /= fl;
-		z /= fl;
+	/** Component wise scalar multiplication. */
+	vec3		operator*(float s) const;
 
-		return *this;
-	}
+	/** Component wise scalar division. */
+	vec3		operator/(float s) const;
 
-	vec3 operator/(float other) const {
-		vec3 vec{};
+	/** Returns component at specified index. */
+	const float& operator[](size_t i) const { return (&x)[i]; }
 
-		vec.x = x / other;
-		vec.y = y / other;
-		vec.z = z / other;
+	/** Returns true if vectors are bitwise equal. */
+	bool		operator==(const vec3& o) const;
 
-		return vec;
-	}
+	/** Returns true if vectors are bitwise inequal. */
+	bool		operator!=(const vec3& o) const;
 
-	vec3 operator+(const vec3& v) const {
-		return vec3{ x + v.x, y + v.y, z + v.z };
-	}
+	/** Returns const pointer to the first float. */
+	const float*	begin() const { return &x; }
 
-	float& operator[](int i) {
-		return ((float*)this)[i];
-	}
-
-	float operator[](int i) const {
-		return ((float*)this)[i];
-	}
-
-	float x, y, z;
+	/** Returns const pointer to one beyond the last float. */
+	const float*	end() const { return &x + SIZE; }
 };
 
+/**
+ * Returns cross product of two vectors.
+ * @ingroup vec_util
+ */
+vec3	cross(const vec3& a, const vec3& b);
+
+/**
+ * Calculates triangle face normal when triangle is defined by counter-clock-wise points.
+ * @ingroup vec_util
+ */
+vec3	facenormal_ccw(const vec3& v0, const vec3& v1, const vec3& v2);
+
+/**
+ * Calculates triangle face normal when triangle is defined by clock-wise points.
+ * @ingroup vec_util
+ */
+vec3	facenormal_cw(const vec3& v0, const vec3& v1, const vec3& v2);
+
+/**
+ * Refracts vector against specified normal using specified ratio of refraction indices.
+ * The result is computed by
+ * ndoti = dot(n,i);
+ * k = 1.0f - eta*eta*(1.0f - ndoti*ndoti);
+ * if k < 0 then return 0 else return eta*i-(eta*ndoti+sqrtf(k))*n
+ * @param i Input vector. Must be pre-normalized.
+ * @param n Normal vector. Must be pre-normalized.
+ * @param eta Ratio of two materials refraction indices.
+ * @return Refracted vector.
+ * @ingroup vec_util
+ */
+vec3	refract(const vec3& i, const vec3& n, float eta);
+
+/**
+ * Reflects vector against specified normal.
+ * @param i Input vector.
+ * @param n Normal vector. Must be pre-normalized.
+ * @return i - 2*dot(n,i)*n
+ * @ingroup vec_util
+ */
+vec3	reflect(const vec3& i, const vec3& n);
+
+/**
+ * Checks if vector points to specified direction.
+ * @param n Vector to be reflected if input does not face against reference vector.
+ * @param i Input vector.
+ * @param nref Normal reference vector.
+ * @return If dot(nref<i) < 0 return n, otherwise return -n;
+ * @ingroup vec_util
+ */
+vec3	faceforward(const vec3& n, const vec3& i, const vec3& nref);
+
+/**
+ * Component wise scalar multiplication.
+ * @ingroup vec_util
+ */
+vec3	operator*(float s, const vec3& v);
+
+/**
+ * Returns length of the vector.
+ * @ingroup vec_util
+ */
+float	length(const vec3& v);
+float   length_2d(const vec3& v);
+
+/**
+ * Returns dot product (inner product) of two vectors.
+ * @ingroup vec_util
+ */
+float	dot(const vec3& a, const vec3& b);
+float   dot(const vec3& a, const float* o);
+
+/**
+ * Returns the vector normalized.
+ * @ingroup vec_util
+ */
+vec3	normalize(const vec3& v);
+
+/**
+ * Returns component wise maximum of two vectors.
+ * @ingroup vec_util
+ */
+vec3	max(const vec3& a, const vec3& b);
+
+/**
+ * Returns component wise minimum of two vectors.
+ * @ingroup vec_util
+ */
+vec3	min(const vec3& a, const vec3& b);
+
+/**
+ * Returns component wise absolute of the vector.
+ * @ingroup vec_util
+ */
+vec3	abs(const vec3& v);
+
+/**
+ * Returns linear blend between two values. Formula is x*(1-a)+y*a.
+ * @param x The first value.
+ * @param y The second value.
+ * @param a The blend factor.
+ * @return x*(1-a)+y*a
+ * @ingroup vec_util
+ */
+vec3	mix(const vec3& x, const vec3& y, float a);
+
+/**
+ * Returns distance between two values.
+ * @param p0 The first point vector.
+ * @param p1 The second point vector.
+ * @return Distance between p0 and p1, i.e. length(p1-p0).
+ * @ingroup vec_util
+ */
+float	distance(const vec3& p0, const vec3& p1);
+
+/**
+ * Returns value with components clamped between [min,max].
+ * @ingroup vec_util
+ */
+vec3	clamp(const vec3& v, const vec3& min, const vec3& max);
+void	clamp(vec3& v);
+
+/**
+ * Returns value with components clamped between [0,1].
+ * @ingroup vec_util
+ */
+vec3	saturate(const vec3& v);
+
+/**
+ * Returns true if all components are valid numbers.
+ * @ingroup vec_util
+ */
+bool	check(const vec3& v);
+
+/**
+ * Returns negated vector. This function is useful for scripting where overloaded operators are not available.
+ * @ingroup vec_util
+ */
+vec3	neg(const vec3& a);
+
+/**
+ * Adds two vectors together. This function is useful for scripting where overloaded operators are not available.
+ * @ingroup vec_util
+ */
+vec3	add(const vec3& a, const vec3& b);
+
+/**
+ * Subtracts two vectors together. This function is useful for scripting where overloaded operators are not available.
+ * @ingroup vec_util
+ */
+vec3	sub(const vec3& a, const vec3& b);
+
+/**
+ * Multiplies vector by scalar. This function is useful for scripting where overloaded operators are not available.
+ * @ingroup vec_util
+ */
+vec3	mul(const vec3& a, float b);
+
+/**
+ * Multiplies vector by scalar. This function is useful for scripting where overloaded operators are not available.
+ * @ingroup vec_util
+ */
+vec3	mul(float b, const vec3& a);
+
+/**
+ * Rotates vector v about Z-axis by specified angle a (in radians).
+ * @ingroup vec_util
+ */
+vec3	rotate_z(const vec3& v, float a);
+
+/**
+ * Rotates vector v about Y-axis by specified angle a (in radians).
+ * @ingroup vec_util
+ */
+vec3	rotate_y(const vec3& v, float a);
+
+/**
+ * Rotates vector v about X-axis by specified angle a (in radians).
+ * @ingroup vec_util
+ */
+vec3	rotate_x(const vec3& v, float a);
+
+// Declare a class with 16-byte alignment for optimized memory access (e.g., SIMD instructions)
 class __declspec(align(16)) vec_aligned : public vec3 {
 public:
 	vec_aligned& operator=(const vec3& oth) {
-		init(oth.x, oth.y, oth.z);
+		x = oth.x; y = oth.y; z = oth.z;
 		return *this;
 	}
 
 	float w;
 };
+
+#endif // _VEC3_H_

@@ -526,31 +526,6 @@ static bool __fastcall is_connected_h(void* _ecx, void*)
 	return ret;
 }
 
-static int(__thiscall *o_list_in_leaves_box)(void*, const vec3&, const vec3&, unsigned short*, int);
-static int __fastcall list_leaves_in_box_h(void* bsp, void*, const vec3& mins, const vec3& maxs, unsigned short* list, int list_max)
-{
-	if (_ReturnAddress() != g_sig[S_LIST_LEAVES])
-		return o_list_in_leaves_box(bsp, mins, maxs, list, list_max);
-
-	const auto renderable_info = Helpers::read<renderable_info_t*>(uintptr_t(_AddressOfReturnAddress()) + 0x14);
-
-	if (!renderable_info || !renderable_info->entity)
-		return o_list_in_leaves_box(bsp, mins, maxs, list, list_max);
-
-	auto entity = Helpers::call_virtual_fn<c_base_entity*>(renderable_info->entity - 0x4, 7);
-
-	if (!entity || entity->get_client_class()->class_id != ccsplayer)
-		return o_list_in_leaves_box(bsp, mins, maxs, list, list_max);
-
-	renderable_info->flags &= ~0x100;
-	renderable_info->flags2 |= 0x40;
-
-	static const vec3 map_min = vec3{ MIN_COORD_FLOAT, MIN_COORD_FLOAT, MIN_COORD_FLOAT };
-	static const vec3 map_max = vec3{ MAX_COORD_FLOAT, MAX_COORD_FLOAT, MAX_COORD_FLOAT };
-
-	return o_list_in_leaves_box(bsp, map_min, map_max, list, list_max);
-}
-
 static bool(__thiscall *o_sv_cheats_boolean)(convar*);
 static bool __fastcall sv_cheats_boolean_h(convar* convar, int)
 {
@@ -676,9 +651,6 @@ void hooks::init()
 
 		m_hooks[HK_ISCONNECTED].hook<c_engine_client*, IS_CONNECTED_FN_INDEX>(g_csgo.m_engine,
 			is_connected_h, reinterpret_cast<void**>(&o_is_connected));
-
-		m_hooks[HK_LISTLEAVESINBOX].hook<void*, LIST_IN_LEAVES_BOX_FN_INDEX>(g_csgo.m_engine->get_bsp_query(),
-			list_leaves_in_box_h, reinterpret_cast<void**>(&o_list_in_leaves_box));
 
 		m_hooks[HK_SVCHEATSBOOLEAN].hook<convar*, SV_CHEATS_BOOLEAN_FN_INDEX>(g_csgo.m_cvar->get_convar("sv_cheats"),
 			sv_cheats_boolean_h, reinterpret_cast<void**>(&o_sv_cheats_boolean));

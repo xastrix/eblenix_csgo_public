@@ -15,7 +15,6 @@ enum fn_num {
 	DRAW_MODEL_EXECUTE_FN_INDEX          = 21,
 	OVERRIDE_VIEW_FN_INDEX               = 18,
 	IS_CONNECTED_FN_INDEX                = 27,
-	LIST_IN_LEAVES_BOX_FN_INDEX          = 6,
 	SV_CHEATS_BOOLEAN_FN_INDEX           = 13,
 	DRAW_SET_COLOR_FN_INDEX              = 15,
 	LEVEL_INIT_POST_ENTITY_FN_INDEX      = 6,

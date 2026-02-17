@@ -64,12 +64,6 @@ vec3 c_engine_client::get_view_angles()
 	return t;
 }
 
-void* c_engine_client::get_bsp_query()
-{
-	using original_fn = void*(__thiscall*)(c_engine_client*);
-	return (*(original_fn**)this)[43](this);
-}
-
 void c_engine_client::execute_cmd(const char* cmd)
 {
 	using original_fn = void(__thiscall*)(c_engine_client*, const char*);

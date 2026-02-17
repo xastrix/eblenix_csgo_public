@@ -17,6 +17,5 @@ public:
 	const char* get_product_version_string();
 	void set_view_angles(vec3& angles);
 	vec3 get_view_angles();
-	void* get_bsp_query();
 	void execute_cmd(const char* cmd);
 };

@@ -140,6 +140,12 @@
       <Filter>csgo\engine</Filter>
     </ClCompile>
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="vec2.cpp">
+      <Filter>csgo\math</Filter>
+    </ClCompile>
+    <ClCompile Include="vec3.cpp">
+      <Filter>csgo\math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="netvar_manager.h">
@@ -343,6 +349,9 @@
     </ClInclude>
     <ClInclude Include="state_mgr.h">
       <Filter>helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="vec_util.h">
+      <Filter>csgo\math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

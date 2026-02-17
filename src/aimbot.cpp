@@ -43,7 +43,7 @@ void aimbot::run(user_cmd_t* cmd)
 		set_aim_angle(cmd, entity, g_csgo.get_local()->aim_punch_angle());
 
 		m_angle.normalize();
-		m_angle.clamp();
+		clamp(m_angle);
 
 		m_angle /= m_aim_smooth;
 		cmd->viewangles += m_angle;

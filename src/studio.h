@@ -3,6 +3,8 @@
 #include "matrix.h"
 #include "vec3.h"
 
+#include <cstdint>
+
 using quaternion = float[4];
 using rad_euler = float[3];
 

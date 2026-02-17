@@ -194,10 +194,3 @@ public:
 	bool                  is_bomb_planted();
 	float                 get_defuse_length();
 };
-
-struct renderable_info_t {
-	c_base_entity*       entity;
-	std::byte            u[18];
-	uint16_t             flags;
-	uint16_t             flags2;
-};
