@@ -100,6 +100,7 @@
 #define V_ESP_WEAPON_COL_B V_ESP_WEAPON_COL B_COL_P
 
 #define V_ESP_ARMOR_ENABLED "esp->armor->enabled"
+#define V_ESP_ARMOR_BATTERY "esp->armor->battery"
 #define V_ESP_ARMOR_COL "esp->armor->col"
 #define V_ESP_ARMOR_COL_R V_ESP_ARMOR_COL R_COL_P
 #define V_ESP_ARMOR_COL_G V_ESP_ARMOR_COL G_COL_P

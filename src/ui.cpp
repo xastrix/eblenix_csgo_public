@@ -237,7 +237,9 @@ void ui::setup()
 
 			add_int<UI_SUB_SUB_POS>(L"Armor R", V_ESP_ARMOR_COL_R, 0, 255, 1);
 			add_int<UI_SUB_SUB_POS>(L"Armor G", V_ESP_ARMOR_COL_G, 0, 255, 1);
-			add_int<UI_SUB_SUB_POS>(L"Armor B", V_ESP_ARMOR_COL_B, 0, 255, 1);
+			add_int<UI_SUB_SUB_POS>(L"Armor B", V_ESP_ARMOR_COL_B, 0, 255, 1, true);
+
+			add_bool<UI_SUB_SUB_POS>(L"Armor Battery", V_ESP_ARMOR_BATTERY);
 		});
 
 		add_tab<UI_SUB_POS>(L"Barrel", [&]() {

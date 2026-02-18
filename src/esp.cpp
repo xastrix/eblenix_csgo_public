@@ -175,14 +175,13 @@ void esp::player_rendering(int index, c_base_player* entity, box bbox)
 
 		if (hp)
 		{
-			const auto pixel_value = hp * (bbox.h + 1) / 100;
+			const auto pixel_value = hp * (bbox.h + 1) / max_hp;
 
 			switch (g_vars.get_as<int>(V_ESP_HEALTH_TYPE).value()) {
 			case 0: {
-				const auto col = color_t(V_ESP_HEALTH_COL, 255 * m_alpha[index]);
-
 				g_renderer.rect_fill(bbox.x - 6, bbox.y - 1, 4, bbox.h + 3, background_col);
-				g_renderer.rect_fill(bbox.x - 5, bbox.y + (bbox.h + 1) - pixel_value, 2, pixel_value, col);
+				g_renderer.rect_fill(bbox.x - 5, bbox.y + (bbox.h + 1) - pixel_value, 2, pixel_value,
+					color_t(V_ESP_HEALTH_COL, 255 * m_alpha[index]));
 				break;
 			}
 			case 1: {
@@ -195,9 +194,10 @@ void esp::player_rendering(int index, c_base_player* entity, box bbox)
 
 			if (g_vars.get_as<bool>(V_ESP_HEALTH_BATTERY).value())
 			{
-				for (int i = 0; i < 9; i++) {
-					g_renderer.line(bbox.x - 5, bbox.y + i * ((bbox.h + 1) / 9.0f) - 1.0f, bbox.x - 3,
-						bbox.y + i * ((bbox.h + 1) / 9.0f) - 1.0f, background_col);
+				int line_count = 9;
+				for (int i = 0; i < line_count; i++) {
+					int y = bbox.y - 1 + (i * bbox.h + 3) / line_count;
+					g_renderer.line(bbox.x - 6, y, bbox.x - 3, y, background_col);
 				}
 			}
 		}
@@ -240,7 +240,19 @@ void esp::player_rendering(int index, c_base_player* entity, box bbox)
 		if (armor_val > m_armor_min)
 		{
 			g_renderer.rect_fill(bbox.x - 1, bbox.y + bbox.h + 3, bbox.w + 3, 4, background_col);
-			g_renderer.rect_fill(bbox.x, bbox.y + bbox.h + 4, ((bbox.w + 1) * armor_val) / 100, 2, color_t(V_ESP_ARMOR_COL, 255 * m_alpha[index]));
+
+			g_renderer.rect_fill(bbox.x, bbox.y + bbox.h + 4, ((bbox.w + 1) * armor_val) / 100, 2,
+				color_t(V_ESP_ARMOR_COL, 255 * m_alpha[index]));
+
+			if (g_vars.get_as<bool>(V_ESP_ARMOR_BATTERY).value())
+			{
+				int start_y = bbox.y + bbox.h + 3;
+				int line_count = 5;
+				for (int i = 0; i < line_count; i++) {
+					int x = bbox.x - 1 + (i * bbox.w + 3) / line_count;
+					g_renderer.line(x, start_y, x, start_y + 3, background_col);
+				}
+			}
 		}
 	}
 

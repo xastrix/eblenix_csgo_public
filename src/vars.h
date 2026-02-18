@@ -89,6 +89,7 @@ struct vars
 		set(V_ESP_WEAPON_COL_G, 255);
 		set(V_ESP_WEAPON_COL_B, 255);
 		set(V_ESP_ARMOR_ENABLED, false);
+		set(V_ESP_ARMOR_BATTERY, true);
 		set(V_ESP_ARMOR_COL_R, 255);
 		set(V_ESP_ARMOR_COL_G, 255);
 		set(V_ESP_ARMOR_COL_B, 255);
