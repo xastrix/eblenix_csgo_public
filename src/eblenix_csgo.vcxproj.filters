@@ -149,6 +149,9 @@
     <ClCompile Include="sprite_mgr.cpp">
       <Filter>helpers\renderer</Filter>
     </ClCompile>
+    <ClCompile Include="..\external\exception_handler\exception_handler.cpp">
+      <Filter>external\exception_handler</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="netvar_manager.h">
@@ -356,6 +359,9 @@
     <ClInclude Include="vec_util.h">
       <Filter>csgo\math</Filter>
     </ClInclude>
+    <ClInclude Include="..\external\exception_handler\exception_handler.hpp">
+      <Filter>external\exception_handler</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="csgo">
@@ -465,6 +471,9 @@
     </Filter>
     <Filter Include="helpers\ui">
       <UniqueIdentifier>{9840e7ae-799f-4f14-917f-1544e34cf189}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="external\exception_handler">
+      <UniqueIdentifier>{dafe7bf8-088f-4e41-b097-dbdde06f5e34}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

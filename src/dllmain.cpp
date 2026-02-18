@@ -6,6 +6,8 @@
 #include "fonts.hpp"
 static HANDLE g_astriumwepFont{};
 
+#include <exception_handler.hpp>
+
 static void __stdcall init(HMODULE I)
 {
 	// waiting for the server browser module (the last module loaded by the game)
@@ -99,7 +101,7 @@ static void __stdcall init(HMODULE I)
 		}();
 
 		state++;
-		});
+	});
 
 	g_state->call_state(SL_INIT_HOOKS, [](state_t& state) {
 		g_input.init({ CSGO_CLASS_NAME, 0 });
@@ -146,7 +148,7 @@ static void __stdcall init(HMODULE I)
 				{ "Model", 1.0f },
 				{ "Decal", 1.0f },
 				{ "Other", 1.0f },
-				});
+			});
 		}
 
 		// turn off all functions before unloading
@@ -178,8 +180,14 @@ static void __stdcall init(HMODULE I)
 
 bool __stdcall DllMain(const HMODULE mod, const int32_t r, void*)
 {
-	if (r != DLL_PROCESS_ATTACH)
+	if (!(r == DLL_PROCESS_ATTACH))
 		return false;
+
+	// disables thread library calls
+	DisableThreadLibraryCalls(mod);
+
+	// sets a custom handler for unhandled exceptions
+	SetUnhandledExceptionFilter(exception_handler::custom_exception_filter);
 
 	if (auto h = CreateThread(nullptr, 0, reinterpret_cast<LPTHREAD_START_ROUTINE>(init), mod, 0, nullptr))
 		CloseHandle(h);

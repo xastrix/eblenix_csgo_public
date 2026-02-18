@@ -61,21 +61,21 @@
     <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)obj\$(ProjectName)\$(Configuration)\</IntDir>
     <LibraryPath>$(SolutionDir)shared\dxsdk\lib\x86;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)shared;$(SolutionDir)shared\dxsdk\include;$(SolutionDir)external\minhook\include;$(SolutionDir)external\files;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)shared;$(SolutionDir)shared\dxsdk\include;$(SolutionDir)external\minhook\include;$(SolutionDir)external\files;$(SolutionDir)external\exception_handler;$(IncludePath)</IncludePath>
     <TargetName>$(ProjectName)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)obj\$(ProjectName)\$(Configuration)\</IntDir>
     <LibraryPath>$(SolutionDir)shared\dxsdk\lib\x86;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)shared;$(SolutionDir)shared\dxsdk\include;$(SolutionDir)external\minhook\include;$(SolutionDir)external\files;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)shared;$(SolutionDir)shared\dxsdk\include;$(SolutionDir)external\minhook\include;$(SolutionDir)external\files;$(SolutionDir)external\exception_handler;$(IncludePath)</IncludePath>
     <TargetName>$(ProjectName)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release - 2020 build|Win32'">
     <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)obj\$(ProjectName)\$(Configuration)\</IntDir>
     <LibraryPath>$(SolutionDir)shared\dxsdk\lib\x86;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)shared;$(SolutionDir)shared\dxsdk\include;$(SolutionDir)external\minhook\include;$(SolutionDir)external\files;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)shared;$(SolutionDir)shared\dxsdk\include;$(SolutionDir)external\minhook\include;$(SolutionDir)external\files;$(SolutionDir)external\exception_handler;$(IncludePath)</IncludePath>
     <TargetName>$(ProjectName)</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -146,6 +146,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\external\exception_handler\exception_handler.cpp" />
     <ClCompile Include="..\external\files\files.cpp" />
     <ClCompile Include="..\external\minhook\src\buffer.c" />
     <ClCompile Include="..\external\minhook\src\hde\hde32.c" />
@@ -198,6 +199,7 @@
     <ClCompile Include="ui.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\external\exception_handler\exception_handler.hpp" />
     <ClInclude Include="..\external\files\files.h" />
     <ClInclude Include="..\external\minhook\include\MinHook.h" />
     <ClInclude Include="..\external\minhook\src\buffer.h" />
