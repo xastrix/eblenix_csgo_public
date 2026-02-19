@@ -40,14 +40,6 @@ float c_base_plantedc4::c4_blow()
 		netvar_manager::get_address("DT_PlantedC4::m_flC4Blow"));
 }
 
-bool c_base_plantedc4::is_bomb_planted()
-{
-	if (!this)
-		return false;
-
-	return get_client_class()->class_id == cplantedc4;
-}
-
 float c_base_plantedc4::get_defuse_length()
 {
 	float ret = defuse_count_down() - g_csgo.m_globals->cur_time;

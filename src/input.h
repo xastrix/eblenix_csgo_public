@@ -4,6 +4,8 @@
 #include <functional>
 #include <string>
 
+#include "vec2.h"
+
 enum m_state {
 	state_none = 1,
 	state_down,
@@ -14,16 +16,9 @@ enum m_state {
 struct mouse_t {
 	friend struct input;
 
-	int get_mouse_pos_x() {
-		return m_mouse_pos_x;
-	}
-
-	int get_mouse_pos_y() {
-		return m_mouse_pos_y;
-	}
-
-	int get_mouse_wheel_accumlate() {
-		return m_wheel_accumulate;
+	bool is_hovered(const vec2 min, const vec2 max) {
+		return (m_mouse_pos_x >= min.x && m_mouse_pos_y >= min.y &&
+			m_mouse_pos_x <= max.x && m_mouse_pos_y <= max.y);
 	}
 
 	bool move_object(UINT m, int w, int h, int& x, int& y) {
@@ -58,6 +53,18 @@ struct mouse_t {
 		return dragging;
 	}
 
+	int get_mouse_pos_x() {
+		return m_mouse_pos_x;
+	}
+
+	int get_mouse_pos_y() {
+		return m_mouse_pos_y;
+	}
+
+	int get_mouse_wheel_accumlate() {
+		return m_wheel_accumulate;
+	}
+
 private:
 	int m_mouse_pos_x{};
 	int m_mouse_pos_y{};
@@ -73,8 +80,11 @@ struct input : public mouse_t {
 	void process_keybd_message(UINT m, WPARAM w);
 
 	std::wstring virtual_key_to_wstring(unsigned int vk);
-	m_state get_key_state(unsigned int vk);
 	WNDPROC get_wnd_proc();
+
+	m_state& operator[](unsigned int vk) {
+		return m_key_map[vk];
+	}
 
 	void undo();
 private:

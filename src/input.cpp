@@ -1,7 +1,7 @@
 #include "input.h"
 
 #include "globals.h"
-#include "ui.h"
+#include "hud.h"
 #include "fnv.h"
 #include "state_mgr.h"
 
@@ -26,12 +26,7 @@ static unsigned long WINAPI wnd_proc(HWND h, UINT m, WPARAM w, LPARAM l)
 		}
 
 		if (!(g_state->get_current_state() == SL_SHUTDOWN))
-		{
-			if (!GLOBAL(b_flags[BF_CONSOLE_OPENED]) && !GLOBAL(b_flags[BF_CHAT_OPENED]))
-			{
-				g_input.process_message(m, w, l);
-			}
-		}
+			g_input.process_message(m, w, l);
 	}
 
 	return CallWindowProcA(g_input.get_wnd_proc(), h, m, w, l);
@@ -54,14 +49,16 @@ void input::add_hk(unsigned int vk, std::function<void()> fn)
 
 void input::process_message(UINT m, WPARAM w, LPARAM l)
 {
-	process_keybd_message(m, w);
+	if (!GLOBAL(b_flags[BF_CONSOLE_OPENED]) && !GLOBAL(b_flags[BF_CHAT_OPENED]))
+		process_keybd_message(m, w);
+
 	process_mouse_message(m, w, l);
 }
 
 void input::process_mouse_message(UINT m, WPARAM w, LPARAM l)
 {
 	auto menu_opened = g_ui.get_menu_state();
-
+	
 	// emulate WM_KEYDOWN, WM_KEYUP for mouse wheel control
 	auto emul_key_for_wheel_navigation = [&](unsigned int k) {
 		if (!(menu_opened && g_vars.get_as<bool>(V_UI_MOUSE_WHEEL_NAVIGATION).value()))
@@ -80,6 +77,8 @@ void input::process_mouse_message(UINT m, WPARAM w, LPARAM l)
 			g_vars.set(V_UI_POS_X, ui_pos_x);
 			g_vars.set(V_UI_POS_Y, ui_pos_y);
 		}
+
+		g_hud.process_message(m);
 	}
 
 	switch (m) {
@@ -194,11 +193,6 @@ std::wstring input::virtual_key_to_wstring(unsigned int vk)
 	}
 
 	return k;
-}
-
-m_state input::get_key_state(unsigned int vk)
-{
-	return m_key_map[vk];
 }
 
 WNDPROC input::get_wnd_proc()

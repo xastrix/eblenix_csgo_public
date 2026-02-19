@@ -41,12 +41,20 @@ enum _boolean_flags {
 	BF_CONSOLE_OPENED,
 	BF_CHAT_OPENED,
 	BF_NIGHTMODE_HOLD,
+	BF_BOMB_PLANTED,
 	maxBooleanFlags,
+};
+
+enum _integer_flags {
+	IF_BOMB_TIMER,
+	IF_BOMB_SITE_ID,
+	maxIntegerFlags,
 };
 
 namespace g
 {
 	inline bool b_flags[maxBooleanFlags];
+	inline int i_flags[maxIntegerFlags];
 
 	inline _game_status status{};
 

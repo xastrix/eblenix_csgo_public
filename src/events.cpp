@@ -1,6 +1,7 @@
 #include "events.h"
 
 #include "vars.h"
+#include "globals.h"
 #include "color.h"
 #include "esp.h"
 #include "interfaces.h"
@@ -81,7 +82,20 @@ void events::init()
 	});
 
 	listen_event(this, "round_start", [](c_game_event*) {
+		GLOBAL(b_flags[BF_BOMB_PLANTED]) = false;
 		g_esp.on_round_start_e();
+	});
+
+	listen_event(this, "bomb_planted", [](c_game_event*) { 
+		GLOBAL(b_flags[BF_BOMB_PLANTED]) = true;
+	});
+
+	listen_event(this, "bomb_exploded", [](c_game_event*) {
+		GLOBAL(b_flags[BF_BOMB_PLANTED]) = false;
+	});
+
+	listen_event(this, "bomb_defused", [](c_game_event*) {
+		GLOBAL(b_flags[BF_BOMB_PLANTED]) = false;
 	});
 }
 

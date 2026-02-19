@@ -5,6 +5,7 @@
 #include "knifebot.h"
 #include "esp.h"
 #include "visuals.h"
+#include "hud.h"
 #include "movement.h"
 
 // _ReturnAddress, _AddressOfReturnAddress
@@ -127,24 +128,15 @@ static long D3DAPI present_h(IDirect3DDevice9* device, RECT* source_rect, RECT* 
 		if (!GLOBAL(b_flags[BF_PANIC])) {
 			g_esp.run();
 			g_visuals.run();
+			g_hud.run();
 			g_ui.run();
 		}
 		break;
 	}
 #ifndef DISABLE_CSGO_VERSION_CHECK
 	case gameVersionOutdated: {
-		vec2 screen_size = g_renderer.get_screen_size();
-
-		std::string string_ver = g_csgo.m_engine->get_product_version_string();
-		std::string ss = "Hack has not been updated for " + string_ver;
-
-		const auto string_font = g_font[Tahoma12px];
-		const auto string_width = g_font.get_text_width(ss, string_font);
-
-		g_renderer.rect_fill(screen_size.x - string_width - 15, 10, screen_size.x, 17, color_t(20, 20, 20, 140));
-		g_renderer.rect_fill(screen_size.x - string_width - 12, 13, 2, 11, color_t(164, 164, 164));
-
-		g_font.draw_string(ss, screen_size.x - string_width - 5, 12, string_font, TEXT_OUTLINE, color_t(255, 255, 255));
+		g_hud.notify_hud("Hack has not been updated for " +
+			std::string(g_csgo.m_engine->get_product_version_string()), color_t(164, 164, 164));
 		break;
 	}
 #endif

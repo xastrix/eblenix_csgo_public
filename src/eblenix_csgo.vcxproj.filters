@@ -320,12 +320,6 @@
     <ClInclude Include="surface.h">
       <Filter>csgo\vgui</Filter>
     </ClInclude>
-    <ClInclude Include="vars.h">
-      <Filter>helpers\cfg</Filter>
-    </ClInclude>
-    <ClInclude Include="var_defines.h">
-      <Filter>helpers\cfg</Filter>
-    </ClInclude>
     <ClInclude Include="..\external\files\files.h">
       <Filter>external\files</Filter>
     </ClInclude>
@@ -361,6 +355,11 @@
     </ClInclude>
     <ClInclude Include="..\external\exception_handler\exception_handler.hpp">
       <Filter>external\exception_handler</Filter>
+    </ClInclude>
+    <ClInclude Include="var_defines.h" />
+    <ClInclude Include="vars.h" />
+    <ClInclude Include="hud.h">
+      <Filter>features</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
