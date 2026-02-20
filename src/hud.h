@@ -124,6 +124,30 @@ private:
 
 			if (g_vars.get_as<bool>(V_VISUALS_INTERFACE_STATUS_AIMBOT).value())
 				push_item("A", g_font[Verdana12px], g_vars.get_as<bool>(V_AIMBOT_ENABLED).value());
+		}
+
+		if (g_vars.get_as<bool>(V_VISUALS_INTERFACE_STATUS_FPS).value())
+		{
+			char buffer[50]{};
+			sprintf(buffer, " %i FPS", int(1.0f / g_csgo.m_globals->frame_time));
+
+			push_item(buffer, g_font[Tahoma12px], true);
+		}
+
+		if (g_csgo.m_engine->is_connected())
+		{
+			if (g_csgo.get_local())
+			{
+				if (g_vars.get_as<bool>(V_VISUALS_INTERFACE_STATUS_VELOCITY).value())
+				{
+					float velocity = length(g_csgo.get_local()->get_velocity());
+
+					char buffer[50]{};
+					sprintf(buffer, " Velocity: %.2f", velocity);
+
+					push_item(buffer, g_font[Tahoma12px], velocity > 0.0f);
+				}
+			}
 
 			if (g_vars.get_as<bool>(V_VISUALS_INTERFACE_STATUS_C4).value())
 			{
@@ -131,11 +155,11 @@ private:
 				{
 					switch (GLOBAL(i_flags[IF_BOMB_SITE_ID])) {
 					case BS_A: {
-						push_item("C4 (A): " + std::to_string(GLOBAL(i_flags[IF_BOMB_TIMER])), g_font[Tahoma12px], true);
+						push_item(" C4 (A): " + std::to_string(GLOBAL(i_flags[IF_BOMB_TIMER])), g_font[Tahoma12px], true);
 						break;
 					}
 					case BS_B: {
-						push_item("C4 (B): " + std::to_string(GLOBAL(i_flags[IF_BOMB_TIMER])), g_font[Tahoma12px], true);
+						push_item(" C4 (B): " + std::to_string(GLOBAL(i_flags[IF_BOMB_TIMER])), g_font[Tahoma12px], true);
 						break;
 					}
 					}
@@ -149,7 +173,9 @@ private:
 		{ "Aim", V_VISUALS_INTERFACE_STATUS_AIMBOT },
 		{ "Trigger", V_VISUALS_INTERFACE_STATUS_TRIGGERBOT },
 		{ "Esp", V_VISUALS_INTERFACE_STATUS_ESP },
-		{ "C4 Timer", V_VISUALS_INTERFACE_STATUS_C4 },
+		{ "Fps", V_VISUALS_INTERFACE_STATUS_FPS },
+		{ "Velocity", V_VISUALS_INTERFACE_STATUS_VELOCITY },
+		{ "C4", V_VISUALS_INTERFACE_STATUS_C4 },
 	};
 
 	bool m_ctx_menu_open{};
