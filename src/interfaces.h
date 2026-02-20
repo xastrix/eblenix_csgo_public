@@ -1,9 +1,23 @@
 #pragma once
 
-#include "sdk.h"
+#include "base_client.h"
+#include "entity_list.h"
+#include "engine_client.h"
+#include "panel.h"
+#include "surface.h"
+#include "global_vars.h"
+#include "material_system.h"
+#include "base_convars.h"
+#include "trace_ray.h"
+#include "model_info.h"
+#include "model_render.h"
+#include "render_view.h"
+#include "game_event_mgr.h"
+#include "d3d9.h"
+#include "weapon_system.h"
+#include "glow_manager.h"
 
-#include <string>
-#include <d3d9.h>
+#include "i_input.h"
 
 struct interfaces {
 	c_base_client* m_client;

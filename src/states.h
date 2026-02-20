@@ -22,7 +22,7 @@ public:
 	using s_fn = std::function<void(state_t&)>;
 
 	void call_state(state_t state, s_fn fn) {
-		fn(m_state);
+		if (m_state == state) fn(m_state);
 	}
 
 	static std::shared_ptr<c_state_mgr> make_shared() {

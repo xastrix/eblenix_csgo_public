@@ -5,7 +5,7 @@
 #include "interfaces.h"
 #include "math.h"
 
-void aimbot::run(user_cmd_t* cmd)
+void c_aimbot::run(user_cmd_t* cmd)
 {
 	if (!g_vars.get_as<bool>(V_AIMBOT_ENABLED).value())
 		return;
@@ -53,7 +53,167 @@ void aimbot::run(user_cmd_t* cmd)
 	}
 }
 
-void aimbot::set_weapon_param(c_base_weapon* weapon)
+void c_aimbot::do_triggerbot(user_cmd_t* cmd)
+{
+	if (!g_vars.get_as<bool>(V_TRIGGERBOT_ENABLED).value())
+		return;
+
+	if (!g_csgo.m_engine->is_playing())
+		return;
+
+	if (!g_csgo.get_local() || !g_csgo.get_local()->is_life_state())
+		return;
+
+	const auto weapon = g_csgo.get_local()->get_active_weapon();
+
+	if (!weapon || !weapon->clip1_count())
+		return;
+
+	if (Helpers::is_knife(weapon) || Helpers::is_grenade(weapon))
+		return;
+
+	const auto weapon_data = weapon->get_weapon_data();
+
+	if (!weapon_data)
+		return;
+
+	vec3 src, dst, forward, crosshair_forward;
+	trace_t tr;
+	ray_t ray;
+	trace_filter filter;
+
+	Math::angle_vectors(cmd->viewangles, forward);
+	forward *= weapon_data->weapon_range;
+
+	filter.e = g_csgo.get_local();
+
+	src = g_csgo.get_local()->get_eye_pos();
+	dst = src + forward;
+
+	ray.init(src, dst);
+	g_csgo.m_trace->trace_ray(ray, MASK_SHOT, &filter, &tr);
+
+	if (tr.did_hit_world() || !tr.did_hit_non_world_entity())
+		return;
+
+	const auto entity = tr.entity;
+
+	if (!entity)
+		return;
+
+	if (!g_vars.get_as<bool>(V_TRIGGERBOT_FLASH_CHECK).value() && g_csgo.get_local()->is_flashed())
+		return;
+
+	if (!g_vars.get_as<bool>(V_TRIGGERBOT_SMOKE_CHECK).value() && Helpers::is_behind_smoke(g_csgo.get_local()->get_eye_pos(), tr.end))
+		return;
+
+	if (!g_vars.get_as<bool>(V_TRIGGERBOT_TEAMMATE_CHECK).value() && g_csgo.get_local()->get_team_num() == entity->get_team_num())
+		return;
+
+	if (!g_vars.get_as<bool>(V_TRIGGERBOT_JUMP_CHECK).value() && !(g_csgo.get_local()->get_flags() & fl_onground))
+		return;
+
+	if (g_vars.get_as<bool>(V_TRIGGERBOT_SCOPE_CHECK).value() && Helpers::is_sniper(weapon) && !g_csgo.get_local()->is_scoped())
+		return;
+
+	if (entity->get_client_class()->class_id != ccsplayer)
+		return;
+
+	if (entity == g_csgo.get_local() || entity->get_dormant() || !entity->is_life_state() || entity->has_gun_game_immunity())
+		return;
+
+	if (!Helpers::is_taser(weapon))
+	{
+		if (g_vars.get_as<bool>(V_TRIGGERBOT_HITBOX_HEAD).value())
+		{
+			if (tr.hitgroup == hitgroup_head)
+			{
+				Helpers::is_revolver(weapon) ?
+					cmd->buttons |= in_attack2 : cmd->buttons |= in_attack;
+			}
+		}
+
+		if (g_vars.get_as<bool>(V_TRIGGERBOT_HITBOX_BODY).value())
+		{
+			if (tr.hitgroup == hitgroup_chest || tr.hitgroup == hitgroup_stomach)
+			{
+				Helpers::is_revolver(weapon) ?
+					cmd->buttons |= in_attack2 : cmd->buttons |= in_attack;
+			}
+		}
+
+		if (g_vars.get_as<bool>(V_TRIGGERBOT_HITBOX_ARMS).value())
+		{
+			if (tr.hitgroup == hitgroup_leftarm || tr.hitgroup == hitgroup_rightarm)
+			{
+				Helpers::is_revolver(weapon) ?
+					cmd->buttons |= in_attack2 : cmd->buttons |= in_attack;
+			}
+		}
+
+		if (g_vars.get_as<bool>(V_TRIGGERBOT_HITBOX_LEGS).value())
+		{
+			if (tr.hitgroup == hitgroup_leftleg || tr.hitgroup == hitgroup_rightleg)
+			{
+				Helpers::is_revolver(weapon) ?
+					cmd->buttons |= in_attack2 : cmd->buttons |= in_attack;
+			}
+		}
+	}
+}
+
+void c_aimbot::do_knifebot(user_cmd_t* cmd)
+{
+	if (!g_vars.get_as<bool>(V_KNIFEBOT_ENABLED).value())
+		return;
+
+	if (!g_csgo.m_engine->is_playing())
+		return;
+
+	if (!g_csgo.get_local() || !g_csgo.get_local()->is_life_state())
+		return;
+
+	const auto weapon = g_csgo.get_local()->get_active_weapon();
+
+	if (!weapon || !Helpers::is_knife(weapon))
+		return;
+
+	if (!g_vars.get_as<bool>(V_KNIFEBOT_FLASH_CHECK).value() && g_csgo.get_local()->is_flashed())
+		return;
+
+	for (int i = 1; i <= g_csgo.m_globals->max_clients; i++)
+	{
+		auto entity = g_csgo.m_entity_list->get_client_entity<c_base_player*>(i);
+
+		if (!entity || entity->get_dormant() || !entity->is_life_state() || entity == g_csgo.get_local())
+			continue;
+
+		if (!g_vars.get_as<bool>(V_KNIFEBOT_SMOKE_CHECK).value() && Helpers::is_behind_smoke(g_csgo.get_local()->get_eye_pos(), entity->get_hitbox_position(hitbox_head)))
+			return;
+
+		if (!g_vars.get_as<bool>(V_KNIFEBOT_TEAMMATE_CHECK).value() && g_csgo.get_local()->get_team_num() == entity->get_team_num())
+			return;
+
+		const auto distance = g_csgo.get_local()->get_eye_pos().distance_to(entity->get_eye_pos());
+
+		if (entity->get_health() <= 51)
+		{
+			if (distance <= 45.0f)
+			{
+				cmd->buttons |= in_attack2;
+			}
+		}
+		else
+		{
+			if (distance <= g_vars.get_as<float>(V_KNIFEBOT_DISTANCE).value())
+			{
+				cmd->buttons |= in_attack;
+			}
+		}
+	}
+}
+
+void c_aimbot::set_weapon_param(c_base_weapon* weapon)
 {
 	if (Helpers::is_pistol(weapon))
 	{
@@ -202,7 +362,7 @@ void aimbot::set_weapon_param(c_base_weapon* weapon)
 	}
 }
 
-bool aimbot::can_aiming(c_base_player* entity, c_base_weapon* weapon)
+bool c_aimbot::can_aiming(c_base_player* entity, c_base_weapon* weapon)
 {
 	if (g_vars.get_as<bool>(V_AIMBOT_VISIBLE_CHECK).value() && !g_csgo.get_local()->can_see_entity(entity->get_eye_pos()))
 		return false;
@@ -225,7 +385,7 @@ bool aimbot::can_aiming(c_base_player* entity, c_base_weapon* weapon)
 	return true;
 }
 
-void aimbot::set_aim_angle(user_cmd_t* cmd, c_base_player* entity, const vec3& aim_punch)
+void c_aimbot::set_aim_angle(user_cmd_t* cmd, c_base_player* entity, const vec3& aim_punch)
 {
 	switch (m_aim_type) {
 	case 0: {
@@ -241,7 +401,7 @@ void aimbot::set_aim_angle(user_cmd_t* cmd, c_base_player* entity, const vec3& a
 	}
 }
 
-void aimbot::do_autopistol(user_cmd_t* cmd, c_base_weapon* weapon)
+void c_aimbot::do_autopistol(user_cmd_t* cmd, c_base_weapon* weapon)
 {
 	if (!Helpers::is_pistol(weapon) || Helpers::is_revolver(weapon))
 		return;

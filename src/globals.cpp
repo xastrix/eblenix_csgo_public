@@ -1,7 +1,7 @@
 #include "globals.h"
 
 #include "ui.h"
-#include "state_mgr.h"
+#include "states.h"
 
 void g::unload()
 {

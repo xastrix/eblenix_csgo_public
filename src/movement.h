@@ -1,9 +1,11 @@
 #pragma once
 
-#include "sdk.h"
+#include "user_cmd.h"
 
-struct movement {
+class c_move {
+public:
 	void run(user_cmd_t* cmd);
+
 private:
 	void bunny_hop(user_cmd_t* cmd);
 	void infinite_duck(user_cmd_t* cmd);
@@ -11,4 +13,4 @@ private:
 	void block_players(user_cmd_t* cmd);
 };
 
-inline movement g_movement;
+inline c_move g_move;

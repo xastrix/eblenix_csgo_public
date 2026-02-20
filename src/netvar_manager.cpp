@@ -1,7 +1,6 @@
 #include "netvar_manager.h"
 
 #include "interfaces.h"
-#include "sdk.h"
 #include "fnv.h"
 
 #include <unordered_map>

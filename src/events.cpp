@@ -17,7 +17,7 @@ static void listen_event(c_game_event_listener2* listener, const char* name, std
 	g_event_list.push_back({ fnv::hash(name), fn });
 }
 
-void events::init()
+void c_event_list::init()
 {
 	listen_event(this, "player_hurt", [](c_game_event* event) {
 		if (g_vars.get_as<bool>(V_MISC_EVENT_LOGS_PLAYER_HURT).value()) {
@@ -99,7 +99,7 @@ void events::init()
 	});
 }
 
-void events::fire_game_event(c_game_event* event)
+void c_event_list::fire_game_event(c_game_event* event)
 {
 	for (const auto& e : g_event_list)
 	{
@@ -108,7 +108,7 @@ void events::fire_game_event(c_game_event* event)
 	}
 }
 
-void events::undo()
+void c_event_list::undo()
 {
 	if (g_event_list.empty())
 		return;

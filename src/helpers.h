@@ -4,8 +4,8 @@
 #include <string>
 #include <thread>
 
-#include "sdk.h"
 #include "color.h"
+#include "base_entity.h"
 
 using create_interface_fn = void*(*)(const char*, int*);
 

@@ -185,8 +185,6 @@
     <ClCompile Include="movement.cpp" />
     <ClCompile Include="aimbot.cpp" />
     <ClCompile Include="esp.cpp" />
-    <ClCompile Include="knifebot.cpp" />
-    <ClCompile Include="triggerbot.cpp" />
     <ClCompile Include="visuals.cpp" />
     <ClCompile Include="globals.cpp" />
     <ClCompile Include="hooks.cpp" />
@@ -216,7 +214,7 @@
     <ClInclude Include="hud.h" />
     <ClInclude Include="math.h" />
     <ClInclude Include="matrix.h" />
-    <ClInclude Include="state_mgr.h" />
+    <ClInclude Include="states.h" />
     <ClInclude Include="surface.h" />
     <ClInclude Include="var_defines.h" />
     <ClInclude Include="vec2.h" />
@@ -225,7 +223,7 @@
     <ClInclude Include="vec4.h" />
     <ClInclude Include="vec_util.h" />
     <ClInclude Include="view_setup.h" />
-    <ClInclude Include="iinput.h" />
+    <ClInclude Include="i_input.h" />
     <ClInclude Include="signatures.h" />
     <ClInclude Include="app_system.h" />
     <ClInclude Include="base_client.h" />
@@ -251,13 +249,10 @@
     <ClInclude Include="player_info.h" />
     <ClInclude Include="user_cmd.h" />
     <ClInclude Include="weapon_info.h" />
-    <ClInclude Include="sdk.h" />
     <ClInclude Include="cfg.h" />
     <ClInclude Include="movement.h" />
     <ClInclude Include="aimbot.h" />
     <ClInclude Include="esp.h" />
-    <ClInclude Include="knifebot.h" />
-    <ClInclude Include="triggerbot.h" />
     <ClInclude Include="visuals.h" />
     <ClInclude Include="globals.h" />
     <ClInclude Include="hooks.h" />

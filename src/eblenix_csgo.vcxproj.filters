@@ -16,12 +16,6 @@
     <ClCompile Include="esp.cpp">
       <Filter>features\esp</Filter>
     </ClCompile>
-    <ClCompile Include="triggerbot.cpp">
-      <Filter>features\triggerbot</Filter>
-    </ClCompile>
-    <ClCompile Include="knifebot.cpp">
-      <Filter>features\knifebot</Filter>
-    </ClCompile>
     <ClCompile Include="movement.cpp">
       <Filter>features\movement</Filter>
     </ClCompile>
@@ -172,20 +166,11 @@
     <ClInclude Include="vec3.h">
       <Filter>csgo\math</Filter>
     </ClInclude>
-    <ClInclude Include="sdk.h">
-      <Filter>csgo</Filter>
-    </ClInclude>
     <ClInclude Include="aimbot.h">
       <Filter>features\aimbot</Filter>
     </ClInclude>
     <ClInclude Include="esp.h">
       <Filter>features\esp</Filter>
-    </ClInclude>
-    <ClInclude Include="triggerbot.h">
-      <Filter>features\triggerbot</Filter>
-    </ClInclude>
-    <ClInclude Include="knifebot.h">
-      <Filter>features\knifebot</Filter>
     </ClInclude>
     <ClInclude Include="movement.h">
       <Filter>features\movement</Filter>
@@ -329,9 +314,6 @@
     <ClInclude Include="events.h">
       <Filter>helpers\events</Filter>
     </ClInclude>
-    <ClInclude Include="iinput.h">
-      <Filter>csgo\structs</Filter>
-    </ClInclude>
     <ClInclude Include="input.h">
       <Filter>helpers\input</Filter>
     </ClInclude>
@@ -347,9 +329,6 @@
     <ClInclude Include="studio.h">
       <Filter>csgo\structs</Filter>
     </ClInclude>
-    <ClInclude Include="state_mgr.h">
-      <Filter>helpers</Filter>
-    </ClInclude>
     <ClInclude Include="vec_util.h">
       <Filter>csgo\math</Filter>
     </ClInclude>
@@ -361,6 +340,10 @@
     <ClInclude Include="hud.h">
       <Filter>features</Filter>
     </ClInclude>
+    <ClInclude Include="i_input.h">
+      <Filter>csgo\structs</Filter>
+    </ClInclude>
+    <ClInclude Include="states.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="csgo">
@@ -405,9 +388,6 @@
     <Filter Include="features\aimbot">
       <UniqueIdentifier>{baf46f29-c877-43db-b55a-341f1d8a1dee}</UniqueIdentifier>
     </Filter>
-    <Filter Include="features\triggerbot">
-      <UniqueIdentifier>{0fe56000-fbec-45c3-871a-721db6d67c18}</UniqueIdentifier>
-    </Filter>
     <Filter Include="features\esp">
       <UniqueIdentifier>{74637c9d-1d5e-4f76-8f1f-69b3f3fecd49}</UniqueIdentifier>
     </Filter>
@@ -416,9 +396,6 @@
     </Filter>
     <Filter Include="features\movement">
       <UniqueIdentifier>{848d947d-0dc6-419d-90f2-b11c6b2e0ece}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="features\knifebot">
-      <UniqueIdentifier>{b5235895-8f91-48ef-a32b-27394ade7d9d}</UniqueIdentifier>
     </Filter>
     <Filter Include="csgo\interfaces">
       <UniqueIdentifier>{1a448240-a0ce-4208-9d20-b75792d5aab1}</UniqueIdentifier>

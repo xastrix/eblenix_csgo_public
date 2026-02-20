@@ -8,7 +8,7 @@
 
 #include <array>
 
-void esp::run()
+void c_esp::run()
 {
 	if (!g_vars.get_as<bool>(V_ESP_ENABLED).value())
 		return;
@@ -48,14 +48,14 @@ void esp::run()
 	}
 }
 
-void esp::on_round_start_e()
+void c_esp::on_round_start_e()
 {
 	for (int i = 0; i <= MAX_PLAYERS; i++) {
 		reset_position(i);
 	}
 }
 
-void esp::calc_player_animation_progress(int index, float& anim, c_base_player* entity)
+void c_esp::calc_player_animation_progress(int index, float& anim, c_base_player* entity)
 {
 	float rate = g_csgo.m_globals->frame_time * 1.0f / 0.5f;
 	auto& health_anim = m_health_anims[index];
@@ -91,7 +91,7 @@ void esp::calc_player_animation_progress(int index, float& anim, c_base_player* 
 	}
 }
 
-void esp::player_rendering(int index, c_base_player* entity, box bbox)
+void c_esp::player_rendering(int index, c_base_player* entity, box bbox)
 {
 	if (g_vars.get_as<bool>(V_ESP_NAME_ENABLED).value())
 	{
@@ -516,7 +516,7 @@ void esp::player_rendering(int index, c_base_player* entity, box bbox)
 	}
 }
 
-void esp::reset_position(int index)
+void c_esp::reset_position(int index)
 {
 	m_has_seen[index] = false;
 	m_anim_progress[index] = 0.0f;
@@ -525,7 +525,7 @@ void esp::reset_position(int index)
 	m_health_anims[index].m_elapsed = 0.0f;
 }
 
-void esp::update_position(int index, const vec3& pos)
+void c_esp::update_position(int index, const vec3& pos)
 {
 	m_stored_pos[index] = pos;
 

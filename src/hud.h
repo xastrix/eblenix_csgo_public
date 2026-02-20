@@ -51,12 +51,9 @@ struct status_bar_t {
 					g_vars.set(m_vars[i].second, !g_vars.get_as<bool>(m_vars[i].second).value());
 			}
 
-			if (!g_input.is_hovered(ctx_min, ctx_min + ctx_max) &&
-				!g_input.is_hovered(ctx_content_min, ctx_content_min + ctx_content_max))
-			{
-				if (click)
-					m_ctx_menu_open = false;
-			}
+			if ((!g_input.is_hovered(ctx_min, ctx_min + ctx_max) &&
+				 !g_input.is_hovered(ctx_content_min, ctx_content_min + ctx_content_max)) && click)
+				m_ctx_menu_open = false;
 		}
 	}
 

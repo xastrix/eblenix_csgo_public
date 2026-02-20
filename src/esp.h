@@ -11,12 +11,15 @@ struct health_anim_t {
 	bool  m_confirmed;
 };
 
-struct esp {
+class c_esp {
+public:
 	void run();
 	void on_round_start_e();
+
 private:
 	void calc_player_animation_progress(int index, float& anim, c_base_player* entity);
 	void player_rendering(int index, c_base_player* entity, box bbox);
+
 private:
 	vec3  m_stored_pos[MAX_PLAYERS]{};
 	float m_anim_progress[MAX_PLAYERS]{};
@@ -30,4 +33,4 @@ private:
 	void reset_position(int index);
 };
 
-inline esp g_esp;
+inline c_esp g_esp;

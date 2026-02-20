@@ -4,7 +4,9 @@
 #include "interfaces.h"
 #include "math.h"
 
-void movement::run(user_cmd_t* cmd)
+#include <algorithm>
+
+void c_move::run(user_cmd_t* cmd)
 {
 	if (!g_csgo.m_engine->is_playing())
 		return;
@@ -25,7 +27,7 @@ void movement::run(user_cmd_t* cmd)
 		block_players(cmd);
 }
 
-void movement::bunny_hop(user_cmd_t* cmd)
+void c_move::bunny_hop(user_cmd_t* cmd)
 {
 	if (g_csgo.get_local()->get_move_type() == movetype_ladder ||
 		g_csgo.get_local()->get_move_type() == movetype_noclip ||
@@ -52,7 +54,7 @@ void movement::bunny_hop(user_cmd_t* cmd)
 	}
 }
 
-void movement::infinite_duck(user_cmd_t* cmd)
+void c_move::infinite_duck(user_cmd_t* cmd)
 {
 	if (g_csgo.get_local()->get_move_type() == movetype_ladder ||
 		g_csgo.get_local()->get_move_type() == movetype_noclip ||
@@ -62,7 +64,7 @@ void movement::infinite_duck(user_cmd_t* cmd)
 	cmd->buttons |= in_bullrush;
 }
 
-void movement::auto_strafe(user_cmd_t* cmd)
+void c_move::auto_strafe(user_cmd_t* cmd)
 {
 	if (g_csgo.get_local()->get_move_type() == movetype_ladder ||
 		g_csgo.get_local()->get_move_type() == movetype_noclip ||
@@ -87,7 +89,7 @@ void movement::auto_strafe(user_cmd_t* cmd)
 	}
 }
 
-void movement::block_players(user_cmd_t* cmd)
+void c_move::block_players(user_cmd_t* cmd)
 {
 	auto best_dist = 255.0f;
 	auto ent_index = -1;

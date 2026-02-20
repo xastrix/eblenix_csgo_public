@@ -40,7 +40,7 @@ private:
 	void* m_entity{};
 };
 
-void visuals::run()
+void c_visuals::run()
 {
 	if (!g_vars.get_as<bool>(V_VISUALS_ENABLED).value())
 		return;
@@ -135,7 +135,224 @@ void visuals::run()
 	}
 }
 
-void visuals::draw_projectiles(c_base_entity* entity)
+void c_visuals::on_do_post_screen_effects()
+{
+	if (!g_vars.get_as<bool>(V_GLOW_ENABLED).value())
+		return;
+
+	if (!g_csgo.m_engine->is_connected())
+		return;
+
+	if (!g_csgo.get_local())
+		return;
+
+	for (int i = 0; i < g_csgo.m_glow_manager->size; i++)
+	{
+		auto& glow = g_csgo.m_glow_manager->objects[i];
+
+		if (glow.next_free_slot != ENTRY_IN_USE)
+			continue;
+
+		const auto glow_object = reinterpret_cast<c_base_player*>(glow.entity);
+
+		if (!glow_object || glow_object->get_dormant())
+			continue;
+
+		if (!g_csgo.get_local()->can_see_entity(glow_object->get_eye_pos()) & g_vars.get_as<bool>(V_GLOW_VISIBLE_ONLY).value())
+			continue;
+
+		const auto client_class = glow_object->get_client_class();
+
+		if (g_vars.get_as<bool>(V_GLOW_C4).value())
+		{
+			if (client_class->class_id == cc4 || client_class->class_id == cplantedc4)
+			{
+				glow.set_glow(
+					g_vars.get_as<int>(V_GLOW_C4_COL_R).value() / 255.0f,
+					g_vars.get_as<int>(V_GLOW_C4_COL_G).value() / 255.0f,
+					g_vars.get_as<int>(V_GLOW_C4_COL_B).value() / 255.0f,
+					g_vars.get_as<int>(V_GLOW_C4_COL_A).value() / 255.0f
+				);
+			}
+		}
+
+		if (!glow_object->is_moving() & g_vars.get_as<bool>(V_GLOW_WALKING_ONLY).value())
+			continue;
+
+		if (client_class->class_id == ccsplayer)
+		{
+			const auto is_enemy = glow_object->get_team_num() != g_csgo.get_local()->get_team_num();
+			const auto is_teammate = glow_object->get_team_num() == g_csgo.get_local()->get_team_num();
+
+			float glow_enemy_col[4];
+			float glow_team_col[4];
+
+			if (g_vars.get_as<bool>(V_GLOW_HEALTH_BASED).value())
+			{
+				color_t health_col = color_t::calc_health_color(glow_object->get_health());
+
+				glow_enemy_col[0] = health_col.get_arr()[0] / 255.0f;
+				glow_enemy_col[1] = health_col.get_arr()[1] / 255.0f;
+				glow_enemy_col[2] = health_col.get_arr()[2] / 255.0f;
+
+				glow_team_col[0] = health_col.get_arr()[0] / 255.0f;
+				glow_team_col[1] = health_col.get_arr()[1] / 255.0f;
+				glow_team_col[2] = health_col.get_arr()[2] / 255.0f;
+			}
+			else
+			{
+				glow_enemy_col[0] = g_vars.get_as<int>(V_GLOW_ENEMY_COL_R).value() / 255.0f;
+				glow_enemy_col[1] = g_vars.get_as<int>(V_GLOW_ENEMY_COL_G).value() / 255.0f;
+				glow_enemy_col[2] = g_vars.get_as<int>(V_GLOW_ENEMY_COL_B).value() / 255.0f;
+
+				glow_team_col[0] = g_vars.get_as<int>(V_GLOW_TEAM_COL_R).value() / 255.0f;
+				glow_team_col[1] = g_vars.get_as<int>(V_GLOW_TEAM_COL_G).value() / 255.0f;
+				glow_team_col[2] = g_vars.get_as<int>(V_GLOW_TEAM_COL_B).value() / 255.0f;
+			}
+
+			glow_enemy_col[3] = g_vars.get_as<int>(V_GLOW_ENEMY_COL_A).value() / 255.0f;
+			glow_team_col[3] = g_vars.get_as<int>(V_GLOW_TEAM_COL_A).value() / 255.0f;
+
+			const auto flash_duration = glow_object->get_flash_duration();
+
+			if (is_enemy) {
+				glow.set_glow(
+					glow_enemy_col[0], glow_enemy_col[1], glow_enemy_col[2],
+
+					flash_duration > g_vars.get_as<int>(V_GLOW_ENEMY_COL_A).value() ?
+					flash_duration / 255.0f : glow_enemy_col[3]
+				);
+			}
+
+			if (is_teammate && g_vars.get_as<bool>(V_GLOW_TEAM).value()) {
+				glow.set_glow(
+					glow_team_col[0], glow_team_col[1], glow_team_col[2],
+
+					flash_duration > g_vars.get_as<int>(V_GLOW_TEAM_COL_A).value() ?
+					flash_duration / 255.0f : glow_team_col[3]
+				);
+			}
+		}
+	}
+}
+
+void c_visuals::on_scene_end()
+{
+	if (g_vars.get_as<bool>(V_CHAMS_ENABLED).value())
+	{
+		if (g_csgo.m_engine->is_connected())
+		{
+			if (g_csgo.get_local())
+			{
+				for (int i = 1; i <= g_csgo.m_globals->max_clients; i++)
+				{
+					auto entity = g_csgo.m_entity_list->get_client_entity<c_base_player*>(i);
+
+					if (!entity)
+						continue;
+
+					if (entity == g_csgo.get_local())
+						continue;
+
+					if (entity->get_health() <= 0)
+						continue;
+
+					if (entity->get_team_num() == g_csgo.get_local()->get_team_num() & !g_vars.get_as<bool>(V_CHAMS_TEAM).value())
+						continue;
+
+					if (!entity->is_moving() & g_vars.get_as<bool>(V_CHAMS_WALKING_ONLY).value())
+						continue;
+
+					const auto debugambientcube = g_csgo.m_mat_system->find_material(
+						"debug/debugambientcube", TEXTURE_GROUP_MODEL
+					);
+
+					const auto flat = g_csgo.m_mat_system->find_material(
+						"debug/debugdrawflat", TEXTURE_GROUP_MODEL
+					);
+
+					const auto dogtags_outline = g_csgo.m_mat_system->find_material(
+						"models/inventory_items/dogtags/dogtags_outline", TEXTURE_GROUP_MODEL
+					);
+
+					debugambientcube->increment_reference_count();
+					flat->increment_reference_count();
+					dogtags_outline->increment_reference_count();
+
+					c_material* material{};
+					switch (g_vars.get_as<int>(V_CHAMS_TYPE).value()) {
+					case 0: {
+						material = debugambientcube;
+						break;
+					}
+					case 1: {
+						material = flat;
+						break;
+					}
+					case 2: {
+						material = dogtags_outline;
+						break;
+					}
+					}
+
+					float col[3];
+					if (g_vars.get_as<bool>(V_CHAMS_HEALTH_BASED).value())
+					{
+						color_t health_col = color_t::calc_health_color(entity->get_health());
+
+						col[0] = health_col.get_arr()[0] / 255.0f;
+						col[1] = health_col.get_arr()[1] / 255.0f;
+						col[2] = health_col.get_arr()[2] / 255.0f;
+					}
+					else
+					{
+						col[0] = g_vars.get_as<int>(V_CHAMS_COL_R).value() / 255.0f;
+						col[1] = g_vars.get_as<int>(V_CHAMS_COL_G).value() / 255.0f;
+						col[2] = g_vars.get_as<int>(V_CHAMS_COL_B).value() / 255.0f;
+					}
+
+					g_csgo.m_render_view->modulate_color(col);
+					g_csgo.m_render_view->set_blend(1.0f);
+
+					material->set_material_var_flag(material_var_ignorez, !g_vars.get_as<bool>(V_CHAMS_VISIBLE_ONLY).value());
+
+					g_csgo.m_model_render->override_material(material);
+					entity->draw_model(1, 255);
+
+					g_csgo.m_model_render->override_material(nullptr);
+				}
+			}
+		}
+	}
+
+	if (g_vars.get_as<bool>(V_VISUALS_ENABLED).value())
+	{
+		if (g_csgo.m_engine->is_connected())
+		{
+			std::vector<c_material*> smoke_materials = {
+				g_csgo.m_mat_system->find_material("particle/vistasmokev1/vistasmokev1_fire", TEXTURE_GROUP_OTHER),
+				g_csgo.m_mat_system->find_material("particle/vistasmokev1/vistasmokev1_smokegrenade", TEXTURE_GROUP_OTHER),
+				g_csgo.m_mat_system->find_material("particle/vistasmokev1/vistasmokev1_emods", TEXTURE_GROUP_OTHER),
+				g_csgo.m_mat_system->find_material("particle/vistasmokev1/vistasmokev1_emods_impactdust", TEXTURE_GROUP_OTHER)
+			};
+
+			std::vector<c_material*> flash_materials = {
+				g_csgo.m_mat_system->find_material("effects/flashbang", TEXTURE_GROUP_OTHER),
+				g_csgo.m_mat_system->find_material("effects/flashbang_white", TEXTURE_GROUP_OTHER)
+			};
+
+			for (const auto& mat : smoke_materials) {
+				if (mat) mat->set_material_var_flag(material_var_no_draw, g_vars.get_as<bool>(V_VISUALS_REMOVALS_SMOKE).value());
+			}
+
+			for (const auto& mat : flash_materials) {
+				if (mat) mat->set_material_var_flag(material_var_no_draw, g_vars.get_as<bool>(V_VISUALS_REMOVALS_FLASH).value());
+			}
+		}
+	}
+}
+
+void c_visuals::draw_projectiles(c_base_entity* entity)
 {
 	entity_object projectlines{ entity };
 
@@ -227,7 +444,7 @@ void visuals::draw_projectiles(c_base_entity* entity)
 	}
 }
 
-void visuals::draw_entity_objects(c_base_entity* entity, std::vector<std::pair<std::string, class_ids>> objects)
+void c_visuals::draw_entity_objects(c_base_entity* entity, std::vector<std::pair<std::string, class_ids>> objects)
 {
 	entity_object entity_objects{ entity };
 
@@ -255,7 +472,7 @@ void visuals::draw_entity_objects(c_base_entity* entity, std::vector<std::pair<s
 	}
 }
 
-void visuals::draw_dropped_weapons(c_base_entity* entity)
+void c_visuals::draw_dropped_weapons(c_base_entity* entity)
 {
 	entity_object dropped_weapons{ entity };
 
@@ -316,7 +533,7 @@ void visuals::draw_dropped_weapons(c_base_entity* entity)
 	}
 }
 
-void visuals::draw_planted_bomb(c_base_plantedc4* entity, const float explode_time)
+void c_visuals::draw_planted_bomb(c_base_plantedc4* entity, const float explode_time)
 {
 	entity_object planted_bomb{ entity };
 

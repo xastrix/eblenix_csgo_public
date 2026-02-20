@@ -3,7 +3,7 @@
 #include "globals.h"
 #include "hud.h"
 #include "fnv.h"
-#include "state_mgr.h"
+#include "states.h"
 
 #include <algorithm>
 

@@ -1,12 +1,14 @@
 #pragma once
 
-#include "sdk.h"
+#include "game_event_mgr.h"
 
-struct events : public c_game_event_listener2 {
+class c_event_list : public c_game_event_listener2 {
+public:
 	void init();
 	void undo();
+
 private:
 	void fire_game_event(c_game_event* event);
 };
 
-inline events g_event;
+inline c_event_list g_event;
