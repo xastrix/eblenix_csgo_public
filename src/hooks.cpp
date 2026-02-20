@@ -221,7 +221,7 @@ static void __stdcall draw_model_execute_h(i_mat_render_ctx* ctx, const draw_mod
 	{
 		if (g_vars.get_as<bool>(V_VISUALS_ENABLED).value())
 		{
-			if (g_csgo.m_engine->is_playing())
+			if (g_csgo.m_engine->is_connected() && g_csgo.m_engine->is_in_game())
 			{
 				auto model_name = g_csgo.m_model_info->get_model_name(info.model);
 
@@ -250,7 +250,7 @@ static void __fastcall override_view_h(void* _ecx, void* _edx, c_view_setup* set
 {
 	if (GLOBAL(b_flags[BF_INITIALISED]) && !GLOBAL(b_flags[BF_PANIC]))
 	{
-		if (g_csgo.m_engine->is_playing())
+		if (g_csgo.m_engine->is_connected() && g_csgo.m_engine->is_in_game())
 		{
 			if (g_csgo.get_local() && g_csgo.get_local()->is_life_state())
 			{

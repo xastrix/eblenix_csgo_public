@@ -1,7 +1,6 @@
 #pragma once
 
-#include "common.h"
-#include <shared_defines.h>
+#include "../common.h"
 
 #include <string>
 #include <vector>

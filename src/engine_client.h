@@ -12,7 +12,6 @@ public:
 	void get_player_info(int index, player_info_t* info);
 	bool is_in_game();
 	bool is_connected();
-	bool is_playing();
 	bool is_console_visible();
 	const char* get_product_version_string();
 	void set_view_angles(vec3& angles);

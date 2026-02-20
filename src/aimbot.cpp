@@ -10,7 +10,7 @@ void c_aimbot::run(user_cmd_t* cmd)
 	if (!g_vars.get_as<bool>(V_AIMBOT_ENABLED).value())
 		return;
 
-	if (!g_csgo.m_engine->is_playing())
+	if (!(g_csgo.m_engine->is_connected() && g_csgo.m_engine->is_in_game()))
 		return;
 
 	if (!g_csgo.get_local() || !g_csgo.get_local()->is_life_state())
@@ -58,7 +58,7 @@ void c_aimbot::do_triggerbot(user_cmd_t* cmd)
 	if (!g_vars.get_as<bool>(V_TRIGGERBOT_ENABLED).value())
 		return;
 
-	if (!g_csgo.m_engine->is_playing())
+	if (!(g_csgo.m_engine->is_connected() && g_csgo.m_engine->is_in_game()))
 		return;
 
 	if (!g_csgo.get_local() || !g_csgo.get_local()->is_life_state())
@@ -167,7 +167,7 @@ void c_aimbot::do_knifebot(user_cmd_t* cmd)
 	if (!g_vars.get_as<bool>(V_KNIFEBOT_ENABLED).value())
 		return;
 
-	if (!g_csgo.m_engine->is_playing())
+	if (!(g_csgo.m_engine->is_connected() && g_csgo.m_engine->is_in_game()))
 		return;
 
 	if (!g_csgo.get_local() || !g_csgo.get_local()->is_life_state())

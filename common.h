@@ -1,5 +1,8 @@
 #pragma once
 
+#define CSGO_CLASS_NAME            "Valve001"
+#define LOADER_UNLOAD_HOOK_MESSAGE "UNLOAD_EBLENIX_MSG"
+
 // Uncomment the following line to disable game version checks
 // #define DISABLE_CSGO_VERSION_CHECK
 

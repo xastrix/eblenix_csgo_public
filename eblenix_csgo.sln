@@ -5,8 +5,6 @@ VisualStudioVersion = 15.0.36324.19
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "eblenix_csgo", "src\eblenix_csgo.vcxproj", "{AF041675-F00D-4A72-B40F-78D0C4BB72D9}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Shared deps", "shared\eblenix_shared.vcxproj", "{4FB076F5-0B77-47CD-B04F-C94211ECDB25}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "eblenix_injector", "injector\eblenix_injector.vcxproj", "{9CFAA9FF-15A1-441B-ABAE-E111D1DA856C}"
 EndProject
 Global

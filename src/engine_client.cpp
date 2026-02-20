@@ -1,5 +1,6 @@
 #include "engine_client.h"
-#include "common.h"
+
+#include "../common.h"
 
 int c_engine_client::get_local_player()
 {
@@ -29,11 +30,6 @@ bool c_engine_client::is_connected()
 {
 	using original_fn = bool(__thiscall*)(c_engine_client*);
 	return (*(original_fn**)this)[IS_CONNECTED_FN_INDEX](this);
-}
-
-bool c_engine_client::is_playing()
-{
-	return (is_connected() && is_in_game());
 }
 
 bool c_engine_client::is_console_visible()

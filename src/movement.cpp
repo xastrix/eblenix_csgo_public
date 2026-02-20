@@ -8,7 +8,7 @@
 
 void c_move::run(user_cmd_t* cmd)
 {
-	if (!g_csgo.m_engine->is_playing())
+	if (!(g_csgo.m_engine->is_connected() && g_csgo.m_engine->is_in_game()))
 		return;
 
 	if (!g_csgo.get_local() || !g_csgo.get_local()->is_life_state())
