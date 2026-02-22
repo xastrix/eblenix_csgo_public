@@ -69,13 +69,15 @@ void input::process_mouse_message(UINT m, WPARAM w, LPARAM l)
 	};
 
 	if (menu_opened) {
-		/* moving the ui by position x,y using the mouse */
+		/* moving the ui by position x, y using the mouse */
 		auto ui_pos_x = g_vars.get_as<int>(V_UI_POS_X).value();
 		auto ui_pos_y = g_vars.get_as<int>(V_UI_POS_Y).value();
 
-		if (move_object(m, 180, 255, ui_pos_x, ui_pos_y)) {
-			g_vars.set(V_UI_POS_X, ui_pos_x);
-			g_vars.set(V_UI_POS_Y, ui_pos_y);
+		static draggable_object_t ui_drag_obj{ ui_pos_x, ui_pos_y, 180, 255 };
+
+		if (move_object(ui_drag_obj, m)) {
+			g_vars.set(V_UI_POS_X, ui_drag_obj.x);
+			g_vars.set(V_UI_POS_Y, ui_drag_obj.y);
 		}
 
 		g_hud.process_message(m);

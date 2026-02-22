@@ -108,7 +108,7 @@ vec2 vec2::operator-() const
 
 vec2 vec2::operator*(float s) const
 {
-	return vec2(x*s, y*s);
+	return vec2(x * s, y * s);
 }
 
 bool vec2::operator==(const vec2& o) const
@@ -119,6 +119,11 @@ bool vec2::operator==(const vec2& o) const
 bool vec2::operator!=(const vec2& o) const
 {
 	return !(*this == o);
+}
+
+bool vec2::operator!() const
+{
+	return is_zero();
 }
 
 float length(const vec2& v)

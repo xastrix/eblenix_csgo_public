@@ -134,6 +134,11 @@ bool vec3::operator!=(const vec3& o) const
 	return !(*this == o);
 }
 
+bool vec3::operator!() const
+{
+	return is_zero();
+}
+
 vec3 operator*(float s, const vec3& v)
 {
 	return vec3(v.x*s, v.y*s, v.z*s);

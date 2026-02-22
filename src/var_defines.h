@@ -155,6 +155,7 @@
 #define V_VISUALS_ENABLED "visuals->enabled"
 #define V_VISUALS_ENGINE_RADAR "visuals->engine_radar"
 #define V_VISUALS_INTERFACE_STATUS "visuals->interface->status"
+#define V_VISUALS_INTERFACE_STATUS_POS_Y "visuals->interface->status->pos->y"
 #define V_VISUALS_INTERFACE_STATUS_AIMBOT "visuals->interface->status->aim"
 #define V_VISUALS_INTERFACE_STATUS_TRIGGERBOT "visuals->interface->status->trigger"
 #define V_VISUALS_INTERFACE_STATUS_ESP "visuals->interface->status->esp"
@@ -162,6 +163,7 @@
 #define V_VISUALS_INTERFACE_STATUS_VELOCITY "visuals->interface->status->velocity"
 #define V_VISUALS_INTERFACE_STATUS_C4 "visuals->interface->status->c4"
 #define V_VISUALS_INTERFACE_SPECTATORS "visuals->interface->spectators"
+#define V_VISUALS_INTERFACE_SPECTATORS_POS_Y "visuals->interface->spectators->pos->y"
 
 #define V_VISUALS_WORLD_PROJECTLINES_ENABLED "visuals->world->projectlines->enabled"
 #define V_VISUALS_WORLD_PROJECTLINES_DISTANCE "visuals->world->projectlines->distance"

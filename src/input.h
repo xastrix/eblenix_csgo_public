@@ -13,6 +13,12 @@ enum m_state {
 	state_pressed,
 };
 
+struct draggable_object_t {
+	int x, y, width, height;
+	bool dragging;
+	int drag_offset_x, drag_offset_y;
+};
+
 struct mouse_t {
 	friend struct input;
 
@@ -21,36 +27,31 @@ struct mouse_t {
 			m_mouse_pos_x <= max.x && m_mouse_pos_y <= max.y);
 	}
 
-	bool move_object(UINT m, int w, int h, int& x, int& y) {
-		static bool dragging{};
-		
-		static int drag_offset_x{};
-		static int drag_offset_y{};
-
+	bool move_object(draggable_object_t& o, UINT m) {
 		switch (m) {
 		case WM_LBUTTONDOWN: {
-			if (m_mouse_pos_x >= x && m_mouse_pos_x <= x + w &&
-				m_mouse_pos_y >= y && m_mouse_pos_y <= y + h) {
-				dragging = true;
-				drag_offset_x = m_mouse_pos_x - x;
-				drag_offset_y = m_mouse_pos_y - y;
+			if (m_mouse_pos_x >= o.x && m_mouse_pos_x <= o.x + o.width &&
+				m_mouse_pos_y >= o.y && m_mouse_pos_y <= o.y + o.height) {
+				o.dragging = true;
+				o.drag_offset_x = m_mouse_pos_x - o.x;
+				o.drag_offset_y = m_mouse_pos_y - o.y;
 			}
 			break;
 		}
 		case WM_MOUSEMOVE: {
-			if (dragging) {
-				x = m_mouse_pos_x - drag_offset_x;
-				y = m_mouse_pos_y - drag_offset_y;
+			if (o.dragging) {
+				o.x = m_mouse_pos_x - o.drag_offset_x;
+				o.y = m_mouse_pos_y - o.drag_offset_y;
 			}
 			break;
 		}
 		case WM_LBUTTONUP: {
-			dragging = false;
+			o.dragging = false;
 			break;
 		}
 		}
 
-		return dragging;
+		return o.dragging;
 	}
 
 	int get_mouse_pos_x() {

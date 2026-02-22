@@ -52,6 +52,7 @@ static void __stdcall init(HMODULE I)
 
 	g_state->call_state(SL_CHECK_GAME_VERSION, [](state_t& state) {
 		auto setup_basic_vars = []() {
+			g_vars.set(V_VISUALS_INTERFACE_SPECTATORS_POS_Y, g_renderer.get_screen_size().y * 0.5f);
 			g_vars.set(V_MISC_VISUAL_VIEWMODEL_FOV, Helpers::get_viewmodel_fov());
 
 			g_vars.set(V_UI_POS_X, 80);

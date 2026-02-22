@@ -80,6 +80,9 @@ public:
 	/** Returns pointer to one beyond the last float. */
 	float*		end() { return &x + SIZE; }
 
+	/** Checks if both components of the vector are zero. */
+	bool		is_zero() const { return x == 0.0f && y == 0.0f; }
+
 	/** Normalizes this vector. */
 	void		normalize();
 
@@ -112,6 +115,9 @@ public:
 
 	/** Returns true if vectors are bitwise inequal. */
 	bool		operator!=(const vec2& o) const;
+
+	/** Returns true if both components of the vector are zero. */
+	bool        operator!() const;
 
 	/** Returns const pointer to the first float. */
 	const float*	begin() const { return &x; }
