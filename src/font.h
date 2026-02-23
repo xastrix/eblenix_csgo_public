@@ -39,6 +39,10 @@ public:
 	float get_text_height(const std::string& string, ID3DXFont* font);
 	float get_text_heightW(const std::wstring& string, ID3DXFont* font);
 
+	static std::shared_ptr<c_fonts> make_shared() {
+		return std::shared_ptr<c_fonts>(new c_fonts());
+	}
+
 	ID3DXFont* operator[](_font_list index) const {
 		return m_fonts[index];
 	}
@@ -49,4 +53,6 @@ private:
 	ID3DXFont* m_fonts[maxFonts]{};
 };
 
-inline c_fonts g_font;
+inline std::shared_ptr<c_fonts> g_font = c_fonts::make_shared();
+
+#define FONT(index) g_font->operator[](index)

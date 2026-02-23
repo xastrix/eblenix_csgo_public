@@ -110,11 +110,18 @@ private:
 	bool   m_hooked{};
 };
 
-struct hooks {
+class c_hooks {
+public:
 	void init();
+
+	static std::shared_ptr<c_hooks> make_shared() {
+		return std::shared_ptr<c_hooks>(new c_hooks());
+	}
+
 	void undo();
+
 private:
 	hook_t m_hooks[maxHooks];
 };
 
-inline hooks g_hooks;
+inline std::shared_ptr<c_hooks> g_hooks = c_hooks::make_shared();

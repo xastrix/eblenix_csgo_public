@@ -19,7 +19,11 @@
 
 #include "i_input.h"
 
-struct interfaces {
+// ::shared_ptr
+#include <memory>
+
+class c_interfaces {
+public:
 	c_base_client* m_client;
 	c_entity_list* m_entity_list;
 	c_engine_client* m_engine;
@@ -55,14 +59,25 @@ private:
 	c_base_player* m_ptr{};
 };
 
-struct CSGO : public interfaces {
+class c_csgo : public c_interfaces {
+public:
 	void init();
 
+	static std::shared_ptr<c_csgo> make_shared() {
+		return std::shared_ptr<c_csgo>(new c_csgo());
+	}
+
 	void init_local(const local_t& local);
-	c_base_player* get_local();
+	
+	c_base_player* get_local() {
+		if (!m_local)
+			return nullptr;
+
+		return m_local.get();
+	}
 
 private:
 	local_t m_local{};
 };
 
-inline CSGO g_csgo;
+inline std::shared_ptr<c_csgo> g_cs = c_csgo::make_shared();

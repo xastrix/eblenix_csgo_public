@@ -26,16 +26,21 @@ enum _signature_list {
 
 using sig_t = uint8_t*;
 
-struct sig {
+class c_sig {
+public:
 	void init();
+
+	sig_t scan_sig(const std::string& module_name, const std::string& signature);
+
+	static std::shared_ptr<c_sig> make_shared() {
+		return std::shared_ptr<c_sig>(new c_sig());
+	}
 
 	sig_t operator[](_signature_list index) const {
 		return m_signatures[index];
 	}
 
 private:
-	sig_t scan_sig(const std::string& module_name, const std::string& signature);
-	sig_t scan_sigs(const std::string& module_name, const std::vector<std::string>& signatures);
 	DWORD get_module_size(const HMODULE mod);
 	std::vector<int> pattern_to_bytes(const std::string& signature);
 
@@ -43,4 +48,6 @@ private:
 	sig_t m_signatures[maxSignatures];
 };
 
-inline sig g_sig;
+inline std::shared_ptr<c_sig> g_sig = c_sig::make_shared();
+
+#define SIG(index) g_sig->operator[](index)

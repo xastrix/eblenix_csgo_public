@@ -6,15 +6,15 @@
 
 #include "sprites.hpp"
 
-void ui::init(IDirect3DDevice9* device)
+void c_ui::init(IDirect3DDevice9* device)
 {
 	m_sprites[UI_SPRITE_LOGO].init(device, m_ui_logotype, sizeof(m_ui_logotype), 178, 33);
 }
 
-void ui::run()
+void c_ui::run()
 {
 	float old_progress{};
-	calc_animation_progress(g_vars.get_as<float>(V_UI_SPEED_ANIMATION).value(), g_csgo.m_globals->frame_time, old_progress);
+	calc_animation_progress(g_var->get_as<float>(V_UI_SPEED_ANIMATION).value(), g_cs->m_globals->frame_time, old_progress);
 
 	m_colors[UI_TEXT_COL] = color_t(253, 253, 253,
 		static_cast<int>(target_animation_progress * 255.0f));
@@ -26,7 +26,7 @@ void ui::run()
 		static_cast<int>(target_animation_progress * 130.0f));
 
 	m_colors[UI_SHADOW_COL] = color_t(20, 20, 20,
-		static_cast<int>(target_animation_progress * g_vars.get_as<int>(V_UI_COL_A).value()));
+		static_cast<int>(target_animation_progress * g_var->get_as<int>(V_UI_COL_A).value()));
 
 	m_colors[UI_OUTLINE_COL] = color_t(40, 40, 40,
 		static_cast<int>(target_animation_progress * 255.0f));
@@ -39,7 +39,7 @@ void ui::run()
 		for (int i = 0; i < maxUISprites; i++)
 			m_sprites[i].begin(D3DXSPRITE_DONOTMODIFY_RENDERSTATE);
 
-		draw(g_vars.get_as<int>(V_UI_POS_X).value(), g_vars.get_as<int>(V_UI_POS_Y).value());
+		draw(g_var->get_as<int>(V_UI_POS_X).value(), g_var->get_as<int>(V_UI_POS_Y).value());
 
 		for (int i = 0; i < maxUISprites; i++)
 			m_sprites[i].end();
@@ -48,7 +48,7 @@ void ui::run()
 	current_animation_progress = old_progress;
 }
 
-void ui::calc_animation_progress(float anim_time, float delta_time, float& old_alpha)
+void c_ui::calc_animation_progress(float anim_time, float delta_time, float& old_alpha)
 {
 	if (m_opened)
 	{
@@ -69,7 +69,7 @@ void ui::calc_animation_progress(float anim_time, float delta_time, float& old_a
 	current_animation_progress = target_animation_progress;
 }
 
-void ui::setup()
+void c_ui::setup()
 {
 	const auto cfgs = std::vector<std::wstring>{ L"1", L"2", L"3", L"4", L"5" };
 
@@ -93,7 +93,7 @@ void ui::setup()
 			add_tab<UI_SUB_SUB_POS>(L"Pistols", [&]() {
 				add_item<UI_SUB_SUB_SUB_POS>(L"Type", V_AIMBOT_TYPE_PISTOL, m_types, true);
 
-				if (g_vars.get_as<int>(V_AIMBOT_TYPE_PISTOL).value() == 0)
+				if (g_var->get_as<int>(V_AIMBOT_TYPE_PISTOL).value() == 0)
 					add_item<UI_SUB_SUB_SUB_POS>(L"Hitbox", V_AIMBOT_BONE_PISTOL, m_hitboxes, true);
 
 				add_float<UI_SUB_SUB_SUB_POS>(L"Fov", V_AIMBOT_FOV_PISTOL, 0.0f, 180.0f, 0.5f);
@@ -103,7 +103,7 @@ void ui::setup()
 			add_tab<UI_SUB_SUB_POS>(L"Rifles", [&]() {
 				add_item<UI_SUB_SUB_SUB_POS>(L"Type", V_AIMBOT_TYPE_RIFLE, m_types, true);
 
-				if (g_vars.get_as<int>(V_AIMBOT_TYPE_RIFLE).value() == 0)
+				if (g_var->get_as<int>(V_AIMBOT_TYPE_RIFLE).value() == 0)
 					add_item<UI_SUB_SUB_SUB_POS>(L"Hitbox", V_AIMBOT_BONE_RIFLE, m_hitboxes, true);
 
 				add_float<UI_SUB_SUB_SUB_POS>(L"Fov", V_AIMBOT_FOV_RIFLE, 0.0f, 180.0f, 0.5f);
@@ -113,7 +113,7 @@ void ui::setup()
 			add_tab<UI_SUB_SUB_POS>(L"Snipers", [&]() {
 				add_item<UI_SUB_SUB_SUB_POS>(L"Type", V_AIMBOT_TYPE_SNIPER, m_types, true);
 
-				if (g_vars.get_as<int>(V_AIMBOT_TYPE_SNIPER).value() == 0)
+				if (g_var->get_as<int>(V_AIMBOT_TYPE_SNIPER).value() == 0)
 					add_item<UI_SUB_SUB_SUB_POS>(L"Hitbox", V_AIMBOT_BONE_SNIPER, m_hitboxes, true);
 
 				add_float<UI_SUB_SUB_SUB_POS>(L"Fov", V_AIMBOT_FOV_SNIPER, 0.0f, 180.0f, 0.5f);
@@ -123,7 +123,7 @@ void ui::setup()
 			add_tab<UI_SUB_SUB_POS>(L"Heavies", [&]() {
 				add_item<UI_SUB_SUB_SUB_POS>(L"Type", V_AIMBOT_TYPE_HEAVY, m_types, true);
 
-				if (g_vars.get_as<int>(V_AIMBOT_TYPE_HEAVY).value() == 0)
+				if (g_var->get_as<int>(V_AIMBOT_TYPE_HEAVY).value() == 0)
 					add_item<UI_SUB_SUB_SUB_POS>(L"Hitbox", V_AIMBOT_BONE_HEAVY, m_hitboxes, true);
 
 				add_float<UI_SUB_SUB_SUB_POS>(L"Fov", V_AIMBOT_FOV_HEAVY, 0.0f, 180.0f, 0.5f);
@@ -133,7 +133,7 @@ void ui::setup()
 			add_tab<UI_SUB_SUB_POS>(L"Smgs", [&]() {
 				add_item<UI_SUB_SUB_SUB_POS>(L"Type", V_AIMBOT_TYPE_SMG, m_types, true);
 
-				if (g_vars.get_as<int>(V_AIMBOT_TYPE_SMG).value() == 0)
+				if (g_var->get_as<int>(V_AIMBOT_TYPE_SMG).value() == 0)
 					add_item<UI_SUB_SUB_SUB_POS>(L"Hitbox", V_AIMBOT_BONE_SMG, m_hitboxes, true);
 
 				add_float<UI_SUB_SUB_SUB_POS>(L"Fov", V_AIMBOT_FOV_SMG, 0.0f, 180.0f, 0.5f);
@@ -202,7 +202,7 @@ void ui::setup()
 
 			add_item<UI_SUB_SUB_POS>(L"Health Type", V_ESP_HEALTH_TYPE, { L"Default", L"Health Based" }, true);
 
-			if (g_vars.get_as<int>(V_ESP_HEALTH_TYPE).value() == 0)
+			if (g_var->get_as<int>(V_ESP_HEALTH_TYPE).value() == 0)
 			{
 				add_int<UI_SUB_SUB_POS>(L"Health R", V_ESP_HEALTH_COL_R, 0, 255, 1);
 				add_int<UI_SUB_SUB_POS>(L"Health G", V_ESP_HEALTH_COL_G, 0, 255, 1);
@@ -373,7 +373,7 @@ void ui::setup()
 				add_float<UI_SUB_SUB_SUB_POS>(L"Others Brightness", V_VISUALS_WORLD_NIGHTMODE_OTHER_BRIGHTNESS, 0.1f, 1.0f, 0.01f, true);
 
 				add_function<UI_SUB_SUB_SUB_POS>(L"Apply Changes", []() {
-					if (g_vars.get_as<bool>(V_VISUALS_WORLD_NIGHTMODE_ENABLED).value())
+					if (g_var->get_as<bool>(V_VISUALS_WORLD_NIGHTMODE_ENABLED).value())
 						GLOBAL(b_flags[BF_NIGHTMODE_HOLD]) = false;
 				});
 			});
@@ -429,7 +429,7 @@ void ui::setup()
 		});
 
 		add_function<UI_SUB_POS>(L"Quit", []() {
-			g_csgo.m_engine->execute_cmd("quit");
+			g_cs->m_engine->execute_cmd("quit");
 		});
 	});
 
@@ -528,19 +528,19 @@ void ui::setup()
 	});
 }
 
-void ui::on_reset()
+void c_ui::on_reset()
 {
 	for (int i = 0; i < maxUISprites; i++)
 		m_sprites[i].on_reset();
 }
 
-void ui::on_reset_end()
+void c_ui::on_reset_end()
 {
 	for (int i = 0; i < maxUISprites; i++)
 		m_sprites[i].on_reset_end();
 }
 
-void ui::clear()
+void c_ui::clear()
 {
 	for (int i = 0; i < m_entry_sz; i++) {
 		m_entry[i].m_name.clear();

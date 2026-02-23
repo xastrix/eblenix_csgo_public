@@ -16,11 +16,11 @@ struct status_bar_t {
 	}
 
 	void think() {
-		const auto string_width = g_font.get_text_width(_PRODUCT_NAME, g_font[Tahoma12px]) + m_string_spacing;
+		const auto string_width = g_font->get_text_width(_PRODUCT_NAME, FONT(Tahoma12px)) + m_string_spacing;
 
-		vec2 screen_size = g_renderer.get_screen_size();
+		vec2 screen_size = g_renderer->get_screen_size();
 
-		m_rect_min = vec2(screen_size.x - string_width - 15, g_vars.get_as<float>(V_VISUALS_INTERFACE_STATUS_POS_Y).value());
+		m_rect_min = vec2(screen_size.x - string_width - 15, g_var->get_as<float>(V_VISUALS_INTERFACE_STATUS_POS_Y).value());
 		m_rect_max = vec2(screen_size.x, 17);
 
 		m_rect_min.y = std::max(0.0f, std::min(m_rect_min.y, screen_size.y - m_rect_max.y));
@@ -32,7 +32,7 @@ struct status_bar_t {
 	}
 
 	void handle_click(bool left_click, bool right_click) {
-		if (g_input.is_hovered(m_rect_min, m_rect_min + m_rect_max))
+		if (g_input->is_hovered(m_rect_min, m_rect_min + m_rect_max))
 		{
 			if (!m_ctx_menu_open && right_click)
 				m_ctx_menu_open = true;
@@ -48,12 +48,12 @@ struct status_bar_t {
 				vec2 ctx_list_min(m_rect_min.x + 10, m_rect_min.y + 20 + (i * 18));
 				vec2 ctx_list_max(m_rect_max.x - 10, 17);
 
-				if (g_input.is_hovered(ctx_list_min, ctx_list_min + ctx_list_max) && left_click)
-					g_vars.set(m_vars[i].second, !g_vars.get_as<bool>(m_vars[i].second).value());
+				if (g_input->is_hovered(ctx_list_min, ctx_list_min + ctx_list_max) && left_click)
+					g_var->set(m_vars[i].second, !g_var->get_as<bool>(m_vars[i].second).value());
 			}
 
-			if ((!g_input.is_hovered(m_rect_min, m_rect_min + m_rect_max) &&
-				 !g_input.is_hovered(ctx_content_min, ctx_content_min + ctx_content_max)) && (left_click || right_click))
+			if ((!g_input->is_hovered(m_rect_min, m_rect_min + m_rect_max) &&
+				 !g_input->is_hovered(ctx_content_min, ctx_content_min + ctx_content_max)) && (left_click || right_click))
 				m_ctx_menu_open = false;
 		}
 	}
@@ -64,10 +64,10 @@ struct status_bar_t {
 
 		static draggable_object_t bar_drag_obj{ m_rect_min.x, m_rect_min.y, m_rect_max.x, m_rect_max.y };
 
-		if (g_input.move_object(bar_drag_obj, m))
+		if (g_input->move_object(bar_drag_obj, m))
 		{
 			m_rect_min.y = bar_drag_obj.y;
-			g_vars.set(V_VISUALS_INTERFACE_STATUS_POS_Y, m_rect_min.y);
+			g_var->set(V_VISUALS_INTERFACE_STATUS_POS_Y, m_rect_min.y);
 		}
 
 		else
@@ -78,19 +78,19 @@ private:
 	status_bar_t() = default;
 
 	void draw() {
-		const auto menu_shadow_alpha = g_vars.get_as<int>(V_UI_COL_A).value();
+		const auto menu_shadow_alpha = g_var->get_as<int>(V_UI_COL_A).value();
 
-		vec2 screen_size = g_renderer.get_screen_size();
+		vec2 screen_size = g_renderer->get_screen_size();
 
-		g_renderer.rect_fill(m_rect_min, m_rect_max, color_t(20, 20, 20, menu_shadow_alpha));
+		g_renderer->rect_fill(m_rect_min, m_rect_max, color_t(20, 20, 20, menu_shadow_alpha));
 
-		g_renderer.rect_fill(m_rect_min.x + 3, m_rect_min.y + 3, 2, 11,
+		g_renderer->rect_fill(m_rect_min.x + 3, m_rect_min.y + 3, 2, 11,
 			GLOBAL(b_flags[BF_INITIALISED]) ? color_t(V_UI_COL) : color_t(164, 164, 164));
 
-		g_font.draw_string(_PRODUCT_NAME, m_rect_min.x + 10, m_rect_min.y + 2,
-			g_font[Tahoma12px], TEXT_OUTLINE, color_t(255, 255, 255));
+		g_font->draw_string(_PRODUCT_NAME, m_rect_min.x + 10, m_rect_min.y + 2,
+			FONT(Tahoma12px), TEXT_OUTLINE, color_t(255, 255, 255));
 
-		if (g_ui.get_menu_state())
+		if (g_ui->get_menu_state())
 		{
 			if (m_ctx_menu_open)
 			{
@@ -99,14 +99,14 @@ private:
 					vec2 ctx_list_min(m_rect_min.x + 10, m_rect_min.y + 20 + (i * 18));
 					vec2 ctx_list_max(m_rect_max.x - 10, 17);
 
-					bool is_hovered = g_input.is_hovered(ctx_list_min, ctx_list_min + ctx_list_max);
-					bool is_actived = g_vars.get_as<bool>(m_vars[i].second).value();
+					bool is_hovered = g_input->is_hovered(ctx_list_min, ctx_list_min + ctx_list_max);
+					bool is_actived = g_var->get_as<bool>(m_vars[i].second).value();
 
-					g_renderer.rect_fill(ctx_list_min, ctx_list_max, color_t(20, 20, 20, menu_shadow_alpha - 20));
-					g_renderer.rect_fill(ctx_list_min.x + 3, ctx_list_min.y + 3, 2, 11,
+					g_renderer->rect_fill(ctx_list_min, ctx_list_max, color_t(20, 20, 20, menu_shadow_alpha - 20));
+					g_renderer->rect_fill(ctx_list_min.x + 3, ctx_list_min.y + 3, 2, 11,
 						is_actived ? color_t(V_UI_COL) : color_t(164, 164, 164));
 
-					g_font.draw_string(m_vars[i].first, ctx_list_min.x + 9, ctx_list_min.y + 2, g_font[Tahoma12px], TEXT_OUTLINE,
+					g_font->draw_string(m_vars[i].first, ctx_list_min.x + 9, ctx_list_min.y + 2, FONT(Tahoma12px), TEXT_OUTLINE,
 						is_hovered ? color_t(V_UI_COL) : color_t(255, 255, 255));
 				}
 			}
@@ -116,62 +116,62 @@ private:
 
 		int x = 0;
 		auto push_item = [&](const std::string& label, ID3DXFont* font, bool v) {
-			const auto string_width = g_font.get_text_width(label, font);
+			const auto string_width = g_font->get_text_width(label, font);
 
-			g_renderer.rect_fill(m_rect_min.x - string_width - x - 13, m_rect_min.y, string_width + 11, 17, color_t(20, 20, 20, menu_shadow_alpha));
-			g_renderer.rect_fill(m_rect_min.x - string_width - x - 10, m_rect_min.y + 3, 2, 11, v ? color_t(V_UI_COL) : color_t(164, 164, 164));
+			g_renderer->rect_fill(m_rect_min.x - string_width - x - 13, m_rect_min.y, string_width + 11, 17, color_t(20, 20, 20, menu_shadow_alpha));
+			g_renderer->rect_fill(m_rect_min.x - string_width - x - 10, m_rect_min.y + 3, 2, 11, v ? color_t(V_UI_COL) : color_t(164, 164, 164));
 
-			g_font.draw_string(label, m_rect_min.x - string_width - x - 6, m_rect_min.y + 2, font, TEXT_OUTLINE, color_t(255, 255, 255));
+			g_font->draw_string(label, m_rect_min.x - string_width - x - 6, m_rect_min.y + 2, font, TEXT_OUTLINE, color_t(255, 255, 255));
 
 			x += string_width + 13;
 		};
 
-		if (g_csgo.m_engine->is_connected())
+		if (g_cs->m_engine->is_connected())
 		{
-			if (g_vars.get_as<bool>(V_VISUALS_INTERFACE_STATUS_ESP).value())
-				push_item("E", g_font[Verdana12px], g_vars.get_as<bool>(V_ESP_ENABLED).value());
+			if (g_var->get_as<bool>(V_VISUALS_INTERFACE_STATUS_ESP).value())
+				push_item("E", FONT(Verdana12px), g_var->get_as<bool>(V_ESP_ENABLED).value());
 
-			if (g_vars.get_as<bool>(V_VISUALS_INTERFACE_STATUS_TRIGGERBOT).value())
-				push_item("T", g_font[Verdana12px], g_vars.get_as<bool>(V_TRIGGERBOT_ENABLED).value());
+			if (g_var->get_as<bool>(V_VISUALS_INTERFACE_STATUS_TRIGGERBOT).value())
+				push_item("T", FONT(Verdana12px), g_var->get_as<bool>(V_TRIGGERBOT_ENABLED).value());
 
-			if (g_vars.get_as<bool>(V_VISUALS_INTERFACE_STATUS_AIMBOT).value())
-				push_item("A", g_font[Verdana12px], g_vars.get_as<bool>(V_AIMBOT_ENABLED).value());
+			if (g_var->get_as<bool>(V_VISUALS_INTERFACE_STATUS_AIMBOT).value())
+				push_item("A", FONT(Verdana12px), g_var->get_as<bool>(V_AIMBOT_ENABLED).value());
 		}
 
-		if (g_vars.get_as<bool>(V_VISUALS_INTERFACE_STATUS_FPS).value())
+		if (g_var->get_as<bool>(V_VISUALS_INTERFACE_STATUS_FPS).value())
 		{
 			char buffer[50]{};
-			sprintf(buffer, " %i FPS", int(1.0f / g_csgo.m_globals->frame_time));
+			sprintf(buffer, " %i FPS", int(1.0f / g_cs->m_globals->frame_time));
 
-			push_item(buffer, g_font[Tahoma12px], true);
+			push_item(buffer, FONT(Tahoma12px), true);
 		}
 
-		if (g_csgo.m_engine->is_connected())
+		if (g_cs->m_engine->is_connected())
 		{
-			if (g_csgo.get_local())
+			if (g_cs->get_local())
 			{
-				if (g_vars.get_as<bool>(V_VISUALS_INTERFACE_STATUS_VELOCITY).value())
+				if (g_var->get_as<bool>(V_VISUALS_INTERFACE_STATUS_VELOCITY).value())
 				{
-					float velocity = length(g_csgo.get_local()->get_velocity());
+					float velocity = length(g_cs->get_local()->get_velocity());
 
 					char buffer[50]{};
 					sprintf(buffer, " Velocity: %.2f", velocity);
 
-					push_item(buffer, g_font[Tahoma12px], velocity > 0.0f);
+					push_item(buffer, FONT(Tahoma12px), velocity > 0.0f);
 				}
 			}
 
-			if (g_vars.get_as<bool>(V_VISUALS_INTERFACE_STATUS_C4).value())
+			if (g_var->get_as<bool>(V_VISUALS_INTERFACE_STATUS_C4).value())
 			{
 				if (GLOBAL(b_flags[BF_BOMB_PLANTED]))
 				{
 					switch (GLOBAL(i_flags[IF_BOMB_SITE_ID])) {
 					case BS_A: {
-						push_item(" C4 (A): " + std::to_string(GLOBAL(i_flags[IF_BOMB_TIMER])), g_font[Tahoma12px], true);
+						push_item(" C4 (A): " + std::to_string(GLOBAL(i_flags[IF_BOMB_TIMER])), FONT(Tahoma12px), true);
 						break;
 					}
 					case BS_B: {
-						push_item(" C4 (B): " + std::to_string(GLOBAL(i_flags[IF_BOMB_TIMER])), g_font[Tahoma12px], true);
+						push_item(" C4 (B): " + std::to_string(GLOBAL(i_flags[IF_BOMB_TIMER])), FONT(Tahoma12px), true);
 						break;
 					}
 					}
@@ -207,9 +207,9 @@ struct spectators_t {
 	}
 
 	void think() {
-		vec2 screen_size = g_renderer.get_screen_size();
+		vec2 screen_size = g_renderer->get_screen_size();
 
-		m_rect_min = vec2(screen_size.x - 105, g_vars.get_as<float>(V_VISUALS_INTERFACE_SPECTATORS_POS_Y).value());
+		m_rect_min = vec2(screen_size.x - 105, g_var->get_as<float>(V_VISUALS_INTERFACE_SPECTATORS_POS_Y).value());
 		m_rect_max = vec2(screen_size.x, 18);
 
 		m_rect_min.y = std::max(0.0f, std::min(m_rect_min.y, screen_size.y - m_rect_max.y));
@@ -226,10 +226,10 @@ struct spectators_t {
 
 		static draggable_object_t spec_drag_obj{ m_rect_min.x, m_rect_min.y, m_rect_max.x, m_rect_max.y };
 
-		if (g_input.move_object(spec_drag_obj, m))
+		if (g_input->move_object(spec_drag_obj, m))
 		{
 			m_rect_min.y = spec_drag_obj.y;
-			g_vars.set(V_VISUALS_INTERFACE_SPECTATORS_POS_Y, m_rect_min.y);
+			g_var->set(V_VISUALS_INTERFACE_SPECTATORS_POS_Y, m_rect_min.y);
 		}
 
 		else
@@ -240,25 +240,25 @@ private:
 	spectators_t() = default;
 
 	void draw() {
-		const auto menu_shadow_alpha = g_vars.get_as<int>(V_UI_COL_A).value();
+		const auto menu_shadow_alpha = g_var->get_as<int>(V_UI_COL_A).value();
 
-		if (!g_csgo.m_engine->is_in_game())
+		if (!g_cs->m_engine->is_in_game())
 			return;
 
-		g_renderer.rect_fill(m_rect_min, m_rect_max, color_t(20, 20, 20, menu_shadow_alpha));
-		g_renderer.rect_fill(m_rect_min.x + 3, m_rect_min.y + 3, 2, 12, color_t(V_UI_COL));
+		g_renderer->rect_fill(m_rect_min, m_rect_max, color_t(20, 20, 20, menu_shadow_alpha));
+		g_renderer->rect_fill(m_rect_min.x + 3, m_rect_min.y + 3, 2, 12, color_t(V_UI_COL));
 
-		g_font.draw_string("Spectators", m_rect_min.x + 9, m_rect_min.y + 2,
-			g_font[Tahoma12px], TEXT_OUTLINE, color_t(255, 255, 255));
+		g_font->draw_string("Spectators", m_rect_min.x + 9, m_rect_min.y + 2,
+			FONT(Tahoma12px), TEXT_OUTLINE, color_t(255, 255, 255));
 
 		int y = 1;
-		for (int i = 1; i <= g_csgo.m_globals->max_clients; i++) {
-			auto entity = g_csgo.m_entity_list->get_client_entity<c_base_player*>(i);
+		for (int i = 1; i <= g_cs->m_globals->max_clients; i++) {
+			auto entity = g_cs->m_entity_list->get_client_entity<c_base_player*>(i);
 
 			if (!entity)
 				continue;
 
-			if (entity == g_csgo.get_local())
+			if (entity == g_cs->get_local())
 				continue;
 
 			if (entity->is_life_state())
@@ -272,24 +272,24 @@ private:
 			if (!target)
 				continue;
 
-			const auto spectator_target = g_csgo.m_entity_list->get_client_entity_handle<c_base_entity*>(target);
+			const auto spectator_target = g_cs->m_entity_list->get_client_entity_handle<c_base_entity*>(target);
 
-			if (spectator_target != g_csgo.get_local())
+			if (spectator_target != g_cs->get_local())
 				continue;
 
-			g_renderer.rect_fill(m_rect_min.x, m_rect_min.y + (19 * y), m_rect_max.x, m_rect_max.y, color_t(20, 20, 20, menu_shadow_alpha));
-			g_renderer.rect_fill(m_rect_min.x + 3, m_rect_min.y + 3 + (19 * y), 2, 12, color_t(164, 164, 164));
+			g_renderer->rect_fill(m_rect_min.x, m_rect_min.y + (19 * y), m_rect_max.x, m_rect_max.y, color_t(20, 20, 20, menu_shadow_alpha));
+			g_renderer->rect_fill(m_rect_min.x + 3, m_rect_min.y + 3 + (19 * y), 2, 12, color_t(164, 164, 164));
 
 			player_info_t info;
-			g_csgo.m_engine->get_player_info(i, &info);
+			g_cs->m_engine->get_player_info(i, &info);
 
 			auto player_name = Helpers::stws(std::string{ info.player_name });
 
 			if (player_name.length() > 14)
 				player_name = player_name.substr(0, 14) + L"...";
 
-			g_font.draw_stringW(player_name, m_rect_min.x + 9, m_rect_min.y + 2 + (19 * y),
-				g_font[Tahoma12px], TEXT_OUTLINE, color_t(255, 255, 255));
+			g_font->draw_stringW(player_name, m_rect_min.x + 9, m_rect_min.y + 2 + (19 * y),
+				FONT(Tahoma12px), TEXT_OUTLINE, color_t(255, 255, 255));
 
 			y++;
 		}
@@ -302,21 +302,25 @@ private:
 class c_hud {
 public:
 	void run() {
-		if (!g_vars.get_as<bool>(V_VISUALS_ENABLED).value())
+		if (!g_var->get_as<bool>(V_VISUALS_ENABLED).value())
 			return;
 
-		if (g_vars.get_as<bool>(V_VISUALS_INTERFACE_STATUS).value())
-			status_bar_t::get_instance().run();
-
-		if (g_vars.get_as<bool>(V_VISUALS_INTERFACE_SPECTATORS).value())
+		if (g_var->get_as<bool>(V_VISUALS_INTERFACE_SPECTATORS).value())
 			spectators_t::get_instance().run();
+
+		if (g_var->get_as<bool>(V_VISUALS_INTERFACE_STATUS).value())
+			status_bar_t::get_instance().run();
+	}
+
+	static std::shared_ptr<c_hud> make_shared() {
+		return std::shared_ptr<c_hud>(new c_hud());
 	}
 
 	void process_message(UINT m) {
-		if (!g_vars.get_as<bool>(V_VISUALS_ENABLED).value())
+		if (!g_var->get_as<bool>(V_VISUALS_ENABLED).value())
 			return;
 
-		if (g_vars.get_as<bool>(V_VISUALS_INTERFACE_STATUS).value())
+		if (g_var->get_as<bool>(V_VISUALS_INTERFACE_STATUS).value())
 		{
 			switch (m) {
 			case WM_LBUTTONDOWN: {
@@ -340,21 +344,21 @@ public:
 			status_bar_t::get_instance().handle_move(m);
 		}
 
-		if (g_vars.get_as<bool>(V_VISUALS_INTERFACE_SPECTATORS).value())
+		if (g_var->get_as<bool>(V_VISUALS_INTERFACE_SPECTATORS).value())
 			spectators_t::get_instance().handle_move(m);
 	}
 
 	void notify_hud(const std::string& msg, color_t rect_c) {
-		const auto string_font = g_font[Tahoma12px];
-		const auto string_width = g_font.get_text_width(msg, string_font);
+		const auto string_font = FONT(Tahoma12px);
+		const auto string_width = g_font->get_text_width(msg, string_font);
 
-		vec2 screen_size = g_renderer.get_screen_size();
+		vec2 screen_size = g_renderer->get_screen_size();
 
-		g_renderer.rect_fill(screen_size.x - string_width - 15, 10, screen_size.x, 17, color_t(20, 20, 20, 140));
-		g_renderer.rect_fill(screen_size.x - string_width - 12, 13, 2, 11, rect_c);
+		g_renderer->rect_fill(screen_size.x - string_width - 15, 10, screen_size.x, 17, color_t(20, 20, 20, 140));
+		g_renderer->rect_fill(screen_size.x - string_width - 12, 13, 2, 11, rect_c);
 
-		g_font.draw_string(msg, screen_size.x - string_width - 5, 12, string_font, TEXT_OUTLINE, color_t(255, 255, 255));
+		g_font->draw_string(msg, screen_size.x - string_width - 5, 12, string_font, TEXT_OUTLINE, color_t(255, 255, 255));
 	}
 };
 
-inline c_hud g_hud;
+inline std::shared_ptr<c_hud> g_hud = c_hud::make_shared();

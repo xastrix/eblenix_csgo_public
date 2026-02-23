@@ -20,7 +20,7 @@ struct draggable_object_t {
 };
 
 struct mouse_t {
-	friend struct input;
+	friend class c_input;
 
 	bool is_hovered(const vec2 min, const vec2 max) {
 		return (m_mouse_pos_x >= min.x && m_mouse_pos_y >= min.y &&
@@ -72,7 +72,8 @@ private:
 	int m_wheel_accumulate{};
 };
 
-struct input : public mouse_t {
+class c_input : public mouse_t {
+public:
 	void init(const std::pair<LPCSTR, LPCSTR>& wnd);
 	void add_hk(unsigned int vk, std::function<void()> fn);
 
@@ -83,11 +84,16 @@ struct input : public mouse_t {
 	std::wstring virtual_key_to_wstring(unsigned int vk);
 	WNDPROC get_wnd_proc();
 
+	static std::shared_ptr<c_input> make_shared() {
+		return std::shared_ptr<c_input>(new c_input());
+	}
+
 	m_state& operator[](unsigned int vk) {
 		return m_key_map[vk];
 	}
 
 	void undo();
+
 private:
 	HWND                  m_hwnd{};
 	WNDPROC               m_old_wnd_proc{};
@@ -95,4 +101,6 @@ private:
 	std::function<void()> m_hotkeys[256]{};
 };
 
-inline input g_input;
+inline std::shared_ptr<c_input> g_input = c_input::make_shared();
+
+#define INPUT(vk) g_input->operator[](vk)

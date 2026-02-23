@@ -86,7 +86,7 @@ static void add_props_for_table(
 
 static void initialize_props(netvar_table_map& table_map)
 {
-	for (auto c = g_csgo.m_client->get_client_classes(); c; c = c->next_ptr)
+	for (auto c = g_cs->m_client->get_client_classes(); c; c = c->next_ptr)
 	{
 		const auto table = c->recvtable_ptr;
 		const auto table_name = table->table_name;

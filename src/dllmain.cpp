@@ -28,11 +28,11 @@ static void __stdcall init(HMODULE I)
 	g_state->call_state(SL_INIT_BASE, [](state_t& state) {
 		g_astriumwepFont = AddFontMemResourceEx(astriumwep_ttf, ASTRIUMWEP_TTF_SZ, NULL, 0);
 
-		g_vars.init();
-		g_sig.init();
-		g_csgo.init();
+		g_var->init();
+		g_sig->init();
+		g_cs->init();
 
-		g_font.init(g_csgo.m_device, {
+		g_font->init(g_cs->m_device, {
 			{ Tahoma12px,     12, "Tahoma",     FW_MEDIUM, ANTIALIASED_QUALITY },
 			{ Verdana12px,    12, "Verdana",    FW_SEMIBOLD, ANTIALIASED_QUALITY },
 			{ Astriumwep12px, 12, "AstriumWep", FW_NORMAL, CLEARTYPE_QUALITY },
@@ -40,8 +40,8 @@ static void __stdcall init(HMODULE I)
 			{ Astriumwep25px, 25, "AstriumWep", FW_NORMAL, CLEARTYPE_QUALITY },
 	    });
 
-		if (g_renderer.init(g_csgo.m_device))
-			g_ui.init(g_csgo.m_device);
+		if (g_renderer->init(g_cs->m_device))
+			g_ui->init(g_cs->m_device);
 
 #ifndef CSGO_2020_BUILD
 		// patch 'STEAM validation rejected' msgbox in the (non-steam) csgo
@@ -52,23 +52,23 @@ static void __stdcall init(HMODULE I)
 
 	g_state->call_state(SL_CHECK_GAME_VERSION, [](state_t& state) {
 		auto setup_basic_vars = []() {
-			g_vars.set(V_VISUALS_INTERFACE_SPECTATORS_POS_Y, g_renderer.get_screen_size().y * 0.5f);
-			g_vars.set(V_MISC_VISUAL_VIEWMODEL_FOV, Helpers::get_viewmodel_fov());
+			g_var->set(V_VISUALS_INTERFACE_SPECTATORS_POS_Y, g_renderer->get_screen_size().y * 0.5f);
+			g_var->set(V_MISC_VISUAL_VIEWMODEL_FOV, Helpers::get_viewmodel_fov());
 
-			g_vars.set(V_UI_POS_X, 80);
-			g_vars.set(V_UI_POS_Y, 80);
+			g_var->set(V_UI_POS_X, 80);
+			g_var->set(V_UI_POS_Y, 80);
 
-			g_vars.set(V_UI_COL_R, 95);
-			g_vars.set(V_UI_COL_G, 115);
-			g_vars.set(V_UI_COL_B, 150);
-			g_vars.set(V_UI_COL_A, 130);
+			g_var->set(V_UI_COL_R, 95);
+			g_var->set(V_UI_COL_G, 115);
+			g_var->set(V_UI_COL_B, 150);
+			g_var->set(V_UI_COL_A, 130);
 
-			g_vars.set(V_KEYS_ON_TOGGLE_UI, VK_INSERT);
+			g_var->set(V_KEYS_ON_TOGGLE_UI, VK_INSERT);
 		};
 
 		GLOBAL(status) = [setup_basic_vars]() {
 #ifndef DISABLE_CSGO_VERSION_CHECK
-			const auto current_game_vers = std::string{ g_csgo.m_engine->get_product_version_string() };
+			const auto current_game_vers = std::string{ g_cs->m_engine->get_product_version_string() };
 
 			for (int i = 0; i < maxVersions; i++) {
 				const auto target_ver = GLOBAL(csgo_version_list[i]);
@@ -105,9 +105,9 @@ static void __stdcall init(HMODULE I)
 	});
 
 	g_state->call_state(SL_INIT_HOOKS, [](state_t& state) {
-		g_input.init({ CSGO_CLASS_NAME, 0 });
-		g_hooks.init();
-		g_event.init();
+		g_input->init({ CSGO_CLASS_NAME, 0 });
+		g_hooks->init();
+		g_event->init();
 
 		state++;
 	});
@@ -116,12 +116,12 @@ static void __stdcall init(HMODULE I)
 		// set initialised flag
 		if (GLOBAL(b_flags[BF_INITIALISED]) = static_cast<bool>(GLOBAL(status))) {
 			// set unload key
-			g_input.add_hk(VK_F12, []() {
+			g_input->add_hk(VK_F12, []() {
 				g::unload();
 			});
 
 			// open the ui
-			g_ui.set_menu_state(true);
+			g_ui->set_menu_state(true);
 		}
 		else {
 			// if not initialised, sleep 5s and then call the unload fn.
@@ -141,8 +141,8 @@ static void __stdcall init(HMODULE I)
 
 	g_state->call_state(SL_SHUTDOWN, [I](state_t& state) {
 		// reset world brightness if nightmode was enabled
-		if (g_vars.get_as<bool>(V_VISUALS_ENABLED).value() &&
-			g_vars.get_as<bool>(V_VISUALS_WORLD_NIGHTMODE_ENABLED).value()) {
+		if (g_var->get_as<bool>(V_VISUALS_ENABLED).value() &&
+			g_var->get_as<bool>(V_VISUALS_WORLD_NIGHTMODE_ENABLED).value()) {
 			Helpers::modulate_world_brightness({
 				{ "World", 1.0f },
 				{ "SkyBox", 1.0f },
@@ -156,17 +156,17 @@ static void __stdcall init(HMODULE I)
 		GLOBAL(b_flags[BF_PANIC]) = true;
 
 		// reset all vars before unloading
-		g_vars.reset();
+		g_var->reset();
 
 #ifndef CSGO_2020_BUILD
 		// write 0x74 to the address, restoring it to the original value
 		Helpers::write<unsigned char>(reinterpret_cast<uintptr_t>(g_sig[S_STEAM_VALIDATION_REJECTED]), 0x74);
 #endif
 		// free stuff
-		g_event.undo();
-		g_hooks.undo();
-		g_input.undo();
-		g_vars.undo();
+		g_event->undo();
+		g_hooks->undo();
+		g_input->undo();
+		g_var->undo();
 
 		// free loaded fonts
 		if (g_astriumwepFont) {

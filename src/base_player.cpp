@@ -61,7 +61,7 @@ c_base_weapon* c_base_player::get_active_weapon()
 	if (!weapon)
 		return nullptr;
 
-	return g_csgo.m_entity_list->get_client_entity<c_base_weapon*>(weapon);
+	return g_cs->m_entity_list->get_client_entity<c_base_weapon*>(weapon);
 }
 
 bool c_base_player::can_see_entity(const vec3& pos)
@@ -73,7 +73,7 @@ bool c_base_player::can_see_entity(const vec3& pos)
 	filter.e = this;
 
 	ray.init(get_eye_pos(), pos);
-	g_csgo.m_trace->trace_ray(ray, MASK_SHOT | CONTENTS_GRATE, &filter, &tr);
+	g_cs->m_trace->trace_ray(ray, MASK_SHOT | CONTENTS_GRATE, &filter, &tr);
 
 	return (tr.entity == this || tr.fraction > 0.97f);
 }
@@ -95,7 +95,7 @@ vec3 c_base_player::get_hitbox_position(int hitbox_id)
 	if (!setup_bones(bone_matrix, max_studio_bones, bone_used_by_hitbox, 0.0f))
 		return vec3{ 0, 0, 0 };
 
-	const auto studio_model = g_csgo.m_model_info->get_studio_model(get_model());
+	const auto studio_model = g_cs->m_model_info->get_studio_model(get_model());
 
 	if (!studio_model)
 		return vec3{ 0, 0, 0 };
@@ -186,7 +186,7 @@ bool c_base_player::has_c4()
 	if (!this)
 		return false;
 
-	return reinterpret_cast<bool(__thiscall*)(void*)>(g_sig[S_HAS_C4])(this);
+	return reinterpret_cast<bool(__thiscall*)(void*)>(SIG(S_HAS_C4))(this);
 }
 
 int c_base_player::get_cash()

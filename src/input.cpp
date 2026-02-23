@@ -26,13 +26,13 @@ static unsigned long WINAPI wnd_proc(HWND h, UINT m, WPARAM w, LPARAM l)
 		}
 
 		if (!(g_state->get_current_state() == SL_SHUTDOWN))
-			g_input.process_message(m, w, l);
+			g_input->process_message(m, w, l);
 	}
 
-	return CallWindowProcA(g_input.get_wnd_proc(), h, m, w, l);
+	return CallWindowProcA(g_input->get_wnd_proc(), h, m, w, l);
 }
 
-void input::init(const std::pair<LPCSTR, LPCSTR>& wnd)
+void c_input::init(const std::pair<LPCSTR, LPCSTR>& wnd)
 {
 	m_hwnd = FindWindowA(wnd.first, wnd.second);
 
@@ -42,12 +42,12 @@ void input::init(const std::pair<LPCSTR, LPCSTR>& wnd)
 	m_old_wnd_proc = reinterpret_cast<WNDPROC>(SetWindowLongA(m_hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(wnd_proc)));
 }
 
-void input::add_hk(unsigned int vk, std::function<void()> fn)
+void c_input::add_hk(unsigned int vk, std::function<void()> fn)
 {
 	m_hotkeys[vk] = fn;
 }
 
-void input::process_message(UINT m, WPARAM w, LPARAM l)
+void c_input::process_message(UINT m, WPARAM w, LPARAM l)
 {
 	if (!GLOBAL(b_flags[BF_CONSOLE_OPENED]) && !GLOBAL(b_flags[BF_CHAT_OPENED]))
 		process_keybd_message(m, w);
@@ -55,13 +55,13 @@ void input::process_message(UINT m, WPARAM w, LPARAM l)
 	process_mouse_message(m, w, l);
 }
 
-void input::process_mouse_message(UINT m, WPARAM w, LPARAM l)
+void c_input::process_mouse_message(UINT m, WPARAM w, LPARAM l)
 {
-	auto menu_opened = g_ui.get_menu_state();
+	auto menu_opened = g_ui->get_menu_state();
 	
 	// emulate WM_KEYDOWN, WM_KEYUP for mouse wheel control
 	auto emul_key_for_wheel_navigation = [&](unsigned int k) {
-		if (!(menu_opened && g_vars.get_as<bool>(V_UI_MOUSE_WHEEL_NAVIGATION).value()))
+		if (!(menu_opened && g_var->get_as<bool>(V_UI_MOUSE_WHEEL_NAVIGATION).value()))
 			return;
 
 		process_keybd_message(WM_KEYDOWN, k);
@@ -70,17 +70,17 @@ void input::process_mouse_message(UINT m, WPARAM w, LPARAM l)
 
 	if (menu_opened) {
 		/* moving the ui by position x, y using the mouse */
-		auto ui_pos_x = g_vars.get_as<int>(V_UI_POS_X).value();
-		auto ui_pos_y = g_vars.get_as<int>(V_UI_POS_Y).value();
+		auto ui_pos_x = g_var->get_as<int>(V_UI_POS_X).value();
+		auto ui_pos_y = g_var->get_as<int>(V_UI_POS_Y).value();
 
 		static draggable_object_t ui_drag_obj{ ui_pos_x, ui_pos_y, 180, 255 };
 
 		if (move_object(ui_drag_obj, m)) {
-			g_vars.set(V_UI_POS_X, ui_drag_obj.x);
-			g_vars.set(V_UI_POS_Y, ui_drag_obj.y);
+			g_var->set(V_UI_POS_X, ui_drag_obj.x);
+			g_var->set(V_UI_POS_Y, ui_drag_obj.y);
 		}
 
-		g_hud.process_message(m);
+		g_hud->process_message(m);
 	}
 
 	switch (m) {
@@ -116,7 +116,7 @@ void input::process_mouse_message(UINT m, WPARAM w, LPARAM l)
 	}
 }
 
-void input::process_keybd_message(UINT m, WPARAM w)
+void c_input::process_keybd_message(UINT m, WPARAM w)
 {
 	int key = w;
 	auto state = state_none;
@@ -140,7 +140,7 @@ void input::process_keybd_message(UINT m, WPARAM w)
 	{
 		m_key_map[key] = state_pressed;
 
-		g_ui.handle_toggle_keys(key);
+		g_ui->handle_toggle_keys(key);
 
 		auto& hotkey_callback = m_hotkeys[key];
 
@@ -154,12 +154,12 @@ void input::process_keybd_message(UINT m, WPARAM w)
 
 	if (state == state_down)
 	{
-		if (g_ui.get_menu_state())
-			g_ui.handle_input(key);
+		if (g_ui->get_menu_state())
+			g_ui->handle_input(key);
 	}
 }
 
-std::wstring input::virtual_key_to_wstring(unsigned int vk)
+std::wstring c_input::virtual_key_to_wstring(unsigned int vk)
 {
 	std::wstring k{ L"?" };
 	auto map{ MapVirtualKeyW(vk, MAPVK_VK_TO_VSC) };
@@ -197,12 +197,12 @@ std::wstring input::virtual_key_to_wstring(unsigned int vk)
 	return k;
 }
 
-WNDPROC input::get_wnd_proc()
+WNDPROC c_input::get_wnd_proc()
 {
 	return m_old_wnd_proc;
 }
 
-void input::undo()
+void c_input::undo()
 {
 	if (m_old_wnd_proc)
 		SetWindowLongA(m_hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(m_old_wnd_proc));

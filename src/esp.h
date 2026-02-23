@@ -14,6 +14,11 @@ struct health_anim_t {
 class c_esp {
 public:
 	void run();
+
+	static std::shared_ptr<c_esp> make_shared() {
+		return std::shared_ptr<c_esp>(new c_esp());
+	}
+
 	void on_round_start_e();
 
 private:
@@ -33,4 +38,4 @@ private:
 	void reset_position(int index);
 };
 
-inline c_esp g_esp;
+inline std::shared_ptr<c_esp> g_esp = c_esp::make_shared();

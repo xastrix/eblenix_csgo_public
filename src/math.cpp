@@ -9,7 +9,7 @@ static bool screen_transform(const vec3& in, vec3& out)
 {
 	static uintptr_t view_matrix{};
 
-	view_matrix = reinterpret_cast<uintptr_t>(g_sig[S_VIEW_MATRIX]);
+	view_matrix = reinterpret_cast<uintptr_t>(SIG(S_VIEW_MATRIX));
 	view_matrix = *reinterpret_cast<uintptr_t*>(view_matrix) + 0xB0;
 
 	auto& matrix = (*(matrix3x4_t*)view_matrix);
@@ -146,7 +146,7 @@ bool Math::w2s(const vec3& origin, vec3& screen)
 	if (!screen_transform(origin, screen))
 		return false;
 
-	vec2 screen_size = g_renderer.get_screen_size();
+	vec2 screen_size = g_renderer->get_screen_size();
 
 	screen.x = (screen_size.x / 2.0f) + (screen.x * screen_size.x) / 2.0f;
 	screen.y = (screen_size.y / 2.0f) - (screen.y * screen_size.y) / 2.0f;

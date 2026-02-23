@@ -30,5 +30,5 @@ short c_base_weapon::item_definition_index()
 
 weapon_info_t* c_base_weapon::get_weapon_data()
 {
-	return g_csgo.m_weapon_system->get_weapon_data(item_definition_index());
+	return g_cs->m_weapon_system->get_weapon_data(item_definition_index());
 }

@@ -4,7 +4,7 @@
 #include "globals.h"
 #include "helpers.h"
 
-void CSGO::init()
+void c_csgo::init()
 {
 	m_client = Helpers::get_interface<c_base_client>(GLOBAL(module_list[clientDLL]), CLIENT_INTERFACE_VERSION);
 	m_entity_list = Helpers::get_interface<c_entity_list>(GLOBAL(module_list[clientDLL]), CLIENT_ENTITY_INTERFACE_VERSION);
@@ -19,23 +19,15 @@ void CSGO::init()
 	m_render_view = Helpers::get_interface<c_render_view>(GLOBAL(module_list[engineDLL]), ENGINE_RENDER_VIEW_INTERFACE_VERSION);
 	m_event_manager = Helpers::get_interface<c_game_event_manager2>(GLOBAL(module_list[engineDLL]), GAME_EVENT_MANAGER_INTERFACE_VERSION);
 	
-	m_device = *Helpers::read<IDirect3DDevice9**>(reinterpret_cast<uintptr_t>(g_sig[S_DEVICE]));
+	m_device = *Helpers::read<IDirect3DDevice9**>(reinterpret_cast<uintptr_t>(SIG(S_DEVICE)));
 	m_globals = *Helpers::read<c_global_vars**>((*reinterpret_cast<uintptr_t**>(m_client))[11] + 10);
 	m_client_mode = *Helpers::read<uintptr_t**>((*reinterpret_cast<uintptr_t**>(m_client))[10] + 5);
-	m_input = Helpers::read<input_t*>(reinterpret_cast<uintptr_t>(g_sig[S_INPUT]));
-	m_weapon_system = Helpers::read<c_weapon_system*>(reinterpret_cast<uintptr_t>(g_sig[S_WEAPON_SYSTEM]));
-	m_glow_manager = Helpers::read_ptr<c_glow_manager*>(*reinterpret_cast<uintptr_t*>(g_sig[S_GLOW_MANAGER]));
+	m_input = Helpers::read<input_t*>(reinterpret_cast<uintptr_t>(SIG(S_INPUT)));
+	m_weapon_system = Helpers::read<c_weapon_system*>(reinterpret_cast<uintptr_t>(SIG(S_WEAPON_SYSTEM)));
+	m_glow_manager = Helpers::read_ptr<c_glow_manager*>(*reinterpret_cast<uintptr_t*>(SIG(S_GLOW_MANAGER)));
 }
 
-void CSGO::init_local(const local_t& local)
+void c_csgo::init_local(const local_t& local)
 {
 	m_local = local;
-}
-
-c_base_player* CSGO::get_local()
-{
-	if (!m_local)
-		return nullptr;
-
-	return m_local.get();
 }

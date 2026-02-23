@@ -42,6 +42,6 @@ float c_base_plantedc4::c4_blow()
 
 float c_base_plantedc4::get_defuse_length()
 {
-	float ret = defuse_count_down() - g_csgo.m_globals->cur_time;
+	float ret = defuse_count_down() - g_cs->m_globals->cur_time;
 	return ret < 0 ? 0.0f : ret;
 }

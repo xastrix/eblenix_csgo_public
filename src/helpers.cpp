@@ -17,7 +17,7 @@ int Helpers::get_nearest_bone(c_base_player* entity, user_cmd_t* cmd)
 	if (!entity->setup_bones(matrix, max_studio_bones, bone_used_by_hitbox, 0.0f))
 		return -1;
 
-	const auto studio_model = g_csgo.m_model_info->get_studio_model(entity->get_model());
+	const auto studio_model = g_cs->m_model_info->get_studio_model(entity->get_model());
 
 	if (!studio_model)
 		return -1;
@@ -37,7 +37,7 @@ int Helpers::get_nearest_bone(c_base_player* entity, user_cmd_t* cmd)
 		if (!hitbox)
 			continue;
 
-		const auto angle = Math::calculate_angle(g_csgo.get_local()->get_eye_pos(), vec3(matrix[hitbox->bone].m[0][3], matrix[hitbox->bone].m[1][3], matrix[hitbox->bone].m[2][3]), cmd->viewangles);
+		const auto angle = Math::calculate_angle(g_cs->get_local()->get_eye_pos(), vec3(matrix[hitbox->bone].m[0][3], matrix[hitbox->bone].m[1][3], matrix[hitbox->bone].m[2][3]), cmd->viewangles);
 		const auto this_distance = std::hypotf(angle.x, angle.y);
 
 		if (best_distance > this_distance) {
@@ -55,13 +55,13 @@ int Helpers::find_target_entity(user_cmd_t* cmd, const float fov, vec3& angle)
 	auto best_fov = fov;
 	auto best_target = 0;
 
-	for (int i = 1; i <= g_csgo.m_globals->max_clients; i++) {
-		auto entity = g_csgo.m_entity_list->get_client_entity<c_base_player*>(i);
+	for (int i = 1; i <= g_cs->m_globals->max_clients; i++) {
+		auto entity = g_cs->m_entity_list->get_client_entity<c_base_player*>(i);
 
 		auto entity_bone_pos = entity->get_bone_position(get_nearest_bone(entity, cmd));
-		auto local_eye_pos = g_csgo.get_local()->get_eye_pos();
+		auto local_eye_pos = g_cs->get_local()->get_eye_pos();
 
-		if (!entity || entity == g_csgo.get_local() || entity->get_dormant() || !entity->is_life_state() || entity->has_gun_game_immunity())
+		if (!entity || entity == g_cs->get_local() || entity->get_dormant() || !entity->is_life_state() || entity->has_gun_game_immunity())
 			continue;
 
 		angle = Math::calculate_angle(local_eye_pos, entity_bone_pos, cmd->viewangles);
@@ -221,7 +221,7 @@ bool Helpers::get_bbox(c_base_player* entity, box& in, const bbox_type type)
 
 bool Helpers::is_behind_smoke(const vec3 start_pos, const vec3 end_pos)
 {
-	static auto line_goes_through_smoke_fn = reinterpret_cast<line_goes_through_smoke>(g_sig[S_LINE_GOES_THROUGH_SMOKE]);
+	static auto line_goes_through_smoke_fn = reinterpret_cast<line_goes_through_smoke>(SIG(S_LINE_GOES_THROUGH_SMOKE));
 
 	if (!line_goes_through_smoke_fn)
 		return false;
@@ -231,12 +231,12 @@ bool Helpers::is_behind_smoke(const vec3 start_pos, const vec3 end_pos)
 
 bool Helpers::is_chat_opened()
 {
-	static void* _this = *reinterpret_cast<DWORD**>(g_sig[S_HUD_ELEMENT]);
+	static void* _this = *reinterpret_cast<DWORD**>(SIG(S_HUD_ELEMENT));
 	if (!_this)
 		return nullptr;
 
 	static auto fn
-		= reinterpret_cast<DWORD(__thiscall*)(void*, const char*)>(g_sig[S_FIND_HUD_ELEMENT]);
+		= reinterpret_cast<DWORD(__thiscall*)(void*, const char*)>(SIG(S_FIND_HUD_ELEMENT));
 
 	auto ccsgo_hudchat = fn(_this, "CCSGO_HudChat");
 	return read<bool>(ccsgo_hudchat + 13);
@@ -244,11 +244,11 @@ bool Helpers::is_chat_opened()
 
 void Helpers::modulate_world_brightness(std::vector<std::pair<std::string, float>> models)
 {
-	for (auto i = g_csgo.m_mat_system->first_material();
-		i != g_csgo.m_mat_system->invalid_material_handle();
-		i = g_csgo.m_mat_system->next_material(i)) {
+	for (auto i = g_cs->m_mat_system->first_material();
+		i != g_cs->m_mat_system->invalid_material_handle();
+		i = g_cs->m_mat_system->next_material(i)) {
 
-		auto material = g_csgo.m_mat_system->get_material(i);
+		auto material = g_cs->m_mat_system->get_material(i);
 
 		if (!material)
 			continue;
@@ -263,12 +263,12 @@ void Helpers::modulate_world_brightness(std::vector<std::pair<std::string, float
 
 int Helpers::get_c4_server_time()
 {
-	return g_csgo.m_cvar->get_convar("mp_c4timer")->get_int();
+	return g_cs->m_cvar->get_convar("mp_c4timer")->get_int();
 }
 
 float Helpers::get_viewmodel_fov()
 {
-	return g_csgo.m_cvar->get_convar("viewmodel_fov")->get_float();
+	return g_cs->m_cvar->get_convar("viewmodel_fov")->get_float();
 }
 
 std::string Helpers::hitgroup_name(const int index)

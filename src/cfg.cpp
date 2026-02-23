@@ -37,18 +37,18 @@ void cfg::load(const std::wstring& name)
 		const auto value = line.substr(equal_pos + 1);
 
 		if (value == CFG_BOOL_TRUE_KEY) {
-			g_vars.set(key, true);
+			g_var->set(key, true);
 		}
 		else if (value == CFG_BOOL_FALSE_KEY) {
-			g_vars.set(key, false);
+			g_var->set(key, false);
 		}
 		else
 		{
 			if (value.find(CFG_INT_KEY) != std::string::npos) {
-				g_vars.set(key, std::stoi(Helpers::remove_chars_from_string(value, CFG_INT_KEY)));
+				g_var->set(key, std::stoi(Helpers::remove_chars_from_string(value, CFG_INT_KEY)));
 			}
 			else if (value.find(CFG_FLOAT_KEY) != std::string::npos) {
-				g_vars.set(key, std::stof(Helpers::remove_chars_from_string(value, CFG_FLOAT_KEY)));
+				g_var->set(key, std::stof(Helpers::remove_chars_from_string(value, CFG_FLOAT_KEY)));
 			}
 		}
 
@@ -62,7 +62,7 @@ void cfg::save(const std::wstring& name)
 	std::string data{};
 
 	Files::make_dirs(CFG_DIRECTORY_PATHS);
-	for (const auto&[k, v] : g_vars.get_vars()) {
+	for (const auto&[k, v] : g_var->get_vars()) {
 		data += k + "=";
 
 		std::visit([&](auto&& arg) {

@@ -69,15 +69,20 @@ struct s_entry
 	std::vector<std::wstring> m_items{};
 };
 
-struct ui {
+class c_ui {
+public:
 	void init(IDirect3DDevice9* device);
 	void run();
 
 	void on_reset();
 	void on_reset_end();
 
-	void handle_toggle_keys(unsigned int k);
-	void handle_input(unsigned int k);
+	void handle_toggle_keys(unsigned int vk);
+	void handle_input(unsigned int vk);
+
+	static std::shared_ptr<c_ui> make_shared() {
+		return std::shared_ptr<c_ui>(new c_ui());
+	}
 
 	bool get_menu_state() { return m_opened; }
 	void set_menu_state(bool v) { m_opened = v; }
@@ -220,4 +225,4 @@ private:
 	sprite_t m_sprites[maxUISprites]{};
 };
 
-inline ui g_ui;
+inline std::shared_ptr<c_ui> g_ui = c_ui::make_shared();

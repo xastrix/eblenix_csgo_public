@@ -2,7 +2,7 @@
 
 #include "globals.h"
 
-void sig::init()
+void c_sig::init()
 {
 	m_signatures[S_DEVICE] = scan_sig(GLOBAL(module_list[shaderapidx9DLL]), "A1 ? ? ? ? 50 8B 08 FF 51 0C") + 1;
 	m_signatures[S_GLOW_MANAGER] = scan_sig(GLOBAL(module_list[clientDLL]), "0F 11 05 ? ? ? ? 83 C8 01") + 3;
@@ -28,7 +28,7 @@ void sig::init()
 #endif
 }
 
-sig_t sig::scan_sig(const std::string& module_name, const std::string& signature)
+sig_t c_sig::scan_sig(const std::string& module_name, const std::string& signature)
 {
 	const auto mod = GetModuleHandleA(module_name.c_str());
 
@@ -60,20 +60,7 @@ sig_t sig::scan_sig(const std::string& module_name, const std::string& signature
 	return {};
 }
 
-sig_t sig::scan_sigs(const std::string& module_name, const std::vector<std::string>& signatures)
-{
-	sig_t ret{};
-
-	for (const auto& signature : signatures)
-	{
-		if (ret = scan_sig(module_name, signature))
-			break;
-	}
-
-	return ret;
-}
-
-DWORD sig::get_module_size(const HMODULE mod)
+DWORD c_sig::get_module_size(const HMODULE mod)
 {
 	const auto dos_header = reinterpret_cast<PIMAGE_DOS_HEADER>(mod);
 
@@ -88,7 +75,7 @@ DWORD sig::get_module_size(const HMODULE mod)
 	return nt_header->OptionalHeader.SizeOfImage;
 }
 
-std::vector<int> sig::pattern_to_bytes(const std::string& signature)
+std::vector<int> c_sig::pattern_to_bytes(const std::string& signature)
 {
 	std::vector<int> ret{};
 

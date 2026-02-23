@@ -47,7 +47,7 @@ private:
 	std::array<int, 4> m_color{};
 
 	int get_var_value(const std::string& key) const {
-		auto opt = g_vars.get_as<int>(key);
+		auto opt = g_var->get_as<int>(key);
 
 		if (!opt.has_value())
 			return 0;

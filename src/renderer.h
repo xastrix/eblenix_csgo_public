@@ -111,6 +111,10 @@ public:
 
 	void build_lookup_table();
 
+	static std::shared_ptr<c_renderer> make_shared() {
+		return std::shared_ptr<c_renderer>(new c_renderer());
+	}
+
 	IDirect3DDevice9* get_device() {
 		return m_device;
 	}
@@ -135,4 +139,4 @@ private:
 };
 
 using sprite_t = c_sprite_mgr;
-inline c_renderer g_renderer;
+inline std::shared_ptr<c_renderer> g_renderer = c_renderer::make_shared();

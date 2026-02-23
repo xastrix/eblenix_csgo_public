@@ -11,10 +11,9 @@
 using var_type = std::variant<bool, int, float>;
 using vars_t = std::vector<std::pair<std::string, var_type>>;
 
-struct vars
-{
-	void init()
-	{
+class c_var_mgr {
+public:
+	void init() {
 		set(V_AIMBOT_ENABLED, false);
 		set(V_AIMBOT_SILENT, false);
 		set(V_AIMBOT_AUTOPISTOL, false);
@@ -251,12 +250,9 @@ struct vars
 		init();
 	}
 
-	void set(const std::string& key, const var_type& value)
-	{
-		for (auto& v : m_vars)
-		{
-			if (v.first == key)
-			{
+	void set(const std::string& key, const var_type& value) {
+		for (auto& v : m_vars) {
+			if (v.first == key) {
 				if (v.second != value)
 					v.second = std::move(value);
 
@@ -268,12 +264,9 @@ struct vars
 	}
 
 	template <typename T>
-	std::optional<T> get_as(const std::string& key)
-	{
-		for (const auto& v : m_vars)
-		{
-			if (v.first == key)
-			{
+	std::optional<T> get_as(const std::string& key) {
+		for (const auto& v : m_vars) {
+			if (v.first == key) {
 				std::optional<var_type> opt{ v.second };
 
 				if (opt.has_value()) {
@@ -287,6 +280,10 @@ struct vars
 		return std::nullopt;
 	}
 
+	static std::shared_ptr<c_var_mgr> make_shared() {
+		return std::shared_ptr<c_var_mgr>(new c_var_mgr());
+	}
+
 	vars_t get_vars() {
 		return m_vars;
 	}
@@ -294,8 +291,9 @@ struct vars
 	void undo() {
 		m_vars.clear();
 	}
+
 private:
 	vars_t m_vars{};
 };
 
-inline vars g_vars;
+inline std::shared_ptr<c_var_mgr> g_var = c_var_mgr::make_shared();
