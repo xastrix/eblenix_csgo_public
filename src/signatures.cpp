@@ -23,8 +23,6 @@ void c_sig::init()
 	m_signatures[S_IS_LOADOUTALLOWED] = scan_sig(GLOBAL(module_list[clientDLL]), "84 C0 75 05 B0 01");
 	m_signatures[S_CROSSHAIR_COLOR] = scan_sig(GLOBAL(module_list[clientDLL]), "FF 50 3C 80 7D 2C 00") + 3;
 	m_signatures[S_CAM_THINK] = scan_sig(GLOBAL(module_list[clientDLL]), "85 C0 75 30 38 87");
-
-	m_signatures[S_STEAM_VALIDATION_REJECTED] = scan_sig(GLOBAL(module_list[engineDLL]), "74 25 8B 06 68");
 #endif
 }
 

@@ -161,6 +161,8 @@
 #define V_VISUALS_INTERFACE_STATUS_ESP "visuals->interface->status->esp"
 #define V_VISUALS_INTERFACE_STATUS_FPS "visuals->interface->status->fps"
 #define V_VISUALS_INTERFACE_STATUS_VELOCITY "visuals->interface->status->velocity"
+#define V_VISUALS_INTERFACE_STATUS_INCOMING "visuals->interface->status->incoming"
+#define V_VISUALS_INTERFACE_STATUS_OUTGOING "visuals->interface->status->outgoing"
 #define V_VISUALS_INTERFACE_STATUS_C4 "visuals->interface->status->c4"
 #define V_VISUALS_INTERFACE_SPECTATORS "visuals->interface->spectators"
 #define V_VISUALS_INTERFACE_SPECTATORS_POS_Y "visuals->interface->spectators->pos->y"
@@ -217,7 +219,6 @@
 #define V_VISUALS_WORLD_NIGHTMODE_MODEL_BRIGHTNESS "visuals->world->nightmode->model_textures->brightness"
 #define V_VISUALS_WORLD_NIGHTMODE_DECAL_BRIGHTNESS "visuals->world->nightmode->decal_textures->brightness"
 #define V_VISUALS_WORLD_NIGHTMODE_OTHER_BRIGHTNESS "visuals->world->nightmode->other_textures->brightness"
-
 
 #define V_VISUALS_REMOVALS_SMOKE "visuals->removals->smoke"
 #define V_VISUALS_REMOVALS_FLASH "visuals->removals->flash"

@@ -343,6 +343,9 @@
       <Filter>csgo\structs</Filter>
     </ClInclude>
     <ClInclude Include="states.h" />
+    <ClInclude Include="net_channel_info.h">
+      <Filter>csgo\structs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="csgo">

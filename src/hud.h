@@ -161,6 +161,20 @@ private:
 				}
 			}
 
+			auto net_channel_info = g_cs->m_engine->get_net_channel_info();
+
+			if (net_channel_info)
+			{
+				int incoming = std::max(static_cast<int>(net_channel_info->get_latency(FLOW_INCOMING) * 1000.0f), 0);
+				int outgoing = std::max(static_cast<int>(net_channel_info->get_latency(FLOW_OUTGOING) * 1000.0f), 0);
+
+				if (g_var->get_as<bool>(V_VISUALS_INTERFACE_STATUS_INCOMING).value())
+					push_item(" Incoming: " + std::to_string(incoming) + "ms", FONT(Tahoma12px), incoming > 0);
+
+				if (g_var->get_as<bool>(V_VISUALS_INTERFACE_STATUS_OUTGOING).value())
+					push_item(" Outgoing: " + std::to_string(outgoing) + "ms", FONT(Tahoma12px), outgoing > 0);
+			}
+
 			if (g_var->get_as<bool>(V_VISUALS_INTERFACE_STATUS_C4).value())
 			{
 				if (GLOBAL(b_flags[BF_BOMB_PLANTED]))
@@ -190,6 +204,8 @@ private:
 		{ "Esp",      V_VISUALS_INTERFACE_STATUS_ESP },
 		{ "Fps",      V_VISUALS_INTERFACE_STATUS_FPS },
 		{ "Velocity", V_VISUALS_INTERFACE_STATUS_VELOCITY },
+		{ "Incoming", V_VISUALS_INTERFACE_STATUS_INCOMING },
+		{ "Outgoing", V_VISUALS_INTERFACE_STATUS_OUTGOING },
 		{ "C4",       V_VISUALS_INTERFACE_STATUS_C4 },
 	};
 

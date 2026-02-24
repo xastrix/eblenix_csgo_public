@@ -18,9 +18,6 @@ enum _signature_list {
 	S_IS_LOADOUTALLOWED,
 	S_CROSSHAIR_COLOR,
 	S_CAM_THINK,
-#ifndef CSGO_2020_BUILD
-	S_STEAM_VALIDATION_REJECTED,
-#endif
 	maxSignatures,
 };
 

@@ -65,3 +65,9 @@ void c_engine_client::execute_cmd(const char* cmd)
 	using original_fn = void(__thiscall*)(c_engine_client*, const char*);
 	return (*(original_fn**)this)[108](this, cmd);
 }
+
+net_channel_info_t* c_engine_client::get_net_channel_info()
+{
+	using original_fn = net_channel_info_t*(__thiscall*)(c_engine_client*);
+	return (*(original_fn**)this)[78](this);
+}

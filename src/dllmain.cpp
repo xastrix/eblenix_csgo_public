@@ -43,10 +43,6 @@ static void __stdcall init(HMODULE I)
 		if (g_renderer->init(g_cs->m_device))
 			g_ui->init(g_cs->m_device);
 
-#ifndef CSGO_2020_BUILD
-		// patch 'STEAM validation rejected' msgbox in the (non-steam) csgo
-		Helpers::write<unsigned char>(reinterpret_cast<uintptr_t>(g_sig[S_STEAM_VALIDATION_REJECTED]), 0x75);
-#endif
 		state++;
 	});
 
@@ -158,10 +154,6 @@ static void __stdcall init(HMODULE I)
 		// reset all vars before unloading
 		g_var->reset();
 
-#ifndef CSGO_2020_BUILD
-		// write 0x74 to the address, restoring it to the original value
-		Helpers::write<unsigned char>(reinterpret_cast<uintptr_t>(g_sig[S_STEAM_VALIDATION_REJECTED]), 0x74);
-#endif
 		// free stuff
 		g_event->undo();
 		g_hooks->undo();

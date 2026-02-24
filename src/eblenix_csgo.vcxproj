@@ -213,6 +213,7 @@
     <ClInclude Include="hud.h" />
     <ClInclude Include="math.h" />
     <ClInclude Include="matrix.h" />
+    <ClInclude Include="net_channel_info.h" />
     <ClInclude Include="states.h" />
     <ClInclude Include="surface.h" />
     <ClInclude Include="var_defines.h" />

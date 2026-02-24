@@ -1,6 +1,7 @@
 #pragma once
 
 #include "player_info.h"
+#include "net_channel_info.h"
 #include "vec3.h"
 
 #define ENGINE_INTERFACE_VERSION "VEngineClient014"
@@ -17,4 +18,5 @@ public:
 	void set_view_angles(vec3& angles);
 	vec3 get_view_angles();
 	void execute_cmd(const char* cmd);
+	net_channel_info_t* get_net_channel_info();
 };
