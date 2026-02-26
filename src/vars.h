@@ -15,34 +15,7 @@ class c_var_mgr {
 public:
 	void init() {
 		set(V_AIMBOT_ENABLED, false);
-		set(V_AIMBOT_SILENT, false);
 		set(V_AIMBOT_AUTOPISTOL, false);
-		set(V_AIMBOT_VISIBLE_CHECK, true);
-		set(V_AIMBOT_SMOKE_CHECK, false);
-		set(V_AIMBOT_FLASH_CHECK, false);
-		set(V_AIMBOT_TEAMMATE_CHECK, false);
-		set(V_AIMBOT_JUMP_CHECK, false);
-		set(V_AIMBOT_SCOPE_CHECK, false);
-		set(V_AIMBOT_TYPE_PISTOL, 0);
-		set(V_AIMBOT_TYPE_RIFLE, 0);
-		set(V_AIMBOT_TYPE_SNIPER, 0);
-		set(V_AIMBOT_TYPE_HEAVY, 0);
-		set(V_AIMBOT_TYPE_SMG, 0);
-		set(V_AIMBOT_BONE_PISTOL, 0);
-		set(V_AIMBOT_BONE_RIFLE, 0);
-		set(V_AIMBOT_BONE_SNIPER, 0);
-		set(V_AIMBOT_BONE_HEAVY, 0);
-		set(V_AIMBOT_BONE_SMG, 0);
-		set(V_AIMBOT_FOV_PISTOL, 0.0f);
-		set(V_AIMBOT_SMOOTH_PISTOL, 1.0f);
-		set(V_AIMBOT_FOV_RIFLE, 0.0f);
-		set(V_AIMBOT_SMOOTH_RIFLE, 1.0f);
-		set(V_AIMBOT_FOV_SNIPER, 0.0f);
-		set(V_AIMBOT_SMOOTH_SNIPER, 1.0f);
-		set(V_AIMBOT_FOV_HEAVY, 0.0f);
-		set(V_AIMBOT_SMOOTH_HEAVY, 1.0f);
-		set(V_AIMBOT_FOV_SMG, 0.0f);
-		set(V_AIMBOT_SMOOTH_SMG, 1.0f);
 
 		set(V_TRIGGERBOT_ENABLED, false);
 		set(V_TRIGGERBOT_FLASH_CHECK, false);
@@ -54,12 +27,6 @@ public:
 		set(V_TRIGGERBOT_HITBOX_BODY, true);
 		set(V_TRIGGERBOT_HITBOX_ARMS, true);
 		set(V_TRIGGERBOT_HITBOX_LEGS, true);
-
-		set(V_KNIFEBOT_ENABLED, false);
-		set(V_KNIFEBOT_FLASH_CHECK, false);
-		set(V_KNIFEBOT_SMOKE_CHECK, false);
-		set(V_KNIFEBOT_TEAMMATE_CHECK, false);
-		set(V_KNIFEBOT_DISTANCE, 65.0f);
 
 		set(V_ESP_ENABLED, false);
 		set(V_ESP_TEAM, false);

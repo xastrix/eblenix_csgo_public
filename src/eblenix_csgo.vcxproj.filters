@@ -10,18 +10,6 @@
     <ClCompile Include="math.cpp">
       <Filter>csgo\math</Filter>
     </ClCompile>
-    <ClCompile Include="aimbot.cpp">
-      <Filter>features\aimbot</Filter>
-    </ClCompile>
-    <ClCompile Include="esp.cpp">
-      <Filter>features\esp</Filter>
-    </ClCompile>
-    <ClCompile Include="movement.cpp">
-      <Filter>features\movement</Filter>
-    </ClCompile>
-    <ClCompile Include="visuals.cpp">
-      <Filter>features\visuals</Filter>
-    </ClCompile>
     <ClCompile Include="interfaces.cpp">
       <Filter>csgo\interfaces</Filter>
     </ClCompile>
@@ -146,6 +134,45 @@
     <ClCompile Include="..\external\exception_handler\exception_handler.cpp">
       <Filter>external\exception_handler</Filter>
     </ClCompile>
+    <ClCompile Include="triggerbot.cpp">
+      <Filter>features</Filter>
+    </ClCompile>
+    <ClCompile Include="auto_pistol.cpp">
+      <Filter>features</Filter>
+    </ClCompile>
+    <ClCompile Include="aimbot.cpp">
+      <Filter>features</Filter>
+    </ClCompile>
+    <ClCompile Include="autostrafe.cpp">
+      <Filter>features</Filter>
+    </ClCompile>
+    <ClCompile Include="bhop.cpp">
+      <Filter>features</Filter>
+    </ClCompile>
+    <ClCompile Include="blockbot.cpp">
+      <Filter>features</Filter>
+    </ClCompile>
+    <ClCompile Include="movement.cpp">
+      <Filter>features</Filter>
+    </ClCompile>
+    <ClCompile Include="player_esp.cpp">
+      <Filter>features</Filter>
+    </ClCompile>
+    <ClCompile Include="visuals.cpp">
+      <Filter>features</Filter>
+    </ClCompile>
+    <ClCompile Include="world_esp.cpp">
+      <Filter>features</Filter>
+    </ClCompile>
+    <ClCompile Include="hud.cpp">
+      <Filter>features</Filter>
+    </ClCompile>
+    <ClCompile Include="status_bar.cpp">
+      <Filter>features</Filter>
+    </ClCompile>
+    <ClCompile Include="spectators.cpp">
+      <Filter>features</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="netvar_manager.h">
@@ -165,18 +192,6 @@
     </ClInclude>
     <ClInclude Include="vec3.h">
       <Filter>csgo\math</Filter>
-    </ClInclude>
-    <ClInclude Include="aimbot.h">
-      <Filter>features\aimbot</Filter>
-    </ClInclude>
-    <ClInclude Include="esp.h">
-      <Filter>features\esp</Filter>
-    </ClInclude>
-    <ClInclude Include="movement.h">
-      <Filter>features\movement</Filter>
-    </ClInclude>
-    <ClInclude Include="visuals.h">
-      <Filter>features\visuals</Filter>
     </ClInclude>
     <ClInclude Include="interfaces.h">
       <Filter>csgo\interfaces</Filter>
@@ -346,6 +361,15 @@
     <ClInclude Include="net_channel_info.h">
       <Filter>csgo\structs</Filter>
     </ClInclude>
+    <ClInclude Include="aimbot.h">
+      <Filter>features</Filter>
+    </ClInclude>
+    <ClInclude Include="movement.h">
+      <Filter>features</Filter>
+    </ClInclude>
+    <ClInclude Include="visuals.h">
+      <Filter>features</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="csgo">
@@ -386,18 +410,6 @@
     </Filter>
     <Filter Include="features">
       <UniqueIdentifier>{1f0980bb-c668-4ebb-ab5f-953fb3b8689c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="features\aimbot">
-      <UniqueIdentifier>{baf46f29-c877-43db-b55a-341f1d8a1dee}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="features\esp">
-      <UniqueIdentifier>{74637c9d-1d5e-4f76-8f1f-69b3f3fecd49}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="features\visuals">
-      <UniqueIdentifier>{2d4d9e0e-69d7-411f-846c-5f4512d7b90c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="features\movement">
-      <UniqueIdentifier>{848d947d-0dc6-419d-90f2-b11c6b2e0ece}</UniqueIdentifier>
     </Filter>
     <Filter Include="csgo\interfaces">
       <UniqueIdentifier>{1a448240-a0ce-4208-9d20-b75792d5aab1}</UniqueIdentifier>

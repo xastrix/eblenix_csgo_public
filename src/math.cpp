@@ -5,6 +5,8 @@
 #include "signatures.h"
 #include "renderer.h"
 
+#include "vec_util.h"
+
 static bool screen_transform(const vec3& in, vec3& out)
 {
 	static uintptr_t view_matrix{};
@@ -29,27 +31,6 @@ static bool screen_transform(const vec3& in, vec3& out)
 	return true;
 }
 
-vec3 Math::calculate_angle(const vec3& source, const vec3& destination, const vec3& view_angles)
-{
-	vec3 delta = source - destination;
-	vec3 angles;
-
-	angles.x = RAD2DEG(std::atanf(delta.z / std::hypotf(delta.x, delta.y))) - view_angles.x;
-	angles.y = RAD2DEG(std::atanf(delta.y / delta.x)) - view_angles.y;
-	angles.z = 0.0f;
-
-	if (delta.x >= 0.0f)
-		angles.y += 180.0f;
-
-	return angles;
-}
-
-void Math::sin_cos(float r, float* s, float* c)
-{
-	*s = std::sin(r);
-	*c = std::cos(r);
-}
-
 void Math::transform_vector(vec3& a, matrix3x4_t& b, vec3& out)
 {
 	out.x = dot(a, b.m[0]) + b.m[0][3];
@@ -57,37 +38,12 @@ void Math::transform_vector(vec3& a, matrix3x4_t& b, vec3& out)
 	out.z = dot(a, b.m[2]) + b.m[2][3];
 }
 
-void Math::vector_angles(const vec3& forward, vec3& angles)
-{
-	if (forward.y == 0.0f && forward.x == 0.0f)
-	{
-		angles.x = (forward.z > 0.0f) ? 270.0f : 90.0f;
-		angles.y = 0.0f;
-	}
-	else
-	{
-		angles.x = std::atan2(-forward.z, std::sqrt(forward.x * forward.x + forward.z * forward.z)) * -180 / static_cast<float>(M_PI);
-		angles.y = std::atan2(forward.y, forward.x) * 180 / static_cast<float>(M_PI);
-
-		if (angles.y > 90)
-			angles.y -= 180;
-
-		else if (angles.y < 90)
-			angles.y += 180;
-
-		else if (angles.y == 90)
-			angles.y = 0;
-	}
-
-	angles.z = 0.0f;
-}
-
 void Math::angle_vectors(const vec3& angles, vec3& forward)
 {
 	float sp, sy, cp, cy;
 
-	sin_cos(DEG2RAD(angles.y), &sy, &cy);
-	sin_cos(DEG2RAD(angles.x), &sp, &cp);
+	vecUtil::sinCos(DEG2RAD(angles.y), &sy, &cy);
+	vecUtil::sinCos(DEG2RAD(angles.x), &sp, &cp);
 
 	forward.x = cp * cy;
 	forward.y = cp * sy;
@@ -115,30 +71,6 @@ bool Math::normalize_angles(vec3& angles)
 	angles.y = std::remainder(angles.y, 360.f);
 
 	return true;
-}
-
-float Math::distance_based_fov(const float distance, const vec3 angle, const user_cmd_t* cmd)
-{
-	vec3 aiming_at;
-	angle_vectors(cmd->viewangles, aiming_at);
-	aiming_at *= distance / 10;
-
-	vec3 aim_at;
-	angle_vectors(angle, aim_at);
-	aim_at *= distance / 10;
-
-	return aiming_at.distance_to(aim_at);
-}
-
-float Math::get_fov(const vec3 vangle, const vec3 angle)
-{
-	vec3 a0, a1;
-
-	angle_vectors(vangle, a0);
-	angle_vectors(angle, a1);
-
-	return RAD2DEG(std::acos((a0.x * a1.x + a0.y * a1.y + a0.z * a1.z) /
-		(a0.x * a0.x + a0.y * a0.y + a0.z * a0.z)));
 }
 
 bool Math::w2s(const vec3& origin, vec3& screen)

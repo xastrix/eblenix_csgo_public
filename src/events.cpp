@@ -3,9 +3,10 @@
 #include "vars.h"
 #include "globals.h"
 #include "color.h"
-#include "esp.h"
 #include "interfaces.h"
 #include "fnv.h"
+
+#include "visuals.h"
 
 static std::vector<std::pair<uint32_t, std::function<void(c_game_event*)>>> g_event_list{};
 
@@ -83,7 +84,7 @@ void c_event_list::init()
 
 	listen_event(this, "round_start", [](c_game_event*) {
 		GLOBAL(b_flags[BF_BOMB_PLANTED]) = false;
-		g_esp->on_round_start_e();
+		player_esp_t::get_instance().on_round_start_e();
 	});
 
 	listen_event(this, "bomb_planted", [](c_game_event*) { 

@@ -8,37 +8,7 @@
 /******************************************************************************/
 
 #define V_AIMBOT_ENABLED "aimbot->enabled"
-#define V_AIMBOT_SILENT "aimbot->silent"
 #define V_AIMBOT_AUTOPISTOL "aimbot->autopistol"
-#define V_AIMBOT_VISIBLE_CHECK "aimbot->visible_check"
-#define V_AIMBOT_SMOKE_CHECK "aimbot->smoke_check"
-#define V_AIMBOT_FLASH_CHECK "aimbot->flash_check"
-#define V_AIMBOT_TEAMMATE_CHECK "aimbot->teammate_check"
-#define V_AIMBOT_JUMP_CHECK "aimbot->jump_check"
-#define V_AIMBOT_SCOPE_CHECK "aimbot->scope_check"
-
-#define V_AIMBOT_TYPE_PISTOL "aimbot->type->pistol"
-#define V_AIMBOT_TYPE_RIFLE "aimbot->type->rifle"
-#define V_AIMBOT_TYPE_SNIPER "aimbot->type->sniper"
-#define V_AIMBOT_TYPE_HEAVY "aimbot->type->heavy"
-#define V_AIMBOT_TYPE_SMG "aimbot->type->smg"
-
-#define V_AIMBOT_BONE_PISTOL "aimbot->bone->pistol"
-#define V_AIMBOT_BONE_RIFLE "aimbot->bone->rifle"
-#define V_AIMBOT_BONE_SNIPER "aimbot->bone->sniper"
-#define V_AIMBOT_BONE_HEAVY "aimbot->bone->heavy"
-#define V_AIMBOT_BONE_SMG "aimbot->bone->smg"
-
-#define V_AIMBOT_FOV_PISTOL "aimbot->fov->pistol"
-#define V_AIMBOT_SMOOTH_PISTOL "aimbot->smooth->pistol"
-#define V_AIMBOT_FOV_RIFLE "aimbot->fov->rifle"
-#define V_AIMBOT_SMOOTH_RIFLE "aimbot->smooth->rifle"
-#define V_AIMBOT_FOV_SNIPER "aimbot->fov->sniper"
-#define V_AIMBOT_SMOOTH_SNIPER "aimbot->smooth->sniper"
-#define V_AIMBOT_FOV_HEAVY "aimbot->fov->heavy"
-#define V_AIMBOT_SMOOTH_HEAVY "aimbot->smooth->heavy"
-#define V_AIMBOT_FOV_SMG "aimbot->fov->smg"
-#define V_AIMBOT_SMOOTH_SMG "aimbot->smooth->smg"
 
 /******************************************************************************/
 
@@ -53,14 +23,6 @@
 #define V_TRIGGERBOT_HITBOX_BODY "triggerbot->hitbox->body"
 #define V_TRIGGERBOT_HITBOX_ARMS "triggerbot->hitbox->arms"
 #define V_TRIGGERBOT_HITBOX_LEGS "triggerbot->hitbox->legs"
-
-/******************************************************************************/
-
-#define V_KNIFEBOT_ENABLED "knifebot->enabled"
-#define V_KNIFEBOT_FLASH_CHECK "knifebot->flash_check"
-#define V_KNIFEBOT_SMOKE_CHECK "knifebot->smoke_check"
-#define V_KNIFEBOT_TEAMMATE_CHECK "knifebot->teammate_check"
-#define V_KNIFEBOT_DISTANCE "knifebot->distance"
 
 /******************************************************************************/
 

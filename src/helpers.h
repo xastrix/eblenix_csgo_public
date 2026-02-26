@@ -33,9 +33,6 @@ struct box {
 
 namespace Helpers
 {
-	int get_nearest_bone(c_base_player* entity, user_cmd_t* cmd);
-	int find_target_entity(user_cmd_t* cmd, const float fov, vec3& angle);
-
 	bool is_pistol(c_base_weapon* weapon);
 	bool is_sniper(c_base_weapon* weapon);
 	bool is_auto(c_base_weapon* weapon);

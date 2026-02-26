@@ -1,22 +1,13 @@
-#include "esp.h"
+#include "visuals.h"
 
-#include "globals.h"
 #include "vars.h"
-#include "renderer.h"
 #include "interfaces.h"
+#include "renderer.h"
 #include "math.h"
 
-#include <array>
-
-void c_esp::run()
+void player_esp_t::think()
 {
 	if (!g_var->get_as<bool>(V_ESP_ENABLED).value())
-		return;
-
-	if (!g_cs->m_engine->is_connected())
-		return;
-
-	if (!g_cs->get_local())
 		return;
 
 	for (int i = 0; i <= MAX_PLAYERS; i++)
@@ -48,14 +39,14 @@ void c_esp::run()
 	}
 }
 
-void c_esp::on_round_start_e()
+void player_esp_t::on_round_start_e()
 {
 	for (int i = 0; i <= MAX_PLAYERS; i++) {
 		reset_position(i);
 	}
 }
 
-void c_esp::calc_player_animation_progress(int index, float& anim, c_base_player* entity)
+void player_esp_t::calc_player_animation_progress(int index, float& anim, c_base_player* entity)
 {
 	float rate = g_cs->m_globals->frame_time * 1.0f / 0.5f;
 	auto& health_anim = m_health_anims[index];
@@ -91,7 +82,7 @@ void c_esp::calc_player_animation_progress(int index, float& anim, c_base_player
 	}
 }
 
-void c_esp::player_rendering(int index, c_base_player* entity, box bbox)
+void player_esp_t::player_rendering(int index, c_base_player* entity, box bbox)
 {
 	if (g_var->get_as<bool>(V_ESP_NAME_ENABLED).value())
 	{
@@ -131,7 +122,7 @@ void c_esp::player_rendering(int index, c_base_player* entity, box bbox)
 			g_renderer->line(bbox.x - 1, bbox.y + bbox.h + 1, bbox.x + bbox.w + 1, bbox.y + bbox.h + 1, background_col);
 			g_renderer->line(bbox.x - 1, bbox.y - 1, bbox.x - 1, bbox.y + bbox.h + 1, background_col);
 			g_renderer->line(bbox.x + bbox.w + 1, bbox.y - 1, bbox.x + bbox.w + 1, bbox.y + bbox.h + 1, background_col);
-			
+
 			g_renderer->line(bbox.x, bbox.y, bbox.x + bbox.w, bbox.y, col);
 			g_renderer->line(bbox.x, bbox.y + bbox.h, bbox.x + bbox.w, bbox.y + bbox.h, col);
 			g_renderer->line(bbox.x, bbox.y, bbox.x, bbox.y + bbox.h, col);
@@ -159,7 +150,7 @@ void c_esp::player_rendering(int index, c_base_player* entity, box bbox)
 		}
 		case 3: {
 			g_renderer->rect_fill(bbox.x, bbox.y, bbox.w, bbox.h - 1, outline_col);
-			
+
 			g_renderer->corner_box(bbox.x - 1, bbox.y - 1, bbox.w + 2, bbox.h + 2, 3, 5, background_col);
 			g_renderer->corner_box(bbox.x, bbox.y, bbox.w, bbox.h, 3, 5, col);
 			break;
@@ -263,9 +254,9 @@ void c_esp::player_rendering(int index, c_base_player* entity, box bbox)
 		if (studio_model)
 		{
 			vec3 v_parent{},
-				 v_child{},
-				 s_parent{},
-				 s_child{};
+				v_child{},
+				s_parent{},
+				s_child{};
 
 			for (int i = 0; i < studio_model->bones_count; i++)
 			{
@@ -300,10 +291,10 @@ void c_esp::player_rendering(int index, c_base_player* entity, box bbox)
 	if (g_var->get_as<bool>(V_ESP_BARREL_ENABLED).value())
 	{
 		vec3 start{},
-			 s_screen{},
-			 end{},
-			 e_screen{},
-			 forward{};
+			s_screen{},
+			end{},
+			e_screen{},
+			forward{};
 
 		Math::angle_vectors(entity->get_eye_angles(), forward);
 
@@ -516,7 +507,7 @@ void c_esp::player_rendering(int index, c_base_player* entity, box bbox)
 	}
 }
 
-void c_esp::reset_position(int index)
+void player_esp_t::reset_position(int index)
 {
 	m_has_seen[index] = false;
 	m_anim_progress[index] = 0.0f;
@@ -525,7 +516,7 @@ void c_esp::reset_position(int index)
 	m_health_anims[index].m_elapsed = 0.0f;
 }
 
-void c_esp::update_position(int index, const vec3& pos)
+void player_esp_t::update_position(int index, const vec3& pos)
 {
 	m_stored_pos[index] = pos;
 

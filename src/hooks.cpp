@@ -1,7 +1,6 @@
 #include "hooks.h"
 
 #include "aimbot.h"
-#include "esp.h"
 #include "visuals.h"
 #include "hud.h"
 #include "movement.h"
@@ -28,9 +27,6 @@ static bool __stdcall create_move_h(float input_sample_frametime, user_cmd_t* cm
 		if (!GLOBAL(b_flags[BF_PANIC]))
 		{
 			g_aimbot->run(cmd);
-			g_aimbot->do_triggerbot(cmd);
-			g_aimbot->do_knifebot(cmd);
-
 			g_move->run(cmd);
 
 			if (g_cs->m_engine->is_connected())
@@ -127,7 +123,6 @@ static long D3DAPI present_h(IDirect3DDevice9* device, RECT* source_rect, RECT* 
 	switch (GLOBAL(status)) {
 	case gameVersionOK: {
 		if (!GLOBAL(b_flags[BF_PANIC])) {
-			g_esp->run();
 			g_visuals->run();
 			g_hud->run();
 			g_ui->run();
@@ -171,7 +166,7 @@ static int(__thiscall *o_do_post_screen_effects)(void*, int);
 static int __stdcall do_post_screen_effects_h(int v)
 {
 	if (GLOBAL(b_flags[BF_INITIALISED]) && !GLOBAL(b_flags[BF_PANIC]))
-		g_visuals->on_do_post_screen_effects();
+		world_esp_t::get_instance().on_do_post_screen_effects();
 
 	return o_do_post_screen_effects(g_cs->m_client_mode, v);
 }
@@ -180,7 +175,7 @@ static void(__thiscall *o_scene_end)(void*);
 static void __stdcall scene_end_h()
 {
 	if (GLOBAL(b_flags[BF_INITIALISED]) && !GLOBAL(b_flags[BF_PANIC]))
-		g_visuals->on_scene_end();
+		world_esp_t::get_instance().on_scene_end();
 
 	return o_scene_end(g_cs->m_render_view);
 }

@@ -1,9 +1,10 @@
 #include "input.h"
 
 #include "globals.h"
-#include "hud.h"
 #include "fnv.h"
 #include "states.h"
+#include "hud.h"
+#include "ui.h"
 
 #include <algorithm>
 

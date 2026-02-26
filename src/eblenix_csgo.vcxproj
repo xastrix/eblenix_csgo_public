@@ -153,15 +153,24 @@
     <ClCompile Include="..\external\minhook\src\hde\hde64.c" />
     <ClCompile Include="..\external\minhook\src\hook.c" />
     <ClCompile Include="..\external\minhook\src\trampoline.c" />
+    <ClCompile Include="autostrafe.cpp" />
+    <ClCompile Include="auto_pistol.cpp" />
+    <ClCompile Include="bhop.cpp" />
+    <ClCompile Include="blockbot.cpp" />
     <ClCompile Include="color.cpp" />
+    <ClCompile Include="hud.cpp" />
+    <ClCompile Include="player_esp.cpp" />
     <ClCompile Include="events.cpp" />
     <ClCompile Include="font.cpp" />
     <ClCompile Include="math.cpp" />
     <ClCompile Include="netvar_manager.cpp" />
     <ClCompile Include="game_event_mgr.cpp" />
     <ClCompile Include="render_view.cpp" />
+    <ClCompile Include="spectators.cpp" />
+    <ClCompile Include="status_bar.cpp" />
     <ClCompile Include="surface.cpp" />
     <ClCompile Include="trace_ray.cpp" />
+    <ClCompile Include="triggerbot.cpp" />
     <ClCompile Include="ui_draw.cpp" />
     <ClCompile Include="ui_input.cpp" />
     <ClCompile Include="vec2.cpp" />
@@ -184,7 +193,6 @@
     <ClCompile Include="cfg.cpp" />
     <ClCompile Include="movement.cpp" />
     <ClCompile Include="aimbot.cpp" />
-    <ClCompile Include="esp.cpp" />
     <ClCompile Include="visuals.cpp" />
     <ClCompile Include="globals.cpp" />
     <ClCompile Include="hooks.cpp" />
@@ -195,6 +203,7 @@
     <ClCompile Include="sprite_mgr.cpp" />
     <ClCompile Include="helpers.cpp" />
     <ClCompile Include="ui.cpp" />
+    <ClCompile Include="world_esp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\external\exception_handler\exception_handler.hpp" />
@@ -252,7 +261,6 @@
     <ClInclude Include="cfg.h" />
     <ClInclude Include="movement.h" />
     <ClInclude Include="aimbot.h" />
-    <ClInclude Include="esp.h" />
     <ClInclude Include="visuals.h" />
     <ClInclude Include="globals.h" />
     <ClInclude Include="hooks.h" />
