@@ -8,12 +8,14 @@
 #include <memory>
 
 #define MAX_PLAYER_RENDERING_DISTANCE 1499.0f
-#define MAX_PLAYERS 65
+#define MAX_PLAYERS                   65
 
-struct health_anim_t {
-	int   m_final_hp;
-	float m_elapsed;
-	bool  m_confirmed;
+#define ARMOR_MIN_VAL                 10
+
+struct begin_animation_t {
+	int   m_final_val{};
+	float m_elapsed{};
+	bool  m_confirmed{};
 };
 
 struct player_esp_t {
@@ -36,13 +38,11 @@ private:
 	void update_position(int index, const vec3& pos);
 	void reset_position(int index);
 
-	vec3  m_stored_pos[MAX_PLAYERS]{};
-	float m_anim_progress[MAX_PLAYERS]{};
-	health_anim_t m_health_anims[MAX_PLAYERS]{};
-	bool  m_has_seen[MAX_PLAYERS]{};
-	float m_alpha[MAX_PLAYERS]{};
-
-	int   m_armor_min{ 10 };
+	vec3              m_stored_pos[MAX_PLAYERS]{};
+	float             m_anim_progress[MAX_PLAYERS]{};
+	begin_animation_t m_begin_anims[MAX_PLAYERS]{};
+	bool              m_has_seen[MAX_PLAYERS]{};
+	float             m_alpha[MAX_PLAYERS]{};
 };
 
 struct world_esp_t {

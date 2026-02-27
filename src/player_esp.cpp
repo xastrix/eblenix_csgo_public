@@ -49,7 +49,7 @@ void player_esp_t::on_round_start_e()
 void player_esp_t::calc_player_animation_progress(int index, float& anim, c_base_player* entity)
 {
 	float rate = g_cs->m_globals->frame_time * 1.0f / 0.5f;
-	auto& health_anim = m_health_anims[index];
+	auto& begin_anim = m_begin_anims[index];
 
 	if (!entity->get_dormant()) {
 		update_position(index, entity->get_absolute_origin());
@@ -69,16 +69,16 @@ void player_esp_t::calc_player_animation_progress(int index, float& anim, c_base
 		}
 	}
 
-	if (!health_anim.m_confirmed) {
-		health_anim.m_elapsed += rate;
-		float t = health_anim.m_elapsed / 0.5f;
+	if (!begin_anim.m_confirmed) {
+		begin_anim.m_elapsed += rate;
+		float t = begin_anim.m_elapsed / 0.5f;
 
 		if (t > 1.0f) {
 			t = 1.0f;
-			health_anim.m_confirmed = true;
+			begin_anim.m_confirmed = true;
 		}
 
-		health_anim.m_final_hp = t * 100.0f;
+		begin_anim.m_final_val = t * 100.0f;
 	}
 }
 
@@ -162,7 +162,7 @@ void player_esp_t::player_rendering(int index, c_base_player* entity, box bbox)
 	{
 		const auto max_hp = 100;
 		const auto inner_hp = std::min(entity->get_health(), max_hp);
-		const auto hp = m_health_anims[index].m_confirmed ? inner_hp : m_health_anims[index].m_final_hp;
+		const auto hp = m_begin_anims[index].m_confirmed ? inner_hp : m_begin_anims[index].m_final_val;
 
 		if (hp)
 		{
@@ -194,7 +194,7 @@ void player_esp_t::player_rendering(int index, c_base_player* entity, box bbox)
 		}
 	}
 
-	const auto armor_val = entity->get_armor_value();
+	auto armor_val = entity->get_armor_value();
 
 	if (g_var->get_as<bool>(V_ESP_WEAPON_ENABLED).value())
 	{
@@ -207,7 +207,7 @@ void player_esp_t::player_rendering(int index, c_base_player* entity, box bbox)
 			auto offset = 4;
 			switch (g_var->get_as<int>(V_ESP_WEAPON_TYPE).value()) {
 			case 0: {
-				if (g_var->get_as<bool>(V_ESP_ARMOR_ENABLED).value() && armor_val > m_armor_min)
+				if (g_var->get_as<bool>(V_ESP_ARMOR_ENABLED).value() && armor_val > ARMOR_MIN_VAL)
 					offset += 3;
 
 				g_font->draw_string(Helpers::get_weapon_type_by_index(weapon->item_definition_index(), WE_TEXT),
@@ -215,7 +215,7 @@ void player_esp_t::player_rendering(int index, c_base_player* entity, box bbox)
 				break;
 			}
 			case 1: {
-				if (g_var->get_as<bool>(V_ESP_ARMOR_ENABLED).value() && armor_val > m_armor_min)
+				if (g_var->get_as<bool>(V_ESP_ARMOR_ENABLED).value() && armor_val > ARMOR_MIN_VAL)
 					offset += 5;
 
 				g_font->draw_string(Helpers::get_weapon_type_by_index(weapon->item_definition_index(), WE_ICON),
@@ -228,7 +228,9 @@ void player_esp_t::player_rendering(int index, c_base_player* entity, box bbox)
 
 	if (g_var->get_as<bool>(V_ESP_ARMOR_ENABLED).value())
 	{
-		if (armor_val > m_armor_min)
+		armor_val = m_begin_anims[index].m_confirmed ? armor_val : m_begin_anims[index].m_final_val;
+
+		if (armor_val > ARMOR_MIN_VAL)
 		{
 			g_renderer->rect_fill(bbox.x - 1, bbox.y + bbox.h + 3, bbox.w + 3, 4, background_col);
 
@@ -331,7 +333,7 @@ void player_esp_t::player_rendering(int index, c_base_player* entity, box bbox)
 
 		if (g_var->get_as<bool>(V_ESP_FLAGS_HK).value())
 		{
-			if (armor_val > m_armor_min)
+			if (armor_val > ARMOR_MIN_VAL)
 			{
 				flags.push_back(std::pair<std::string, color_t>(entity->has_helmet() ? "HK" : "K", col));
 			}
@@ -512,8 +514,8 @@ void player_esp_t::reset_position(int index)
 	m_has_seen[index] = false;
 	m_anim_progress[index] = 0.0f;
 
-	m_health_anims[index].m_confirmed = false;
-	m_health_anims[index].m_elapsed = 0.0f;
+	m_begin_anims[index].m_confirmed = false;
+	m_begin_anims[index].m_elapsed = 0.0f;
 }
 
 void player_esp_t::update_position(int index, const vec3& pos)
