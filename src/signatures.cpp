@@ -14,16 +14,9 @@ void c_sig::init()
 	m_signatures[S_LIST_LEAVES] = scan_sig(GLOBAL(module_list[clientDLL]), "56 52 FF 50 18") + 5;
 	m_signatures[S_HUD_ELEMENT] = scan_sig(GLOBAL(module_list[clientDLL]), "B9 ? ? ? ? E8 ? ? ? ? 8B 5D 08") + 1;
 	m_signatures[S_FIND_HUD_ELEMENT] = scan_sig(GLOBAL(module_list[clientDLL]), "55 8B EC 53 8B 5D 08 56 57 8B F9 33 F6 39 77 28");
-
-#ifdef CSGO_2020_BUILD
-	m_signatures[S_IS_LOADOUTALLOWED] = scan_sig(GLOBAL(module_list[clientDLL]), "84 C0 75 04 B0 01 5F");
-	m_signatures[S_CROSSHAIR_COLOR] = scan_sig(GLOBAL(module_list[clientDLL]), "FF 50 3C 80 7D 28") + 3;
-	m_signatures[S_CAM_THINK] = scan_sig(GLOBAL(module_list[clientDLL]), "85 C0 75 30 38 86");
-#else
 	m_signatures[S_IS_LOADOUTALLOWED] = scan_sig(GLOBAL(module_list[clientDLL]), "84 C0 75 05 B0 01");
 	m_signatures[S_CROSSHAIR_COLOR] = scan_sig(GLOBAL(module_list[clientDLL]), "FF 50 3C 80 7D 2C 00") + 3;
 	m_signatures[S_CAM_THINK] = scan_sig(GLOBAL(module_list[clientDLL]), "85 C0 75 30 38 87");
-#endif
 }
 
 sig_t c_sig::scan_sig(const std::string& module_name, const std::string& signature)

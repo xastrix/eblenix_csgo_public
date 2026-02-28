@@ -14,16 +14,9 @@ static void __stdcall init(HMODULE I)
 	if (Helpers::wait_for_module(serverBrowserDLL, 600) == WM_TIMEOUT)
 		g_state->set_current_state(SL_SHUTDOWN);
 
-#ifdef CSGO_2020_BUILD
-	// waiting for the client module
-	// if not found, swap to client_panorama.dll and try again
-	if (Helpers::wait_for_module(clientDLL, clientPanoramaDLL, 200) == WM_TIMEOUT)
-		g_state->set_current_state(SL_SHUTDOWN);
-#else
 	// waiting for the client module
 	if (Helpers::wait_for_module(clientDLL, 200) == WM_TIMEOUT)
 		g_state->set_current_state(SL_SHUTDOWN);
-#endif
 
 	g_state->call_state(SL_INIT_BASE, [](state_t& state) {
 		g_astriumwepFont = AddFontMemResourceEx(astriumwep_ttf, ASTRIUMWEP_TTF_SZ, NULL, 0);

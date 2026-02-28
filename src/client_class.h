@@ -116,9 +116,7 @@ enum class_ids {
 	cknife,
 	cknifegg,
 	clightglow,
-#ifndef CSGO_2020_BUILD
 	cmapvetopickcontroller,
-#endif
 	cmaterialmodifycontrol,
 	cmelee,
 	cmolotovgrenade,

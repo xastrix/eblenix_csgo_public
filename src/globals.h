@@ -12,9 +12,6 @@ enum _game_status {
 
 enum _module_list {
 	clientDLL,
-#ifdef CSGO_2020_BUILD
-	clientPanoramaDLL,
-#endif
 	engineDLL,
 	shaderapidx9DLL,
 	vstdlibDLL,
@@ -26,11 +23,7 @@ enum _module_list {
 };
 
 enum _csgo_versions {
-#ifdef CSGO_2020_BUILD
-	CSGO_2020_PATCH,
-#else
 	CSGO_2023_PATCH,
-#endif
 	maxVersions,
 };
 
@@ -59,9 +52,6 @@ namespace g
 
 	inline std::string module_list[maxModules] = {
 		"client.dll",
-#ifdef CSGO_2020_BUILD
-		"client_panorama.dll",
-#endif
 		"engine.dll",
 		"shaderapidx9.dll",
 		"vstdlib.dll",
@@ -72,11 +62,7 @@ namespace g
 	};
 
 	inline std::string csgo_version_list[maxVersions] = {
-#ifdef CSGO_2020_BUILD
-		"1.37.3.*", // ~2020 build
-#else
-		"1.38.8.1", // Oct 12 2023 build
-#endif
+		"1.38.8.1",
 	};
 
 	void unload();

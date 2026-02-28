@@ -141,11 +141,7 @@ void Interface::render()
 
 				g_ui.get->group_box("Games", { 20, 20 }, { 200, 80 }); {
 					g_ui.get->pop_cursor_pos({ 21, 27 });
-#ifndef CSGO_2020_BUILD
-					g_ui.get->game_selector("CSGO", *g_ui.csgo_icon_sprite, &game_id, 0);
-#else
-					g_ui.get->game_selector("CSGO 2020", *g_ui.csgo_icon_sprite, &game_id, 0);
-#endif
+					g_ui.get->game_selector("CSGO Legacy", *g_ui.csgo_icon_sprite, &game_id, 0);
 				}
 
 				g_ui.get->group_box("Actions", { 230, 20 }, { 135, 80 }); {
