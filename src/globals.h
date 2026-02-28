@@ -5,11 +5,6 @@
 #include <string>
 #include <vector>
 
-enum _game_status {
-	gameVersionOutdated,
-	gameVersionOK,
-};
-
 enum _module_list {
 	clientDLL,
 	engineDLL,
@@ -20,11 +15,6 @@ enum _module_list {
 	materialsystemDLL,
 	serverBrowserDLL,
 	maxModules,
-};
-
-enum _csgo_versions {
-	CSGO_2023_PATCH,
-	maxVersions,
 };
 
 enum _boolean_flags {
@@ -48,8 +38,6 @@ namespace g
 	inline bool b_flags[maxBooleanFlags];
 	inline int i_flags[maxIntegerFlags];
 
-	inline _game_status status{};
-
 	inline std::string module_list[maxModules] = {
 		"client.dll",
 		"engine.dll",
@@ -59,10 +47,6 @@ namespace g
 		"vguimatsurface.dll",
 		"materialsystem.dll",
 		"serverbrowser.dll",
-	};
-
-	inline std::string csgo_version_list[maxVersions] = {
-		"1.38.8.1",
 	};
 
 	void unload();

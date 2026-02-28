@@ -120,22 +120,11 @@ static long D3DAPI present_h(IDirect3DDevice9* device, RECT* source_rect, RECT* 
 {
 	g_renderer->begin();
 
-	switch (GLOBAL(status)) {
-	case gameVersionOK: {
-		if (!GLOBAL(b_flags[BF_PANIC])) {
-			g_visuals->run();
-			g_hud->run();
-			g_ui->run();
-		}
-		break;
-	}
-#ifndef DISABLE_CSGO_VERSION_CHECK
-	case gameVersionOutdated: {
-		g_hud->notify_hud("Hack has not been updated for " +
-			std::string(g_cs->m_engine->get_product_version_string()), color_t(164, 164, 164));
-		break;
-	}
-#endif
+	if (!GLOBAL(b_flags[BF_PANIC]))
+	{
+		g_visuals->run();
+		g_hud->run();
+		g_ui->run();
 	}
 
 	g_renderer->end();
@@ -383,7 +372,7 @@ static void __fastcall on_shutdown_h()
 void c_hooks::init()
 {
 	MH_Initialize();
-	
+
 	m_hooks[HK_PRESENT].hook<IDirect3DDevice9*, PRESENT_FN_INDEX>(g_cs->m_device,
 		present_h, reinterpret_cast<void**>(&o_present));
 
@@ -393,44 +382,41 @@ void c_hooks::init()
 	m_hooks[HK_SHUTDOWN].hook<c_base_client*, SHUTDOWN_FN_INDEX>(g_cs->m_client,
 		on_shutdown_h, reinterpret_cast<void**>(&o_shutdown));
 
-	if (GLOBAL(status) == gameVersionOK)
-	{
-		m_hooks[HK_CREATEMOVE].hook<uintptr_t*, CREATE_MOVE_FN_INDEX>(g_cs->m_client_mode,
-			create_move_h, reinterpret_cast<void**>(&o_create_move));
+	m_hooks[HK_CREATEMOVE].hook<uintptr_t*, CREATE_MOVE_FN_INDEX>(g_cs->m_client_mode,
+		create_move_h, reinterpret_cast<void**>(&o_create_move));
 
-		m_hooks[HK_PAINTTRAVERSE].hook<c_panel*, PAINT_TRAVERSE_FN_INDEX>(g_cs->m_panel,
-			paint_traverse_h, reinterpret_cast<void**>(&o_paint_traverse));
+	m_hooks[HK_PAINTTRAVERSE].hook<c_panel*, PAINT_TRAVERSE_FN_INDEX>(g_cs->m_panel,
+		paint_traverse_h, reinterpret_cast<void**>(&o_paint_traverse));
 
-		m_hooks[HK_DOPOSTSCREENEFFECTS].hook<uintptr_t*, DO_POST_SCREEN_EFFECTS_FN_INDEX>(g_cs->m_client_mode,
-			do_post_screen_effects_h, reinterpret_cast<void**>(&o_do_post_screen_effects));
+	m_hooks[HK_DOPOSTSCREENEFFECTS].hook<uintptr_t*, DO_POST_SCREEN_EFFECTS_FN_INDEX>(g_cs->m_client_mode,
+		do_post_screen_effects_h, reinterpret_cast<void**>(&o_do_post_screen_effects));
 
-		m_hooks[HK_SCENEEND].hook<c_render_view*, SCENE_END_FN_INDEX>(g_cs->m_render_view,
-			scene_end_h, reinterpret_cast<void**>(&o_scene_end));
+	m_hooks[HK_SCENEEND].hook<c_render_view*, SCENE_END_FN_INDEX>(g_cs->m_render_view,
+		scene_end_h, reinterpret_cast<void**>(&o_scene_end));
 
-		m_hooks[HK_SCREENMODELFOVCHANGE].hook<uintptr_t*, SCREEN_VIEWMODEL_FOV_CHANGE_FN_INDEX>(g_cs->m_client_mode,
-			screen_viewmodel_fov_change_h, reinterpret_cast<void**>(&o_screen_viewmodel_fov_change));
+	m_hooks[HK_SCREENMODELFOVCHANGE].hook<uintptr_t*, SCREEN_VIEWMODEL_FOV_CHANGE_FN_INDEX>(g_cs->m_client_mode,
+		screen_viewmodel_fov_change_h, reinterpret_cast<void**>(&o_screen_viewmodel_fov_change));
 
-		m_hooks[HK_GETSCREENASPECTRATIO].hook<c_engine_client*, GET_SCREEN_ASPECT_RATIO_FN_INDEX>(g_cs->m_engine,
-			get_screen_aspect_ratio_h, reinterpret_cast<void**>(&o_get_screen_aspect_ratio));
+	m_hooks[HK_GETSCREENASPECTRATIO].hook<c_engine_client*, GET_SCREEN_ASPECT_RATIO_FN_INDEX>(g_cs->m_engine,
+		get_screen_aspect_ratio_h, reinterpret_cast<void**>(&o_get_screen_aspect_ratio));
 
-		m_hooks[HK_DRAWMODELEXECUTE].hook<c_model_render*, DRAW_MODEL_EXECUTE_FN_INDEX>(g_cs->m_model_render,
-			draw_model_execute_h, reinterpret_cast<void**>(&o_draw_model_execute));
+	m_hooks[HK_DRAWMODELEXECUTE].hook<c_model_render*, DRAW_MODEL_EXECUTE_FN_INDEX>(g_cs->m_model_render,
+		draw_model_execute_h, reinterpret_cast<void**>(&o_draw_model_execute));
 
-		m_hooks[HK_OVERRIDEVIEW].hook<uintptr_t*, OVERRIDE_VIEW_FN_INDEX>(g_cs->m_client_mode,
-			override_view_h, reinterpret_cast<void**>(&o_override_view));
+	m_hooks[HK_OVERRIDEVIEW].hook<uintptr_t*, OVERRIDE_VIEW_FN_INDEX>(g_cs->m_client_mode,
+		override_view_h, reinterpret_cast<void**>(&o_override_view));
 
-		m_hooks[HK_ISCONNECTED].hook<c_engine_client*, IS_CONNECTED_FN_INDEX>(g_cs->m_engine,
-			is_connected_h, reinterpret_cast<void**>(&o_is_connected));
+	m_hooks[HK_ISCONNECTED].hook<c_engine_client*, IS_CONNECTED_FN_INDEX>(g_cs->m_engine,
+		is_connected_h, reinterpret_cast<void**>(&o_is_connected));
 
-		m_hooks[HK_SVCHEATSBOOLEAN].hook<convar*, SV_CHEATS_BOOLEAN_FN_INDEX>(g_cs->m_cvar->get_convar("sv_cheats"),
-			sv_cheats_boolean_h, reinterpret_cast<void**>(&o_sv_cheats_boolean));
+	m_hooks[HK_SVCHEATSBOOLEAN].hook<convar*, SV_CHEATS_BOOLEAN_FN_INDEX>(g_cs->m_cvar->get_convar("sv_cheats"),
+		sv_cheats_boolean_h, reinterpret_cast<void**>(&o_sv_cheats_boolean));
 
-		m_hooks[HK_DRAWSETCOLOR].hook<c_surface_draw_manager*, DRAW_SET_COLOR_FN_INDEX>(g_cs->m_surface,
-			draw_set_color_h, reinterpret_cast<void**>(&o_draw_set_color));
+	m_hooks[HK_DRAWSETCOLOR].hook<c_surface_draw_manager*, DRAW_SET_COLOR_FN_INDEX>(g_cs->m_surface,
+		draw_set_color_h, reinterpret_cast<void**>(&o_draw_set_color));
 
-		m_hooks[HK_LEVELINITPOSTENTITY].hook<c_base_client*, LEVEL_INIT_POST_ENTITY_FN_INDEX>(g_cs->m_client,
-			level_init_post_entity_h, reinterpret_cast<void**>(&o_level_init_post_entity));
-	}
+	m_hooks[HK_LEVELINITPOSTENTITY].hook<c_base_client*, LEVEL_INIT_POST_ENTITY_FN_INDEX>(g_cs->m_client,
+		level_init_post_entity_h, reinterpret_cast<void**>(&o_level_init_post_entity));
 }
 
 void c_hooks::undo()

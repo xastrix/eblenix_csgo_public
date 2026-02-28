@@ -39,56 +39,19 @@ static void __stdcall init(HMODULE I)
 		state++;
 	});
 
-	g_state->call_state(SL_CHECK_GAME_VERSION, [](state_t& state) {
-		auto setup_basic_vars = []() {
-			g_var->set(V_VISUALS_INTERFACE_SPECTATORS_POS_Y, g_renderer->get_screen_size().y * 0.5f);
-			g_var->set(V_MISC_VISUAL_VIEWMODEL_FOV, Helpers::get_viewmodel_fov());
+	g_state->call_state(SL_INIT_VARS, [](state_t& state) {
+		g_var->set(V_VISUALS_INTERFACE_SPECTATORS_POS_Y, g_renderer->get_screen_size().y * 0.5f);
+		g_var->set(V_MISC_VISUAL_VIEWMODEL_FOV, Helpers::get_viewmodel_fov());
 
-			g_var->set(V_UI_POS_X, 80);
-			g_var->set(V_UI_POS_Y, 80);
+		g_var->set(V_UI_POS_X, 80);
+		g_var->set(V_UI_POS_Y, 80);
 
-			g_var->set(V_UI_COL_R, 95);
-			g_var->set(V_UI_COL_G, 115);
-			g_var->set(V_UI_COL_B, 150);
-			g_var->set(V_UI_COL_A, 130);
+		g_var->set(V_UI_COL_R, 95);
+		g_var->set(V_UI_COL_G, 115);
+		g_var->set(V_UI_COL_B, 150);
+		g_var->set(V_UI_COL_A, 130);
 
-			g_var->set(V_KEYS_ON_TOGGLE_UI, VK_INSERT);
-		};
-
-		GLOBAL(status) = [setup_basic_vars]() {
-#ifndef DISABLE_CSGO_VERSION_CHECK
-			const auto current_game_vers = std::string{ g_cs->m_engine->get_product_version_string() };
-
-			for (int i = 0; i < maxVersions; i++) {
-				const auto target_ver = GLOBAL(csgo_version_list[i]);
-
-				size_t pos = target_ver.find('*');
-				if (pos == std::string::npos) {
-					if (current_game_vers.compare(0, target_ver.size(), target_ver) == 0) {
-						setup_basic_vars();
-						return gameVersionOK;
-					}
-
-					continue;
-				}
-
-				auto pat_ver = target_ver.substr(0, pos);
-				if (pat_ver.empty())
-					continue;
-
-				if (pat_ver.back() == '.') pat_ver.pop_back();
-				if (current_game_vers.compare(0, pat_ver.size(), pat_ver) == 0) {
-					setup_basic_vars();
-					return gameVersionOK;
-				}
-			}
-
-			return gameVersionOutdated;
-#else
-			setup_basic_vars();
-			return gameVersionOK;
-#endif
-		}();
+		g_var->set(V_KEYS_ON_TOGGLE_UI, VK_INSERT);
 
 		state++;
 	});
@@ -103,26 +66,15 @@ static void __stdcall init(HMODULE I)
 
 	g_state->call_state(SL_WAITING_FOR_SHUTDOWN, [](state_t& state) {
 		// set initialised flag
-		if (GLOBAL(b_flags[BF_INITIALISED]) = static_cast<bool>(GLOBAL(status))) {
-			// set unload key
-			g_input->add_hk(VK_F12, []() {
-				g::unload();
-			});
+		GLOBAL(b_flags[BF_INITIALISED]) = true;
 
-			// open the ui
-			g_ui->set_menu_state(true);
-		}
-		else {
-			// if not initialised, sleep 5s and then call the unload fn.
-
-			// during this time, the cheat displays a notification
-			// in the top-left corner indicating that the game version failed the check.
-
-			// also, you can disable the game version check
-			// by uncommenting DISABLE_CSGO_VERSION_CHECK in common.h.
-			std::this_thread::sleep_for(std::chrono::seconds(5));
+		// set unload key
+		g_input->add_hk(VK_F12, []() {
 			g::unload();
-		}
+		});
+
+		// open the ui
+		g_ui->set_menu_state(true);
 
 		while (!(state == SL_SHUTDOWN))
 			std::this_thread::sleep_for(std::chrono::seconds(2));
