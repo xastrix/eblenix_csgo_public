@@ -6,7 +6,7 @@
 
 #include "vec2.h"
 
-enum m_state {
+enum _input_states {
 	state_none = 1,
 	state_down,
 	state_up,
@@ -88,7 +88,7 @@ public:
 		return std::shared_ptr<c_input>(new c_input());
 	}
 
-	m_state& operator[](unsigned int vk) {
+	_input_states& operator[](unsigned int vk) {
 		return m_key_map[vk];
 	}
 
@@ -97,7 +97,7 @@ public:
 private:
 	HWND                  m_hwnd{};
 	WNDPROC               m_old_wnd_proc{};
-	m_state               m_key_map[256]{};
+	_input_states         m_key_map[256]{};
 	std::function<void()> m_hotkeys[256]{};
 };
 

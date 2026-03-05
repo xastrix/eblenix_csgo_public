@@ -73,7 +73,6 @@ public:
 	}
 
 	void process_message(UINT m);
-	void notify_hud(const std::string& msg, color_t rect_c);
 };
 
 inline std::shared_ptr<c_hud> g_hud = c_hud::make_shared();

@@ -4,7 +4,7 @@
 
 #define CLIENT_INTERFACE_VERSION "VClient018"
 
-enum cstrike15_user_messages {
+enum _cstrike15_user_messages {
 	cs_um_vguimenu = 1,
 	cs_um_geiger = 2,
 	cs_um_train = 3,

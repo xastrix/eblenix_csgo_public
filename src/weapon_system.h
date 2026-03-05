@@ -1,6 +1,6 @@
 #pragma once
 
-#include "weapon_info.h"
+#include "i_weapon_info.h"
 
 class c_weapon_system {
 public:

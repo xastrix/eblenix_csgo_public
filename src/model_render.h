@@ -1,6 +1,6 @@
 #pragma once
 
-#include "studio.h"
+#include "i_studio.h"
 #include "material.h"
 
 #define ENGINE_MODEL_INTERFACE_VERSION "VEngineModel016"

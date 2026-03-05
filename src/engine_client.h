@@ -1,7 +1,8 @@
 #pragma once
 
-#include "player_info.h"
-#include "net_channel_info.h"
+#include "i_player_info.h"
+#include "i_net_channel_info.h"
+
 #include "vec3.h"
 
 #define ENGINE_INTERFACE_VERSION "VEngineClient014"

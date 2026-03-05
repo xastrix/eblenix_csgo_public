@@ -5,7 +5,7 @@
 using create_client_class_fn = void*(*)(int, int);
 using create_event_fn = void*(*)();
 
-enum class_ids {
+enum _class_ids {
 	cai_basenpc = 0,
 	cak47,
 	cbaseanimating,
@@ -298,5 +298,5 @@ public:
 	char* network_name;
 	recv_table* recvtable_ptr;
 	c_client_class* next_ptr;
-	class_ids class_id;
+	_class_ids class_id;
 };

@@ -286,18 +286,6 @@
     <ClInclude Include="model_render.h">
       <Filter>csgo\models</Filter>
     </ClInclude>
-    <ClInclude Include="model.h">
-      <Filter>csgo\structs</Filter>
-    </ClInclude>
-    <ClInclude Include="player_info.h">
-      <Filter>csgo\structs</Filter>
-    </ClInclude>
-    <ClInclude Include="user_cmd.h">
-      <Filter>csgo\structs</Filter>
-    </ClInclude>
-    <ClInclude Include="weapon_info.h">
-      <Filter>csgo\structs</Filter>
-    </ClInclude>
     <ClInclude Include="panel.h">
       <Filter>csgo\vgui</Filter>
     </ClInclude>
@@ -334,9 +322,6 @@
     <ClInclude Include="game_event_mgr.h">
       <Filter>csgo\engine</Filter>
     </ClInclude>
-    <ClInclude Include="studio.h">
-      <Filter>csgo\structs</Filter>
-    </ClInclude>
     <ClInclude Include="vec_util.h">
       <Filter>csgo\math</Filter>
     </ClInclude>
@@ -352,9 +337,6 @@
       <Filter>csgo\structs</Filter>
     </ClInclude>
     <ClInclude Include="states.h" />
-    <ClInclude Include="net_channel_info.h">
-      <Filter>csgo\structs</Filter>
-    </ClInclude>
     <ClInclude Include="aimbot.h">
       <Filter>features</Filter>
     </ClInclude>
@@ -366,6 +348,24 @@
     </ClInclude>
     <ClInclude Include="engine_trace.h">
       <Filter>csgo\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="i_model.h">
+      <Filter>csgo\structs</Filter>
+    </ClInclude>
+    <ClInclude Include="i_net_channel_info.h">
+      <Filter>csgo\structs</Filter>
+    </ClInclude>
+    <ClInclude Include="i_player_info.h">
+      <Filter>csgo\structs</Filter>
+    </ClInclude>
+    <ClInclude Include="i_studio.h">
+      <Filter>csgo\structs</Filter>
+    </ClInclude>
+    <ClInclude Include="i_user_cmd.h">
+      <Filter>csgo\structs</Filter>
+    </ClInclude>
+    <ClInclude Include="i_weapon_info.h">
+      <Filter>csgo\structs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -76,7 +76,7 @@ void triggerbot_t::calc_trace_to_players(user_cmd_t* cmd, trace_filter* filter, 
 	filter->m_fp = g_cs->get_local();
 
 	src = g_cs->get_local()->get_eye_pos();
-	Math::angle_vectors(cmd->viewangles, dst);
+	Math::angle_vectors(cmd->m_viewangles, dst);
 
 	ray.init(src, (dst * 8192.0f) + src);
 
@@ -116,7 +116,7 @@ void triggerbot_t::shoot(user_cmd_t* cmd, c_base_weapon* weapon, trace_t trace)
 	{
 		if (trace.m_hitgroup == hitgroup_head)
 		{
-			cmd->buttons |= Helpers::is_revolver(weapon) ? in_attack2 : in_attack;
+			cmd->m_buttons |= Helpers::is_revolver(weapon) ? in_attack2 : in_attack;
 		}
 	}
 
@@ -124,7 +124,7 @@ void triggerbot_t::shoot(user_cmd_t* cmd, c_base_weapon* weapon, trace_t trace)
 	{
 		if (trace.m_hitgroup == hitgroup_chest || trace.m_hitgroup == hitgroup_stomach)
 		{
-			cmd->buttons |= Helpers::is_revolver(weapon) ? in_attack2 : in_attack;
+			cmd->m_buttons |= Helpers::is_revolver(weapon) ? in_attack2 : in_attack;
 		}
 	}
 
@@ -132,7 +132,7 @@ void triggerbot_t::shoot(user_cmd_t* cmd, c_base_weapon* weapon, trace_t trace)
 	{
 		if (trace.m_hitgroup == hitgroup_leftarm || trace.m_hitgroup == hitgroup_rightarm)
 		{
-			cmd->buttons |= Helpers::is_revolver(weapon) ? in_attack2 : in_attack;
+			cmd->m_buttons |= Helpers::is_revolver(weapon) ? in_attack2 : in_attack;
 		}
 	}
 
@@ -140,10 +140,10 @@ void triggerbot_t::shoot(user_cmd_t* cmd, c_base_weapon* weapon, trace_t trace)
 	{
 		if (trace.m_hitgroup == hitgroup_leftleg || trace.m_hitgroup == hitgroup_rightleg)
 		{
-			cmd->buttons |= Helpers::is_revolver(weapon) ? in_attack2 : in_attack;
+			cmd->m_buttons |= Helpers::is_revolver(weapon) ? in_attack2 : in_attack;
 		}
 	}
 
-	if (Helpers::is_pistol(weapon) && cmd->buttons & in_attack)
-		cmd->command_number % 2 == 1 ? cmd->buttons |= in_attack : cmd->buttons &= ~in_attack;
+	if (Helpers::is_pistol(weapon) && cmd->m_buttons & in_attack)
+		cmd->m_command_number % 2 == 1 ? cmd->m_buttons |= in_attack : cmd->m_buttons &= ~in_attack;
 }

@@ -110,7 +110,7 @@ bool Helpers::is_non_aim(c_base_weapon* weapon)
 	return (std::find(v.begin(), v.end(), weapon->item_definition_index()) != v.end());
 }
 
-bool Helpers::get_bbox(c_base_player* entity, box& in, const bbox_type type)
+bool Helpers::get_bbox(c_base_player* entity, box& in, const _bbox_types type)
 {
 	vec3 top, down, s[2]{};
 
@@ -219,7 +219,7 @@ std::string Helpers::hitgroup_name(const int index)
 	return "?";
 }
 
-std::string Helpers::get_weapon_type_by_index(const int index, const weapon_esp_type type)
+std::string Helpers::get_weapon_type_by_index(const int index, const _weapon_esp_types type)
 {
 	std::vector<std::pair<std::string, int>> weapons = {
 		{ type == WE_TEXT ? "Knife"      : "[", weapon_knife_t },

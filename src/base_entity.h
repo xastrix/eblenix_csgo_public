@@ -3,14 +3,15 @@
 #include <cstdint>
 
 #include "client_class.h"
-#include "weapon_info.h"
-#include "model.h"
-#include "user_cmd.h"
 #include "matrix.h"
 #include "vec2.h"
 #include "vec3.h"
 
-enum move_type {
+#include "i_weapon_info.h"
+#include "i_model.h"
+#include "i_user_cmd.h"
+
+enum _move_types {
 	movetype_none,
 	movetype_isometric,
 	movetype_walk,
@@ -26,7 +27,7 @@ enum move_type {
 	movetype_last = movetype_custom,
 };
 
-enum item_definition_data {
+enum _item_definitions {
 	weapon_none = 0,
 	weapon_deagle,
 	weapon_elite,

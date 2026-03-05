@@ -21,8 +21,8 @@ void auto_pistol_t::think(user_cmd_t* cmd)
 		return;
 
 	static bool shoot{};
-	if (shoot && (cmd->buttons & in_attack))
-		cmd->buttons &= ~in_attack;
+	if (shoot && (cmd->m_buttons & in_attack))
+		cmd->m_buttons &= ~in_attack;
 
-	shoot = cmd->buttons & in_attack ? true : false;
+	shoot = cmd->m_buttons & in_attack ? true : false;
 }

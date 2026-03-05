@@ -1,6 +1,7 @@
 #include "cfg.h"
 
 #include "vars.h"
+#include "globals.h"
 #include "helpers.h"
 #include "interfaces.h"
 

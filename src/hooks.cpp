@@ -16,7 +16,7 @@ static bool __stdcall create_move_h(float input_sample_frametime, user_cmd_t* cm
 	auto ret = o_create_move(input_sample_frametime, cmd);
 
 	// check cmd
-	if (!cmd || !cmd->command_number)
+	if (!cmd || !cmd->m_command_number)
 		return ret;
 
 	// init local player
@@ -33,14 +33,14 @@ static bool __stdcall create_move_h(float input_sample_frametime, user_cmd_t* cm
 			{
 				if (g_var->get_as<bool>(V_MISC_VISUAL_REVEAL_RANKS).value())
 				{
-					if (cmd->buttons & in_score)
+					if (cmd->m_buttons & in_score)
 						g_cs->m_client->dispatch_user_message(cs_um_serverrankrevealall);
 				}
 			}
 		}
 
-		Math::normalize_angles(cmd->viewangles);
-		Math::clamp_angles(cmd->viewangles);
+		Math::normalize_angles(cmd->m_viewangles);
+		Math::clamp_angles(cmd->m_viewangles);
 
 		return false;
 	}
@@ -207,7 +207,7 @@ static void __stdcall draw_model_execute_h(i_mat_render_ctx* ctx, const draw_mod
 		{
 			if (g_cs->m_engine->is_connected() && g_cs->m_engine->is_in_game())
 			{
-				auto model_name = g_cs->m_model_info->get_model_name(info.model);
+				auto model_name = g_cs->m_model_info->get_model_name(info.m_model);
 
 				if (g_var->get_as<bool>(V_VISUALS_REMOVALS_SLEEVES).value())
 				{

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "model.h"
-#include "studio.h"
+#include "i_model.h"
+#include "i_studio.h"
 
 #define MODEL_INFO_INTERFACE_VERSION "VModelInfoClient004"
 

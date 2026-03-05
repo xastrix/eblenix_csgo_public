@@ -2,7 +2,8 @@
 
 #include "vec3.h"
 #include "matrix.h"
-#include "user_cmd.h"
+
+#include "i_user_cmd.h"
 
 #define M_PI       3.14159265358979323846
 #define M_RADPI    57.295779513082f

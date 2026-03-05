@@ -6,7 +6,7 @@
 // ::shared_ptr
 #include <memory>
 
-enum state_list {
+enum _state_list {
 	SL_INIT_BASE,
 	SL_INIT_VARS,
 	SL_INIT_HOOKS,

@@ -19,7 +19,7 @@
 
 #define	MASK_SHOT (CONTENTS_SOLID | CONTENTS_MOVEABLE | CONTENTS_MONSTER | CONTENTS_WINDOW | CONTENTS_DEBRIS | CONTENTS_HITBOX)
 
-enum trace_type_t {
+enum _trace_types {
 	TRACE_EVERYTHING,
 	TRACE_WORLD_ONLY,
 	TRACE_ENTITIES_ONLY,
@@ -94,7 +94,7 @@ struct trace_t {
 class c_trace_filter {
 public:
 	virtual bool should_hit_entity(c_base_player* entity, int) = 0;
-	virtual trace_type_t get_trace_type() const = 0;
+	virtual _trace_types get_trace_type() const = 0;
 };
 
 class trace_filter : public c_trace_filter {
@@ -103,7 +103,7 @@ public:
 		return entity != m_fp;
 	}
 
-	trace_type_t get_trace_type() const {
+	_trace_types get_trace_type() const {
 		return TRACE_EVERYTHING;
 	}
 

@@ -9,7 +9,7 @@
 struct entity_object {
 	entity_object(void* entity) : m_entity(entity) {}
 
-	bool in_class_id(const class_ids _class_id) {
+	bool in_class_id(const _class_ids _class_id) {
 		auto temp_ent{ reinterpret_cast<c_base_entity*>(m_entity) };
 		return temp_ent->get_client_class()->class_id == _class_id;
 	}
@@ -62,7 +62,7 @@ void world_esp_t::think()
 
 		if (g_var->get_as<bool>(V_VISUALS_WORLD_ITEMS_ENABLED).value())
 		{
-			std::vector<std::pair<std::string, class_ids>> entity_objects{
+			std::vector<std::pair<std::string, _class_ids>> entity_objects{
 				{ "Drone",         cdrone },
 				{ "Radar Jammer",  cphyspropradarjammer },
 				{ "Sentry Turret", cdronegun },
@@ -353,7 +353,7 @@ void world_esp_t::draw_projectiles(c_base_entity* entity)
 		return;
 
 	const auto studio_model = g_cs->m_model_info->get_studio_model(entity->get_model());
-	const auto studio_model_name = std::string{ studio_model->name_char_array };
+	const auto studio_model_name = std::string{ studio_model->m_name_char_array };
 
 	if (!studio_model)
 		return;
@@ -437,7 +437,7 @@ void world_esp_t::draw_projectiles(c_base_entity* entity)
 	}
 }
 
-void world_esp_t::draw_entity_objects(c_base_entity* entity, std::vector<std::pair<std::string, class_ids>> objects)
+void world_esp_t::draw_entity_objects(c_base_entity* entity, std::vector<std::pair<std::string, _class_ids>> objects)
 {
 	entity_object entity_objects{ entity };
 
@@ -507,7 +507,7 @@ void world_esp_t::draw_dropped_weapons(c_base_entity* entity)
 			auto width = 40;
 
 			width *= weapon->clip1_count();
-			width /= weapon->get_weapon_data()->weapon_max_clip;
+			width /= weapon->get_weapon_data()->m_weapon_max_clip;
 
 			const auto ammo_bar_col = color_t(V_VISUALS_WORLD_WEAPONS_AMMO_BAR_COL);
 

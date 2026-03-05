@@ -40,8 +40,11 @@ void blockbot_t::think(user_cmd_t* cmd)
 
 	if (hitbox_pos.z < g_cs->get_local()->get_vec_origin().z)
 	{
-		cmd->forwardmove = ((std::sin(DEG2RAD(local_angle.y)) * vec_forward.y) + (std::cos(DEG2RAD(local_angle.y)) * vec_forward.x)) * best_speed;
-		cmd->sidemove = ((std::cos(DEG2RAD(local_angle.y)) * -vec_forward.y) + (std::sin(DEG2RAD(local_angle.y)) * vec_forward.x)) * best_speed;
+		cmd->m_forwardmove = ((std::sin(DEG2RAD(local_angle.y)) * vec_forward.y) +
+			(std::cos(DEG2RAD(local_angle.y)) * vec_forward.x)) * best_speed;
+
+		cmd->m_sidemove = ((std::cos(DEG2RAD(local_angle.y)) * -vec_forward.y) +
+			(std::sin(DEG2RAD(local_angle.y)) * vec_forward.x)) * best_speed;
 	}
 	else
 	{

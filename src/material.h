@@ -2,8 +2,7 @@
 
 #include "vec3.h"
 
-enum material_var_flags
-{
+enum _material_var_flags {
 	material_var_debug = (1 << 0),
 	material_var_no_debug_override = (1 << 1),
 	material_var_no_draw = (1 << 2),

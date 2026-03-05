@@ -121,17 +121,15 @@ void Math::adjust_sidemove_for_yaw(const vec3& forward, const vec3& local_angle,
 {
 	auto delta = (std::atan2(forward.y, forward.x) * 180.0f / M_PI) - local_angle.y;
 
-	if (delta > 180) {
+	if (delta > 180)
 		delta -= 360;
-	}
-	else if (delta < -180) {
-		delta += 360;
-	}
 
-	if (delta > 0.25) {
-		cmd->sidemove = -best_speed;
-	}
-	else if (delta < -0.25) {
-		cmd->sidemove = best_speed;
-	}
+	else if (delta < -180)
+		delta += 360;
+
+	if (delta > 0.25)
+		cmd->m_sidemove = -best_speed;
+
+	else if (delta < -0.25)
+		cmd->m_sidemove = best_speed;
 }

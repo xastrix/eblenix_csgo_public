@@ -9,12 +9,12 @@
 
 using create_interface_fn = void*(*)(const char*, int*);
 
-enum bbox_type {
+enum _bbox_types {
 	BT_STATIC,
 	BT_DYNAMIC,
 };
 
-enum weapon_esp_type {
+enum _weapon_esp_types {
 	WE_TEXT,
 	WE_ICON,
 };
@@ -46,7 +46,7 @@ namespace Helpers
 	bool is_knife(c_base_weapon* weapon);
 	bool is_non_aim(c_base_weapon* weapon);
 
-	bool get_bbox(c_base_player* entity, box& in, const bbox_type type);
+	bool get_bbox(c_base_player* entity, box& in, const _bbox_types type);
 	bool is_behind_smoke(const vec3 start_pos, const vec3 end_pos);
 	bool is_chat_opened();
 
@@ -56,7 +56,7 @@ namespace Helpers
 	float get_viewmodel_fov();
 
 	std::string hitgroup_name(const int index);
-	std::string get_weapon_type_by_index(const int index, const weapon_esp_type type);
+	std::string get_weapon_type_by_index(const int index, const _weapon_esp_types type);
 
 	std::wstring stws(const std::string& string);
 	std::string xor_encrypt_decrypt(const std::string& data, const std::string& key);

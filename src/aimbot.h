@@ -1,8 +1,7 @@
 #pragma once
 
-#include "engine_trace.h"
-#include "user_cmd.h"
 #include "base_entity.h"
+#include "engine_trace.h"
 
 // ::shared_ptr
 #include <memory>

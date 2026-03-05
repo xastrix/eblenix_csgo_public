@@ -41,10 +41,10 @@ void c_event_list::init()
 
 						if (health >= 0)
 						{
-							player_info_t info{};
+							player_info_t info;
 							g_cs->m_engine->get_player_info(ent_index, &info);
 
-							std::string player_name{ info.player_name };
+							std::string player_name{ info.m_player_name };
 							std::transform(player_name.begin(), player_name.end(), player_name.begin(), tolower);
 
 							g_cs->m_cvar->console_color_printf(color_t(255, V_UI_COL).get_revert(), "[Eblenix] ");
@@ -67,10 +67,10 @@ void c_event_list::init()
 
 				if (entity->get_team_num() != g_cs->get_local()->get_team_num())
 				{
-					player_info_t info{};
+					player_info_t info;
 					g_cs->m_engine->get_player_info(ent_index, &info);
 
-					std::string player_name{ info.player_name };
+					std::string player_name{ info.m_player_name };
 					std::transform(player_name.begin(), player_name.end(), player_name.begin(), tolower);
 
 					const auto weapon = event->get_string("weapon");

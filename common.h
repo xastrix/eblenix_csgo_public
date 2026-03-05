@@ -5,6 +5,12 @@
 #define CSGO_CLASS_NAME            "Valve001"
 #define LOADER_UNLOAD_HOOK_MESSAGE "UNLOAD_EBLENIX_MSG"
 
+#define CFG_DIRECTORY_PATHS        "EBX/cfg/"
+#define CFG_INT_KEY                "{i32}"
+#define CFG_FLOAT_KEY              "{f32}"
+#define CFG_BOOL_TRUE_KEY          "{on}"
+#define CFG_BOOL_FALSE_KEY         "{off}"
+
 enum fn_num {
 	CREATE_MOVE_FN_INDEX                 = 24,
 	PAINT_TRAVERSE_FN_INDEX              = 41,
