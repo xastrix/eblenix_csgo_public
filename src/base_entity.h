@@ -134,6 +134,8 @@ public:
 	vec3                  get_vec_origin();
 	bool&                 get_spotted();
 	int                   draw_model(int flags, uint8_t alpha);
+	vec3                  mins();
+	vec3                  maxs();
 };
 
 class c_base_weapon : public c_base_entity {

@@ -7,7 +7,7 @@
 
 void triggerbot_t::think(user_cmd_t* cmd)
 {
-	vec3         src, dst, forward, crosshair_forward;
+	vec3         src, dst;
 	trace_t      tr;
 	ray_t        ray;
 	trace_filter filter;
@@ -21,95 +21,129 @@ void triggerbot_t::think(user_cmd_t* cmd)
 	if (!g_cs->get_local() || !g_cs->get_local()->is_life_state())
 		return;
 
+	calc_trace_to_players(cmd, &filter, src, dst, ray, &tr);
+
+	if (!tr.m_entity || tr.m_entity->get_client_class()->class_id != ccsplayer)
+		return;
+
+	if (tr.m_entity == g_cs->get_local() || tr.m_entity->get_dormant() ||
+		!tr.m_entity->is_life_state() || tr.m_entity->has_gun_game_immunity())
+		return;
+
 	const auto weapon = g_cs->get_local()->get_active_weapon();
 
 	if (!weapon || !weapon->clip1_count())
 		return;
 
-	if (Helpers::is_knife(weapon) || Helpers::is_grenade(weapon))
-		return;
+	if (can_shoot(weapon, tr))
+		shoot(cmd, weapon, tr);
+}
 
-	const auto weapon_data = weapon->get_weapon_data();
+void triggerbot_t::clip_trace_to_players(const vec3& start, const vec3& end, uint32_t mask, trace_t* old_trace, c_base_entity* ent) const
+{
+	float range, range_along;
 
-	if (!weapon_data)
-		return;
+	auto entity_center      = vec3(((ent->mins() + ent->maxs()) * 0.5f) + ent->get_absolute_origin());
+	auto to_entity          = vec3(entity_center - start);
+	auto dir                = vec3(end - start);
 
-	Math::angle_vectors(cmd->viewangles, forward);
-	forward *= weapon_data->weapon_range;
+	dir.normalize();
+	range_along = dot(dir, to_entity);
 
-	filter.e = g_cs->get_local();
+	if (range_along < 0.0f)
+		range = -length(to_entity);
+
+	else if (range_along > 0.0f)
+		range = -length(entity_center - end);
+
+	else
+		range = length(entity_center - (dir * range_along + start));
+
+	if (range <= 60.0f)
+	{
+		trace_t tr;
+		g_cs->m_trace->clip_ray_to_entity(ray_t(start, end), mask, ent, &tr);
+
+		if (old_trace->m_fraction > tr.m_fraction)
+			*old_trace = tr;
+	}
+}
+
+void triggerbot_t::calc_trace_to_players(user_cmd_t* cmd, trace_filter* filter, vec3& src, vec3& dst, ray_t& ray, trace_t* trace)
+{
+	constexpr uint32_t mask = CONTENTS_SOLID | CONTENTS_GRATE | CONTENTS_HITBOX;
+
+	filter->m_fp = g_cs->get_local();
 
 	src = g_cs->get_local()->get_eye_pos();
-	dst = src + forward;
+	Math::angle_vectors(cmd->viewangles, dst);
 
-	ray.init(src, dst);
-	g_cs->m_trace->trace_ray(ray, MASK_SHOT, &filter, &tr);
+	ray.init(src, (dst * 8192.0f) + src);
 
-	if (tr.did_hit_world() || !tr.did_hit_non_world_entity())
-		return;
+	g_cs->m_trace->trace_ray(ray, mask, filter, trace);
+	clip_trace_to_players(src, dst, mask, trace, g_cs->get_local());
+}
 
-	const auto entity = tr.entity;
-
-	if (!entity)
-		return;
+bool triggerbot_t::can_shoot(c_base_weapon* weapon, trace_t trace)
+{
+	if (Helpers::is_knife(weapon) || Helpers::is_grenade(weapon) || Helpers::is_non_aim(weapon))
+		return false;
 
 	if (!g_var->get_as<bool>(V_TRIGGERBOT_FLASH_CHECK).value() && g_cs->get_local()->is_flashed())
-		return;
+		return false;
 
-	if (!g_var->get_as<bool>(V_TRIGGERBOT_SMOKE_CHECK).value() && Helpers::is_behind_smoke(g_cs->get_local()->get_eye_pos(), tr.end))
-		return;
+	if (!g_var->get_as<bool>(V_TRIGGERBOT_SMOKE_CHECK).value() && Helpers::is_behind_smoke(g_cs->get_local()->get_eye_pos(), trace.m_end))
+		return false;
 
-	if (!g_var->get_as<bool>(V_TRIGGERBOT_TEAMMATE_CHECK).value() && g_cs->get_local()->get_team_num() == entity->get_team_num())
-		return;
+	if (!g_var->get_as<bool>(V_TRIGGERBOT_TEAMMATE_CHECK).value() && (g_cs->get_local()->get_team_num() == trace.m_entity->get_team_num()))
+		return false;
 
 	if (!g_var->get_as<bool>(V_TRIGGERBOT_JUMP_CHECK).value() && !(g_cs->get_local()->get_flags() & fl_onground))
+		return false;
+
+	if (g_var->get_as<bool>(V_TRIGGERBOT_SCOPE_CHECK).value() && (Helpers::is_sniper(weapon) && !g_cs->get_local()->is_scoped()))
+		return false;
+
+	return true;
+}
+
+void triggerbot_t::shoot(user_cmd_t* cmd, c_base_weapon* weapon, trace_t trace)
+{
+	if (Helpers::is_taser(weapon))
 		return;
 
-	if (g_var->get_as<bool>(V_TRIGGERBOT_SCOPE_CHECK).value() && Helpers::is_sniper(weapon) && !g_cs->get_local()->is_scoped())
-		return;
-
-	if (entity->get_client_class()->class_id != ccsplayer)
-		return;
-
-	if (entity == g_cs->get_local() || entity->get_dormant() || !entity->is_life_state() || entity->has_gun_game_immunity())
-		return;
-
-	if (!Helpers::is_taser(weapon))
+	if (g_var->get_as<bool>(V_TRIGGERBOT_HITBOX_HEAD).value())
 	{
-		if (g_var->get_as<bool>(V_TRIGGERBOT_HITBOX_HEAD).value())
+		if (trace.m_hitgroup == hitgroup_head)
 		{
-			if (tr.hitgroup == hitgroup_head)
-			{
-				Helpers::is_revolver(weapon) ?
-					cmd->buttons |= in_attack2 : cmd->buttons |= in_attack;
-			}
-		}
-
-		if (g_var->get_as<bool>(V_TRIGGERBOT_HITBOX_BODY).value())
-		{
-			if (tr.hitgroup == hitgroup_chest || tr.hitgroup == hitgroup_stomach)
-			{
-				Helpers::is_revolver(weapon) ?
-					cmd->buttons |= in_attack2 : cmd->buttons |= in_attack;
-			}
-		}
-
-		if (g_var->get_as<bool>(V_TRIGGERBOT_HITBOX_ARMS).value())
-		{
-			if (tr.hitgroup == hitgroup_leftarm || tr.hitgroup == hitgroup_rightarm)
-			{
-				Helpers::is_revolver(weapon) ?
-					cmd->buttons |= in_attack2 : cmd->buttons |= in_attack;
-			}
-		}
-
-		if (g_var->get_as<bool>(V_TRIGGERBOT_HITBOX_LEGS).value())
-		{
-			if (tr.hitgroup == hitgroup_leftleg || tr.hitgroup == hitgroup_rightleg)
-			{
-				Helpers::is_revolver(weapon) ?
-					cmd->buttons |= in_attack2 : cmd->buttons |= in_attack;
-			}
+			cmd->buttons |= Helpers::is_revolver(weapon) ? in_attack2 : in_attack;
 		}
 	}
+
+	if (g_var->get_as<bool>(V_TRIGGERBOT_HITBOX_BODY).value())
+	{
+		if (trace.m_hitgroup == hitgroup_chest || trace.m_hitgroup == hitgroup_stomach)
+		{
+			cmd->buttons |= Helpers::is_revolver(weapon) ? in_attack2 : in_attack;
+		}
+	}
+
+	if (g_var->get_as<bool>(V_TRIGGERBOT_HITBOX_ARMS).value())
+	{
+		if (trace.m_hitgroup == hitgroup_leftarm || trace.m_hitgroup == hitgroup_rightarm)
+		{
+			cmd->buttons |= Helpers::is_revolver(weapon) ? in_attack2 : in_attack;
+		}
+	}
+
+	if (g_var->get_as<bool>(V_TRIGGERBOT_HITBOX_LEGS).value())
+	{
+		if (trace.m_hitgroup == hitgroup_leftleg || trace.m_hitgroup == hitgroup_rightleg)
+		{
+			cmd->buttons |= Helpers::is_revolver(weapon) ? in_attack2 : in_attack;
+		}
+	}
+
+	if (Helpers::is_pistol(weapon) && cmd->buttons & in_attack)
+		cmd->command_number % 2 == 1 ? cmd->buttons |= in_attack : cmd->buttons &= ~in_attack;
 }

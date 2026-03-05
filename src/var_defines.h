@@ -240,7 +240,6 @@
 #define V_MISC_VISUAL_VIEWMODEL_FOV "misc->visual->viewmodel->fov"
 
 #define V_MISC_MOVEMENT_BUNNYHOP "misc->movement->bunnyhop"
-#define V_MISC_MOVEMENT_INFINITE_DUCK "misc->movement->infinite_duck"
 #define V_MISC_MOVEMENT_AUTO_STRAFE "misc->movement->auto_strafe"
 
 #define V_MISC_EVENT_LOGS_PLAYER_HURT "misc->event_logs->player_hurt"

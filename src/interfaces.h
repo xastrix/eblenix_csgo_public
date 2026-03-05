@@ -8,7 +8,7 @@
 #include "global_vars.h"
 #include "material_system.h"
 #include "base_convars.h"
-#include "trace_ray.h"
+#include "engine_trace.h"
 #include "model_info.h"
 #include "model_render.h"
 #include "render_view.h"
@@ -32,7 +32,7 @@ public:
 	c_global_vars* m_globals;
 	c_material_system* m_mat_system;
 	c_base_convars* m_cvar;
-	c_trace_ray* m_trace;
+	c_engine_trace* m_trace;
 	c_model_info* m_model_info;
 	c_model_render* m_model_render;
 	c_render_view* m_render_view;

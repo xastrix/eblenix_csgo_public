@@ -72,3 +72,15 @@ int c_base_entity::draw_model(int flags, uint8_t alpha)
 	using original_fn = int(__thiscall*)(c_client_renderable*, int, uint8_t);
 	return (*(original_fn**)get_renderable())[9](get_renderable(), flags, alpha);
 }
+
+vec3 c_base_entity::mins()
+{
+	return Helpers::read<vec3>(uintptr_t(this) +
+		netvar_manager::get_address("DT_BaseEntity::m_vecMins"));
+}
+
+vec3 c_base_entity::maxs()
+{
+	return Helpers::read<vec3>(uintptr_t(this) +
+		netvar_manager::get_address("DT_BaseEntity::m_vecMaxs"));
+}

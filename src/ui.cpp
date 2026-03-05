@@ -331,7 +331,6 @@ void c_ui::setup()
 
 		add_tab<UI_SUB_POS>(L"Movement", [&]() {
 			add_bool<UI_SUB_SUB_POS>(L"Bunnyhop", V_MISC_MOVEMENT_BUNNYHOP);
-			add_bool<UI_SUB_SUB_POS>(L"Infinite Duck", V_MISC_MOVEMENT_INFINITE_DUCK);
 			add_bool<UI_SUB_SUB_POS>(L"Autostrafe", V_MISC_MOVEMENT_AUTO_STRAFE);
 		});
 

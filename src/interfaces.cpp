@@ -13,7 +13,7 @@ void c_csgo::init()
 	m_surface = Helpers::get_interface<c_surface_draw_manager>(GLOBAL(module_list[vguiMatSurfaceDLL]), VGUI_SURFACE_INTERFACE_VERSION);
 	m_mat_system = Helpers::get_interface<c_material_system>(GLOBAL(module_list[materialsystemDLL]), MATERIAL_SYSTEM_INTERFACE_VERSION);
 	m_cvar = Helpers::get_interface<c_base_convars>(GLOBAL(module_list[vstdlibDLL]), ENGINE_CVAR_INTERFACE_VERSION);
-	m_trace = Helpers::get_interface<c_trace_ray>(GLOBAL(module_list[engineDLL]), TRACE_INTERFACE_VERSION);
+	m_trace = Helpers::get_interface<c_engine_trace>(GLOBAL(module_list[engineDLL]), ENGINE_TRACE_INTERFACE_VERSION);
 	m_model_info = Helpers::get_interface<c_model_info>(GLOBAL(module_list[engineDLL]), MODEL_INFO_INTERFACE_VERSION);
 	m_model_render = Helpers::get_interface<c_model_render>(GLOBAL(module_list[engineDLL]), ENGINE_MODEL_INTERFACE_VERSION);
 	m_render_view = Helpers::get_interface<c_render_view>(GLOBAL(module_list[engineDLL]), ENGINE_RENDER_VIEW_INTERFACE_VERSION);

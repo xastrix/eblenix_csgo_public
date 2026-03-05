@@ -55,9 +55,6 @@
     <ClCompile Include="render_view.cpp">
       <Filter>csgo\engine</Filter>
     </ClCompile>
-    <ClCompile Include="trace_ray.cpp">
-      <Filter>csgo\engine</Filter>
-    </ClCompile>
     <ClCompile Include="base_entity.cpp">
       <Filter>csgo\entity</Filter>
     </ClCompile>
@@ -268,9 +265,6 @@
     <ClInclude Include="render_view.h">
       <Filter>csgo\engine</Filter>
     </ClInclude>
-    <ClInclude Include="trace_ray.h">
-      <Filter>csgo\engine</Filter>
-    </ClInclude>
     <ClInclude Include="view_setup.h">
       <Filter>csgo\engine</Filter>
     </ClInclude>
@@ -369,6 +363,9 @@
     </ClInclude>
     <ClInclude Include="visuals.h">
       <Filter>features</Filter>
+    </ClInclude>
+    <ClInclude Include="engine_trace.h">
+      <Filter>csgo\engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
