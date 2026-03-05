@@ -5,6 +5,7 @@
 enum _font_list {
 	Tahoma12px,
 	Verdana12px,
+	SmallFonts10px,
 	Astriumwep12px,
 	Astriumwep16px,
 	Astriumwep25px,

@@ -61,12 +61,6 @@
     <ClCompile Include="base_player.cpp">
       <Filter>csgo\entity</Filter>
     </ClCompile>
-    <ClCompile Include="material.cpp">
-      <Filter>csgo\materials</Filter>
-    </ClCompile>
-    <ClCompile Include="material_system.cpp">
-      <Filter>csgo\materials</Filter>
-    </ClCompile>
     <ClCompile Include="model_info.cpp">
       <Filter>csgo\models</Filter>
     </ClCompile>

@@ -4,7 +4,8 @@
 #include "states.h"
 
 #include "fonts.hpp"
-static HANDLE g_astriumwepFont{};
+static DWORD  g_numFonts;
+static HANDLE g_fonts[1];
 
 #include <exception_handler.hpp>
 
@@ -19,18 +20,20 @@ static void __stdcall init(HMODULE I)
 		g_state->set_current_state(SL_SHUTDOWN);
 
 	g_state->call_state(SL_INIT_BASE, [](state_t& state) {
-		g_astriumwepFont = AddFontMemResourceEx(astriumwep_ttf, ASTRIUMWEP_TTF_SZ, NULL, 0);
+		g_fonts[0] = AddFontMemResourceEx(astriumwep_ttf, ASTRIUMWEP_TTF_SZ, NULL, &g_numFonts);
+		g_fonts[1] = AddFontMemResourceEx(smallestpixel7_ttf, SMALLESTPIXEL7_TTF_SZ, NULL, &g_numFonts);
 
 		g_var->init();
 		g_sig->init();
 		g_cs->init();
 
 		g_font->init(g_cs->m_device, {
-			{ Tahoma12px,     12, "Tahoma",     FW_MEDIUM, ANTIALIASED_QUALITY },
-			{ Verdana12px,    12, "Verdana",    FW_SEMIBOLD, ANTIALIASED_QUALITY },
-			{ Astriumwep12px, 12, "AstriumWep", FW_NORMAL, CLEARTYPE_QUALITY },
-			{ Astriumwep16px, 16, "AstriumWep", FW_NORMAL, CLEARTYPE_QUALITY },
-			{ Astriumwep25px, 25, "AstriumWep", FW_NORMAL, CLEARTYPE_QUALITY },
+			{ Tahoma12px,     12, "Tahoma",           FW_MEDIUM,   ANTIALIASED_QUALITY },
+			{ Verdana12px,    12, "Verdana",          FW_SEMIBOLD, ANTIALIASED_QUALITY },
+			{ SmallFonts10px, 10, "Smallest Pixel-7", FW_THIN,     ANTIALIASED_QUALITY },
+			{ Astriumwep12px, 12, "AstriumWep",       FW_NORMAL,   CLEARTYPE_QUALITY },
+			{ Astriumwep16px, 16, "AstriumWep",       FW_NORMAL,   CLEARTYPE_QUALITY },
+			{ Astriumwep25px, 25, "AstriumWep",       FW_NORMAL,   CLEARTYPE_QUALITY },
 	    });
 
 		if (g_renderer->init(g_cs->m_device))
@@ -106,10 +109,14 @@ static void __stdcall init(HMODULE I)
 		g_var->undo();
 
 		// free loaded fonts
-		if (g_astriumwepFont) {
-			RemoveFontMemResourceEx(g_astriumwepFont);
-			g_astriumwepFont = nullptr;
+		for (int i = 0; i <= 1; i++) {
+			if (g_fonts[i]) {
+				RemoveFontMemResourceEx(g_fonts[i]);
+				g_fonts[i] = nullptr;
+			}
 		}
+
+		g_numFonts = 0;
 
 		// exit thread
 		FreeLibraryAndExitThread(I, EXIT_SUCCESS);

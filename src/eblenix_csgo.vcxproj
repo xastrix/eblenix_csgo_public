@@ -128,7 +128,6 @@
     <ClCompile Include="vec2.cpp" />
     <ClCompile Include="vec3.cpp" />
     <ClCompile Include="weapon_system.cpp" />
-    <ClCompile Include="material.cpp" />
     <ClCompile Include="signatures.cpp" />
     <ClCompile Include="base_attributable_item.cpp" />
     <ClCompile Include="base_client.cpp" />
@@ -138,7 +137,6 @@
     <ClCompile Include="base_player.cpp" />
     <ClCompile Include="base_weapon.cpp" />
     <ClCompile Include="engine_client.cpp" />
-    <ClCompile Include="material_system.cpp" />
     <ClCompile Include="model_info.cpp" />
     <ClCompile Include="model_render.cpp" />
     <ClCompile Include="panel.cpp" />

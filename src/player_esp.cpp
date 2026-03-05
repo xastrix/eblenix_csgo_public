@@ -422,10 +422,10 @@ void player_esp_t::player_rendering(int index, c_base_player* entity, box bbox)
 
 		auto fl_pos = 0;
 		for (const auto fl : flags) {
-			g_font->draw_string(fl.first, bbox.x + bbox.w + 3, bbox.y + fl_pos - 2,
-				FONT(Tahoma12px), TEXT_OUTLINE, fl.second);
+			g_font->draw_string(fl.first, bbox.x + bbox.w + 3, bbox.y + fl_pos,
+				FONT(SmallFonts10px), TEXT_OUTLINE, fl.second);
 
-			fl_pos += 10;
+			fl_pos += 8;
 		}
 
 		if (g_var->get_as<bool>(V_ESP_FLAGS_ITEMS_ENABLED).value())
