@@ -39,9 +39,8 @@ void c_fonts::draw_string(const std::string& string, float x, float y, ID3DXFont
 		o_r = { static_cast<LONG>(x) - half_width + 1, static_cast<LONG>(y) + 1, static_cast<LONG>(x) - half_width + 1, static_cast<LONG>(y) + 1 };
 	}
 
-	if (flags & TEXT_OUTLINE) {
-		font->DrawTextA(NULL, string.c_str(), -1, &o_r, DT_NOCLIP, color_t(0, 0, 0, color.get_alpha()).get());
-	}
+	if (flags & TEXT_OUTLINE)
+		font->DrawTextA(NULL, string.c_str(), -1, &o_r, DT_NOCLIP, color_t(0, 0, 0, color.get_arr()[3]).get());
 
 	font->DrawTextA(NULL, string.c_str(), -1, &r, DT_NOCLIP, color.get());
 }
@@ -58,9 +57,8 @@ void c_fonts::draw_stringW(const std::wstring& string, float x, float y, ID3DXFo
 		o_r = { static_cast<LONG>(x) - half_width + 1, static_cast<LONG>(y) + 1, static_cast<LONG>(x) - half_width + 1, static_cast<LONG>(y) + 1 };
 	}
 
-	if (flags & TEXT_OUTLINE) {
-		font->DrawTextW(NULL, string.c_str(), -1, &o_r, DT_NOCLIP, color_t(0, 0, 0, color.get_alpha()).get());
-	}
+	if (flags & TEXT_OUTLINE)
+		font->DrawTextW(NULL, string.c_str(), -1, &o_r, DT_NOCLIP, color_t(0, 0, 0, color.get_arr()[3]).get());
 
 	font->DrawTextW(NULL, string.c_str(), -1, &r, DT_NOCLIP, color.get());
 }

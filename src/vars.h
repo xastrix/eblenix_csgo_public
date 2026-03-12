@@ -88,10 +88,6 @@ public:
 		set(V_ESP_FLAGS_COL_R, 255);
 		set(V_ESP_FLAGS_COL_G, 255);
 		set(V_ESP_FLAGS_COL_B, 255);
-		set(V_ESP_FLAGS_ITEMS_ENABLED, false);
-		set(V_ESP_FLAGS_ITEMS_COL_R, 255);
-		set(V_ESP_FLAGS_ITEMS_COL_G, 255);
-		set(V_ESP_FLAGS_ITEMS_COL_B, 255);
 
 		set(V_VISUALS_ENABLED, true);
 		set(V_VISUALS_ENGINE_RADAR, false);

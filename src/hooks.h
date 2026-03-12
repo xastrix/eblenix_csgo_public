@@ -31,6 +31,7 @@ enum _hk_list {
 };
 
 struct hook_t {
+	/* Set up a hook */
 	template <typename T, int index>
 	void hook(void* addr, void* target, void** orig) {
 		if (m_hooked)
@@ -55,6 +56,7 @@ struct hook_t {
 		m_hooked = true;
 	}
 
+	/* Set up a hook method without index, for non-virtual functions */
 	void hook(void* addr, void* target, void** orig) {
 		if (m_hooked)
 			return;
@@ -76,14 +78,17 @@ struct hook_t {
 		m_hooked = true;
 	}
 
+	/* Get index of the hook */
 	int get_index() {
 		return m_index;
 	}
 
+	/* Check if the hook is currently active */
 	bool is_hooked() {
 		return m_hooked;
 	}
 
+	/* Remove the hook */
 	void unhook() {
 		if (!m_hooked)
 			return;
@@ -102,12 +107,12 @@ struct hook_t {
 	}
 
 private:
-	int    m_index{};
-	void*  m_addr{};
-	void*  m_src{};
-	void*  m_target{};
-	void** m_orig{};
-	bool   m_hooked{};
+	int    m_index{};    // Index of the virtual function in the vtable
+	void*  m_addr{};     // Address of the function or object containing the function
+	void*  m_src{};      // Original function pointer obtained from the vtable
+	void*  m_target{};   // Target function to hook (redirect to)
+	void** m_orig{};     // Pointer to the original function pointer (for calling original)
+	bool   m_hooked{};   // Hook status flag
 };
 
 class c_hooks {

@@ -124,7 +124,7 @@ void status_bar_t::draw()
 
 		if (g_var->get_as<bool>(V_VISUALS_INTERFACE_STATUS_C4).value())
 		{
-			if (GLOBAL(b_flags[BF_BOMB_PLANTED]))
+			if (GLOBAL(b_flags[BF_BOMB_PLANTED]) && GLOBAL(i_flags[IF_BOMB_TIMER]) > 0)
 			{
 				switch (GLOBAL(i_flags[IF_BOMB_SITE_ID])) {
 				case BS_A: {

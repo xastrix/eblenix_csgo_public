@@ -84,6 +84,12 @@ void player_esp_t::calc_player_animation_progress(int index, float& anim, c_base
 
 void player_esp_t::player_rendering(int index, c_base_player* entity, box bbox)
 {
+	const auto health = entity->get_health();
+	auto       armor  = entity->get_armor_value();
+	const auto weapon = entity->get_active_weapon();
+
+	const auto background_col = color_t(3, 3, 3, 255 * m_alpha[index]);
+
 	if (g_var->get_as<bool>(V_ESP_NAME_ENABLED).value())
 	{
 		player_info_t info;
@@ -108,8 +114,6 @@ void player_esp_t::player_rendering(int index, c_base_player* entity, box bbox)
 		g_font->draw_stringW(player_name, bbox.x + (bbox.w / 2), bbox.y - 14,
 			FONT(Tahoma12px), TEXT_OUTLINE | TEXT_CENTER_X, color_t(V_ESP_NAME_COL, 255 * m_alpha[index]));
 	}
-
-	const auto background_col = color_t(3, 3, 3, 255 * m_alpha[index]);
 
 	if (g_var->get_as<bool>(V_ESP_BOX_ENABLED).value())
 	{
@@ -161,7 +165,7 @@ void player_esp_t::player_rendering(int index, c_base_player* entity, box bbox)
 	if (g_var->get_as<bool>(V_ESP_HEALTH_ENABLED).value())
 	{
 		const auto max_hp = 100;
-		const auto inner_hp = std::min(entity->get_health(), max_hp);
+		const auto inner_hp = std::min(health, max_hp);
 		const auto hp = m_begin_anims[index].m_confirmed ? inner_hp : m_begin_anims[index].m_final_val;
 
 		if (hp)
@@ -194,12 +198,8 @@ void player_esp_t::player_rendering(int index, c_base_player* entity, box bbox)
 		}
 	}
 
-	auto armor_val = entity->get_armor_value();
-
 	if (g_var->get_as<bool>(V_ESP_WEAPON_ENABLED).value())
 	{
-		auto weapon = entity->get_active_weapon();
-
 		if (weapon)
 		{
 			const auto col = color_t(V_ESP_WEAPON_COL, 255 * m_alpha[index]);
@@ -207,7 +207,7 @@ void player_esp_t::player_rendering(int index, c_base_player* entity, box bbox)
 			auto offset = 4;
 			switch (g_var->get_as<int>(V_ESP_WEAPON_TYPE).value()) {
 			case 0: {
-				if (g_var->get_as<bool>(V_ESP_ARMOR_ENABLED).value() && armor_val > ARMOR_MIN_VAL)
+				if (g_var->get_as<bool>(V_ESP_ARMOR_ENABLED).value() && armor > ARMOR_MIN_VAL)
 					offset += 3;
 
 				g_font->draw_string(Helpers::get_weapon_type_by_index(weapon->item_definition_index(), WE_TEXT),
@@ -215,7 +215,7 @@ void player_esp_t::player_rendering(int index, c_base_player* entity, box bbox)
 				break;
 			}
 			case 1: {
-				if (g_var->get_as<bool>(V_ESP_ARMOR_ENABLED).value() && armor_val > ARMOR_MIN_VAL)
+				if (g_var->get_as<bool>(V_ESP_ARMOR_ENABLED).value() && armor > ARMOR_MIN_VAL)
 					offset += 5;
 
 				g_font->draw_string(Helpers::get_weapon_type_by_index(weapon->item_definition_index(), WE_ICON),
@@ -228,13 +228,13 @@ void player_esp_t::player_rendering(int index, c_base_player* entity, box bbox)
 
 	if (g_var->get_as<bool>(V_ESP_ARMOR_ENABLED).value())
 	{
-		armor_val = m_begin_anims[index].m_confirmed ? armor_val : m_begin_anims[index].m_final_val;
+		armor = m_begin_anims[index].m_confirmed ? armor : m_begin_anims[index].m_final_val;
 
-		if (armor_val > ARMOR_MIN_VAL)
+		if (armor > ARMOR_MIN_VAL)
 		{
 			g_renderer->rect_fill(bbox.x - 1, bbox.y + bbox.h + 3, bbox.w + 3, 4, background_col);
 
-			g_renderer->rect_fill(bbox.x, bbox.y + bbox.h + 4, ((bbox.w + 1) * armor_val) / 100, 2,
+			g_renderer->rect_fill(bbox.x, bbox.y + bbox.h + 4, ((bbox.w + 1) * armor) / 100, 2,
 				color_t(V_ESP_ARMOR_COL, 255 * m_alpha[index]));
 
 			if (g_var->get_as<bool>(V_ESP_ARMOR_BATTERY).value())
@@ -327,26 +327,20 @@ void player_esp_t::player_rendering(int index, c_base_player* entity, box bbox)
 
 	if (g_var->get_as<bool>(V_ESP_FLAGS_ENABLED).value())
 	{
-		std::vector<std::pair<std::string, color_t>> flags, hk_flags;
+		std::vector<std::pair<std::string, color_t>> flags;
 
 		const auto col = color_t(V_ESP_FLAGS_COL, 255 * m_alpha[index]);
 
 		if (g_var->get_as<bool>(V_ESP_FLAGS_HK).value())
 		{
-			if (armor_val > ARMOR_MIN_VAL)
-			{
+			if (armor > ARMOR_MIN_VAL)
 				flags.push_back(std::pair<std::string, color_t>(entity->has_helmet() ? "HK" : "K", col));
-			}
 		}
 
 		if (g_var->get_as<bool>(V_ESP_FLAGS_HEALTH).value())
 		{
-			const auto health = entity->get_health();
-
 			if (health)
-			{
 				flags.push_back(std::pair<std::string, color_t>(std::to_string(health) + "HP", col));
-			}
 		}
 
 		if (g_var->get_as<bool>(V_ESP_FLAGS_MONEY).value())
@@ -354,15 +348,11 @@ void player_esp_t::player_rendering(int index, c_base_player* entity, box bbox)
 			const auto cash = entity->get_cash();
 
 			if (cash)
-			{
 				flags.push_back(std::pair<std::string, color_t>(std::to_string(cash) + "$", col));
-			}
 		}
 
 		if (g_var->get_as<bool>(V_ESP_FLAGS_AMMO).value())
 		{
-			const auto weapon = entity->get_active_weapon();
-
 			if (weapon)
 			{
 				auto weapon_first_ammo = weapon->clip1_count();
@@ -382,9 +372,7 @@ void player_esp_t::player_rendering(int index, c_base_player* entity, box bbox)
 			const auto flashed = entity->is_flashed();
 
 			if (flashed)
-			{
 				flags.push_back(std::pair<std::string, color_t>("Flashed", col));
-			}
 		}
 
 		if (g_var->get_as<bool>(V_ESP_FLAGS_DEFUSING).value())
@@ -392,9 +380,7 @@ void player_esp_t::player_rendering(int index, c_base_player* entity, box bbox)
 			const auto defusing = entity->is_defusing();
 
 			if (defusing)
-			{
 				flags.push_back(std::pair<std::string, color_t>("Defusing", col));
-			}
 		}
 
 		if (g_var->get_as<bool>(V_ESP_FLAGS_DISTANCE).value())
@@ -415,9 +401,7 @@ void player_esp_t::player_rendering(int index, c_base_player* entity, box bbox)
 			const auto scoped = entity->is_scoped();
 
 			if (scoped)
-			{
 				flags.push_back(std::pair<std::string, color_t>("Scoped", col));
-			}
 		}
 
 		auto fl_pos = 0;
@@ -426,85 +410,6 @@ void player_esp_t::player_rendering(int index, c_base_player* entity, box bbox)
 				FONT(SmallFonts10px), TEXT_OUTLINE, fl.second);
 
 			fl_pos += 8;
-		}
-
-		if (g_var->get_as<bool>(V_ESP_FLAGS_ITEMS_ENABLED).value())
-		{
-			std::vector<std::pair<std::string, color_t>> inventory_item_flags, grenade_flags;
-
-			const auto items_col = color_t(V_ESP_FLAGS_ITEMS_COL, 255 * m_alpha[index]);
-
-			auto get_weapons = entity->get_my_weapons();
-			for (int i = 0; get_weapons[i] != 0xffffffff; i++)
-			{
-				const auto weapon = g_cs->m_entity_list->get_client_entity_handle<c_base_attributable_item*>(get_weapons[i]);
-
-				switch (weapon->item_definition_index()) {
-				case weapon_flashbang: {
-					grenade_flags.push_back(std::pair<std::string, color_t>("i", items_col));
-					break;
-				}
-				case weapon_smokegrenade: {
-					grenade_flags.push_back(std::pair<std::string, color_t>("k", items_col));
-					break;
-				}
-				case weapon_incgrenade: {
-					grenade_flags.push_back(std::pair<std::string, color_t>("n", items_col));
-					break;
-				}
-				case weapon_molotov: {
-					grenade_flags.push_back(std::pair<std::string, color_t>("l", items_col));
-					break;
-				}
-				case weapon_fraggrenade:
-				case weapon_hegrenade: {
-					grenade_flags.push_back(std::pair<std::string, color_t>("j", items_col));
-					break;
-				}
-				case weapon_decoy: {
-					grenade_flags.push_back(std::pair<std::string, color_t>("m", items_col));
-					break;
-				}
-				case weapon_taser: {
-					grenade_flags.push_back(std::pair<std::string, color_t>("h", items_col));
-					break;
-				}
-				}
-			}
-
-			if (entity->get_team_num() == teamT)
-			{
-				if (entity->has_c4())
-				{
-					inventory_item_flags.push_back(std::pair<std::string, color_t>("o", items_col));
-				}
-			}
-
-			if (entity->get_team_num() == teamCT)
-			{
-				if (entity->has_defuser())
-				{
-					inventory_item_flags.push_back(std::pair<std::string, color_t>("r", items_col));
-				}
-			}
-
-			auto grenade_pos = 0;
-			for (const auto fl : grenade_flags) {
-				g_font->draw_string(fl.first, bbox.x + bbox.w + 3 + grenade_pos, bbox.y + bbox.h - 10,
-					FONT(Astriumwep16px), TEXT_OUTLINE, fl.second);
-
-				grenade_pos += 10;
-			}
-
-			auto inventory_item_pos = 0;
-			for (const auto fl : inventory_item_flags) {
-				auto offset = grenade_flags.empty() ? 10 : 23;
-
-				g_font->draw_string(fl.first, bbox.x + bbox.w + 3 + inventory_item_pos, bbox.y + bbox.h - offset,
-					FONT(Astriumwep16px), TEXT_OUTLINE, fl.second);
-
-				inventory_item_pos += 18;
-			}
 		}
 	}
 }

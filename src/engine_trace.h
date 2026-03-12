@@ -17,7 +17,12 @@
 #define	CONTENTS_LADDER         0x20000000
 #define CONTENTS_HITBOX         0x40000000
 
-#define	MASK_SHOT (CONTENTS_SOLID | CONTENTS_MOVEABLE | CONTENTS_MONSTER | CONTENTS_WINDOW | CONTENTS_DEBRIS | CONTENTS_HITBOX)
+#define	MASK_SHOT               CONTENTS_SOLID | \
+                                CONTENTS_MOVEABLE | \
+                                CONTENTS_MONSTER | \
+                                CONTENTS_WINDOW | \
+                                CONTENTS_DEBRIS | \
+                                CONTENTS_HITBOX
 
 enum _trace_types {
 	TRACE_EVERYTHING,

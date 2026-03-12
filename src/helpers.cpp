@@ -9,24 +9,24 @@ using line_goes_through_smoke = bool(__cdecl*)(vec3, vec3);
 
 bool Helpers::is_pistol(c_base_weapon* weapon)
 {
-	static const std::vector<int> v = {
-		weapon_glock, weapon_elite, weapon_p250, weapon_tec9, weapon_cz75a, weapon_deagle,
-		weapon_revolver, weapon_usp_silencer, weapon_hkp2000, weapon_fiveseven
-	};
-
-	return (std::find(v.begin(), v.end(), weapon->item_definition_index()) != v.end());
+	return weapon->item_definition_index() == weapon_glock ||
+		weapon->item_definition_index() == weapon_elite ||
+		weapon->item_definition_index() == weapon_p250 ||
+		weapon->item_definition_index() == weapon_tec9 ||
+		weapon->item_definition_index() == weapon_cz75a ||
+		weapon->item_definition_index() == weapon_deagle ||
+		weapon->item_definition_index() == weapon_revolver ||
+		weapon->item_definition_index() == weapon_usp_silencer ||
+		weapon->item_definition_index() == weapon_hkp2000 ||
+		weapon->item_definition_index() == weapon_fiveseven;
 }
 
 bool Helpers::is_sniper(c_base_weapon* weapon)
 {
-	static const std::vector<int> v = { weapon_awp, weapon_ssg08, weapon_g3sg1, weapon_scar20 };
-	return (std::find(v.begin(), v.end(), weapon->item_definition_index()) != v.end());
-}
-
-bool Helpers::is_auto(c_base_weapon* weapon)
-{
-	static const std::vector<int> v = { weapon_g3sg1, weapon_scar20 };
-	return (std::find(v.begin(), v.end(), weapon->item_definition_index()) != v.end());
+	return weapon->item_definition_index() == weapon_awp ||
+		weapon->item_definition_index() == weapon_ssg08 ||
+		weapon->item_definition_index() == weapon_g3sg1 ||
+		weapon->item_definition_index() == weapon_scar20;
 }
 
 bool Helpers::is_revolver(c_base_weapon* weapon)
@@ -41,42 +41,48 @@ bool Helpers::is_taser(c_base_weapon* weapon)
 
 bool Helpers::is_smg(c_base_weapon* weapon)
 {
-	static const std::vector<int> v = {
-		weapon_mac10, weapon_mp7, weapon_ump45, weapon_p90, weapon_bizon,
-		weapon_mp9, weapon_mp5sd
-	};
-
-	return (std::find(v.begin(), v.end(), weapon->item_definition_index()) != v.end());
+	return weapon->item_definition_index() == weapon_mac10 ||
+		weapon->item_definition_index() == weapon_mp7 ||
+		weapon->item_definition_index() == weapon_ump45 ||
+		weapon->item_definition_index() == weapon_p90 ||
+		weapon->item_definition_index() == weapon_bizon ||
+		weapon->item_definition_index() == weapon_mp9 ||
+		weapon->item_definition_index() == weapon_mp5sd;
 }
 
 bool Helpers::is_heavy(c_base_weapon* weapon)
 {
-	static const std::vector<int> v = {
-		weapon_nova, weapon_xm1014, weapon_sawedoff, weapon_m249,
-		weapon_negev, weapon_mag7
-	};
-
-	return (std::find(v.begin(), v.end(), weapon->item_definition_index()) != v.end());
+	return weapon->item_definition_index() == weapon_nova ||
+		weapon->item_definition_index() == weapon_xm1014 ||
+		weapon->item_definition_index() == weapon_sawedoff ||
+		weapon->item_definition_index() == weapon_m249 ||
+		weapon->item_definition_index() == weapon_negev ||
+		weapon->item_definition_index() == weapon_mag7;
 }
 
 bool Helpers::is_rifle(c_base_weapon* weapon)
 {
-	static const std::vector<int> v = {
-		weapon_ak47, weapon_aug, weapon_famas, weapon_galilar, weapon_m249, weapon_m4a1,
-		weapon_m4a1_silencer, weapon_negev, weapon_sg556
-	};
-
-	return (std::find(v.begin(), v.end(), weapon->item_definition_index()) != v.end());
+	return weapon->item_definition_index() == weapon_ak47 ||
+		weapon->item_definition_index() == weapon_aug ||
+		weapon->item_definition_index() == weapon_famas ||
+		weapon->item_definition_index() == weapon_galilar ||
+		weapon->item_definition_index() == weapon_m249 ||
+		weapon->item_definition_index() == weapon_m4a1 ||
+		weapon->item_definition_index() == weapon_m4a1_silencer ||
+		weapon->item_definition_index() == weapon_negev ||
+		weapon->item_definition_index() == weapon_sg556;
 }
 
 bool Helpers::is_grenade(c_base_weapon* weapon)
 {
-	static const std::vector<int> v = {
-		weapon_fraggrenade, weapon_hegrenade, weapon_incgrenade,
-		weapon_smokegrenade, weapon_tagrenade, weapon_molotov, weapon_flashbang, weapon_decoy
-	};
-
-	return (std::find(v.begin(), v.end(), weapon->item_definition_index()) != v.end());
+	return weapon->item_definition_index() == weapon_fraggrenade ||
+		weapon->item_definition_index() == weapon_hegrenade ||
+		weapon->item_definition_index() == weapon_incgrenade ||
+		weapon->item_definition_index() == weapon_smokegrenade ||
+		weapon->item_definition_index() == weapon_tagrenade ||
+		weapon->item_definition_index() == weapon_molotov ||
+		weapon->item_definition_index() == weapon_flashbang ||
+		weapon->item_definition_index() == weapon_decoy;
 }
 
 bool Helpers::is_c4(c_base_weapon* weapon)
@@ -86,28 +92,37 @@ bool Helpers::is_c4(c_base_weapon* weapon)
 
 bool Helpers::is_knife(c_base_weapon* weapon)
 {
-	static const std::vector<int> v = {
-		weapon_knife, weapon_knifegg,
-		weapon_knife_butterfly, weapon_knife_falchion,
-		weapon_knife_survival_bowie, weapon_knife_flip,
-		weapon_knife_ghost, weapon_knife_gut, weapon_bayonet,
-		weapon_knife_gypsy_jackknife, weapon_knife_karambit,
-		weapon_knife_m9_bayonet, weapon_knife_push, weapon_knife_stiletto,
-		weapon_knife_t, weapon_knife_tactical, weapon_knife_ursus, weapon_knife_widowmaker
-	};
-
-	return (std::find(v.begin(), v.end(), weapon->item_definition_index()) != v.end());
+	return weapon->item_definition_index() == weapon_knife ||
+		weapon->item_definition_index() == weapon_knifegg ||
+		weapon->item_definition_index() == weapon_knife_butterfly ||
+		weapon->item_definition_index() == weapon_knife_falchion ||
+		weapon->item_definition_index() == weapon_knife_survival_bowie ||
+		weapon->item_definition_index() == weapon_knife_flip ||
+		weapon->item_definition_index() == weapon_knife_ghost ||
+		weapon->item_definition_index() == weapon_knife_gut ||
+		weapon->item_definition_index() == weapon_bayonet ||
+		weapon->item_definition_index() == weapon_knife_gypsy_jackknife ||
+		weapon->item_definition_index() == weapon_knife_karambit ||
+		weapon->item_definition_index() == weapon_knife_m9_bayonet ||
+		weapon->item_definition_index() == weapon_knife_push ||
+		weapon->item_definition_index() == weapon_knife_stiletto ||
+		weapon->item_definition_index() == weapon_knife_t ||
+		weapon->item_definition_index() == weapon_knife_tactical ||
+		weapon->item_definition_index() == weapon_knife_ursus ||
+		weapon->item_definition_index() == weapon_knife_widowmaker;
 }
 
 bool Helpers::is_non_aim(c_base_weapon* weapon)
 {
-	static const std::vector<int> v = {
-		weapon_fists, weapon_healthshot, weapon_shield,
-		weapon_taser, weapon_tablet, weapon_hammer,
-		weapon_spanner, weapon_bumpmine, weapon_axe
-	};
-
-	return (std::find(v.begin(), v.end(), weapon->item_definition_index()) != v.end());
+	return weapon->item_definition_index() == weapon_fists ||
+		weapon->item_definition_index() == weapon_healthshot ||
+		weapon->item_definition_index() == weapon_shield ||
+		weapon->item_definition_index() == weapon_taser ||
+		weapon->item_definition_index() == weapon_tablet ||
+		weapon->item_definition_index() == weapon_hammer ||
+		weapon->item_definition_index() == weapon_spanner ||
+		weapon->item_definition_index() == weapon_bumpmine ||
+		weapon->item_definition_index() == weapon_axe;
 }
 
 bool Helpers::get_bbox(c_base_player* entity, box& in, const _bbox_types type)
@@ -146,26 +161,25 @@ bool Helpers::get_bbox(c_base_player* entity, box& in, const _bbox_types type)
 	return true;
 }
 
-bool Helpers::is_behind_smoke(const vec3 start_pos, const vec3 end_pos)
+bool Helpers::is_behind_smoke(const vec3 start, const vec3 end)
 {
 	static auto line_goes_through_smoke_fn = reinterpret_cast<line_goes_through_smoke>(SIG(S_LINE_GOES_THROUGH_SMOKE));
 
 	if (!line_goes_through_smoke_fn)
 		return false;
 
-	return line_goes_through_smoke_fn(start_pos, end_pos);
+	return line_goes_through_smoke_fn(start, end);
 }
 
 bool Helpers::is_chat_opened()
 {
 	static void* _this = *reinterpret_cast<DWORD**>(SIG(S_HUD_ELEMENT));
 	if (!_this)
-		return nullptr;
+		return false;
 
-	static auto fn
-		= reinterpret_cast<DWORD(__thiscall*)(void*, const char*)>(SIG(S_FIND_HUD_ELEMENT));
-
+	static auto fn = reinterpret_cast<DWORD(__thiscall*)(void*, const char*)>(SIG(S_FIND_HUD_ELEMENT));
 	auto ccsgo_hudchat = fn(_this, "CCSGO_HudChat");
+
 	return read<bool>(ccsgo_hudchat + 13);
 }
 

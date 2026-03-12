@@ -143,10 +143,10 @@ void world_esp_t::on_do_post_screen_effects()
 	{
 		auto& glow = g_cs->m_glow_manager->objects[i];
 
-		if (glow.next_free_slot != ENTRY_IN_USE)
+		if (glow.m_next_free_slot != ENTRY_IN_USE)
 			continue;
 
-		const auto glow_object = reinterpret_cast<c_base_player*>(glow.entity);
+		const auto glow_object = reinterpret_cast<c_base_player*>(glow.m_entity);
 
 		if (!glow_object || glow_object->get_dormant())
 			continue;

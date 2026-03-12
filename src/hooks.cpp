@@ -254,7 +254,7 @@ static void __fastcall override_view_h(void* _ecx, void* _edx, c_view_setup* set
 						}
 
 						else
-							setup->fov = g_var->get_as<float>(V_MISC_VISUAL_THIRDPERSON_FOV).value();
+							setup->m_fov = g_var->get_as<float>(V_MISC_VISUAL_THIRDPERSON_FOV).value();
 				}
 
 				else if (!s_tp && g_cs->m_input->in_third_person_mode()) {

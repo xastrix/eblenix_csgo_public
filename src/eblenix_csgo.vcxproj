@@ -129,9 +129,6 @@
     <ClCompile Include="vec3.cpp" />
     <ClCompile Include="weapon_system.cpp" />
     <ClCompile Include="signatures.cpp" />
-    <ClCompile Include="base_attributable_item.cpp" />
-    <ClCompile Include="base_client.cpp" />
-    <ClCompile Include="base_convars.cpp" />
     <ClCompile Include="base_entity.cpp" />
     <ClCompile Include="base_plantedc4.cpp" />
     <ClCompile Include="base_player.cpp" />

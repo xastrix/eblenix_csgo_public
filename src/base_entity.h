@@ -181,11 +181,6 @@ public:
 	unsigned long         get_observer_target();
 };
 
-class c_base_attributable_item : public c_base_entity {
-public:
-	short                 item_definition_index();
-};
-
 class c_base_plantedc4 : public c_base_entity {
 public:
 	bool                  bomb_ticking();

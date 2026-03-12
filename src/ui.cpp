@@ -207,15 +207,7 @@ void c_ui::setup()
 
 			add_int<UI_SUB_SUB_POS>(L"Flags R", V_ESP_FLAGS_COL_R, 0, 255, 1);
 			add_int<UI_SUB_SUB_POS>(L"Flags G", V_ESP_FLAGS_COL_G, 0, 255, 1);
-			add_int<UI_SUB_SUB_POS>(L"Flags B", V_ESP_FLAGS_COL_B, 0, 255, 1, true);
-
-			add_tab<UI_SUB_SUB_POS>(L"Inventory Items", [&]() {
-				add_bool<UI_SUB_SUB_SUB_POS>(L"Enable", V_ESP_FLAGS_ITEMS_ENABLED, true);
-
-				add_int<UI_SUB_SUB_SUB_POS>(L"Inventory Items R", V_ESP_FLAGS_ITEMS_COL_R, 0, 255, 1);
-				add_int<UI_SUB_SUB_SUB_POS>(L"Inventory Items G", V_ESP_FLAGS_ITEMS_COL_G, 0, 255, 1);
-				add_int<UI_SUB_SUB_SUB_POS>(L"Inventory Items B", V_ESP_FLAGS_ITEMS_COL_B, 0, 255, 1);
-			});
+			add_int<UI_SUB_SUB_POS>(L"Flags B", V_ESP_FLAGS_COL_B, 0, 255, 1);
 		});
 	});
 

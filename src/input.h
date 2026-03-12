@@ -103,4 +103,4 @@ private:
 
 inline std::shared_ptr<c_input> g_input = c_input::make_shared();
 
-#define INPUT(vk) g_input->operator[](vk)
+#define KEY(vk) g_input->operator[](vk)

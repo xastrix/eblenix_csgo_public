@@ -40,15 +40,6 @@
     <ClCompile Include="..\external\minhook\src\hde\hde64.c">
       <Filter>external\minhook\src\hde</Filter>
     </ClCompile>
-    <ClCompile Include="base_attributable_item.cpp">
-      <Filter>csgo\client</Filter>
-    </ClCompile>
-    <ClCompile Include="base_client.cpp">
-      <Filter>csgo\client</Filter>
-    </ClCompile>
-    <ClCompile Include="base_convars.cpp">
-      <Filter>csgo\client</Filter>
-    </ClCompile>
     <ClCompile Include="engine_client.cpp">
       <Filter>csgo\engine</Filter>
     </ClCompile>

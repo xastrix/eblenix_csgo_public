@@ -35,13 +35,11 @@ public:
 		return D3DCOLOR_ARGB(m_color[0], m_color[3], m_color[2], m_color[1]);
 	}
 
-	int get_alpha() const {
-		return m_color[3];
-	}
-
 	static color_t calc_health_color(int hp, int alpha = 255);
 
-	const std::array<int, 4>& get_arr() const { return m_color; }
+	const std::array<int, 4>& get_arr() const {
+		return m_color;
+	}
 
 private:
 	std::array<int, 4> m_color{};

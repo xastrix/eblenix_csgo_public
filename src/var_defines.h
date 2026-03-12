@@ -106,11 +106,6 @@
 #define V_ESP_FLAGS_COL_R V_ESP_FLAGS_COL R_COL_P
 #define V_ESP_FLAGS_COL_G V_ESP_FLAGS_COL G_COL_P
 #define V_ESP_FLAGS_COL_B V_ESP_FLAGS_COL B_COL_P
-#define V_ESP_FLAGS_ITEMS_ENABLED "esp->flags->items->enabled"
-#define V_ESP_FLAGS_ITEMS_COL "esp->flags->items->col"
-#define V_ESP_FLAGS_ITEMS_COL_R V_ESP_FLAGS_ITEMS_COL R_COL_P
-#define V_ESP_FLAGS_ITEMS_COL_G V_ESP_FLAGS_ITEMS_COL G_COL_P
-#define V_ESP_FLAGS_ITEMS_COL_B V_ESP_FLAGS_ITEMS_COL B_COL_P
 
 /******************************************************************************/
 

@@ -66,6 +66,13 @@ enum _cstrike15_user_messages {
 
 class c_base_client {
 public:
-	c_client_class* get_client_classes();
-	bool dispatch_user_message(int msg_type, unsigned int arg1 = 0, unsigned int length = 0, const void* data = nullptr);
+	c_client_class* get_client_classes() {
+		using original_fn = c_client_class*(__thiscall*)(c_base_client*);
+		return (*(original_fn**)this)[8](this);
+	}
+
+	bool dispatch_user_message(int msg_type, unsigned int arg1 = 0, unsigned int length = 0, const void* data = nullptr) {
+		using original_fn = bool(__thiscall*)(c_base_client*, int, unsigned int, unsigned int, const void*);
+		return (*(original_fn**)this)[38](this, msg_type, arg1, length, data);
+	}
 };

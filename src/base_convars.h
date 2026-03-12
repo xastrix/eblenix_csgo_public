@@ -33,7 +33,10 @@ public:
 
 class c_base_convars : public c_app_system {
 public:
-	convar* get_convar(const char* var_name);
+	convar* get_convar(const char* var_name) {
+		using original_fn = convar*(__thiscall*)(c_base_convars*, const char*);
+		return (*(original_fn**)this)[15](this, var_name);
+	}
 
 	template <typename... T>
 	void console_color_printf(const unsigned long& clr, const char* fmt, T... args) {
