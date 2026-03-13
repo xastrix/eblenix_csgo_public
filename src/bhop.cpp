@@ -30,6 +30,4 @@ void bunnyhop_t::think(user_cmd_t* cmd)
 	}
 	else
 		u &= ~0x3;
-
-	cmd->m_buttons |= in_bullrush;
 }
