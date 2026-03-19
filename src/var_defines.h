@@ -121,6 +121,8 @@
 #define V_VISUALS_INTERFACE_STATUS_INCOMING "visuals->interface->status->incoming"
 #define V_VISUALS_INTERFACE_STATUS_OUTGOING "visuals->interface->status->outgoing"
 #define V_VISUALS_INTERFACE_STATUS_C4 "visuals->interface->status->c4"
+#define V_VISUALS_INTERFACE_STATUS_TIME "visuals->interface->status->time"
+#define V_VISUALS_INTERFACE_STATUS_TIME_PLAYING "visuals->interface->status->time_playing"
 #define V_VISUALS_INTERFACE_SPECTATORS "visuals->interface->spectators"
 #define V_VISUALS_INTERFACE_SPECTATORS_POS_Y "visuals->interface->spectators->pos->y"
 

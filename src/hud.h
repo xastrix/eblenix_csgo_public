@@ -27,14 +27,16 @@ private:
 	vec2 m_rect_max{};
 
 	std::vector<std::pair<std::string, std::string>> m_vars = {
-		{ "Aim",      V_VISUALS_INTERFACE_STATUS_AIMBOT },
-		{ "Trigger",  V_VISUALS_INTERFACE_STATUS_TRIGGERBOT },
-		{ "Esp",      V_VISUALS_INTERFACE_STATUS_ESP },
-		{ "Fps",      V_VISUALS_INTERFACE_STATUS_FPS },
-		{ "Velocity", V_VISUALS_INTERFACE_STATUS_VELOCITY },
-		{ "Incoming", V_VISUALS_INTERFACE_STATUS_INCOMING },
-		{ "Outgoing", V_VISUALS_INTERFACE_STATUS_OUTGOING },
-		{ "C4",       V_VISUALS_INTERFACE_STATUS_C4 },
+		{ "Aim",          V_VISUALS_INTERFACE_STATUS_AIMBOT },
+		{ "Trigger",      V_VISUALS_INTERFACE_STATUS_TRIGGERBOT },
+		{ "Esp",          V_VISUALS_INTERFACE_STATUS_ESP },
+		{ "Fps",          V_VISUALS_INTERFACE_STATUS_FPS },
+		{ "Velocity",     V_VISUALS_INTERFACE_STATUS_VELOCITY },
+		{ "Incoming",     V_VISUALS_INTERFACE_STATUS_INCOMING },
+		{ "Outgoing",     V_VISUALS_INTERFACE_STATUS_OUTGOING },
+		{ "C4",           V_VISUALS_INTERFACE_STATUS_C4 },
+		{ "Time",         V_VISUALS_INTERFACE_STATUS_TIME },
+		{ "Time playing", V_VISUALS_INTERFACE_STATUS_TIME_PLAYING },
 	};
 
 	bool m_ctx_menu_open{};

@@ -350,3 +350,20 @@ _wfm_stat Helpers::wait_for_module(int module_index, int fallback_module_index, 
 
 	return WM_OK;
 }
+
+std::string Helpers::get_current_time()
+{
+	std::time_t now     = std::time(nullptr);
+	std::tm* local_time = std::localtime(&now);
+
+	char buf[16];
+	sprintf(buf, "%02d:%02d:%02d",
+		local_time->tm_hour, local_time->tm_min, local_time->tm_sec);
+
+	return buf;
+}
+
+long long Helpers::get_elapsed_time(const std::chrono::steady_clock::time_point start_time)
+{
+	return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start_time).count();
+}

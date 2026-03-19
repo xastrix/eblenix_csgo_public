@@ -28,6 +28,9 @@ enum _boolean_flags {
 };
 
 enum _integer_flags {
+	IF_SECONDS_IN_GAME,
+	IF_MINUTES_IN_GAME,
+	IF_HOURS_IN_GAME,
 	IF_BOMB_TIMER,
 	IF_BOMB_SITE_ID,
 	maxIntegerFlags,

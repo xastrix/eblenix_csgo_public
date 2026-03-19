@@ -189,5 +189,4 @@ public:
 	int                   bomb_site();
 	bool                  bomb_defused();
 	float                 c4_blow();
-	float                 get_defuse_length();
 };

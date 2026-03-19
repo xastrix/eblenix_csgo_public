@@ -4,6 +4,7 @@
 #include "interfaces.h"
 #include "input.h"
 #include "ui.h"
+#include "helpers.h"
 
 void status_bar_t::run()
 {
@@ -139,6 +140,29 @@ void status_bar_t::draw()
 			}
 		}
 	}
+
+	if (g_var->get_as<bool>(V_VISUALS_INTERFACE_STATUS_TIME).value())
+	{
+		push_item(" " + Helpers::get_current_time(), FONT(Tahoma12px), true);
+	}
+	
+	if (g_var->get_as<bool>(V_VISUALS_INTERFACE_STATUS_TIME_PLAYING).value())
+	{
+		char buffer[64]{};
+
+		if (GLOBAL(i_flags[IF_HOURS_IN_GAME]) > 0)
+		{
+			if (GLOBAL(i_flags[IF_HOURS_IN_GAME]) >= 24)
+				sprintf(buffer, " %ih Playing", GLOBAL(i_flags[IF_HOURS_IN_GAME]));
+
+			else
+				sprintf(buffer, " %ih %im Playing", GLOBAL(i_flags[IF_HOURS_IN_GAME]), GLOBAL(i_flags[IF_MINUTES_IN_GAME]));
+		}
+		else
+			sprintf(buffer, " %im %is Playing", GLOBAL(i_flags[IF_MINUTES_IN_GAME]), GLOBAL(i_flags[IF_SECONDS_IN_GAME]));
+
+		push_item(buffer, FONT(Tahoma12px), true);
+	}
 }
 
 void status_bar_t::handle_click(bool left_click, bool right_click)
@@ -178,10 +202,10 @@ void status_bar_t::handle_move(UINT m)
 
 	if (g_input->move_object(bar_drag_obj, m))
 	{
-		m_rect_min.y = bar_drag_obj.y;
+		m_rect_min.y = bar_drag_obj.m_y;
 		g_var->set(V_VISUALS_INTERFACE_STATUS_POS_Y, m_rect_min.y);
 	}
 
 	else
-		bar_drag_obj.y = m_rect_min.y;
+		bar_drag_obj.m_y = m_rect_min.y;
 }

@@ -19,6 +19,9 @@ static void __stdcall init(HMODULE I)
 	if (Helpers::wait_for_module(clientDLL, 200) == WM_TIMEOUT)
 		g_state->set_current_state(SL_SHUTDOWN);
 
+	// initialize the timer by recording the current steady clock time
+	auto s_time = std::chrono::steady_clock::now();
+
 	g_state->call_state(SL_INIT_BASE, [](state_t& state) {
 		g_fonts[0] = AddFontMemResourceEx(astriumwep_ttf, ASTRIUMWEP_TTF_SZ, NULL, &g_numFonts);
 		g_fonts[1] = AddFontMemResourceEx(smallestpixel7_ttf, SMALLESTPIXEL7_TTF_SZ, NULL, &g_numFonts);
@@ -67,7 +70,10 @@ static void __stdcall init(HMODULE I)
 		state++;
 	});
 
-	g_state->call_state(SL_WAITING_FOR_SHUTDOWN, [](state_t& state) {
+	g_state->call_state(SL_WAITING_FOR_SHUTDOWN, [s_time](state_t& state) {
+		int last_min  = 0;
+		int last_hour = 0;
+
 		// set initialised flag
 		GLOBAL(b_flags[BF_INITIALISED]) = true;
 
@@ -79,8 +85,34 @@ static void __stdcall init(HMODULE I)
 		// open the ui
 		g_ui->set_menu_state(true);
 
-		while (!(state == SL_SHUTDOWN))
-			std::this_thread::sleep_for(std::chrono::seconds(2));
+		while (!(state == SL_SHUTDOWN)) {
+			std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
+			int total_minutes = Helpers::get_elapsed_time(s_time) / 60000;
+			int total_hours = total_minutes / 60;
+
+			if (total_hours != last_hour) {
+				last_hour = total_hours;
+
+				GLOBAL(i_flags[IF_HOURS_IN_GAME]) = 0;
+
+				GLOBAL(i_flags[IF_MINUTES_IN_GAME]) = 0;
+				GLOBAL(i_flags[IF_SECONDS_IN_GAME]) = 0;
+
+				last_min = 0;
+			}
+
+			if (total_minutes != last_min) {
+				last_min = total_minutes;
+				GLOBAL(i_flags[IF_SECONDS_IN_GAME]) = 0;
+			}
+			else {
+				GLOBAL(i_flags[IF_SECONDS_IN_GAME]) = (Helpers::get_elapsed_time(s_time) % 60000) / 1000;
+			}
+
+			GLOBAL(i_flags[IF_MINUTES_IN_GAME]) = total_minutes % 60;
+			GLOBAL(i_flags[IF_HOURS_IN_GAME]) = total_hours;
+		}
 	});
 
 	g_state->call_state(SL_SHUTDOWN, [I](state_t& state) {
@@ -134,7 +166,7 @@ bool __stdcall DllMain(const HMODULE mod, const int32_t r, void*)
 	// sets a custom handler for unhandled exceptions
 	SetUnhandledExceptionFilter(exception_handler::custom_exception_filter);
 
-	if (auto h = CreateThread(nullptr, 0, reinterpret_cast<LPTHREAD_START_ROUTINE>(init), mod, 0, nullptr))
+	if (const auto h = CreateThread(nullptr, 0, reinterpret_cast<LPTHREAD_START_ROUTINE>(init), mod, 0, nullptr))
 		CloseHandle(h);
 
 	return true;

@@ -84,6 +84,12 @@ namespace Helpers
 	/* Waits for a module specified by index to be loaded, with a fallback module index */
 	_wfm_stat wait_for_module(int module_index, int fallback_module_index, int ms);
 
+	/* Returns the current local time as a formatted string "HH:MM:SS" */
+	std::string get_current_time();
+
+	/* Calculates and returns the elapsed time in milliseconds since the start_time */
+	long long get_elapsed_time(const std::chrono::steady_clock::time_point start_time);
+
 	/* RAII class to temporarily change memory protection of a specified memory region
 	   Restores original protection when the object is destroyed */
 	struct unprotect_t {

@@ -77,8 +77,8 @@ void c_input::process_mouse_message(UINT m, WPARAM w, LPARAM l)
 		static draggable_object_t ui_drag_obj{ ui_pos_x, ui_pos_y, 180, 255 };
 
 		if (move_object(ui_drag_obj, m)) {
-			g_var->set(V_UI_POS_X, ui_drag_obj.x);
-			g_var->set(V_UI_POS_Y, ui_drag_obj.y);
+			g_var->set(V_UI_POS_X, ui_drag_obj.m_x);
+			g_var->set(V_UI_POS_Y, ui_drag_obj.m_y);
 		}
 
 		g_hud->process_message(m);
