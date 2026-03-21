@@ -164,7 +164,7 @@ void c_ui::draw(int x, int y)
 					else if (s_entries[i][UI_SUB_POS].m_state == UI_ITEM_STATE)
 					{
 						draw_item(s_entries[i][UI_SUB_POS].m_items[g_var->get_as<int>(s_entries[i][UI_SUB_POS].m_var).value()],
-							sub_menu_text_x + head_box_width, sub_menu_text_y, m_colors[UI_TEXT_COL]);
+							sub_menu_text_x + head_box_width, sub_menu_text_y, s_entries[i][UI_SUB_POS].m_item_text_col);
 					}
 				}
 			}
@@ -236,7 +236,7 @@ void c_ui::draw(int x, int y)
 					else if (s_entries[i][UI_SUB_SUB_POS].m_state == UI_ITEM_STATE)
 					{
 						draw_item(s_entries[i][UI_SUB_SUB_POS].m_items[g_var->get_as<int>(s_entries[i][UI_SUB_SUB_POS].m_var).value()],
-							sub_sub_menu_text_x + head_box_width, sub_sub_menu_text_y, m_colors[UI_TEXT_COL]);
+							sub_sub_menu_text_x + head_box_width, sub_sub_menu_text_y, s_entries[i][UI_SUB_SUB_POS].m_item_text_col);
 					}
 				}
 			}
@@ -299,7 +299,7 @@ void c_ui::draw(int x, int y)
 				else if (s_entries[i][UI_SUB_SUB_SUB_POS].m_state == UI_ITEM_STATE)
 				{
 					draw_item(s_entries[i][UI_SUB_SUB_SUB_POS].m_items[g_var->get_as<int>(s_entries[i][UI_SUB_SUB_SUB_POS].m_var).value()],
-						sub_sub_sub_menu_text_x + head_box_width, sub_sub_sub_menu_text_y, m_colors[UI_TEXT_COL]);
+						sub_sub_sub_menu_text_x + head_box_width, sub_sub_sub_menu_text_y, s_entries[i][UI_SUB_SUB_SUB_POS].m_item_text_col);
 				}
 			}
 

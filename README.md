@@ -15,4 +15,5 @@ After compilation, a bin folder will appear in the root directory of the project
 > To build, you will need visual studio with cpp17 and the windows sdk (preferably 10.0.19041.0)
 
 # Dependencies
-[minhook](https://github.com/TsudaKageyu/minhook)
+- [minhook](https://github.com/TsudaKageyu/minhook)
+- lua 5.4

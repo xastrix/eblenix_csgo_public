@@ -1,6 +1,7 @@
 #include "files.h"
 
-#include <filesystem>
+#include <chrono>
+#include <fstream>
 
 F_STAT Files::read(const std::string& path, const char* flag, std::string& out)
 {
@@ -91,4 +92,112 @@ F_STAT Files::write(const std::string& path, const char* flag, const std::string
 	}
 
 	return FS_OK;
+}
+
+F_STAT Files::get_directory_files(const std::string& dirname, const std::string& ext, std::vector<std::wstring>& files)
+{
+	files.clear();
+
+	if (!std::filesystem::exists(dirname) || !std::filesystem::is_directory(dirname))
+		return FS_FAIL;
+
+	for (const auto& entry : std::filesystem::directory_iterator(dirname))
+	{
+		if (entry.is_regular_file())
+		{
+			auto path = entry.path();
+
+			if (ext.empty() || path.extension() == ext)
+			{
+				files.push_back(path.filename().wstring());
+			}
+		}
+	}
+
+	return FS_OK;
+}
+
+int64_t Files::get_file_diff(const std::string& filename)
+{
+	auto ftime = std::filesystem::last_write_time(filename);
+
+	auto sctp = std::chrono::time_point_cast<std::chrono::system_clock::duration>(
+		ftime - std::filesystem::file_time_type::clock::now() + std::chrono::system_clock::now());
+
+	std::time_t cftime = std::chrono::system_clock::to_time_t(sctp);
+
+	auto now = std::chrono::system_clock::now();
+	int64_t now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
+	int64_t file_ms = std::chrono::duration_cast<std::chrono::milliseconds>(sctp.time_since_epoch()).count();
+
+	return now_ms - file_ms;
+}
+
+std::string Files::get_updated_datetime(const std::string& filename)
+{
+	auto ftime = std::filesystem::last_write_time(filename);
+
+	auto sctp = std::chrono::time_point_cast<std::chrono::system_clock::duration>(
+		ftime - std::filesystem::file_time_type::clock::now() + std::chrono::system_clock::now());
+
+	std::time_t cftime = std::chrono::system_clock::to_time_t(sctp);
+
+	auto now = std::chrono::system_clock::now();
+	int64_t now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
+
+	int64_t file_ms = std::chrono::duration_cast<std::chrono::milliseconds>(sctp.time_since_epoch()).count();
+
+	int64_t diff = now_ms - file_ms;
+
+	int64_t seconds = diff / 1000;
+	int64_t days = seconds / 86400;
+	int64_t hours = (seconds % 86400) / 3600;
+	int64_t minutes = (seconds % 3600) / 60;
+
+	std::string result;
+
+	if (days > 0) {
+		result += std::to_string(days) + "d ";
+	}
+	if (hours > 0) {
+		result += std::to_string(hours) + "h ";
+	}
+	if (minutes > 0 || (!days && !hours)) {
+		result += std::to_string(minutes) + "min ago";
+	}
+
+	if (result.empty()) {
+		result = "just now";
+	}
+
+	return result;
+}
+
+F_STAT Files::get_file_content(const std::string& filename, std::string& content)
+{
+	std::ifstream f(filename, std::ios::binary);
+
+	if (!f.is_open())
+		return FS_FAIL;
+
+	content = { std::istreambuf_iterator<char>(f), std::istreambuf_iterator<char>() };
+
+	return FS_OK;
+}
+
+F_STAT Files::file_exists(const std::string& path)
+{
+	struct stat s;
+
+	if (stat(path.c_str(), &s) == 0)
+	{
+		if (s.st_mode & S_IFDIR) {
+			return FS_OK;
+		}
+		else if (s.st_mode & S_IFREG) {
+			return FS_OK;
+		}
+	}
+
+	return FS_FAIL;
 }

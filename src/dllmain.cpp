@@ -27,6 +27,7 @@ static void __stdcall init(HMODULE I)
 		g_fonts[1] = AddFontMemResourceEx(smallestpixel7_ttf, SMALLESTPIXEL7_TTF_SZ, NULL, &g_numFonts);
 
 		g_var->init();
+		g_lua->init();
 		g_sig->init();
 		g_cs->init();
 
@@ -138,6 +139,7 @@ static void __stdcall init(HMODULE I)
 		g_event->undo();
 		g_hooks->undo();
 		g_input->undo();
+		g_lua->undo();
 		g_var->undo();
 
 		// free loaded fonts

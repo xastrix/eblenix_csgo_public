@@ -7,6 +7,7 @@
 #include "interfaces.h"
 #include "signatures.h"
 #include "math.h"
+#include "luas.h"
 #include "fnv.h"
 
 #include <MinHook.h>

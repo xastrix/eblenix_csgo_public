@@ -5,6 +5,9 @@
 #define B_COL_P "->b"
 #define A_COL_P "->a"
 
+/* a special pattern after which the item will not be saved in the config */
+#define UNSAVE_MARK "[UNS]"
+
 /******************************************************************************/
 
 #define V_AIMBOT_ENABLED "aimbot->enabled"
@@ -241,6 +244,10 @@
 
 #define V_MISC_EVENT_LOGS_PLAYER_HURT "misc->event_logs->player_hurt"
 #define V_MISC_EVENT_LOGS_PLAYER_PURCHASE "misc->event_logs->player_purchase"
+
+/******************************************************************************/
+
+#define V_LUA_INDEX UNSAVE_MARK "lua->index"
 
 /******************************************************************************/
 

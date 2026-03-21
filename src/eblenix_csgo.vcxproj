@@ -47,14 +47,14 @@
     <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)obj\$(ProjectName)\$(Configuration)\</IntDir>
     <LibraryPath>$(DXSDK_DIR)Lib\x86;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)external\minhook\include;$(SolutionDir)external\files;$(SolutionDir)external\exception_handler;$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)external\minhook\include;$(SolutionDir)external\files;$(SolutionDir)external\exception_handler;$(SolutionDir)external\lua;$(SolutionDir)external\sol;$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
     <TargetName>$(ProjectName)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)obj\$(ProjectName)\$(Configuration)\</IntDir>
     <LibraryPath>$(DXSDK_DIR)Lib\x86;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)external\minhook\include;$(SolutionDir)external\files;$(SolutionDir)external\exception_handler;$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)external\minhook\include;$(SolutionDir)external\files;$(SolutionDir)external\exception_handler;$(SolutionDir)external\lua;$(SolutionDir)external\sol;$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
     <TargetName>$(ProjectName)</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -101,6 +101,40 @@
   <ItemGroup>
     <ClCompile Include="..\external\exception_handler\exception_handler.cpp" />
     <ClCompile Include="..\external\files\files.cpp" />
+    <ClCompile Include="..\external\lua\lapi.c" />
+    <ClCompile Include="..\external\lua\lauxlib.c" />
+    <ClCompile Include="..\external\lua\lbaselib.c" />
+    <ClCompile Include="..\external\lua\lcode.c" />
+    <ClCompile Include="..\external\lua\lcorolib.c" />
+    <ClCompile Include="..\external\lua\lctype.c" />
+    <ClCompile Include="..\external\lua\ldblib.c" />
+    <ClCompile Include="..\external\lua\ldebug.c" />
+    <ClCompile Include="..\external\lua\ldo.c" />
+    <ClCompile Include="..\external\lua\ldump.c" />
+    <ClCompile Include="..\external\lua\lfunc.c" />
+    <ClCompile Include="..\external\lua\lgc.c" />
+    <ClCompile Include="..\external\lua\linit.c" />
+    <ClCompile Include="..\external\lua\liolib.c" />
+    <ClCompile Include="..\external\lua\llex.c" />
+    <ClCompile Include="..\external\lua\lmathlib.c" />
+    <ClCompile Include="..\external\lua\lmem.c" />
+    <ClCompile Include="..\external\lua\loadlib.c" />
+    <ClCompile Include="..\external\lua\lobject.c" />
+    <ClCompile Include="..\external\lua\lopcodes.c" />
+    <ClCompile Include="..\external\lua\loslib.c" />
+    <ClCompile Include="..\external\lua\lparser.c" />
+    <ClCompile Include="..\external\lua\lstate.c" />
+    <ClCompile Include="..\external\lua\lstring.c" />
+    <ClCompile Include="..\external\lua\lstrlib.c" />
+    <ClCompile Include="..\external\lua\ltable.c" />
+    <ClCompile Include="..\external\lua\ltablib.c" />
+    <ClCompile Include="..\external\lua\ltm.c" />
+    <ClCompile Include="..\external\lua\lua.c" />
+    <ClCompile Include="..\external\lua\luac.c" />
+    <ClCompile Include="..\external\lua\lundump.c" />
+    <ClCompile Include="..\external\lua\lutf8lib.c" />
+    <ClCompile Include="..\external\lua\lvm.c" />
+    <ClCompile Include="..\external\lua\lzio.c" />
     <ClCompile Include="..\external\minhook\src\buffer.c" />
     <ClCompile Include="..\external\minhook\src\hde\hde32.c" />
     <ClCompile Include="..\external\minhook\src\hde\hde64.c" />
@@ -112,6 +146,8 @@
     <ClCompile Include="blockbot.cpp" />
     <ClCompile Include="color.cpp" />
     <ClCompile Include="hud.cpp" />
+    <ClCompile Include="luas.cpp" />
+    <ClCompile Include="lua_api.cpp" />
     <ClCompile Include="player_esp.cpp" />
     <ClCompile Include="events.cpp" />
     <ClCompile Include="font.cpp" />
@@ -155,6 +191,33 @@
   <ItemGroup>
     <ClInclude Include="..\external\exception_handler\exception_handler.hpp" />
     <ClInclude Include="..\external\files\files.h" />
+    <ClInclude Include="..\external\lua\lapi.h" />
+    <ClInclude Include="..\external\lua\lauxlib.h" />
+    <ClInclude Include="..\external\lua\lcode.h" />
+    <ClInclude Include="..\external\lua\lctype.h" />
+    <ClInclude Include="..\external\lua\ldebug.h" />
+    <ClInclude Include="..\external\lua\ldo.h" />
+    <ClInclude Include="..\external\lua\lfunc.h" />
+    <ClInclude Include="..\external\lua\lgc.h" />
+    <ClInclude Include="..\external\lua\ljumptab.h" />
+    <ClInclude Include="..\external\lua\llex.h" />
+    <ClInclude Include="..\external\lua\llimits.h" />
+    <ClInclude Include="..\external\lua\lmem.h" />
+    <ClInclude Include="..\external\lua\lobject.h" />
+    <ClInclude Include="..\external\lua\lopcodes.h" />
+    <ClInclude Include="..\external\lua\lopnames.h" />
+    <ClInclude Include="..\external\lua\lparser.h" />
+    <ClInclude Include="..\external\lua\lprefix.h" />
+    <ClInclude Include="..\external\lua\lstate.h" />
+    <ClInclude Include="..\external\lua\lstring.h" />
+    <ClInclude Include="..\external\lua\ltable.h" />
+    <ClInclude Include="..\external\lua\ltm.h" />
+    <ClInclude Include="..\external\lua\lua.h" />
+    <ClInclude Include="..\external\lua\luaconf.h" />
+    <ClInclude Include="..\external\lua\lualib.h" />
+    <ClInclude Include="..\external\lua\lundump.h" />
+    <ClInclude Include="..\external\lua\lvm.h" />
+    <ClInclude Include="..\external\lua\lzio.h" />
     <ClInclude Include="..\external\minhook\include\MinHook.h" />
     <ClInclude Include="..\external\minhook\src\buffer.h" />
     <ClInclude Include="..\external\minhook\src\hde\hde32.h" />
@@ -163,10 +226,12 @@
     <ClInclude Include="..\external\minhook\src\hde\table32.h" />
     <ClInclude Include="..\external\minhook\src\hde\table64.h" />
     <ClInclude Include="..\external\minhook\src\trampoline.h" />
+    <ClInclude Include="..\external\sol\sol.hpp" />
     <ClInclude Include="color.h" />
     <ClInclude Include="events.h" />
     <ClInclude Include="font.h" />
     <ClInclude Include="hud.h" />
+    <ClInclude Include="luas.h" />
     <ClInclude Include="math.h" />
     <ClInclude Include="matrix.h" />
     <ClInclude Include="i_net_channel_info.h" />

@@ -11,6 +11,8 @@
 #define CFG_BOOL_TRUE_KEY          "{on}"
 #define CFG_BOOL_FALSE_KEY         "{off}"
 
+#define LUA_DIRECTORY_PATHS        "EBX/lua/"
+
 enum fn_num {
 	CREATE_MOVE_FN_INDEX                 = 24,
 	PAINT_TRAVERSE_FN_INDEX              = 41,

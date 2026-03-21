@@ -3,6 +3,7 @@
 #include "globals.h"
 #include "cfg.h"
 #include "interfaces.h"
+#include "luas.h"
 
 #include "sprites.hpp"
 
@@ -71,7 +72,8 @@ void c_ui::calc_animation_progress(float anim_time, float delta_time, float& old
 
 void c_ui::setup()
 {
-	const auto cfgs = std::vector<std::wstring>{ L"1", L"2", L"3", L"4", L"5" };
+	lua_list_t                lua_list = g_lua->get_list();
+	std::vector<std::wstring> cfg_list = { L"1", L"2", L"3", L"4", L"5" };
 
 	add(L"Aim", [&]() {
 		add_bool<UI_SUB_POS>(L"Enable", V_AIMBOT_ENABLED, true);
@@ -101,12 +103,12 @@ void c_ui::setup()
 		add_bool<UI_SUB_POS>(L"Visible", V_ESP_VISIBLE_ONLY);
 		add_bool<UI_SUB_POS>(L"Walking", V_ESP_WALKING_ONLY, true);
 
-		add_item<UI_SUB_POS>(L"Render Type", V_ESP_RENDER_TYPE, { L"Static", L"Dynamic" }, true);
+		add_item<UI_SUB_POS>(L"Render Type", V_ESP_RENDER_TYPE, { L"Static", L"Dynamic" }, m_colors[UI_TEXT_COL], true);
 
 		add_tab<UI_SUB_POS>(L"Name", [&]() {
 			add_bool<UI_SUB_SUB_POS>(L"Enable", V_ESP_NAME_ENABLED, true);
 
-			add_item<UI_SUB_SUB_POS>(L"Name Type", V_ESP_NAME_TYPE, { L"Default", L"Lower", L"Upper" }, true);
+			add_item<UI_SUB_SUB_POS>(L"Name Type", V_ESP_NAME_TYPE, { L"Default", L"Lower", L"Upper" }, m_colors[UI_TEXT_COL], true);
 
 			add_int<UI_SUB_SUB_POS>(L"Name R", V_ESP_NAME_COL_R, 0, 255, 1);
 			add_int<UI_SUB_SUB_POS>(L"Name G", V_ESP_NAME_COL_G, 0, 255, 1);
@@ -117,7 +119,7 @@ void c_ui::setup()
 			add_bool<UI_SUB_SUB_POS>(L"Enable", V_ESP_BOX_ENABLED, true);
 
 			add_item<UI_SUB_SUB_POS>(L"Box Type", V_ESP_BOX_TYPE,
-				{ L"Default", L"Default (Background)", L"Corner", L"Corner (Background)" }, true);
+				{ L"Default", L"Default (Background)", L"Corner", L"Corner (Background)" }, m_colors[UI_TEXT_COL], true);
 
 			add_int<UI_SUB_SUB_POS>(L"Box R", V_ESP_BOX_COL_R, 0, 255, 1);
 			add_int<UI_SUB_SUB_POS>(L"Box G", V_ESP_BOX_COL_G, 0, 255, 1);
@@ -127,7 +129,7 @@ void c_ui::setup()
 		add_tab<UI_SUB_POS>(L"Health", [&]() {
 			add_bool<UI_SUB_SUB_POS>(L"Enable", V_ESP_HEALTH_ENABLED, true);
 
-			add_item<UI_SUB_SUB_POS>(L"Health Type", V_ESP_HEALTH_TYPE, { L"Default", L"Health Based" }, true);
+			add_item<UI_SUB_SUB_POS>(L"Health Type", V_ESP_HEALTH_TYPE, { L"Default", L"Health Based" }, m_colors[UI_TEXT_COL], true);
 
 			if (g_var->get_as<int>(V_ESP_HEALTH_TYPE).value() == 0)
 			{
@@ -142,7 +144,7 @@ void c_ui::setup()
 		add_tab<UI_SUB_POS>(L"Weapon", [&]() {
 			add_bool<UI_SUB_SUB_POS>(L"Enable", V_ESP_WEAPON_ENABLED, true);
 
-			add_item<UI_SUB_SUB_POS>(L"Weapon Type", V_ESP_WEAPON_TYPE, { L"Text", L"Icon" }, true);
+			add_item<UI_SUB_SUB_POS>(L"Weapon Type", V_ESP_WEAPON_TYPE, { L"Text", L"Icon" }, m_colors[UI_TEXT_COL], true);
 
 			add_int<UI_SUB_SUB_POS>(L"Weapon R", V_ESP_WEAPON_COL_R, 0, 255, 1);
 			add_int<UI_SUB_SUB_POS>(L"Weapon G", V_ESP_WEAPON_COL_G, 0, 255, 1);
@@ -152,7 +154,7 @@ void c_ui::setup()
 		add_tab<UI_SUB_POS>(L"Skeleton", [&]() {
 			add_bool<UI_SUB_SUB_POS>(L"Enable", V_ESP_SKELETON_ENABLED, true);
 
-			add_item<UI_SUB_SUB_POS>(L"Skeleton Type", V_ESP_SKELETON_TYPE, { L"Default", L"Health Based" }, true);
+			add_item<UI_SUB_SUB_POS>(L"Skeleton Type", V_ESP_SKELETON_TYPE, { L"Default", L"Health Based" }, m_colors[UI_TEXT_COL], true);
 
 			add_int<UI_SUB_SUB_POS>(L"Skeleton R", V_ESP_SKELETON_COL_R, 0, 255, 1);
 			add_int<UI_SUB_SUB_POS>(L"Skeleton G", V_ESP_SKELETON_COL_G, 0, 255, 1);
@@ -234,7 +236,7 @@ void c_ui::setup()
 			add_tab<UI_SUB_SUB_POS>(L"Grenades (In use)", [&]() {
 				add_bool<UI_SUB_SUB_SUB_POS>(L"Enable", V_VISUALS_WORLD_PROJECTLINES_ENABLED, true);
 
-				add_item<UI_SUB_SUB_SUB_POS>(L"Grenades Type", V_VISUALS_WORLD_PROJECTLINES_TYPE, { L"Text", L"Icon" }, true);
+				add_item<UI_SUB_SUB_SUB_POS>(L"Grenades Type", V_VISUALS_WORLD_PROJECTLINES_TYPE, { L"Text", L"Icon" }, m_colors[UI_TEXT_COL], true);
 
 				add_bool<UI_SUB_SUB_SUB_POS>(L"Grenades Distance", V_VISUALS_WORLD_PROJECTLINES_DISTANCE, true);
 
@@ -246,7 +248,7 @@ void c_ui::setup()
 			add_tab<UI_SUB_SUB_POS>(L"Weapons", [&]() {
 				add_bool<UI_SUB_SUB_SUB_POS>(L"Enable", V_VISUALS_WORLD_WEAPONS_ENABLED, true);
 
-				add_item<UI_SUB_SUB_SUB_POS>(L"Weapons Type", V_VISUALS_WORLD_WEAPONS_TYPE, { L"Text", L"Icon" }, true);
+				add_item<UI_SUB_SUB_SUB_POS>(L"Weapons Type", V_VISUALS_WORLD_WEAPONS_TYPE, { L"Text", L"Icon" }, m_colors[UI_TEXT_COL], true);
 
 				add_bool<UI_SUB_SUB_SUB_POS>(L"Weapons Distance", V_VISUALS_WORLD_WEAPONS_DISTANCE);
 				add_bool<UI_SUB_SUB_SUB_POS>(L"Weapons Ammo Bar", V_VISUALS_WORLD_WEAPONS_AMMO_BAR, true);
@@ -263,7 +265,7 @@ void c_ui::setup()
 			add_tab<UI_SUB_SUB_POS>(L"Bomb (Planted)", [&]() {
 				add_bool<UI_SUB_SUB_SUB_POS>(L"Enable", V_VISUALS_WORLD_C4_ENABLED, true);
 
-				add_item<UI_SUB_SUB_SUB_POS>(L"Bomb Type", V_VISUALS_WORLD_C4_TYPE, { L"Text", L"Icon" }, true);
+				add_item<UI_SUB_SUB_SUB_POS>(L"Bomb Type", V_VISUALS_WORLD_C4_TYPE, { L"Text", L"Icon" }, m_colors[UI_TEXT_COL], true);
 
 				add_bool<UI_SUB_SUB_SUB_POS>(L"Bomb Time Bar", V_VISUALS_WORLD_C4_TIME_BAR);
 				add_bool<UI_SUB_SUB_SUB_POS>(L"Bomb Defuse Bar", V_VISUALS_WORLD_C4_DEFUSE_BAR);
@@ -351,6 +353,34 @@ void c_ui::setup()
 		});
 	});
 
+	add(L"Lua (" + std::to_wstring(lua_list.size()) + L")", [&]() {
+		std::vector<std::wstring> luas{};
+
+		if (!lua_list.empty())
+		{
+			for (const auto& script : lua_list)
+				luas.push_back(script.first);
+		}
+		else
+			luas.push_back(L"-");
+
+		add_item<UI_SUB_POS>(L"Lua", V_LUA_INDEX, luas, g_lua->get_loaded_by_index(
+			g_var->get_as<int>(V_LUA_INDEX).value()) ? m_colors[UI_MAIN_COL] : m_colors[UI_TEXT_COL], true);
+
+		add_function<UI_SUB_POS>(L"Load", []() {
+			g_lua->load_script(g_lua->get_script_name_by_index(g_var->get_as<int>(V_LUA_INDEX).value()));
+		});
+
+		add_function<UI_SUB_POS>(L"Unload", []() {
+			g_lua->unload_script(g_lua->get_script_name_by_index(g_var->get_as<int>(V_LUA_INDEX).value()));
+		}, true);
+
+		add_function<UI_SUB_POS>(L"Refresh Scripts", []() {
+			g_var->set(V_LUA_INDEX, 0);
+			g_lua->refresh_scripts();
+		});
+	});
+
 	add(L"Glow", [&]() {
 		add_bool<UI_SUB_POS>(L"Enable", V_GLOW_ENABLED, true);
 
@@ -396,7 +426,7 @@ void c_ui::setup()
 		add_bool<UI_SUB_POS>(L"Visible", V_CHAMS_VISIBLE_ONLY);
 		add_bool<UI_SUB_POS>(L"Walking", V_CHAMS_WALKING_ONLY, true);
 
-		add_item<UI_SUB_POS>(L"Type", V_CHAMS_TYPE, { L"1", L"2", L"3" }, true);
+		add_item<UI_SUB_POS>(L"Type", V_CHAMS_TYPE, { L"1", L"2", L"3" }, m_colors[UI_TEXT_COL], true);
 
 		add_int<UI_SUB_POS>(L"Chams R", V_CHAMS_COL_R, 0, 255, 1);
 		add_int<UI_SUB_POS>(L"Chams G", V_CHAMS_COL_G, 0, 255, 1);
@@ -430,7 +460,7 @@ void c_ui::setup()
 	}, true);
 
 	add(L"Load Settings", [&]() {
-		for (const auto& cfg : cfgs) {
+		for (const auto& cfg : cfg_list) {
 			add_function<UI_SUB_POS>(cfg, [cfg]() {
 				cfg::load(cfg);
 			});
@@ -438,7 +468,7 @@ void c_ui::setup()
 	});
 
 	add(L"Save Settings", [&]() {
-		for (const auto& cfg : cfgs) {
+		for (const auto& cfg : cfg_list) {
 			add_function<UI_SUB_POS>(cfg, [cfg]() {
 				cfg::save(cfg);
 			});
@@ -481,6 +511,8 @@ void c_ui::clear()
 		s_entries[i][UI_SUB_POS].m_state = UI_NONE_STATE;
 
 		s_entries[i][UI_SUB_POS].m_items.clear();
+		s_entries[i][UI_SUB_POS].m_item_text_col = color_t();
+
 		s_entries[i][UI_SUB_POS].m_fn = []() {};
 	}
 
@@ -500,6 +532,8 @@ void c_ui::clear()
 		s_entries[i][UI_SUB_SUB_POS].m_state = UI_NONE_STATE;
 
 		s_entries[i][UI_SUB_SUB_POS].m_items.clear();
+		s_entries[i][UI_SUB_SUB_POS].m_item_text_col = color_t();
+
 		s_entries[i][UI_SUB_SUB_POS].m_fn = []() {};
 	}
 
@@ -519,6 +553,8 @@ void c_ui::clear()
 		s_entries[i][UI_SUB_SUB_SUB_POS].m_state = UI_NONE_STATE;
 
 		s_entries[i][UI_SUB_SUB_SUB_POS].m_items.clear();
+		s_entries[i][UI_SUB_SUB_SUB_POS].m_item_text_col = color_t();
+
 		s_entries[i][UI_SUB_SUB_SUB_POS].m_fn = []() {};
 	}
 

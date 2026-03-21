@@ -18,7 +18,9 @@ void cfg::load(const std::wstring& name)
 	std::string decrypted = Helpers::xor_encrypt_decrypt(data, cfg_path);
 	std::string line{};
 
-	size_t pos = 0, next_pos;
+	size_t pos{};
+	size_t next_pos{};
+
 	while (pos < decrypted.size())
 	{
 		next_pos = decrypted.find('\n', pos);
@@ -63,9 +65,12 @@ void cfg::save(const std::wstring& name)
 	std::string data{};
 
 	Files::make_dirs(CFG_DIRECTORY_PATHS);
-	for (const auto&[k, v] : g_var->get_vars()) {
-		data += k + "=";
+	for (const auto&[k, v] : g_var->get_vars())
+	{
+		if (k.find(UNSAVE_MARK) != std::string::npos)
+			continue;
 
+		data += k + "=";
 		std::visit([&](auto&& arg) {
 			using T = std::decay_t<decltype(arg)>;
 

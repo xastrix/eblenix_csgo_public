@@ -6,7 +6,7 @@
 
 #include "renderer.h"
 
-#define MAX_MENU_ENTRIES 10
+#define MAX_MENU_ENTRIES 11
 #define MAX_SUB_ENTRIES  16
 
 enum _ui_states {
@@ -67,6 +67,8 @@ struct s_entry
 
 	std::function<void()> m_fn{};
 	std::vector<std::wstring> m_items{};
+
+	color_t m_item_text_col{};
 };
 
 class c_ui {
@@ -149,7 +151,7 @@ private:
 	}
 
 	template <_ui_subs pos>
-	void add_item(const std::wstring& name, const std::string& var, std::vector<std::wstring> items, bool space = false) {
+	void add_item(const std::wstring& name, const std::string& var, std::vector<std::wstring> items, color_t item_text_col, bool space = false) {
 		s_entries[s_entry_sz[pos]][pos].m_name = name;
 		s_entries[s_entry_sz[pos]][pos].m_var = var;
 
@@ -160,6 +162,7 @@ private:
 
 		s_entries[s_entry_sz[pos]][pos].m_state = UI_ITEM_STATE;
 		s_entries[s_entry_sz[pos]][pos].m_items = items;
+		s_entries[s_entry_sz[pos]][pos].m_item_text_col = item_text_col;
 
 		s_entries[s_entry_sz[pos]][pos].m_space = space;
 

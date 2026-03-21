@@ -194,6 +194,8 @@ public:
 		set(V_MISC_EVENT_LOGS_PLAYER_HURT, false);
 		set(V_MISC_EVENT_LOGS_PLAYER_PURCHASE, false);
 
+		set(V_LUA_INDEX, 0);
+
 		set(V_UI_POS_X, 0);
 		set(V_UI_POS_Y, 0);
 		set(V_UI_COL_R, 0);
