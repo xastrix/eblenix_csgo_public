@@ -5,13 +5,16 @@
 #define CSGO_CLASS_NAME            "Valve001"
 #define LOADER_UNLOAD_HOOK_MESSAGE "UNLOAD_EBLENIX_MSG"
 
-#define CFG_DIRECTORY_PATHS        "EBX/cfg/"
+#define BASE_DIRECTORY_NAME        "EBX/"
+
+#define CFG_DIRECTORY_PATHS        BASE_DIRECTORY_NAME "cfg/"
 #define CFG_INT_KEY                "{i32}"
 #define CFG_FLOAT_KEY              "{f32}"
 #define CFG_BOOL_TRUE_KEY          "{on}"
 #define CFG_BOOL_FALSE_KEY         "{off}"
 
-#define LUA_DIRECTORY_PATHS        "EBX/lua/"
+#define LUA_DIRECTORY_PATHS        BASE_DIRECTORY_NAME "lua/"
+#define LUA_STARTUP_LIST_PATH      BASE_DIRECTORY_NAME "lua_startup.json"
 
 enum fn_num {
 	CREATE_MOVE_FN_INDEX                 = 24,

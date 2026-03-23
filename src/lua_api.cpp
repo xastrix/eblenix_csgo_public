@@ -28,8 +28,8 @@ void c_lua_mgr::init_api()
 		m_lua_event[_event].push_back({ get_script_index_by_name(name), fn });
 
 		g_cs->m_cvar->console_color_printf(color_t(255, V_UI_COL).get_revert(), "[lua] ");
-		g_cs->m_cvar->console_printf("Subscribed to %s in %s (Updated %s)\n", _event.c_str(), name.c_str(),
-			get_script_update_datetime(name).c_str());
+		g_cs->m_cvar->console_printf("Subscribed to %s in %s (Updated %s)\n", _event.c_str(),
+			std::string(name.begin(), name.end()).c_str(), get_script_update_datetime(name).c_str());
 	});
 }
 

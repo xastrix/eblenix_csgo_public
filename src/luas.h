@@ -52,6 +52,7 @@ public:
 
 private:
 	void init_api();
+	void load_startup_scripts();
 	std::string get_script_update_datetime(const std::wstring& name);
 
 private:

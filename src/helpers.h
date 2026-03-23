@@ -78,6 +78,9 @@ namespace Helpers
 	/* Removes all occurrences of specific characters from a string */
 	std::string remove_chars_from_string(std::string string, const std::string& chars);
 
+	/* Parses a JSON-like string to extract all string values enclosed in double quotes */
+	std::vector<std::string> parse_json_object(const std::string& in);
+
 	/* Waits for a module specified by index to be loaded within a timeout period */
 	_wfm_stat wait_for_module(int module_index, int ms);
 

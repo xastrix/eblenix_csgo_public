@@ -27,7 +27,6 @@ static void __stdcall init(HMODULE I)
 		g_fonts[1] = AddFontMemResourceEx(smallestpixel7_ttf, SMALLESTPIXEL7_TTF_SZ, NULL, &g_numFonts);
 
 		g_var->init();
-		g_lua->init();
 		g_sig->init();
 		g_cs->init();
 
@@ -43,6 +42,18 @@ static void __stdcall init(HMODULE I)
 		if (g_renderer->init(g_cs->m_device))
 			g_ui->init(g_cs->m_device);
 
+		g_lua->init();
+
+		for (auto _ : LUA_CALLBACK("onInit")) {
+			auto result = _.fn();
+			if (!result.valid()) {
+				g_cs->m_cvar->console_color_printf(color_t(255, V_UI_COL).get_revert(), "[lua] ");
+
+				sol::error err = result;
+				g_cs->m_cvar->console_printf("%s\n", err.what());
+			}
+		}
+
 		state++;
 	});
 
@@ -52,11 +63,6 @@ static void __stdcall init(HMODULE I)
 
 		g_var->set(V_UI_POS_X, 80);
 		g_var->set(V_UI_POS_Y, 80);
-
-		g_var->set(V_UI_COL_R, 95);
-		g_var->set(V_UI_COL_G, 115);
-		g_var->set(V_UI_COL_B, 150);
-		g_var->set(V_UI_COL_A, 130);
 
 		g_var->set(V_KEYS_ON_TOGGLE_UI, VK_INSERT);
 
@@ -77,6 +83,17 @@ static void __stdcall init(HMODULE I)
 
 		// set initialised flag
 		GLOBAL(b_flags[BF_INITIALISED]) = true;
+
+		// register a lua callback for the cheat load event
+		for (auto _ : LUA_CALLBACK("onLoaded")) {
+			auto result = _.fn();
+			if (!result.valid()) {
+				g_cs->m_cvar->console_color_printf(color_t(255, V_UI_COL).get_revert(), "[lua] ");
+
+				sol::error err = result;
+				g_cs->m_cvar->console_printf("%s\n", err.what());
+			}
+		}
 
 		// set unload key
 		g_input->add_hk(VK_F12, []() {
@@ -134,6 +151,17 @@ static void __stdcall init(HMODULE I)
 
 		// reset all vars before unloading
 		g_var->reset();
+
+		// register a lua callback for the cheat unload event
+		for (auto _ : LUA_CALLBACK("onUnload")) {
+			auto result = _.fn();
+			if (!result.valid()) {
+				g_cs->m_cvar->console_color_printf(color_t(255, V_UI_COL).get_revert(), "[lua] ");
+
+				sol::error err = result;
+				g_cs->m_cvar->console_printf("%s\n", err.what());
+			}
+		}
 
 		// free stuff
 		g_event->undo();

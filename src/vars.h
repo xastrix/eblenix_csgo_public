@@ -198,10 +198,10 @@ public:
 
 		set(V_UI_POS_X, 0);
 		set(V_UI_POS_Y, 0);
-		set(V_UI_COL_R, 0);
-		set(V_UI_COL_G, 0);
-		set(V_UI_COL_B, 0);
-		set(V_UI_COL_A, 0);
+		set(V_UI_COL_R, 95);
+		set(V_UI_COL_G, 115);
+		set(V_UI_COL_B, 150);
+		set(V_UI_COL_A, 130);
 
 		set(V_UI_SPEED_ANIMATION, 10.0f);
 		set(V_UI_MOUSE_WHEEL_NAVIGATION, false);

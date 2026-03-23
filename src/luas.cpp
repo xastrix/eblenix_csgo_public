@@ -2,6 +2,7 @@
 
 #include "globals.h"
 #include "interfaces.h"
+#include "helpers.h"
 #include "color.h"
 
 #include <files.h>
@@ -15,6 +16,7 @@ void c_lua_mgr::init()
 
 	init_api();
 	refresh_scripts();
+	load_startup_scripts();
 }
 
 void c_lua_mgr::refresh_scripts()
@@ -23,9 +25,8 @@ void c_lua_mgr::refresh_scripts()
 
 	if (!m_lua_list.empty())
 	{
-		for (int i = 0; i <= m_lua_list.size(); i++) {
-			unload_script(get_script_name_by_index(i));
-		}
+		for (const auto& script : m_lua_list)
+			unload_script(script.first);
 
 		m_lua_list.clear();
 	}
@@ -37,9 +38,28 @@ void c_lua_mgr::refresh_scripts()
 		m_lua_list.push_back(std::make_pair(f, false));
 }
 
+void c_lua_mgr::load_startup_scripts()
+{
+	std::string data;
+
+	if (!(Files::file_exists(LUA_STARTUP_LIST_PATH) == FS_OK)) {
+		Files::write(LUA_STARTUP_LIST_PATH, "a", "{}");
+		return;
+	}
+
+	if (!(Files::get_file_content(LUA_STARTUP_LIST_PATH, data) == FS_OK))
+		return;
+
+	for (const auto& script : Helpers::parse_json_object(data))
+		load_script(std::wstring(script.begin(), script.end()));
+}
+
 void c_lua_mgr::load_script(const std::wstring& name)
 {
 	sol::state_view state = m_state;
+
+	if (m_lua_list.empty())
+		return;
 
 	auto it = std::find_if(m_lua_list.begin(), m_lua_list.end(), [&](const auto& p) {
 		return p.first == name;
@@ -66,6 +86,9 @@ void c_lua_mgr::load_script(const std::wstring& name)
 
 void c_lua_mgr::unload_script(const std::wstring& name)
 {
+	if (m_lua_list.empty())
+		return;
+
 	auto it = std::find_if(m_lua_list.begin(), m_lua_list.end(), [&](const auto& p) {
 		return p.first == name;
 	});

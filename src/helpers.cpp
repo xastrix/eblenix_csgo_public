@@ -326,6 +326,40 @@ std::string Helpers::remove_chars_from_string(std::string string, const std::str
 	return string;
 }
 
+std::vector<std::string> Helpers::parse_json_object(const std::string& in)
+{
+	std::vector<std::string> result;
+
+	size_t pos{};
+	while ((pos = in.find('"', pos)) != std::string::npos)
+	{
+		size_t begin_pos = pos + 1;
+		size_t end_pos = begin_pos;
+
+		while (end_pos < in.size()) {
+			end_pos = in.find('"', end_pos);
+
+			if (end_pos == std::string::npos)
+				break;
+
+			if (end_pos > 0 && in[end_pos - 1] == '\\') {
+				end_pos++;
+				continue;
+			}
+
+			break;
+		}
+
+		if (end_pos == std::string::npos)
+			break;
+
+		result.push_back(in.substr(begin_pos, end_pos - begin_pos));
+		pos = end_pos + 1;
+	}
+
+	return result;
+}
+
 _wfm_stat Helpers::wait_for_module(int module_index, int ms)
 {
 	return wait_for_module(module_index, maxModules, ms);

@@ -122,16 +122,6 @@ static long D3DAPI present_h(IDirect3DDevice9* device, RECT* source_rect, RECT* 
 
 	if (!GLOBAL(b_flags[BF_PANIC]))
 	{
-		for (auto _ : LUA_CALLBACK("onPresent")) {
-			auto result = _.fn();
-			if (!result.valid()) {
-				g_cs->m_cvar->console_color_printf(color_t(255, V_UI_COL).get_revert(), "[lua] ");
-
-				sol::error err = result;
-				g_cs->m_cvar->console_printf("%s\n", err.what());
-			}
-		}
-
 		g_visuals->run();
 		g_hud->run();
 		g_ui->run();
