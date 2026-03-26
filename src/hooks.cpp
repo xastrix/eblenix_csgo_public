@@ -120,6 +120,16 @@ static long D3DAPI present_h(IDirect3DDevice9* device, RECT* source_rect, RECT* 
 {
 	g_renderer->begin();
 
+	for (auto _ : LUA_CALLBACK("onPresent")) {
+		auto result = _.fn();
+		if (!result.valid()) {
+			g_cs->m_cvar->console_color_printf(color_t(255, V_UI_COL).get_revert(), "[lua] ");
+
+			sol::error err = result;
+			g_cs->m_cvar->console_printf("%s\n", err.what());
+		}
+	}
+
 	if (!GLOBAL(b_flags[BF_PANIC]))
 	{
 		g_visuals->run();
@@ -135,6 +145,16 @@ static long D3DAPI present_h(IDirect3DDevice9* device, RECT* source_rect, RECT* 
 static long(D3DAPI *o_reset)(IDirect3DDevice9*, D3DPRESENT_PARAMETERS*);
 static long D3DAPI reset_h(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* present_parameters)
 {
+	for (auto _ : LUA_CALLBACK("onReset")) {
+		auto result = _.fn();
+		if (!result.valid()) {
+			g_cs->m_cvar->console_color_printf(color_t(255, V_UI_COL).get_revert(), "[lua] ");
+
+			sol::error err = result;
+			g_cs->m_cvar->console_printf("%s\n", err.what());
+		}
+	}
+
 	g_font->undo();
 	g_ui->on_reset();
 	g_renderer->undo();
@@ -146,6 +166,16 @@ static long D3DAPI reset_h(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* pres
 		g_font->restore(device);
 		g_renderer->restore(device);
 		g_ui->on_reset_end();
+
+		for (auto _ : LUA_CALLBACK("onResetEnd")) {
+			auto result = _.fn(device);
+			if (!result.valid()) {
+				g_cs->m_cvar->console_color_printf(color_t(255, V_UI_COL).get_revert(), "[lua] ");
+
+				sol::error err = result;
+				g_cs->m_cvar->console_printf("%s\n", err.what());
+			}
+		}
 	}
 
 	return ret;
