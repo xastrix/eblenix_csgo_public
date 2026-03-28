@@ -129,13 +129,25 @@ void c_ui::setup()
 		add_tab<UI_SUB_POS>(L"Health", [&]() {
 			add_bool<UI_SUB_SUB_POS>(L"Enable", V_ESP_HEALTH_ENABLED, true);
 
-			add_item<UI_SUB_SUB_POS>(L"Health Type", V_ESP_HEALTH_TYPE, { L"Default", L"Health Based" }, m_colors[UI_TEXT_COL], true);
+			add_item<UI_SUB_SUB_POS>(L"Health Type", V_ESP_HEALTH_TYPE, { L"Default", L"Health Based", L"Gradient" }, m_colors[UI_TEXT_COL], true);
 
-			if (g_var->get_as<int>(V_ESP_HEALTH_TYPE).value() == 0)
-			{
+			switch (g_var->get_as<int>(V_ESP_HEALTH_TYPE).value()) {
+			case 0: {
 				add_int<UI_SUB_SUB_POS>(L"Health R", V_ESP_HEALTH_COL_R, 0, 255, 1);
 				add_int<UI_SUB_SUB_POS>(L"Health G", V_ESP_HEALTH_COL_G, 0, 255, 1);
 				add_int<UI_SUB_SUB_POS>(L"Health B", V_ESP_HEALTH_COL_B, 0, 255, 1, true);
+				break;
+			}
+			case 2: {
+				add_int<UI_SUB_SUB_POS>(L"Health Gradient R", V_ESP_HEALTH_GRADIENT_COL_R, 0, 255, 1);
+				add_int<UI_SUB_SUB_POS>(L"Health Gradient G", V_ESP_HEALTH_GRADIENT_COL_G, 0, 255, 1);
+				add_int<UI_SUB_SUB_POS>(L"Health Gradient B", V_ESP_HEALTH_GRADIENT_COL_B, 0, 255, 1, true);
+
+				add_int<UI_SUB_SUB_POS>(L"Health Gradient2 R", V_ESP_HEALTH_GRADIENT_COL2_R, 0, 255, 1);
+				add_int<UI_SUB_SUB_POS>(L"Health Gradient2 G", V_ESP_HEALTH_GRADIENT_COL2_G, 0, 255, 1);
+				add_int<UI_SUB_SUB_POS>(L"Health Gradient2 B", V_ESP_HEALTH_GRADIENT_COL2_B, 0, 255, 1, true);
+				break;
+			}
 			}
 
 			add_bool<UI_SUB_SUB_POS>(L"Health Battery", V_ESP_HEALTH_BATTERY);
@@ -164,9 +176,26 @@ void c_ui::setup()
 		add_tab<UI_SUB_POS>(L"Armor", [&]() {
 			add_bool<UI_SUB_SUB_POS>(L"Enable", V_ESP_ARMOR_ENABLED, true);
 
-			add_int<UI_SUB_SUB_POS>(L"Armor R", V_ESP_ARMOR_COL_R, 0, 255, 1);
-			add_int<UI_SUB_SUB_POS>(L"Armor G", V_ESP_ARMOR_COL_G, 0, 255, 1);
-			add_int<UI_SUB_SUB_POS>(L"Armor B", V_ESP_ARMOR_COL_B, 0, 255, 1, true);
+			add_item<UI_SUB_SUB_POS>(L"Armor Type", V_ESP_ARMOR_TYPE, { L"Default", L"Gradient" }, m_colors[UI_TEXT_COL], true);
+
+			switch (g_var->get_as<int>(V_ESP_ARMOR_TYPE).value()) {
+			case 0: {
+				add_int<UI_SUB_SUB_POS>(L"Armor R", V_ESP_ARMOR_COL_R, 0, 255, 1);
+				add_int<UI_SUB_SUB_POS>(L"Armor G", V_ESP_ARMOR_COL_G, 0, 255, 1);
+				add_int<UI_SUB_SUB_POS>(L"Armor B", V_ESP_ARMOR_COL_B, 0, 255, 1, true);
+				break;
+			}
+			case 1: {
+				add_int<UI_SUB_SUB_POS>(L"Armor Gradient R", V_ESP_ARMOR_GRADIENT_COL_R, 0, 255, 1);
+				add_int<UI_SUB_SUB_POS>(L"Armor Gradient G", V_ESP_ARMOR_GRADIENT_COL_G, 0, 255, 1);
+				add_int<UI_SUB_SUB_POS>(L"Armor Gradient B", V_ESP_ARMOR_GRADIENT_COL_B, 0, 255, 1, true);
+
+				add_int<UI_SUB_SUB_POS>(L"Armor Gradient2 R", V_ESP_ARMOR_GRADIENT_COL2_R, 0, 255, 1);
+				add_int<UI_SUB_SUB_POS>(L"Armor Gradient2 G", V_ESP_ARMOR_GRADIENT_COL2_G, 0, 255, 1);
+				add_int<UI_SUB_SUB_POS>(L"Armor Gradient2 B", V_ESP_ARMOR_GRADIENT_COL2_B, 0, 255, 1, true);
+				break;
+			}
+			}
 
 			add_bool<UI_SUB_SUB_POS>(L"Armor Battery", V_ESP_ARMOR_BATTERY);
 		});

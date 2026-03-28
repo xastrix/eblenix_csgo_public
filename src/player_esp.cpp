@@ -185,6 +185,13 @@ void player_esp_t::player_rendering(int index, c_base_player* entity, box bbox)
 					color_t::calc_health_color(hp, 255 * m_alpha[index]));
 				break;
 			}
+			case 2: {
+				g_renderer->rect_fill(bbox.x - 6, bbox.y - 1, 4, bbox.h + 3, background_col);
+				g_renderer->gradient_v(bbox.x - 5, bbox.y + (bbox.h + 1) - pixel_value, 2, pixel_value,
+					color_t(V_ESP_HEALTH_GRADIENT_COL, 255 * m_alpha[index]),
+					color_t(V_ESP_HEALTH_GRADIENT_COL2, 255 * m_alpha[index]));
+				break;
+			}
 			}
 
 			if (g_var->get_as<bool>(V_ESP_HEALTH_BATTERY).value())
@@ -232,10 +239,21 @@ void player_esp_t::player_rendering(int index, c_base_player* entity, box bbox)
 
 		if (armor > ARMOR_MIN_VAL)
 		{
-			g_renderer->rect_fill(bbox.x - 1, bbox.y + bbox.h + 3, bbox.w + 3, 4, background_col);
-
-			g_renderer->rect_fill(bbox.x, bbox.y + bbox.h + 4, ((bbox.w + 1) * armor) / 100, 2,
-				color_t(V_ESP_ARMOR_COL, 255 * m_alpha[index]));
+			switch (g_var->get_as<int>(V_ESP_ARMOR_TYPE).value()) {
+			case 0: {
+				g_renderer->rect_fill(bbox.x - 1, bbox.y + bbox.h + 3, bbox.w + 3, 4, background_col);
+				g_renderer->rect_fill(bbox.x, bbox.y + bbox.h + 4, ((bbox.w + 1) * armor) / 100, 2,
+					color_t(V_ESP_ARMOR_COL, 255 * m_alpha[index]));
+				break;
+			}
+			case 1: {
+				g_renderer->rect_fill(bbox.x - 1, bbox.y + bbox.h + 3, bbox.w + 3, 4, background_col);
+				g_renderer->gradient_h(bbox.x, bbox.y + bbox.h + 4, ((bbox.w + 1) * armor) / 100, 2,
+					color_t(V_ESP_ARMOR_GRADIENT_COL, 255 * m_alpha[index]),
+					color_t(V_ESP_ARMOR_GRADIENT_COL2, 255 * m_alpha[index]));
+				break;
+			}
+			}
 
 			if (g_var->get_as<bool>(V_ESP_ARMOR_BATTERY).value())
 			{
