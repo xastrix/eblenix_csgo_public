@@ -120,7 +120,7 @@ static long D3DAPI present_h(IDirect3DDevice9* device, RECT* source_rect, RECT* 
 {
 	g_renderer->begin();
 
-	for (auto _ : LUA_CALLBACK("onPresent")) {
+	for (auto _ : LUA_CALLBACK("on_present")) {
 		auto result = _.fn();
 		if (!result.valid()) {
 			g_cs->m_cvar->console_color_printf(color_t(255, V_UI_COL).get_revert(), "[lua] ");
@@ -145,7 +145,7 @@ static long D3DAPI present_h(IDirect3DDevice9* device, RECT* source_rect, RECT* 
 static long(D3DAPI *o_reset)(IDirect3DDevice9*, D3DPRESENT_PARAMETERS*);
 static long D3DAPI reset_h(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* present_parameters)
 {
-	for (auto _ : LUA_CALLBACK("onReset")) {
+	for (auto _ : LUA_CALLBACK("on_reset")) {
 		auto result = _.fn();
 		if (!result.valid()) {
 			g_cs->m_cvar->console_color_printf(color_t(255, V_UI_COL).get_revert(), "[lua] ");
@@ -167,7 +167,7 @@ static long D3DAPI reset_h(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* pres
 		g_renderer->restore(device);
 		g_ui->on_reset_end();
 
-		for (auto _ : LUA_CALLBACK("onResetEnd")) {
+		for (auto _ : LUA_CALLBACK("on_reset_end")) {
 			auto result = _.fn(device);
 			if (!result.valid()) {
 				g_cs->m_cvar->console_color_printf(color_t(255, V_UI_COL).get_revert(), "[lua] ");

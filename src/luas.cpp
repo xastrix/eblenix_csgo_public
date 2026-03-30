@@ -38,6 +38,15 @@ void c_lua_mgr::refresh_scripts()
 		m_lua_list.push_back(std::make_pair(f, false));
 }
 
+void c_lua_mgr::reload_active_scripts()
+{
+	for (const auto& script : m_lua_list)
+	{
+		if (unload_script(script.first))
+			load_script(script.first);
+	}
+}
+
 void c_lua_mgr::load_startup_scripts()
 {
 	std::string data;
@@ -54,19 +63,19 @@ void c_lua_mgr::load_startup_scripts()
 		load_script(std::wstring(script.begin(), script.end()));
 }
 
-void c_lua_mgr::load_script(const std::wstring& name)
+bool c_lua_mgr::load_script(const std::wstring& name)
 {
 	sol::state_view state = m_state;
 
 	if (m_lua_list.empty())
-		return;
+		return false;
 
 	auto it = std::find_if(m_lua_list.begin(), m_lua_list.end(), [&](const auto& p) {
 		return p.first == name;
 	});
 
 	if (it != m_lua_list.end() && it->second == true)
-		return;
+		return false;
 
 	auto status = state.script_file(LUA_DIRECTORY_PATHS + std::string(name.begin(), name.end()),
 		[](lua_State*, sol::protected_function_result result) {
@@ -82,19 +91,21 @@ void c_lua_mgr::load_script(const std::wstring& name)
 
 	if (it != m_lua_list.end() && status.valid())
 		it->second = true;
+
+	return it->second;
 }
 
-void c_lua_mgr::unload_script(const std::wstring& name)
+bool c_lua_mgr::unload_script(const std::wstring& name)
 {
 	if (m_lua_list.empty())
-		return;
+		return false;
 
 	auto it = std::find_if(m_lua_list.begin(), m_lua_list.end(), [&](const auto& p) {
 		return p.first == name;
 	});
 
 	if (it != m_lua_list.end() && it->second == false)
-		return;
+		return false;
 
 	for (auto& ev : m_lua_event)
 	{
@@ -111,6 +122,8 @@ void c_lua_mgr::unload_script(const std::wstring& name)
 
 	if (it != m_lua_list.end())
 		it->second = false;
+
+	return true;
 }
 
 int c_lua_mgr::get_script_index_by_name(const std::wstring& name)

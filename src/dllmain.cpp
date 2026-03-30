@@ -44,7 +44,7 @@ static void __stdcall init(HMODULE I)
 
 		g_lua->init();
 
-		for (auto _ : LUA_CALLBACK("onInit")) {
+		for (auto _ : LUA_CALLBACK("on_pre_init")) {
 			auto result = _.fn();
 			if (!result.valid()) {
 				g_cs->m_cvar->console_color_printf(color_t(255, V_UI_COL).get_revert(), "[lua] ");
@@ -85,7 +85,7 @@ static void __stdcall init(HMODULE I)
 		GLOBAL(b_flags[BF_INITIALISED]) = true;
 
 		// register a lua callback for the cheat load event
-		for (auto _ : LUA_CALLBACK("onLoaded")) {
+		for (auto _ : LUA_CALLBACK("on_init")) {
 			auto result = _.fn();
 			if (!result.valid()) {
 				g_cs->m_cvar->console_color_printf(color_t(255, V_UI_COL).get_revert(), "[lua] ");
@@ -153,7 +153,7 @@ static void __stdcall init(HMODULE I)
 		g_var->reset();
 
 		// register a lua callback for the cheat unload event
-		for (auto _ : LUA_CALLBACK("onUnload")) {
+		for (auto _ : LUA_CALLBACK("on_unload")) {
 			auto result = _.fn();
 			if (!result.valid()) {
 				g_cs->m_cvar->console_color_printf(color_t(255, V_UI_COL).get_revert(), "[lua] ");

@@ -404,6 +404,10 @@ void c_ui::setup()
 			g_lua->unload_script(g_lua->get_script_name_by_index(g_var->get_as<int>(V_LUA_INDEX).value()));
 		}, true);
 
+		add_function<UI_SUB_POS>(L"Reload Scripts", []() {
+			g_lua->reload_active_scripts();
+		});
+
 		add_function<UI_SUB_POS>(L"Refresh Scripts", []() {
 			g_var->set(V_LUA_INDEX, 0);
 			g_lua->refresh_scripts();

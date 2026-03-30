@@ -24,9 +24,10 @@ class c_lua_mgr {
 public:
 	void init();
 	void refresh_scripts();
+	void reload_active_scripts();
 
-	void load_script(const std::wstring& name);
-	void unload_script(const std::wstring& name);
+	bool load_script(const std::wstring& name);
+	bool unload_script(const std::wstring& name);
 
 	int get_script_index_by_name(const std::wstring& name);
 	std::wstring get_script_name_by_index(int index);
