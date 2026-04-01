@@ -80,10 +80,8 @@ bool c_lua_mgr::load_script(const std::wstring& name)
 	auto status = state.script_file(LUA_DIRECTORY_PATHS + std::string(name.begin(), name.end()),
 		[](lua_State*, sol::protected_function_result result) {
 		if (!result.valid()) {
-			g_cs->m_cvar->console_color_printf(color_t(255, V_UI_COL).get_revert(), "[lua] ");
-
 			sol::error err = result;
-			g_cs->m_cvar->console_printf("%s\n", err.what());
+			Helpers::console_printf_with_prefix("[lua]", "%s", err.what());
 		}
 
 		return result;

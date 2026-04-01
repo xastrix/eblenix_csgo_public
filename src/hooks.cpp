@@ -15,11 +15,9 @@ static bool __stdcall create_move_h(float input_sample_frametime, user_cmd_t* cm
 {
 	auto ret = o_create_move(input_sample_frametime, cmd);
 
-	// check cmd
 	if (!cmd || !cmd->m_command_number)
 		return ret;
 
-	// init local player
 	g_cs->init_local({ g_cs->m_entity_list->get_client_entity<c_base_player*>(g_cs->m_engine->get_local_player()) });
 
 	if (GLOBAL(b_flags[BF_INITIALISED]))
@@ -74,7 +72,6 @@ static void __stdcall paint_traverse_h(uint32_t panel, bool force_repaint, bool 
 
 	if (GLOBAL(b_flags[BF_INITIALISED]) && !GLOBAL(b_flags[BF_PANIC]))
 	{
-		// set console & chat flags
 		GLOBAL(b_flags[BF_CONSOLE_OPENED]) = g_cs->m_engine->is_console_visible();
 		GLOBAL(b_flags[BF_CHAT_OPENED]) = Helpers::is_chat_opened();
 
@@ -120,13 +117,11 @@ static long D3DAPI present_h(IDirect3DDevice9* device, RECT* source_rect, RECT* 
 {
 	g_renderer->begin();
 
-	for (auto _ : LUA_CALLBACK("on_present")) {
+	for (auto _ : LUA_CALLBACK(CL_ON_PRESENT)) {
 		auto result = _.fn();
 		if (!result.valid()) {
-			g_cs->m_cvar->console_color_printf(color_t(255, V_UI_COL).get_revert(), "[lua] ");
-
 			sol::error err = result;
-			g_cs->m_cvar->console_printf("%s\n", err.what());
+			Helpers::console_printf_with_prefix("[lua]", "%s", err.what());
 		}
 	}
 
@@ -145,13 +140,11 @@ static long D3DAPI present_h(IDirect3DDevice9* device, RECT* source_rect, RECT* 
 static long(D3DAPI *o_reset)(IDirect3DDevice9*, D3DPRESENT_PARAMETERS*);
 static long D3DAPI reset_h(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* present_parameters)
 {
-	for (auto _ : LUA_CALLBACK("on_reset")) {
+	for (auto _ : LUA_CALLBACK(CL_ON_RESET)) {
 		auto result = _.fn();
 		if (!result.valid()) {
-			g_cs->m_cvar->console_color_printf(color_t(255, V_UI_COL).get_revert(), "[lua] ");
-
 			sol::error err = result;
-			g_cs->m_cvar->console_printf("%s\n", err.what());
+			Helpers::console_printf_with_prefix("[lua]", "%s", err.what());
 		}
 	}
 
@@ -167,13 +160,11 @@ static long D3DAPI reset_h(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* pres
 		g_renderer->restore(device);
 		g_ui->on_reset_end();
 
-		for (auto _ : LUA_CALLBACK("on_reset_end")) {
+		for (auto _ : LUA_CALLBACK(CL_ON_RESET_END)) {
 			auto result = _.fn(device);
 			if (!result.valid()) {
-				g_cs->m_cvar->console_color_printf(color_t(255, V_UI_COL).get_revert(), "[lua] ");
-
 				sol::error err = result;
-				g_cs->m_cvar->console_printf("%s\n", err.what());
+				Helpers::console_printf_with_prefix("[lua]", "%s", err.what());
 			}
 		}
 	}

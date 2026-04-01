@@ -44,13 +44,11 @@ static void __stdcall init(HMODULE I)
 
 		g_lua->init();
 
-		for (auto _ : LUA_CALLBACK("on_pre_init")) {
+		for (auto _ : LUA_CALLBACK(CL_ON_PREINIT)) {
 			auto result = _.fn();
 			if (!result.valid()) {
-				g_cs->m_cvar->console_color_printf(color_t(255, V_UI_COL).get_revert(), "[lua] ");
-
 				sol::error err = result;
-				g_cs->m_cvar->console_printf("%s\n", err.what());
+				Helpers::console_printf_with_prefix("[lua]", "%s", err.what());
 			}
 		}
 
@@ -85,13 +83,11 @@ static void __stdcall init(HMODULE I)
 		GLOBAL(b_flags[BF_INITIALISED]) = true;
 
 		// register a lua callback for the cheat load event
-		for (auto _ : LUA_CALLBACK("on_init")) {
+		for (auto _ : LUA_CALLBACK(CL_ON_INIT)) {
 			auto result = _.fn();
 			if (!result.valid()) {
-				g_cs->m_cvar->console_color_printf(color_t(255, V_UI_COL).get_revert(), "[lua] ");
-
 				sol::error err = result;
-				g_cs->m_cvar->console_printf("%s\n", err.what());
+				Helpers::console_printf_with_prefix("[lua]", "%s", err.what());
 			}
 		}
 
@@ -153,13 +149,11 @@ static void __stdcall init(HMODULE I)
 		g_var->reset();
 
 		// register a lua callback for the cheat unload event
-		for (auto _ : LUA_CALLBACK("on_unload")) {
+		for (auto _ : LUA_CALLBACK(CL_ON_UNLOAD)) {
 			auto result = _.fn();
 			if (!result.valid()) {
-				g_cs->m_cvar->console_color_printf(color_t(255, V_UI_COL).get_revert(), "[lua] ");
-
 				sol::error err = result;
-				g_cs->m_cvar->console_printf("%s\n", err.what());
+				Helpers::console_printf_with_prefix("[lua]", "%s", err.what());
 			}
 		}
 

@@ -3,6 +3,8 @@
 #include "interfaces.h"
 #include "renderer.h"
 #include "math.h"
+#include "signatures.h"
+#include "helpers.h"
 
 #include <files.h>
 
@@ -16,10 +18,20 @@ static void init_engine_functions(sol::state_view& state);
 static void init_entity_functions(sol::state_view& state);
 static void init_entity_list_functions(sol::state_view& state);
 static void init_math_functions(sol::state_view& state);
+static void init_util_functions(sol::state_view& state);
 
 void c_lua_mgr::init_api()
 {
 	sol::state_view state = m_state;
+
+	state.open_libraries
+	(
+		sol::lib::base,
+		sol::lib::string,
+		sol::lib::utf8,
+		sol::lib::bit32,
+		sol::lib::ffi
+	);
 
 	init_basic_things(state);
 	init_usertypes(state);
@@ -31,33 +43,40 @@ void c_lua_mgr::init_api()
 	init_entity_functions(state);
 	init_entity_list_functions(state);
 	init_math_functions(state);
+	init_util_functions(state);
 
-	state.set_function("set_event_callback", [&](sol::this_state s, const std::string& _event, sol::function fn)
+	state.new_enum("callback",
+		callback_id_to_string(CL_ON_PREINIT),   CL_ON_PREINIT,
+		callback_id_to_string(CL_ON_INIT),      CL_ON_INIT,
+		callback_id_to_string(CL_ON_UNLOAD),    CL_ON_UNLOAD,
+		callback_id_to_string(CL_ON_PRESENT),   CL_ON_PRESENT,
+		callback_id_to_string(CL_ON_RESET),     CL_ON_RESET,
+		callback_id_to_string(CL_ON_RESET_END), CL_ON_RESET_END);
+
+	state.set_function("register_callback", [&](sol::this_state s, int callback_id, sol::function fn)
 	{
 		sol::state_view state{ s };
 		sol::table rs = state["debug"]["getinfo"](2, ("S"));
 
-		std::string  src  = rs["source"];
+		std::string src = rs["source"];
+		int line        = rs["currentline"];
+
+		if (callback_id >= maxCallbacks) {
+			Helpers::console_printf_with_prefix("[lua]", "%s:%i: Failed to register callback (Invalid callback id)", src.substr(1).c_str(), line);
+			return;
+		}
+
 		std::wstring name = std::filesystem::path(src.substr(1)).filename().wstring();
 
-		m_lua_event[_event].push_back({ get_script_index_by_name(name), fn });
+		m_lua_event[callback_id].push_back({ get_script_index_by_name(name), fn });
 
-		g_cs->m_cvar->console_color_printf(color_t(255, V_UI_COL).get_revert(), "[lua] ");
-		g_cs->m_cvar->console_printf("Subscribed to %s in %s (Updated %s)\n", _event.c_str(),
-			std::string(name.begin(), name.end()).c_str(), get_script_update_datetime(name).c_str());
+		Helpers::console_printf_with_prefix("[lua]", "Subscribed to %s in %s (Updated %s)",
+			callback_id_to_string(callback_id).c_str(), std::string(name.begin(), name.end()).c_str(), get_script_update_datetime(name).c_str());
 	});
 }
 
 static void init_basic_things(sol::state_view& state)
 {
-	state.open_libraries
-	(
-		sol::lib::base,
-		sol::lib::string,
-		sol::lib::utf8,
-		sol::lib::bit32
-	);
-
 	state.new_enum("RENDERER_TEXTFLAGS",
 		"TEXT_NONE",     TEXT_NONE,
 		"TEXT_OUTLINE",  TEXT_OUTLINE,
@@ -110,7 +129,7 @@ static void init_usertypes(sol::state_view& state)
 		"release", [](ID3DXFont* font) { if (font) font->Release(); }
 	);
 
-	state.new_usertype<player_info_t>("PlayerInfo",
+	state.new_usertype<player_info_t>("player_info",
 		"name", sol::readonly(&player_info_t::m_player_name),
 		"friendsname", sol::readonly(&player_info_t::m_friends_name),
 		"user_id", sol::readonly(&player_info_t::m_user_id),
@@ -118,7 +137,7 @@ static void init_usertypes(sol::state_view& state)
 		"ishltv", sol::readonly(&player_info_t::m_is_hltv)
 	);
 
-	state.new_usertype<user_cmd_t>("UserCmd",
+	state.new_usertype<user_cmd_t>("user_cmd",
 		"cmd_number", sol::readonly(&user_cmd_t::m_command_number),
 		"forward_move", &user_cmd_t::m_forwardmove,
 		"side_move", &user_cmd_t::m_sidemove,
@@ -254,6 +273,14 @@ static void init_renderer_functions(sol::state_view& state)
 		return g_renderer->gradient_v(x, y, w, h, c_a, c_b);
 	});
 
+	table.set_function("gradient_multi", [](int x, int y, int w, int h, color_t c_a, color_t c_b, color_t c_c, color_t c_d) {
+		return g_renderer->gradient_multi(x, y, w, h, c_a, c_b, c_c, c_d);
+	});
+
+	table.set_function("gradient_multi_fill", [](int x, int y, int w, int h, color_t c_a, color_t c_b, color_t c_c, color_t c_d) {
+		return g_renderer->gradient_multi_fill(x, y, w, h, c_a, c_b, c_c, c_d);
+	});
+
 	state["renderer"] = table;
 }
 
@@ -369,4 +396,15 @@ static void init_math_functions(sol::state_view& state)
 	});
 
 	state["math"] = table;
+}
+
+static void init_util_functions(sol::state_view& state)
+{
+	sol::table table = state.create_table();
+
+	table.set_function("find_pattern", [](const std::string& module_name, const std::string& signature) {
+		return g_sig->scan_sig(module_name, signature);
+	});
+
+	state["util"] = table;
 }

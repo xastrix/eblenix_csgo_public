@@ -81,6 +81,9 @@ namespace Helpers
 	/* Parses a JSON-like string to extract all string values enclosed in double quotes */
 	std::vector<std::string> parse_json_object(const std::string& in);
 
+	/* Prints a formatted message to the in-game console with a specified prefix */
+	void console_printf_with_prefix(const char* prefix, const char* fmt, ...);
+
 	/* Waits for a module specified by index to be loaded within a timeout period */
 	_wfm_stat wait_for_module(int module_index, int ms);
 

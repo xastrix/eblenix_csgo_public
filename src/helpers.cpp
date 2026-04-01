@@ -360,6 +360,24 @@ std::vector<std::string> Helpers::parse_json_object(const std::string& in)
 	return result;
 }
 
+void Helpers::console_printf_with_prefix(const char* prefix, const char* fmt, ...)
+{
+	va_list ap;
+	va_start(ap, fmt);
+
+	va_list ap_copy;
+	va_copy(ap_copy, ap);
+	int needed = std::vsnprintf(nullptr, 0, fmt, ap_copy);
+	va_end(ap_copy);
+
+	std::vector<char> buf(static_cast<size_t>(needed) + 1);
+	std::vsnprintf(buf.data(), buf.size(), fmt, ap);
+	va_end(ap);
+
+	g_cs->m_cvar->console_color_printf(color_t(255, V_UI_COL).get_revert(), "%s ", prefix);
+	g_cs->m_cvar->console_printf("%s\n", buf.data());
+}
+
 _wfm_stat Helpers::wait_for_module(int module_index, int ms)
 {
 	return wait_for_module(module_index, maxModules, ms);

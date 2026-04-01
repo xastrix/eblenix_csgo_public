@@ -47,8 +47,7 @@ void c_event_list::init()
 							std::string player_name{ info.m_player_name };
 							std::transform(player_name.begin(), player_name.end(), player_name.begin(), tolower);
 
-							g_cs->m_cvar->console_color_printf(color_t(255, V_UI_COL).get_revert(), "[Eblenix] ");
-							g_cs->m_cvar->console_printf("hit %s in the %s for %d (%d health remains)\n",
+							Helpers::console_printf_with_prefix("[Eblenix]", "hit %s in the %s for %d (%d health remains)",
 								player_name.c_str(), Helpers::hitgroup_name(hitbox).c_str(), damage, health);
 						}
 					}
@@ -75,8 +74,8 @@ void c_event_list::init()
 
 					const auto weapon = event->get_string("weapon");
 
-					g_cs->m_cvar->console_color_printf(color_t(255, V_UI_COL).get_revert(), "[Eblenix] ");
-					g_cs->m_cvar->console_printf("A %s purchased %s\n", player_name.c_str(), weapon != "weapon_unknown" ? weapon : "?");
+					Helpers::console_printf_with_prefix("[Eblenix]", "A %s purchased %s",
+						player_name.c_str(), weapon != "weapon_unknown" ? weapon : "?");
 				}
 			}
 		}
