@@ -57,7 +57,7 @@ void world_esp_t::think()
 		if (g_var->get_as<bool>(V_VISUALS_ENGINE_RADAR).value())
 			entity->get_spotted() = true;
 
-		if (g_var->get_as<bool>(V_VISUALS_WORLD_PROJECTLINES_ENABLED).value())
+		if (g_var->get_as<bool>(V_VISUALS_WORLD_GRENADES_ENABLED).value())
 			draw_projectiles(entity);
 
 		if (g_var->get_as<bool>(V_VISUALS_WORLD_ITEMS_ENABLED).value())
@@ -347,9 +347,9 @@ void world_esp_t::on_scene_end()
 
 void world_esp_t::draw_projectiles(c_base_entity* entity)
 {
-	entity_object projectlines{ entity };
+	entity_object projectiles{ entity };
 
-	if (!projectlines.is_network_name("Projectile"))
+	if (!projectiles.is_network_name("Projectile"))
 		return;
 
 	const auto studio_model = g_cs->m_model_info->get_studio_model(entity->get_model());
@@ -361,104 +361,103 @@ void world_esp_t::draw_projectiles(c_base_entity* entity)
 	if (studio_model_name.find("thrown") == std::string::npos && studio_model_name.find("dropped") == std::string::npos)
 		return;
 
-	if (!projectlines.world_to_screen())
+	if (!projectiles.world_to_screen())
 		return;
 
-	const auto col = color_t(V_VISUALS_WORLD_PROJECTLINES_COL);
+	const auto col = color_t(V_VISUALS_WORLD_GRENADES_COL);
 
 	auto y_dist_pos = 10;
 
-	switch (g_var->get_as<int>(V_VISUALS_WORLD_PROJECTLINES_TYPE).value()) {
+	switch (g_var->get_as<int>(V_VISUALS_WORLD_GRENADES_TYPE).value()) {
 	case 0: {
-		if (studio_model_name.find("shbang") != std::string::npos) {
-			g_font->draw_string("Flash", projectlines.get_pos().x, projectlines.get_pos().y,
+		if (studio_model_name.find("shbang") != std::string::npos)
+			g_font->draw_string("Flash", projectiles.get_pos().x, projectiles.get_pos().y,
 				FONT(Tahoma12px), TEXT_OUTLINE | TEXT_CENTER_X, col);
-		}
-		else if (studio_model_name.find("kegrenade") != std::string::npos) {
-			g_font->draw_string("Smoke", projectlines.get_pos().x, projectlines.get_pos().y,
+
+		else if (studio_model_name.find("kegrenade") != std::string::npos)
+			g_font->draw_string("Smoke", projectiles.get_pos().x, projectiles.get_pos().y,
 				FONT(Tahoma12px), TEXT_OUTLINE | TEXT_CENTER_X, col);
-		}
-		else if (studio_model_name.find("arygrenade") != std::string::npos) {
-			g_font->draw_string("Incendiary", projectlines.get_pos().x, projectlines.get_pos().y,
+
+		else if (studio_model_name.find("arygrenade") != std::string::npos)
+			g_font->draw_string("Incendiary", projectiles.get_pos().x, projectiles.get_pos().y,
 				FONT(Tahoma12px), TEXT_OUTLINE | TEXT_CENTER_X, col);
-		}
-		else if (studio_model_name.find("olotov") != std::string::npos) {
-			g_font->draw_string("Molotov", projectlines.get_pos().x, projectlines.get_pos().y,
+
+		else if (studio_model_name.find("olotov") != std::string::npos)
+			g_font->draw_string("Molotov", projectiles.get_pos().x, projectiles.get_pos().y,
 				FONT(Tahoma12px), TEXT_OUTLINE | TEXT_CENTER_X, col);
-		}
-		else if (studio_model_name.find("ggrenade") != std::string::npos) {
-			g_font->draw_string("He", projectlines.get_pos().x, projectlines.get_pos().y,
+
+		else if (studio_model_name.find("ggrenade") != std::string::npos)
+			g_font->draw_string("He", projectiles.get_pos().x, projectiles.get_pos().y,
 				FONT(Tahoma12px), TEXT_OUTLINE | TEXT_CENTER_X, col);
-		}
-		else if (studio_model_name.find("ecoy") != std::string::npos) {
-			g_font->draw_string("Decoy", projectlines.get_pos().x, projectlines.get_pos().y,
+
+		else if (studio_model_name.find("ecoy") != std::string::npos)
+			g_font->draw_string("Decoy", projectiles.get_pos().x, projectiles.get_pos().y,
 				FONT(Tahoma12px), TEXT_OUTLINE | TEXT_CENTER_X, col);
-		}
+
 		break;
 	}
 	case 1: {
-		if (studio_model_name.find("shbang") != std::string::npos) {
-			g_font->draw_string("i", projectlines.get_pos().x, projectlines.get_pos().y,
+		if (studio_model_name.find("shbang") != std::string::npos)
+			g_font->draw_string("i", projectiles.get_pos().x, projectiles.get_pos().y,
 				FONT(Astriumwep16px), TEXT_OUTLINE | TEXT_CENTER_X, col);
-		}
-		else if (studio_model_name.find("kegrenade") != std::string::npos) {
-			g_font->draw_string("k", projectlines.get_pos().x, projectlines.get_pos().y,
+
+		else if (studio_model_name.find("kegrenade") != std::string::npos)
+			g_font->draw_string("k", projectiles.get_pos().x, projectiles.get_pos().y,
 				FONT(Astriumwep16px), TEXT_OUTLINE | TEXT_CENTER_X, col);
-		}
-		else if (studio_model_name.find("arygrenade") != std::string::npos) {
-			g_font->draw_string("l", projectlines.get_pos().x, projectlines.get_pos().y,
+
+		else if (studio_model_name.find("arygrenade") != std::string::npos)
+			g_font->draw_string("l", projectiles.get_pos().x, projectiles.get_pos().y,
 				FONT(Astriumwep16px), TEXT_OUTLINE | TEXT_CENTER_X, col);
-		}
-		else if (studio_model_name.find("olotov") != std::string::npos) {
-			g_font->draw_string("n", projectlines.get_pos().x, projectlines.get_pos().y,
+
+		else if (studio_model_name.find("olotov") != std::string::npos)
+			g_font->draw_string("n", projectiles.get_pos().x, projectiles.get_pos().y,
 				FONT(Astriumwep16px), TEXT_OUTLINE | TEXT_CENTER_X, col);
-		}
-		else if (studio_model_name.find("ggrenade") != std::string::npos) {
-			g_font->draw_string("j", projectlines.get_pos().x, projectlines.get_pos().y,
+
+		else if (studio_model_name.find("ggrenade") != std::string::npos)
+			g_font->draw_string("j", projectiles.get_pos().x, projectiles.get_pos().y,
 				FONT(Astriumwep16px), TEXT_OUTLINE | TEXT_CENTER_X, col);
-		}
-		else if (studio_model_name.find("ecoy") != std::string::npos) {
-			g_font->draw_string("m", projectlines.get_pos().x, projectlines.get_pos().y,
+
+		else if (studio_model_name.find("ecoy") != std::string::npos)
+			g_font->draw_string("m", projectiles.get_pos().x, projectiles.get_pos().y,
 				FONT(Astriumwep16px), TEXT_OUTLINE | TEXT_CENTER_X, col);
-		}
 
 		y_dist_pos += 4;
 		break;
 	}
 	}
 
-	if (g_var->get_as<bool>(V_VISUALS_WORLD_PROJECTLINES_DISTANCE).value())
+	if (g_var->get_as<bool>(V_VISUALS_WORLD_GRENADES_DISTANCE).value())
 	{
 		char distance[256];
-		sprintf_s(distance, "%im", static_cast<int>(g_cs->get_local()->get_vec_origin().distance_to(projectlines.get_origin())));
+		sprintf_s(distance, "%im", static_cast<int>(g_cs->get_local()->get_vec_origin().distance_to(projectiles.get_origin())));
 
-		g_font->draw_string(distance, projectlines.get_pos().x, projectlines.get_pos().y + y_dist_pos,
+		g_font->draw_string(distance, projectiles.get_pos().x, projectiles.get_pos().y + y_dist_pos,
 			FONT(Tahoma12px), TEXT_OUTLINE | TEXT_CENTER_X, col);
 	}
 }
 
 void world_esp_t::draw_entity_objects(c_base_entity* entity, std::vector<std::pair<std::string, _class_ids>> objects)
 {
-	entity_object entity_objects{ entity };
+	entity_object entities{ entity };
 
-	if (!entity_objects.world_to_screen())
+	if (!entities.world_to_screen())
 		return;
 
 	const auto col = color_t(V_VISUALS_WORLD_ITEMS_COL);
 
 	char distance[256];
-	sprintf_s(distance, "%im", static_cast<int>(g_cs->get_local()->get_vec_origin().distance_to(entity_objects.get_origin())));
+	sprintf_s(distance, "%im", static_cast<int>(g_cs->get_local()->get_vec_origin().distance_to(entities.get_origin())));
 
 	for (const auto& obj : objects)
 	{
-		if (entity_objects.in_class_id(obj.second))
+		if (entities.in_class_id(obj.second))
 		{
-			g_font->draw_string(obj.first, entity_objects.get_pos().x, entity_objects.get_pos().y,
+			g_font->draw_string(obj.first, entities.get_pos().x, entities.get_pos().y,
 				FONT(Tahoma12px), TEXT_OUTLINE | TEXT_CENTER_X, col);
 
 			if (g_var->get_as<bool>(V_VISUALS_WORLD_ITEMS_DISTANCE).value())
 			{
-				g_font->draw_string(distance, entity_objects.get_pos().x, entity_objects.get_pos().y + 10,
+				g_font->draw_string(distance, entities.get_pos().x, entities.get_pos().y + 10,
 					FONT(Tahoma12px), TEXT_OUTLINE | TEXT_CENTER_X, col);
 			}
 		}

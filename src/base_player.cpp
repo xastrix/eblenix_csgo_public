@@ -198,12 +198,6 @@ bool c_base_player::is_defusing()
 		netvar_manager::get_address("DT_CSPlayer::m_bIsDefusing"));
 }
 
-uint32_t* c_base_player::get_my_weapons()
-{
-	return (uint32_t*)((uintptr_t)this +
-		netvar_manager::get_address("DT_CSPlayer::m_hMyWeapons"));
-}
-
 float c_base_player::get_duck_amount()
 {
 	return Helpers::read<float>(uintptr_t(this) +

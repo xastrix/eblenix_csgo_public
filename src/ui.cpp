@@ -263,15 +263,15 @@ void c_ui::setup()
 			});
 
 			add_tab<UI_SUB_SUB_POS>(L"Grenades (In use)", [&]() {
-				add_bool<UI_SUB_SUB_SUB_POS>(L"Enable", V_VISUALS_WORLD_PROJECTLINES_ENABLED, true);
+				add_bool<UI_SUB_SUB_SUB_POS>(L"Enable", V_VISUALS_WORLD_GRENADES_ENABLED, true);
 
-				add_item<UI_SUB_SUB_SUB_POS>(L"Grenades Type", V_VISUALS_WORLD_PROJECTLINES_TYPE, { L"Text", L"Icon" }, m_colors[UI_TEXT_COL], true);
+				add_item<UI_SUB_SUB_SUB_POS>(L"Grenades Type", V_VISUALS_WORLD_GRENADES_TYPE, { L"Text", L"Icon" }, m_colors[UI_TEXT_COL], true);
 
-				add_bool<UI_SUB_SUB_SUB_POS>(L"Grenades Distance", V_VISUALS_WORLD_PROJECTLINES_DISTANCE, true);
+				add_bool<UI_SUB_SUB_SUB_POS>(L"Grenades Distance", V_VISUALS_WORLD_GRENADES_DISTANCE, true);
 
-				add_int<UI_SUB_SUB_SUB_POS>(L"Grenades R", V_VISUALS_WORLD_PROJECTLINES_COL_R, 0, 255, 1);
-				add_int<UI_SUB_SUB_SUB_POS>(L"Grenades G", V_VISUALS_WORLD_PROJECTLINES_COL_G, 0, 255, 1);
-				add_int<UI_SUB_SUB_SUB_POS>(L"Grenades B", V_VISUALS_WORLD_PROJECTLINES_COL_B, 0, 255, 1);
+				add_int<UI_SUB_SUB_SUB_POS>(L"Grenades R", V_VISUALS_WORLD_GRENADES_COL_R, 0, 255, 1);
+				add_int<UI_SUB_SUB_SUB_POS>(L"Grenades G", V_VISUALS_WORLD_GRENADES_COL_G, 0, 255, 1);
+				add_int<UI_SUB_SUB_SUB_POS>(L"Grenades B", V_VISUALS_WORLD_GRENADES_COL_B, 0, 255, 1);
 			});
 
 			add_tab<UI_SUB_SUB_POS>(L"Weapons", [&]() {

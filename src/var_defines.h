@@ -146,13 +146,13 @@
 #define V_VISUALS_INTERFACE_SPECTATORS "visuals->interface->spectators"
 #define V_VISUALS_INTERFACE_SPECTATORS_POS_Y "visuals->interface->spectators->pos->y"
 
-#define V_VISUALS_WORLD_PROJECTLINES_ENABLED "visuals->world->projectlines->enabled"
-#define V_VISUALS_WORLD_PROJECTLINES_DISTANCE "visuals->world->projectlines->distance"
-#define V_VISUALS_WORLD_PROJECTLINES_TYPE "visuals->world->projectlines->type"
-#define V_VISUALS_WORLD_PROJECTLINES_COL "visuals->world->projectlines->col"
-#define V_VISUALS_WORLD_PROJECTLINES_COL_R V_VISUALS_WORLD_PROJECTLINES_COL R_COL_P
-#define V_VISUALS_WORLD_PROJECTLINES_COL_G V_VISUALS_WORLD_PROJECTLINES_COL G_COL_P
-#define V_VISUALS_WORLD_PROJECTLINES_COL_B V_VISUALS_WORLD_PROJECTLINES_COL B_COL_P
+#define V_VISUALS_WORLD_GRENADES_ENABLED "visuals->world->grenades->enabled"
+#define V_VISUALS_WORLD_GRENADES_DISTANCE "visuals->world->grenades->distance"
+#define V_VISUALS_WORLD_GRENADES_TYPE "visuals->world->grenades->type"
+#define V_VISUALS_WORLD_GRENADES_COL "visuals->world->grenades->col"
+#define V_VISUALS_WORLD_GRENADES_COL_R V_VISUALS_WORLD_GRENADES_COL R_COL_P
+#define V_VISUALS_WORLD_GRENADES_COL_G V_VISUALS_WORLD_GRENADES_COL G_COL_P
+#define V_VISUALS_WORLD_GRENADES_COL_B V_VISUALS_WORLD_GRENADES_COL B_COL_P
 
 #define V_VISUALS_WORLD_ITEMS_ENABLED "visuals->world->items->enabled"
 #define V_VISUALS_WORLD_ITEMS_DISTANCE "visuals->world->items->distance"

@@ -107,13 +107,6 @@ enum _item_definitions {
 	weapon_knife_widowmaker,
 };
 
-enum _teams {
-	teamNone,
-	teamSpectator,
-	teamT,
-	teamCT,
-};
-
 enum _bomb_sites {
 	BS_A,
 	BS_B,
@@ -176,7 +169,6 @@ public:
 	bool                  has_c4();
 	int                   get_cash();
 	bool                  is_defusing();
-	uint32_t*             get_my_weapons();
 	float                 get_duck_amount();
 	unsigned long         get_observer_target();
 };
