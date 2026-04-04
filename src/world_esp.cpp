@@ -139,11 +139,11 @@ void world_esp_t::on_do_post_screen_effects()
 	if (!g_cs->get_local())
 		return;
 
-	for (int i = 0; i < g_cs->m_glow_manager->size; i++)
+	for (int i = 0; i < g_cs->m_glow_manager->get_size(); i++)
 	{
-		auto& glow = g_cs->m_glow_manager->objects[i];
+		auto& glow = g_cs->m_glow_manager->glow_object_definitions[i];
 
-		if (glow.m_next_free_slot != ENTRY_IN_USE)
+		if (glow.is_unused())
 			continue;
 
 		const auto glow_object = reinterpret_cast<c_base_player*>(glow.m_entity);
