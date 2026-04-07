@@ -61,7 +61,7 @@ vec3 c_base_entity::get_vec_origin()
 		netvar_manager::get_address("DT_BasePlayer::m_vecOrigin"));
 }
 
-bool& c_base_entity::get_spotted()
+bool& c_base_entity::is_spotted()
 {
 	return Helpers::read<bool>(uintptr_t(this) +
 		netvar_manager::get_address("DT_BaseEntity::m_bSpotted"));

@@ -40,6 +40,14 @@ static bool __stdcall create_move_h(float input_sample_frametime, user_cmd_t* cm
 		Math::normalize_angles(cmd->m_viewangles);
 		Math::clamp_angles(cmd->m_viewangles);
 
+		for (auto _ : LUA_CALLBACK(CL_ON_CREATE_MOVE)) {
+			auto result = _.fn(cmd);
+			if (!result.valid()) {
+				sol::error err = result;
+				Helpers::console_printf_with_prefix("[lua]", "%s", err.what());
+			}
+		}
+
 		return false;
 	}
 

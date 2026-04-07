@@ -8,7 +8,7 @@
 #include <memory>
 
 #define MAX_PLAYER_RENDERING_DISTANCE 1499.0f
-#define MAX_PLAYERS                   65
+#define MAX_PLAYERS                   64
 
 #define ARMOR_MIN_VAL                 10
 

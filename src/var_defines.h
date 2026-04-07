@@ -130,7 +130,6 @@
 /******************************************************************************/
 
 #define V_VISUALS_ENABLED "visuals->enabled"
-#define V_VISUALS_ENGINE_RADAR "visuals->engine_radar"
 #define V_VISUALS_INTERFACE_STATUS "visuals->interface->status"
 #define V_VISUALS_INTERFACE_STATUS_POS_Y "visuals->interface->status->pos->y"
 #define V_VISUALS_INTERFACE_STATUS_AIMBOT "visuals->interface->status->aim"

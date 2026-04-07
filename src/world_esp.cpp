@@ -54,15 +54,12 @@ void world_esp_t::think()
 		if (entity == g_cs->get_local())
 			continue;
 
-		if (g_var->get_as<bool>(V_VISUALS_ENGINE_RADAR).value())
-			entity->get_spotted() = true;
-
 		if (g_var->get_as<bool>(V_VISUALS_WORLD_GRENADES_ENABLED).value())
 			draw_projectiles(entity);
 
 		if (g_var->get_as<bool>(V_VISUALS_WORLD_ITEMS_ENABLED).value())
 		{
-			std::vector<std::pair<std::string, _class_ids>> entity_objects{
+			draw_entity_objects(entity, {
 				{ "Drone",         cdrone },
 				{ "Radar Jammer",  cphyspropradarjammer },
 				{ "Sentry Turret", cdronegun },
@@ -73,9 +70,7 @@ void world_esp_t::think()
 				{ "Chicken",       cchicken },
 				{ "Hostage",       chostage },
 				{ "Fish",          cfish },
-			};
-
-			draw_entity_objects(entity, entity_objects);
+			});
 		}
 
 		if (g_var->get_as<bool>(V_VISUALS_WORLD_WEAPONS_ENABLED).value())

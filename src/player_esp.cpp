@@ -7,6 +7,8 @@
 
 void player_esp_t::think()
 {
+	box bbox;
+
 	if (!g_var->get_as<bool>(V_ESP_ENABLED).value())
 		return;
 
@@ -33,7 +35,6 @@ void player_esp_t::think()
 
 		calc_player_animation_progress(i, am, entity);
 
-		box bbox{};
 		if (Helpers::get_bbox(entity, bbox, static_cast<_bbox_types>(g_var->get_as<int>(V_ESP_RENDER_TYPE).value())))
 			player_rendering(i, entity, bbox);
 	}

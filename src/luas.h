@@ -19,6 +19,8 @@ enum _callback_list {
 	CL_ON_PRESENT,
 	CL_ON_RESET,
 	CL_ON_RESET_END,
+	CL_ON_CREATE_MOVE,
+	CL_ON_WND_PROC,
 	maxCallbacks,
 };
 
@@ -85,6 +87,12 @@ private:
 		}
 		case CL_ON_RESET_END: {
 			return "on_reset_end";
+		}
+		case CL_ON_CREATE_MOVE: {
+			return "on_move";
+		}
+		case CL_ON_WND_PROC: {
+			return "on_wndproc";
 		}
 		default: {
 			return "?";

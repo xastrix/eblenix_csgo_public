@@ -5,6 +5,8 @@
 #include "states.h"
 #include "hud.h"
 #include "ui.h"
+#include "luas.h"
+#include "helpers.h"
 
 #include <algorithm>
 
@@ -27,7 +29,17 @@ static unsigned long WINAPI wnd_proc(HWND h, UINT m, WPARAM w, LPARAM l)
 		}
 
 		if (!(g_state->get_current_state() == SL_SHUTDOWN))
+		{
 			g_input->process_message(m, w, l);
+
+			for (auto _ : LUA_CALLBACK(CL_ON_WND_PROC)) {
+				auto result = _.fn(m, w, l);
+				if (!result.valid()) {
+					sol::error err = result;
+					Helpers::console_printf_with_prefix("[lua]", "%s", err.what());
+				}
+			}
+		}
 	}
 
 	return CallWindowProcA(g_input->get_wnd_proc(), h, m, w, l);

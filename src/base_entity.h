@@ -126,7 +126,7 @@ public:
 	model_t*              get_model();
 	vec3                  get_absolute_origin();
 	vec3                  get_vec_origin();
-	bool&                 get_spotted();
+	bool&                 is_spotted();
 	int                   draw_model(int flags, uint8_t alpha);
 	vec3                  mins();
 	vec3                  maxs();

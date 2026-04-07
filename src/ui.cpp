@@ -243,8 +243,7 @@ void c_ui::setup()
 	});
 
 	add(L"Visuals", [&]() {
-		add_bool<UI_SUB_POS>(L"Enable", V_VISUALS_ENABLED);
-		add_bool<UI_SUB_POS>(L"Engine Radar", V_VISUALS_ENGINE_RADAR, true);
+		add_bool<UI_SUB_POS>(L"Enable", V_VISUALS_ENABLED, true);
 
 		add_tab<UI_SUB_POS>(L"Interface", [&]() {
 			add_bool<UI_SUB_SUB_POS>(L"Draw Status", V_VISUALS_INTERFACE_STATUS);

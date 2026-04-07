@@ -1,5 +1,6 @@
 #include "luas.h"
 
+#include "globals.h"
 #include "interfaces.h"
 #include "renderer.h"
 #include "math.h"
@@ -46,12 +47,14 @@ void c_lua_mgr::init_api()
 	init_util_functions(state);
 
 	state.new_enum("callback",
-		callback_id_to_string(CL_ON_PREINIT),   CL_ON_PREINIT,
-		callback_id_to_string(CL_ON_INIT),      CL_ON_INIT,
-		callback_id_to_string(CL_ON_UNLOAD),    CL_ON_UNLOAD,
-		callback_id_to_string(CL_ON_PRESENT),   CL_ON_PRESENT,
-		callback_id_to_string(CL_ON_RESET),     CL_ON_RESET,
-		callback_id_to_string(CL_ON_RESET_END), CL_ON_RESET_END);
+		callback_id_to_string(CL_ON_PREINIT),     CL_ON_PREINIT,
+		callback_id_to_string(CL_ON_INIT),        CL_ON_INIT,
+		callback_id_to_string(CL_ON_UNLOAD),      CL_ON_UNLOAD,
+		callback_id_to_string(CL_ON_PRESENT),     CL_ON_PRESENT,
+		callback_id_to_string(CL_ON_RESET),       CL_ON_RESET,
+		callback_id_to_string(CL_ON_RESET_END),   CL_ON_RESET_END,
+		callback_id_to_string(CL_ON_CREATE_MOVE), CL_ON_CREATE_MOVE,
+		callback_id_to_string(CL_ON_WND_PROC),    CL_ON_WND_PROC);
 
 	state.set_function("register_callback", [&](sol::this_state s, int callback_id, sol::function fn)
 	{
@@ -77,6 +80,9 @@ void c_lua_mgr::init_api()
 
 static void init_basic_things(sol::state_view& state)
 {
+	state["is_panic"] = GLOBAL(b_flags[BF_PANIC]);
+	state["unload"]   = [](){ g::unload(); };
+
 	state.new_enum("RENDERER_TEXTFLAGS",
 		"TEXT_NONE",     TEXT_NONE,
 		"TEXT_OUTLINE",  TEXT_OUTLINE,
@@ -150,14 +156,14 @@ static void init_global_variables(sol::state_view& state)
 {
 	sol::table table = state.create_table();
 
-	table["frame_count"] = g_cs->m_globals->frame_count;
-	table["frame_time"] = g_cs->m_globals->frame_time;
+	table["frame_count"]        = g_cs->m_globals->frame_count;
+	table["frame_time"]         = g_cs->m_globals->frame_time;
 	table["absolute_frametime"] = g_cs->m_globals->absolute_frametime;
-	table["cur_time"] = g_cs->m_globals->cur_time;
-	table["real_time"] = g_cs->m_globals->real_time;
-	table["interval_per_tick"] = g_cs->m_globals->interval_per_tick;
-	table["tick_count"] = g_cs->m_globals->tick_count;
-	table["max_clients"] = g_cs->m_globals->max_clients;
+	table["cur_time"]           = g_cs->m_globals->cur_time;
+	table["real_time"]          = g_cs->m_globals->real_time;
+	table["interval_per_tick"]  = g_cs->m_globals->interval_per_tick;
+	table["tick_count"]         = g_cs->m_globals->tick_count;
+	table["max_clients"]        = g_cs->m_globals->max_clients;
 
 	state["globals"] = table;
 }
@@ -351,6 +357,10 @@ static void init_entity_functions(sol::state_view& state)
 
 	table.set_function("is_scoped", [](c_base_player* e) {
 		return e->is_scoped();
+	});
+
+	table.set_function("is_spotted", [](c_base_player* e) {
+		return e->is_spotted();
 	});
 
 	table.set_function("is_defusing", [](c_base_player* e) {
