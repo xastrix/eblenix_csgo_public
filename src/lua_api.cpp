@@ -355,12 +355,12 @@ static void init_entity_functions(sol::state_view& state)
 		return e->get_flash_duration();
 	});
 
-	table.set_function("is_scoped", [](c_base_player* e) {
-		return e->is_scoped();
+	table.set_function("get_dormant", [](c_base_player* e) {
+		return e->get_dormant();
 	});
 
-	table.set_function("is_spotted", [](c_base_player* e) {
-		return e->is_spotted();
+	table.set_function("is_scoped", [](c_base_player* e) {
+		return e->is_scoped();
 	});
 
 	table.set_function("is_defusing", [](c_base_player* e) {
@@ -373,6 +373,10 @@ static void init_entity_functions(sol::state_view& state)
 
 	table.set_function("get_abs_origin", [](c_base_player* e) {
 		return e->get_absolute_origin();
+	});
+
+	table.set_function("set_spotted", [](c_base_player* e, bool v) {
+		return e->is_spotted() = v;
 	});
 
 	state["entity"] = table;
@@ -405,7 +409,7 @@ static void init_math_functions(sol::state_view& state)
 		return Math::w2s(origin, screen);
 	});
 
-	state["math"] = table;
+	state["engine_math"] = table;
 }
 
 static void init_util_functions(sol::state_view& state)
