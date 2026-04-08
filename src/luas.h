@@ -13,6 +13,7 @@ extern "C" {
 #include <map>
 
 enum _callback_list {
+	CL_NONE,
 	CL_ON_PREINIT,
 	CL_ON_INIT,
 	CL_ON_UNLOAD,
@@ -94,10 +95,9 @@ private:
 		case CL_ON_WND_PROC: {
 			return "on_wndproc";
 		}
-		default: {
-			return "?";
 		}
-		}
+
+		return "?";
 	}
 
 private:

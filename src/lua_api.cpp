@@ -64,7 +64,7 @@ void c_lua_mgr::init_api()
 		std::string src = rs["source"];
 		int line        = rs["currentline"];
 
-		if (callback_id >= maxCallbacks) {
+		if (callback_id <= CL_NONE || callback_id >= maxCallbacks) {
 			Helpers::console_printf_with_prefix("[lua]", "%s:%i: Failed to register callback (Invalid callback id)", src.substr(1).c_str(), line);
 			return;
 		}
