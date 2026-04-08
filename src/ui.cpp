@@ -3,7 +3,9 @@
 #include "globals.h"
 #include "cfg.h"
 #include "interfaces.h"
+#ifdef LUA_ENABLED
 #include "luas.h"
+#endif
 
 #include "sprites.hpp"
 
@@ -72,7 +74,9 @@ void c_ui::calc_animation_progress(float anim_time, float delta_time, float& old
 
 void c_ui::setup()
 {
+#ifdef LUA_ENABLED
 	lua_list_t                lua_list = g_lua->get_list();
+#endif
 	std::vector<std::wstring> cfg_list = { L"1", L"2", L"3", L"4", L"5" };
 
 	add(L"Aim", [&]() {
@@ -381,6 +385,7 @@ void c_ui::setup()
 		});
 	});
 
+#ifdef LUA_ENABLED
 	add(L"Lua (" + std::to_wstring(lua_list.size()) + L")", [&]() {
 		std::vector<std::wstring> luas{};
 
@@ -412,6 +417,7 @@ void c_ui::setup()
 			g_lua->refresh_scripts();
 		});
 	});
+#endif
 
 	add(L"Glow", [&]() {
 		add_bool<UI_SUB_POS>(L"Enable", V_GLOW_ENABLED, true);

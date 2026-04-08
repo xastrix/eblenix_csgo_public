@@ -5,7 +5,9 @@
 #include "states.h"
 #include "hud.h"
 #include "ui.h"
+#ifdef LUA_ENABLED
 #include "luas.h"
+#endif
 #include "helpers.h"
 
 #include <algorithm>
@@ -14,7 +16,8 @@ static unsigned long WINAPI wnd_proc(HWND h, UINT m, WPARAM w, LPARAM l)
 {
 	if (GLOBAL(b_flags[BF_INITIALISED]))
 	{
-		// loader (user) sends *unload* message to the csgo, we receive
+		// By pressing the unload button in the injector, you are sending a message,
+		// and here we intercept it and call the unload function.
 		if (m == WM_COPYDATA) {
 			const auto pcds = (PCOPYDATASTRUCT)l;
 
@@ -32,6 +35,7 @@ static unsigned long WINAPI wnd_proc(HWND h, UINT m, WPARAM w, LPARAM l)
 		{
 			g_input->process_message(m, w, l);
 
+#ifdef LUA_ENABLED
 			for (auto _ : LUA_CALLBACK(CL_ON_WND_PROC)) {
 				auto result = _.fn(m, w, l);
 				if (!result.valid()) {
@@ -39,6 +43,7 @@ static unsigned long WINAPI wnd_proc(HWND h, UINT m, WPARAM w, LPARAM l)
 					Helpers::console_printf_with_prefix("[lua]", "%s", err.what());
 				}
 			}
+#endif
 		}
 	}
 

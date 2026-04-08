@@ -1,22 +1,38 @@
 #pragma once
 
+/* Cheat name */
 #define _PRODUCT_NAME              "EBLENIX"
 
+/* Window class name for CS */
 #define CSGO_CLASS_NAME            "Valve001"
+
+/* Message for the client (injector) to unload the cheat */
 #define LOADER_UNLOAD_HOOK_MESSAGE "UNLOAD_EBLENIX_MSG"
 
+/* Main directory of the cheat */
 #define BASE_DIRECTORY_NAME        "EBX/"
 
+/* Path to the configurations directory */
 #define CFG_DIRECTORY_PATHS        BASE_DIRECTORY_NAME "cfg/"
+
+/* Configuration keys */
 #define CFG_INT_KEY                "{i32}"
 #define CFG_FLOAT_KEY              "{f32}"
 #define CFG_BOOL_TRUE_KEY          "{on}"
 #define CFG_BOOL_FALSE_KEY         "{off}"
 
+/* Path to the lua scripts directory */
 #define LUA_DIRECTORY_PATHS        BASE_DIRECTORY_NAME "lua/"
+
+/* Path to the lua startup list file */
 #define LUA_STARTUP_LIST_PATH      BASE_DIRECTORY_NAME "lua_startup.json"
 
+/* Enable/disable lua scripts, if undefined, scripts are disabled */
+#define LUA_ENABLED
+
 enum fn_num {
+	// Hook indexes in virtual tables
+
 	CREATE_MOVE_FN_INDEX                 = 24,
 	PAINT_TRAVERSE_FN_INDEX              = 41,
 	PRESENT_FN_INDEX                     = 17,

@@ -7,7 +7,9 @@
 #include "interfaces.h"
 #include "signatures.h"
 #include "math.h"
+#ifdef LUA_ENABLED
 #include "luas.h"
+#endif
 #include "fnv.h"
 
 #include <MinHook.h>

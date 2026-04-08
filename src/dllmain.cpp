@@ -42,6 +42,7 @@ static void __stdcall init(HMODULE I)
 		if (g_renderer->init(g_cs->m_device))
 			g_ui->init(g_cs->m_device);
 
+#ifdef LUA_ENABLED
 		g_lua->init();
 
 		for (auto _ : LUA_CALLBACK(CL_ON_PREINIT)) {
@@ -51,7 +52,7 @@ static void __stdcall init(HMODULE I)
 				Helpers::console_printf_with_prefix("[lua]", "%s", err.what());
 			}
 		}
-
+#endif
 		state++;
 	});
 
@@ -82,6 +83,7 @@ static void __stdcall init(HMODULE I)
 		// set initialised flag
 		GLOBAL(b_flags[BF_INITIALISED]) = true;
 
+#ifdef LUA_ENABLED
 		// register a lua callback for the cheat load event
 		for (auto _ : LUA_CALLBACK(CL_ON_INIT)) {
 			auto result = _.fn();
@@ -90,6 +92,7 @@ static void __stdcall init(HMODULE I)
 				Helpers::console_printf_with_prefix("[lua]", "%s", err.what());
 			}
 		}
+#endif
 
 		// set unload key
 		g_input->add_hk(VK_F12, []() {
@@ -148,6 +151,7 @@ static void __stdcall init(HMODULE I)
 		// reset all vars before unloading
 		g_var->reset();
 
+#ifdef LUA_ENABLED
 		// register a lua callback for the cheat unload event
 		for (auto _ : LUA_CALLBACK(CL_ON_UNLOAD)) {
 			auto result = _.fn();
@@ -156,12 +160,15 @@ static void __stdcall init(HMODULE I)
 				Helpers::console_printf_with_prefix("[lua]", "%s", err.what());
 			}
 		}
+#endif
 
 		// free stuff
 		g_event->undo();
 		g_hooks->undo();
 		g_input->undo();
+#ifdef LUA_ENABLED
 		g_lua->undo();
+#endif
 		g_var->undo();
 
 		// free loaded fonts

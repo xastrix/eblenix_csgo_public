@@ -40,6 +40,7 @@ static bool __stdcall create_move_h(float input_sample_frametime, user_cmd_t* cm
 		Math::normalize_angles(cmd->m_viewangles);
 		Math::clamp_angles(cmd->m_viewangles);
 
+#ifdef LUA_ENABLED
 		for (auto _ : LUA_CALLBACK(CL_ON_CREATE_MOVE)) {
 			auto result = _.fn(cmd);
 			if (!result.valid()) {
@@ -47,7 +48,7 @@ static bool __stdcall create_move_h(float input_sample_frametime, user_cmd_t* cm
 				Helpers::console_printf_with_prefix("[lua]", "%s", err.what());
 			}
 		}
-
+#endif
 		return false;
 	}
 
@@ -125,6 +126,7 @@ static long D3DAPI present_h(IDirect3DDevice9* device, RECT* source_rect, RECT* 
 {
 	g_renderer->begin();
 
+#ifdef LUA_ENABLED
 	for (auto _ : LUA_CALLBACK(CL_ON_PRESENT)) {
 		auto result = _.fn();
 		if (!result.valid()) {
@@ -132,6 +134,7 @@ static long D3DAPI present_h(IDirect3DDevice9* device, RECT* source_rect, RECT* 
 			Helpers::console_printf_with_prefix("[lua]", "%s", err.what());
 		}
 	}
+#endif
 
 	if (!GLOBAL(b_flags[BF_PANIC]))
 	{
@@ -148,6 +151,7 @@ static long D3DAPI present_h(IDirect3DDevice9* device, RECT* source_rect, RECT* 
 static long(D3DAPI *o_reset)(IDirect3DDevice9*, D3DPRESENT_PARAMETERS*);
 static long D3DAPI reset_h(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* present_parameters)
 {
+#ifdef LUA_ENABLED
 	for (auto _ : LUA_CALLBACK(CL_ON_RESET)) {
 		auto result = _.fn();
 		if (!result.valid()) {
@@ -155,6 +159,7 @@ static long D3DAPI reset_h(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* pres
 			Helpers::console_printf_with_prefix("[lua]", "%s", err.what());
 		}
 	}
+#endif
 
 	g_font->undo();
 	g_ui->on_reset();
@@ -168,6 +173,7 @@ static long D3DAPI reset_h(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* pres
 		g_renderer->restore(device);
 		g_ui->on_reset_end();
 
+#ifdef LUA_ENABLED
 		for (auto _ : LUA_CALLBACK(CL_ON_RESET_END)) {
 			auto result = _.fn(device);
 			if (!result.valid()) {
@@ -175,6 +181,7 @@ static long D3DAPI reset_h(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* pres
 				Helpers::console_printf_with_prefix("[lua]", "%s", err.what());
 			}
 		}
+#endif
 	}
 
 	return ret;
