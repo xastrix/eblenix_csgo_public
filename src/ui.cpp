@@ -602,3 +602,8 @@ void c_ui::clear()
 	s_entry_sz[UI_SUB_SUB_POS] = 0;
 	s_entry_sz[UI_SUB_SUB_SUB_POS] = 0;
 }
+
+void c_ui::undo()
+{
+	delete[] m_sprites;
+}

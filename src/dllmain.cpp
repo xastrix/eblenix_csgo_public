@@ -166,6 +166,7 @@ static void __stdcall init(HMODULE I)
 		g_event->undo();
 		g_hooks->undo();
 		g_input->undo();
+		g_ui->undo();
 #ifdef LUA_ENABLED
 		g_lua->undo();
 #endif

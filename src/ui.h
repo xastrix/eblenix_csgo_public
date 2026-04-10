@@ -89,6 +89,8 @@ public:
 	bool get_menu_state() { return m_opened; }
 	void set_menu_state(bool v) { m_opened = v; }
 
+	void undo();
+
 private:
 	void calc_animation_progress(float anim_time, float delta_time, float& old_alpha);
 	void draw(int x, int y);
@@ -224,8 +226,8 @@ private:
 	m_entry m_entry[MAX_MENU_ENTRIES]{};
 	s_entry s_entries[MAX_SUB_ENTRIES][maxUISubs]{};
 
-	color_t m_colors[maxUIColors]{};
-	sprite_t m_sprites[maxUISprites]{};
+	color_t   m_colors                [maxUIColors]{};
+	sprite_t* m_sprites = new sprite_t[maxUISprites]{};
 };
 
 inline std::shared_ptr<c_ui> g_ui = c_ui::make_shared();
