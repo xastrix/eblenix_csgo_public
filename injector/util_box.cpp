@@ -1,23 +1,27 @@
 #include "ui.h"
+#include "interface.h"
 
-void gui::base_t::util_box(ui_vec_t pos, std::vector<ui_util_t> ulist)
+void ui::ui_base_t::util_box(ui_vec_t pos, std::vector<ui_util_t> list)
 {
-	static bool box_opened{};
+	static bool box_opened;
 	static int sx, sy;
 
 	// huh?
-	if (ulist.empty())
+	if (list.empty())
 		return;
 
-	if ((GetAsyncKeyState(VK_RBUTTON) & 1) && !box_opened) {
+	if ((GetAsyncKeyState(VK_RBUTTON) & 1) && (!box_opened && g_interface.is_window_active()))
+	{
 		sx = pos.x;
 		sy = pos.y;
+
 		box_opened = true;
+		set_blocked(true);
 	}
 
 	if (box_opened)
 	{
-		for (int i = 0; i < ulist.size(); i++)
+		for (int i = 0; i < list.size(); i++)
 		{
 			ui_cursor_rect_t frame_rect = {
 				{ sx + 5, sy + (i * 18) },
@@ -33,16 +37,20 @@ void gui::base_t::util_box(ui_vec_t pos, std::vector<ui_util_t> ulist)
 				frame_rect.m_second.x - 1, frame_rect.m_second.y - 1,
 				hovered ? D3DCOLOR_RGBA(68, 99, 153, 255) : D3DCOLOR_RGBA(54, 72, 102, 255));
 
-			g_d3d.draw_string(ulist[i].m_name, frame_rect.m_first.x + 5,
+			g_d3d.draw_string(list[i].m_name, frame_rect.m_first.x + 5,
 				frame_rect.m_first.y + 3, g_d3d.get_font(Tahoma12px), D3DCOLOR_RGBA(255, 255, 255, 255));
 
 			if (hovered && (GetAsyncKeyState(VK_LBUTTON) & 0x8000)) {
-				ulist[i].m_fn();
+				list[i].m_fn();
+				
+				set_blocked(false);
 				box_opened = false;
 			}
 			else if (!hovered) {
-				if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
+				if (GetAsyncKeyState(VK_LBUTTON) & 0x8000) {
+					set_blocked(false);
 					box_opened = false;
+				}
 			}
 		}
 	}

@@ -12,8 +12,8 @@ enum _game_list {
 
 namespace g
 {
-	inline bool loop{ true };
-	inline HINSTANCE instance{};
+	inline
+		HINSTANCE instance{};
 
 	inline
 		std::string dlls[maxGames]{};

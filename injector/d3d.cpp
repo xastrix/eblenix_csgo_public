@@ -41,10 +41,13 @@ bool d3d::create_objects(IDirect3DDevice9* device)
 	return true;
 }
 
-void d3d::begin_render_states()
+bool d3d::begin_drawing()
 {
 	if (!m_device)
-		return;
+		return false;
+
+	if (FAILED(m_device->BeginScene()))
+		return false;
 
 	m_block->Capture();
 
@@ -92,11 +95,14 @@ void d3d::begin_render_states()
 
 	m_device->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
 	m_device->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+
+	return true;
 }
 
-void d3d::end_render_states()
+void d3d::end_drawing()
 {
 	m_block->Apply();
+	m_device->EndScene();
 }
 
 void d3d::draw_line(int x0, int y0, int x1, int y1, D3DCOLOR color)

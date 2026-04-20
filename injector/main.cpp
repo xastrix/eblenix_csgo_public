@@ -13,7 +13,7 @@ int __stdcall WinMain(HINSTANCE I, HINSTANCE, LPSTR, int32_t)
 
 	g::dlls          [CSGO] = "eblenix_csgo.dll";
 
-	g_interface.render();
+	g_interface.loop();
 	g_interface.undo();
 
 	return EXIT_SUCCESS;

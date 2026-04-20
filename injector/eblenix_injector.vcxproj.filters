@@ -5,12 +5,6 @@
     <ClCompile Include="interface.cpp">
       <Filter>interface</Filter>
     </ClCompile>
-    <ClCompile Include="sprites.cpp">
-      <Filter>interface\renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="d3d.cpp">
-      <Filter>interface\renderer</Filter>
-    </ClCompile>
     <ClCompile Include="ui.cpp">
       <Filter>interface\ui</Filter>
     </ClCompile>
@@ -26,6 +20,9 @@
     <ClCompile Include="util_box.cpp">
       <Filter>interface\ui\controls</Filter>
     </ClCompile>
+    <ClCompile Include="d3d.cpp">
+      <Filter>interface</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="util.h" />
@@ -37,11 +34,11 @@
     </ClInclude>
     <ClInclude Include="globals.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="d3d.h">
-      <Filter>interface\renderer</Filter>
-    </ClInclude>
     <ClInclude Include="ui.h">
       <Filter>interface\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="d3d.h">
+      <Filter>interface</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -53,9 +50,6 @@
     </Filter>
     <Filter Include="interface\ui">
       <UniqueIdentifier>{10af7fdc-6480-473b-b686-dcaefe2080be}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="interface\renderer">
-      <UniqueIdentifier>{63f4818e-60f6-4feb-8487-96cf9f30672f}</UniqueIdentifier>
     </Filter>
     <Filter Include="interface\ui\controls">
       <UniqueIdentifier>{3dce9dc7-7fa1-4c50-91c2-21cc0848c4e8}</UniqueIdentifier>

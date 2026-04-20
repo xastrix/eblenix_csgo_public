@@ -1,19 +1,16 @@
 #include "ui.h"
 
 std::unordered_map<std::string, bool> g_Buttons{};
-void gui::base_t::button(const std::string& field, std::function<void()> fn)
+void ui::ui_base_t::button(const std::string& field, int w, int h, std::function<void()> fn)
 {
 	const auto x = m_erect.m_start_pos.x + 5;
 	const auto y = m_erect.m_start_pos.y + 5;
-
-	const auto w = 115;
-	const auto h = 24;
 
 	ui_cursor_rect_t button_rect = {
 		{ x, y }, { w, h }
 	};
 
-	if (is_hovered(button_rect)) {
+	if (is_hovered(button_rect) && !is_blocked()) {
 		g_d3d.draw_filled_rect(x, y, w, h, D3DCOLOR_RGBA(68, 99, 153, 255));
 		g_d3d.draw_rect(x, y, w, h, D3DCOLOR_RGBA(58, 87, 137, 255));
 

@@ -14,7 +14,7 @@ enum _interface_status {
 struct Interface {
 	_interface_status init();
 
-	void render();
+	void loop();
 	void on_reset();
 
 	int get_width();
@@ -29,6 +29,21 @@ struct Interface {
 	void set_window_pos(int x, int y);
 
 	void undo();
+
+private:
+	bool update_frame() {
+		MSG msg;
+
+		while (PeekMessageA(&msg, NULL, 0, 0, PM_REMOVE)) {
+			if (msg.message == WM_QUIT) return false;
+
+			TranslateMessage(&msg);
+			DispatchMessageA(&msg);
+		}
+
+		return true;
+	}
+
 private:
 	WNDCLASSEX            m_wc{};
 	HWND                  m_hwnd{};

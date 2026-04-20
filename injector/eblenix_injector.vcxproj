@@ -106,7 +106,6 @@
     <ClCompile Include="group_box.cpp" />
     <ClCompile Include="interface.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="sprites.cpp" />
     <ClCompile Include="ui.cpp" />
     <ClCompile Include="util_box.cpp" />
   </ItemGroup>

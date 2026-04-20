@@ -3,45 +3,51 @@
 #include "interface.h"
 #include "csgo_icon.hpp"
 
-void gui::base_t::init(IDirect3DDevice9* device, ui_rect_t rect)
+void ui::ui_base_t::init(IDirect3DDevice9* device, ui_rect_t rect)
 {
 	m_rect = rect;
-	g_ui.csgo_icon_sprite->init(device, csgo_ico, sizeof(csgo_ico), 24, 24);
+	ui::csgo_ico->init(device, csgo_icon, sizeof(csgo_icon), 24, 24);
 }
 
-void gui::base_t::begin_frame()
+void ui::ui_base_t::begin_frame()
 {
-	g_ui.csgo_icon_sprite->begin();
+	ui::csgo_ico->begin();
+
+	g_d3d.draw_filled_rect(0, 0, m_rect.m_size.x, m_rect.m_size.y,
+		D3DCOLOR_RGBA(68, 90, 129, 255));
+
+	g_d3d.draw_rect(0, 0, m_rect.m_size.x - 1, m_rect.m_size.y - 1,
+		D3DCOLOR_RGBA(66, 84, 114, 255));
 }
 
-void gui::base_t::pop_cursor_pos(ui_vec_t group_pos)
+void ui::ui_base_t::set_cursor_pos(ui_vec_t pos)
 {
-	m_erect.m_start_pos.x = group_pos.x;
-	m_erect.m_start_pos.y = group_pos.y;
+	m_erect.m_start_pos.x = pos.x;
+	m_erect.m_start_pos.y = pos.y;
 }
 
-void gui::base_t::push_log(const std::string& msg)
+void ui::ui_base_t::push_log(const std::string& msg)
 {
 	m_logs.push_back({ msg, std::chrono::steady_clock::now() });
 }
 
-void gui::base_t::on_reset()
+void ui::ui_base_t::on_reset()
 {
-	g_ui.csgo_icon_sprite->on_reset();
+	ui::csgo_ico->on_reset();
 }
 
-void gui::base_t::on_reset_end()
+void ui::ui_base_t::on_reset_end()
 {
-	g_ui.csgo_icon_sprite->on_reset_end();
+	ui::csgo_ico->on_reset_end();
 }
 
-void gui::base_t::end_frame()
+void ui::ui_base_t::end_frame()
 {
 	if (!m_logs.empty()) {
 		auto now = std::chrono::steady_clock::now();
 		auto& n = m_logs.front();
 
-		g_ui.get->text_box(n.m_msg, { 10, g_interface.get_height() - 32 });
+		ui::get->text_box(n.m_msg, { 10, g_interface.get_height() - 32 });
 
 		auto duration = std::chrono::duration_cast<std::chrono::seconds>(now - n.m_start_time).count();
 
@@ -49,10 +55,10 @@ void gui::base_t::end_frame()
 			m_logs.erase(m_logs.begin());
 	}
 
-	g_ui.csgo_icon_sprite->end();
+	ui::csgo_ico->end();
 }
 
-bool gui::base_t::is_hovered(const ui_cursor_rect_t& rect)
+bool ui::ui_base_t::is_hovered(const ui_cursor_rect_t& rect)
 {
 	auto mouse_pos_x = g_interface.get_mouse_pos_x();
 	auto mouse_pos_y = g_interface.get_mouse_pos_y();
