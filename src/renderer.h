@@ -12,6 +12,7 @@
 class c_sprite_mgr {
 public:
 	void init(IDirect3DDevice9* device, const byte* img, const size_t img_size, int width, int height);
+	void init(IDirect3DDevice9* device, const std::string& path, int width, int height);
 
 	void begin(DWORD flags);
 	void end();
@@ -35,6 +36,7 @@ private:
 	IDirect3DDevice9*  m_device{};
 	ID3DXSprite*       m_sprite{};
 	IDirect3DTexture9* m_texture{};
+	std::string        m_path{};
 	const byte*        m_image{};
 	size_t             m_image_size{};
 };

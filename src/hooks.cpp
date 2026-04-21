@@ -143,6 +143,16 @@ static long D3DAPI present_h(IDirect3DDevice9* device, RECT* source_rect, RECT* 
 		g_ui->run();
 	}
 
+#ifdef LUA_ENABLED
+	for (auto _ : LUA_CALLBACK(CL_ON_PRESENT_END)) {
+		auto result = _.fn();
+		if (!result.valid()) {
+			sol::error err = result;
+			Helpers::console_printf_with_prefix("[lua]", "%s", err.what());
+		}
+	}
+#endif
+
 	g_renderer->end();
 
 	return o_present(device, source_rect, dest_rect, dest_window_override, dirty_region);

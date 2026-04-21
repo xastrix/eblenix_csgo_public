@@ -51,6 +51,7 @@ void c_lua_mgr::init_api()
 		callback_id_to_string(CL_ON_INIT),        CL_ON_INIT,
 		callback_id_to_string(CL_ON_UNLOAD),      CL_ON_UNLOAD,
 		callback_id_to_string(CL_ON_PRESENT),     CL_ON_PRESENT,
+		callback_id_to_string(CL_ON_PRESENT_END), CL_ON_PRESENT_END,
 		callback_id_to_string(CL_ON_RESET),       CL_ON_RESET,
 		callback_id_to_string(CL_ON_RESET_END),   CL_ON_RESET_END,
 		callback_id_to_string(CL_ON_CREATE_MOVE), CL_ON_CREATE_MOVE,
@@ -131,24 +132,28 @@ static void init_usertypes(sol::state_view& state)
 		"a", [](const color_t& c) { return c.get_arr()[3]; });
 	state["color"] = [](int r, int g, int b, int a) { return color_t(r, g, b, a); };
 
-	state.new_usertype<ID3DXFont>("font",
-		"release", [](ID3DXFont* font) { if (font) font->Release(); }
+	state.new_usertype<sprite_t>("sprite",
+		"begin_draw",    [](sprite_t& sprite) { sprite.begin(D3DXSPRITE_DONOTMODIFY_RENDERSTATE); },
+		"draw",          [](sprite_t& sprite, int x, int y, color_t c) { sprite.draw(x, y, c); },
+		"end_draw",      [](sprite_t& sprite) { sprite.end(); },
+		"on_reset",      [](sprite_t& sprite) { sprite.on_reset(); },
+		"on_reset_end",  [](sprite_t& sprite) { sprite.on_reset_end(); }
 	);
 
 	state.new_usertype<player_info_t>("player_info",
-		"name", sol::readonly(&player_info_t::m_player_name),
-		"friendsname", sol::readonly(&player_info_t::m_friends_name),
-		"user_id", sol::readonly(&player_info_t::m_user_id),
-		"fakeplayer", sol::readonly(&player_info_t::m_is_fake_player),
-		"ishltv", sol::readonly(&player_info_t::m_is_hltv)
+		"name",          sol::readonly(&player_info_t::m_player_name),
+		"friendsname",   sol::readonly(&player_info_t::m_friends_name),
+		"user_id",       sol::readonly(&player_info_t::m_user_id),
+		"fakeplayer",    sol::readonly(&player_info_t::m_is_fake_player),
+		"ishltv",        sol::readonly(&player_info_t::m_is_hltv)
 	);
 
 	state.new_usertype<user_cmd_t>("user_cmd",
-		"cmd_number", sol::readonly(&user_cmd_t::m_command_number),
-		"forward_move", &user_cmd_t::m_forwardmove,
-		"side_move", &user_cmd_t::m_sidemove,
-		"up_move", &user_cmd_t::m_upmove,
-		"buttons", &user_cmd_t::m_buttons
+		"cmd_number",    sol::readonly(&user_cmd_t::m_command_number),
+		"forward_move",  &user_cmd_t::m_forwardmove,
+		"side_move",     &user_cmd_t::m_sidemove,
+		"up_move",       &user_cmd_t::m_upmove,
+		"buttons",       &user_cmd_t::m_buttons
 	);
 }
 
@@ -227,6 +232,14 @@ static void init_renderer_functions(sol::state_view& state)
 			FF_DONTCARE,
 			name.c_str(),
 			&ret);
+
+		return ret;
+	});
+
+	table.set_function("create_sprite", [](const std::string& path, int width, int height) {
+		sprite_t* ret = new sprite_t();
+		
+		ret->init(g_renderer->get_device(), { LUA_DIRECTORY_PATHS + path }, width, height);
 
 		return ret;
 	});

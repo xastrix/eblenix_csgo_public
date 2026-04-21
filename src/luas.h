@@ -18,6 +18,7 @@ enum _callback_list {
 	CL_ON_INIT,
 	CL_ON_UNLOAD,
 	CL_ON_PRESENT,
+	CL_ON_PRESENT_END,
 	CL_ON_RESET,
 	CL_ON_RESET_END,
 	CL_ON_CREATE_MOVE,
@@ -82,6 +83,9 @@ private:
 		}
 		case CL_ON_PRESENT: {
 			return "on_present";
+		}
+		case CL_ON_PRESENT_END: {
+			return "on_present_end";
 		}
 		case CL_ON_RESET: {
 			return "on_reset";
