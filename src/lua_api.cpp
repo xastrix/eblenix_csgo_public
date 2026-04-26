@@ -10,6 +10,7 @@
 #include <files.h>
 
 static void init_basic_things(sol::state_view& state);
+static void init_enums(sol::state_view& state);
 static void init_usertypes(sol::state_view& state);
 static void init_global_variables(sol::state_view& state);
 static void init_convar_functions(sol::state_view& state);
@@ -20,6 +21,7 @@ static void init_entity_functions(sol::state_view& state);
 static void init_entity_list_functions(sol::state_view& state);
 static void init_math_functions(sol::state_view& state);
 static void init_util_functions(sol::state_view& state);
+static std::string callback_id_to_string(int id);
 
 void c_lua_mgr::init_api()
 {
@@ -35,6 +37,7 @@ void c_lua_mgr::init_api()
 	);
 
 	init_basic_things(state);
+	init_enums(state);
 	init_usertypes(state);
 	init_global_variables(state);
 	init_convar_functions(state);
@@ -45,17 +48,6 @@ void c_lua_mgr::init_api()
 	init_entity_list_functions(state);
 	init_math_functions(state);
 	init_util_functions(state);
-
-	state.new_enum("cb",
-		callback_id_to_string(CL_ON_PREINIT),     CL_ON_PREINIT,
-		callback_id_to_string(CL_ON_INIT),        CL_ON_INIT,
-		callback_id_to_string(CL_ON_UNLOAD),      CL_ON_UNLOAD,
-		callback_id_to_string(CL_ON_PRESENT),     CL_ON_PRESENT,
-		callback_id_to_string(CL_ON_PRESENT_END), CL_ON_PRESENT_END,
-		callback_id_to_string(CL_ON_RESET),       CL_ON_RESET,
-		callback_id_to_string(CL_ON_RESET_END),   CL_ON_RESET_END,
-		callback_id_to_string(CL_ON_CREATE_MOVE), CL_ON_CREATE_MOVE,
-		callback_id_to_string(CL_ON_WND_PROC),    CL_ON_WND_PROC);
 
 	state.set_function("register_callback", [&](sol::this_state s, int callback_id, sol::function fn)
 	{
@@ -81,56 +73,75 @@ void c_lua_mgr::init_api()
 
 static void init_basic_things(sol::state_view& state)
 {
-	state["is_panic"] = GLOBAL(b_flags[BF_PANIC]);
-	state["unload"]   = [](){ g::unload(); };
+	state["is_panic"]  = GLOBAL(b_flags[BF_PANIC]);
+	state["unload"]    = [](){ g::unload(); };
+
+	state["vec2"]      = [](float x, float y) { return vec2(x, y); };
+	state["vec3"]      = [](float x, float y, float z) { return vec3(x, y, z); };
+
+	state["color"]     = [](int r, int g, int b, int a) { return color_t(r, g, b, a); };
+}
+
+static void init_enums(sol::state_view& state)
+{
+	state.new_enum("cb",
+		callback_id_to_string(CL_ON_PREINIT),     CL_ON_PREINIT,
+		callback_id_to_string(CL_ON_INIT),        CL_ON_INIT,
+		callback_id_to_string(CL_ON_UNLOAD),      CL_ON_UNLOAD,
+		callback_id_to_string(CL_ON_PRESENT),     CL_ON_PRESENT,
+		callback_id_to_string(CL_ON_PRESENT_END), CL_ON_PRESENT_END,
+		callback_id_to_string(CL_ON_RESET),       CL_ON_RESET,
+		callback_id_to_string(CL_ON_RESET_END),   CL_ON_RESET_END,
+		callback_id_to_string(CL_ON_CREATE_MOVE), CL_ON_CREATE_MOVE,
+		callback_id_to_string(CL_ON_WND_PROC),    CL_ON_WND_PROC);
 
 	state.new_enum("RENDERER_TEXTFLAGS",
-		"TEXT_NONE",     TEXT_NONE,
-		"TEXT_OUTLINE",  TEXT_OUTLINE,
-		"TEXT_CENTER_X", TEXT_CENTER_X
+		"TEXT_NONE",                              TEXT_NONE,
+		"TEXT_OUTLINE",                           TEXT_OUTLINE,
+		"TEXT_CENTER_X",                          TEXT_CENTER_X
 	);
 
 	state.new_enum("CMD_BUTTONS",
-		"IN_ATTACK",     in_attack,
-		"IN_ATTACK2",    in_attack2,
-		"IN_JUMP",       in_jump,
-		"IN_DUCK",       in_duck,
-		"IN_FORWARD",    in_forward,
-		"IN_BACK",       in_back,
-		"IN_USE",        in_use,
-		"IN_MOVELEFT",   in_moveleft,
-		"IN_MOVERIGHT",  in_moveright,
-		"IN_SCORE",      in_score,
-		"IN_BULLRUSH",   in_bullrush
+		"IN_ATTACK",                              in_attack,
+		"IN_ATTACK2",                             in_attack2,
+		"IN_JUMP",                                in_jump,
+		"IN_DUCK",                                in_duck,
+		"IN_FORWARD",                             in_forward,
+		"IN_BACK",                                in_back,
+		"IN_USE",                                 in_use,
+		"IN_MOVELEFT",                            in_moveleft,
+		"IN_MOVERIGHT",                           in_moveright,
+		"IN_SCORE",                               in_score,
+		"IN_BULLRUSH",                            in_bullrush
 	);
 
 	state.new_enum("MOVE_TYPE",
-		"WALK",          movetype_walk,
-		"FLY",           movetype_fly,
-		"NOCLIP",        movetype_noclip,
-		"LADDER",        movetype_ladder,
-		"OBSERVER",      movetype_observer
+		"WALK",                                   movetype_walk,
+		"FLY",                                    movetype_fly,
+		"NOCLIP",                                 movetype_noclip,
+		"LADDER",                                 movetype_ladder,
+		"OBSERVER",                               movetype_observer
 	);
 }
 
 static void init_usertypes(sol::state_view& state)
 {
 	state.new_usertype<vec2>("vec2", sol::constructors<vec2(float, float)>(),
-		"x", &vec2::x, "y", &vec2::y
+		"x",             &vec2::x,
+		"y",             &vec2::y
 	);
-	state["vec2"] = [](float x, float y) { return vec2(x, y); };
 
 	state.new_usertype<vec3>("vec3", sol::constructors<vec2(float, float, float)>(),
-		"x", &vec3::x, "y", &vec3::y, "z", &vec3::z
+		"x",             &vec3::x,
+		"y",             &vec3::y,
+		"z",             &vec3::z
 	);
-	state["vec3"] = [](float x, float y, float z) { return vec3(x, y, z); };
 
 	state.new_usertype<color_t>("color", sol::constructors<color_t(int, int, int, int)>(),
-		"r", [](const color_t& c) { return c.get_arr()[0]; },
-		"g", [](const color_t& c) { return c.get_arr()[1]; },
-		"b", [](const color_t& c) { return c.get_arr()[2]; },
-		"a", [](const color_t& c) { return c.get_arr()[3]; });
-	state["color"] = [](int r, int g, int b, int a) { return color_t(r, g, b, a); };
+		"r",             [](const color_t& c) { return c.get_arr()[0]; },
+		"g",             [](const color_t& c) { return c.get_arr()[1]; },
+		"b",             [](const color_t& c) { return c.get_arr()[2]; },
+		"a",             [](const color_t& c) { return c.get_arr()[3]; });
 
 	state.new_usertype<sprite_t>("sprite",
 		"begin_draw",    [](sprite_t& sprite) { sprite.begin(D3DXSPRITE_DONOTMODIFY_RENDERSTATE); },
@@ -219,10 +230,10 @@ static void init_renderer_functions(sol::state_view& state)
 {
 	sol::table table = state.create_table();
 
-	table.set_function("create_font", [](const std::string& name, int px, uint32_t weight, DWORD quality) {
+	table.set_function("create_font", [](sol::this_state s, const std::string& name, int px, uint32_t weight, DWORD quality) {
 		ID3DXFont* ret;
 
-		D3DXCreateFontA(
+		HRESULT hr = D3DXCreateFontA(
 			g_renderer->get_device(),
 			px, 0,
 			weight, 1, 0,
@@ -233,13 +244,35 @@ static void init_renderer_functions(sol::state_view& state)
 			name.c_str(),
 			&ret);
 
+		if (FAILED(hr)) {
+			sol::state_view state{ s };
+			sol::table rs = state["debug"]["getinfo"](2, ("Sl"));
+
+			std::string src = rs["source"];
+			int line        = rs["currentline"];
+
+			Helpers::console_printf_with_prefix("[lua]",
+				"%s:%i: Failed to create font", src.substr(1).c_str(), line);
+		}
+
 		return ret;
 	});
 
-	table.set_function("create_sprite", [](const std::string& path, int width, int height) {
+	table.set_function("create_sprite", [](sol::this_state s, const std::string& path, int width, int height) {
 		sprite_t* ret = new sprite_t();
 		
 		ret->init(g_renderer->get_device(), { LUA_DIRECTORY_PATHS + path }, width, height);
+
+		if (FAILED(ret->get_result())) {
+			sol::state_view state{ s };
+			sol::table rs = state["debug"]["getinfo"](2, ("Sl"));
+
+			std::string src = rs["source"];
+			int line        = rs["currentline"];
+
+			Helpers::console_printf_with_prefix("[lua]",
+				"%s:%i: Failed to create sprite", src.substr(1).c_str(), line);
+		}
 
 		return ret;
 	});
@@ -434,4 +467,39 @@ static void init_util_functions(sol::state_view& state)
 	});
 
 	state["util"] = table;
+}
+
+static std::string callback_id_to_string(int id)
+{
+	switch (id) {
+	case CL_ON_PREINIT: {
+		return "on_preinit";
+	}
+	case CL_ON_INIT: {
+		return "on_init";
+	}
+	case CL_ON_UNLOAD: {
+		return "on_unload";
+	}
+	case CL_ON_PRESENT: {
+		return "on_present";
+	}
+	case CL_ON_PRESENT_END: {
+		return "on_present_end";
+	}
+	case CL_ON_RESET: {
+		return "on_reset";
+	}
+	case CL_ON_RESET_END: {
+		return "on_reset_end";
+	}
+	case CL_ON_CREATE_MOVE: {
+		return "on_move";
+	}
+	case CL_ON_WND_PROC: {
+		return "on_wndproc";
+	}
+	}
+
+	return "?";
 }

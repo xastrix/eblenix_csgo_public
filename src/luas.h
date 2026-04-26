@@ -70,40 +70,6 @@ private:
 	void load_startup_scripts();
 	std::string get_script_update_datetime(const std::wstring& name);
 
-	std::string callback_id_to_string(int id) {
-		switch (id) {
-		case CL_ON_PREINIT: {
-			return "on_preinit";
-		}
-		case CL_ON_INIT: {
-			return "on_init";
-		}
-		case CL_ON_UNLOAD: {
-			return "on_unload";
-		}
-		case CL_ON_PRESENT: {
-			return "on_present";
-		}
-		case CL_ON_PRESENT_END: {
-			return "on_present_end";
-		}
-		case CL_ON_RESET: {
-			return "on_reset";
-		}
-		case CL_ON_RESET_END: {
-			return "on_reset_end";
-		}
-		case CL_ON_CREATE_MOVE: {
-			return "on_move";
-		}
-		case CL_ON_WND_PROC: {
-			return "on_wndproc";
-		}
-		}
-
-		return "?";
-	}
-
 private:
 	lua_State*  m_state;
 	lua_event_t m_lua_event;

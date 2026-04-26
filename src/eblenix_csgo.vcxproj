@@ -183,7 +183,6 @@
     <ClCompile Include="interfaces.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="renderer.cpp" />
-    <ClCompile Include="sprite_mgr.cpp" />
     <ClCompile Include="helpers.cpp" />
     <ClCompile Include="ui.cpp" />
     <ClCompile Include="world_esp.cpp" />
