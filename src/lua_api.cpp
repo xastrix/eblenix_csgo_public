@@ -46,7 +46,7 @@ void c_lua_mgr::init_api()
 	init_math_functions(state);
 	init_util_functions(state);
 
-	state.new_enum("callback",
+	state.new_enum("cb",
 		callback_id_to_string(CL_ON_PREINIT),     CL_ON_PREINIT,
 		callback_id_to_string(CL_ON_INIT),        CL_ON_INIT,
 		callback_id_to_string(CL_ON_UNLOAD),      CL_ON_UNLOAD,
