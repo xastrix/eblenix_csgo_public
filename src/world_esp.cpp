@@ -146,7 +146,7 @@ void world_esp_t::on_do_post_screen_effects()
 		if (!glow_object || glow_object->get_dormant())
 			continue;
 
-		if (!g_cs->get_local()->can_see_entity(glow_object->get_eye_pos()) & g_var->get_as<bool>(V_GLOW_VISIBLE_ONLY).value())
+		if (!g_cs->get_local()->can_see_entity(glow_object, glow_object->get_eye_pos()) & g_var->get_as<bool>(V_GLOW_VISIBLE_ONLY).value())
 			continue;
 
 		const auto client_class = glow_object->get_client_class();

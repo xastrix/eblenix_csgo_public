@@ -116,9 +116,6 @@
     <ClCompile Include="triggerbot.cpp">
       <Filter>features</Filter>
     </ClCompile>
-    <ClCompile Include="auto_pistol.cpp">
-      <Filter>features</Filter>
-    </ClCompile>
     <ClCompile Include="aimbot.cpp">
       <Filter>features</Filter>
     </ClCompile>
@@ -543,6 +540,9 @@
     </ClInclude>
     <ClInclude Include="luas.h">
       <Filter>luas</Filter>
+    </ClInclude>
+    <ClInclude Include="triggerbot.h">
+      <Filter>features</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

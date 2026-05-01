@@ -45,6 +45,12 @@ namespace Helpers
 	bool is_knife(c_base_weapon* weapon);
 	bool is_non_aim(c_base_weapon* weapon);
 
+	/* Find the bone index on an entity that is closest to the player's view */
+	int get_nearest_bone(c_base_player* entity, user_cmd_t* cmd);
+
+	/* Find the best target entity index within a given fov */
+	int find_target_entity(user_cmd_t* cmd, const float fov, vec3& angle);
+
 	/* Retrieves the bounding box of an entity */
 	bool get_bbox(c_base_player* entity, box& in, const _bbox_types type);
 	

@@ -1,11 +1,11 @@
-#include "aimbot.h"
+#include "triggerbot.h"
 
 #include "vars.h"
 #include "interfaces.h"
 #include "helpers.h"
 #include "math.h"
 
-void triggerbot_t::think(user_cmd_t* cmd)
+void c_triggerbot::run(user_cmd_t* cmd)
 {
 	vec3         src, dst;
 	trace_t      tr;
@@ -39,7 +39,7 @@ void triggerbot_t::think(user_cmd_t* cmd)
 		shoot(cmd, weapon, tr);
 }
 
-void triggerbot_t::clip_trace_to_players(const vec3& start, const vec3& end, uint32_t mask, trace_t* old_trace, c_base_entity* ent) const
+void c_triggerbot::clip_trace_to_players(const vec3& start, const vec3& end, uint32_t mask, trace_t* old_trace, c_base_entity* ent) const
 {
 	float range, range_along;
 
@@ -69,7 +69,7 @@ void triggerbot_t::clip_trace_to_players(const vec3& start, const vec3& end, uin
 	}
 }
 
-void triggerbot_t::calc_trace_to_players(user_cmd_t* cmd, trace_filter* filter, vec3& src, vec3& dst, ray_t& ray, trace_t* trace)
+void c_triggerbot::calc_trace_to_players(user_cmd_t* cmd, trace_filter* filter, vec3& src, vec3& dst, ray_t& ray, trace_t* trace)
 {
 	constexpr uint32_t mask = CONTENTS_SOLID | CONTENTS_GRATE | CONTENTS_HITBOX;
 
@@ -84,7 +84,7 @@ void triggerbot_t::calc_trace_to_players(user_cmd_t* cmd, trace_filter* filter, 
 	clip_trace_to_players(src, dst, mask, trace, g_cs->get_local());
 }
 
-bool triggerbot_t::can_shoot(c_base_weapon* weapon, trace_t trace)
+bool c_triggerbot::can_shoot(c_base_weapon* weapon, trace_t trace)
 {
 	if (Helpers::is_knife(weapon) || Helpers::is_grenade(weapon) || Helpers::is_non_aim(weapon))
 		return false;
@@ -107,7 +107,7 @@ bool triggerbot_t::can_shoot(c_base_weapon* weapon, trace_t trace)
 	return true;
 }
 
-void triggerbot_t::shoot(user_cmd_t* cmd, c_base_weapon* weapon, trace_t trace)
+void c_triggerbot::shoot(user_cmd_t* cmd, c_base_weapon* weapon, trace_t trace)
 {
 	if (Helpers::is_taser(weapon))
 		return;

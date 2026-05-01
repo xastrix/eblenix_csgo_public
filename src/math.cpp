@@ -133,3 +133,55 @@ void Math::adjust_sidemove_for_yaw(const vec3& forward, const vec3& local_angle,
 	else if (delta < -0.25)
 		cmd->m_sidemove = best_speed;
 }
+
+vec3 Math::calculate_angle(const vec3& source, const vec3& destination, const vec3& view_angles)
+{
+	vec3 delta = source - destination;
+	vec3 angles;
+
+	angles.x = RAD2DEG(std::atanf(delta.z / std::hypotf(delta.x, delta.y))) - view_angles.x;
+	angles.y = RAD2DEG(std::atanf(delta.y / delta.x)) - view_angles.y;
+	angles.z = 0.0f;
+
+	if (delta.x >= 0.0)
+		angles.y += 180.0f;
+
+	return angles;
+}
+
+void Math::vector_angles(const vec3& forward, vec3& angles)
+{
+	if (forward.x == 0.0f && forward.y == 0.0f)
+	{
+		angles.x = (forward.z > 0.0f) ? 270.0f : 90.0f;
+		angles.y = 0.0f;
+	}
+	else {
+		angles.x = std::atan2(-forward.z, length_2d(forward)) * -180 / static_cast<float>(M_PI);
+		angles.y = std::atan2(forward.y, forward.x) * 180 / static_cast<float>(M_PI);
+
+		if (angles.y > 90)
+			angles.y -= 180;
+
+		else if (angles.y < 90)
+			angles.y += 180;
+
+		else if (angles.y == 90)
+			angles.y = 0;
+	}
+
+	angles.z = 0.0f;
+}
+
+float Math::distance_based_fov(const float distance, const vec3 angle, const user_cmd_t* cmd)
+{
+	vec3 aiming_at;
+	angle_vectors(cmd->m_viewangles, aiming_at);
+	aiming_at *= distance / 10;
+
+	vec3 aim_at;
+	angle_vectors(angle, aim_at);
+	aim_at *= distance / 10;
+
+	return aiming_at.distance_to(aim_at);
+}

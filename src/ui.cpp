@@ -82,7 +82,85 @@ void c_ui::setup()
 	add(L"Aim", [&]() {
 		add_bool<UI_SUB_POS>(L"Enable", V_AIMBOT_ENABLED, true);
 
-		add_bool<UI_SUB_POS>(L"Auto Pistol", V_AIMBOT_AUTOPISTOL);
+		add_bool<UI_SUB_POS>(L"Silent", V_AIMBOT_SILENT);
+		add_bool<UI_SUB_POS>(L"Auto Pistol", V_AIMBOT_AUTOPISTOL, true);
+
+		add_bool<UI_SUB_POS>(L"Visible", V_AIMBOT_VISIBLE_CHECK);
+		add_bool<UI_SUB_POS>(L"Team", V_AIMBOT_TEAMMATE_CHECK);
+		add_bool<UI_SUB_POS>(L"Smoke", V_AIMBOT_SMOKE_CHECK);
+		add_bool<UI_SUB_POS>(L"Flash", V_AIMBOT_FLASH_CHECK);
+		add_bool<UI_SUB_POS>(L"Scope", V_AIMBOT_SCOPE_CHECK);
+		add_bool<UI_SUB_POS>(L"Jump", V_AIMBOT_JUMP_CHECK, true);
+
+		add_tab<UI_SUB_POS>(L"Weapons", [&]() {
+			std::vector<std::wstring> m_hitboxes{ L"Head", L"Neck", L"Chest", L"Stomach", L"Pelvis" };
+			std::vector<std::wstring> m_types{ L"Hitbox", L"Nearest" };
+
+			add_tab<UI_SUB_SUB_POS>(L"Pistols", [&]() {
+				add_item<UI_SUB_SUB_SUB_POS>(L"Type", V_AIMBOT_TYPE_PISTOL, m_types, m_colors[UI_TEXT_COL], true);
+
+				if (g_var->get_as<int>(V_AIMBOT_TYPE_PISTOL).value() == 0)
+					add_item<UI_SUB_SUB_SUB_POS>(L"Hitbox", V_AIMBOT_BONE_PISTOL, m_hitboxes, m_colors[UI_TEXT_COL], true);
+
+				add_float<UI_SUB_SUB_SUB_POS>(L"Fov", V_AIMBOT_FOV_PISTOL, 0.0f, 180.0f, 0.5f);
+				add_float<UI_SUB_SUB_SUB_POS>(L"Smooth", V_AIMBOT_SMOOTH_PISTOL, 1.0f, 10.0f, 0.1f, true);
+
+				add_float<UI_SUB_SUB_SUB_POS>(L"RCS X", V_AIMBOT_RCS_X_PISTOL, 0.0f, 1.0f, 0.1f);
+				add_float<UI_SUB_SUB_SUB_POS>(L"RCS Y", V_AIMBOT_RCS_Y_PISTOL, 0.0f, 1.0f, 0.1f);
+			});
+
+			add_tab<UI_SUB_SUB_POS>(L"Rifles", [&]() {
+				add_item<UI_SUB_SUB_SUB_POS>(L"Type", V_AIMBOT_TYPE_RIFLE, m_types, m_colors[UI_TEXT_COL], true);
+
+				if (g_var->get_as<int>(V_AIMBOT_TYPE_RIFLE).value() == 0)
+					add_item<UI_SUB_SUB_SUB_POS>(L"Hitbox", V_AIMBOT_BONE_RIFLE, m_hitboxes, m_colors[UI_TEXT_COL], true);
+
+				add_float<UI_SUB_SUB_SUB_POS>(L"Fov", V_AIMBOT_FOV_RIFLE, 0.0f, 180.0f, 0.5f);
+				add_float<UI_SUB_SUB_SUB_POS>(L"Smooth", V_AIMBOT_SMOOTH_RIFLE, 1.0f, 10.0f, 0.1f, true);
+
+				add_float<UI_SUB_SUB_SUB_POS>(L"RCS X", V_AIMBOT_RCS_X_RIFLE, 0.0f, 1.0f, 0.1f);
+				add_float<UI_SUB_SUB_SUB_POS>(L"RCS Y", V_AIMBOT_RCS_Y_RIFLE, 0.0f, 1.0f, 0.1f);
+			});
+
+			add_tab<UI_SUB_SUB_POS>(L"Snipers", [&]() {
+				add_item<UI_SUB_SUB_SUB_POS>(L"Type", V_AIMBOT_TYPE_SNIPER, m_types, m_colors[UI_TEXT_COL], true);
+
+				if (g_var->get_as<int>(V_AIMBOT_TYPE_SNIPER).value() == 0)
+					add_item<UI_SUB_SUB_SUB_POS>(L"Hitbox", V_AIMBOT_BONE_SNIPER, m_hitboxes, m_colors[UI_TEXT_COL], true);
+
+				add_float<UI_SUB_SUB_SUB_POS>(L"Fov", V_AIMBOT_FOV_SNIPER, 0.0f, 180.0f, 0.5f);
+				add_float<UI_SUB_SUB_SUB_POS>(L"Smooth", V_AIMBOT_SMOOTH_SNIPER, 1.0f, 10.0f, 0.1f, true);
+
+				add_float<UI_SUB_SUB_SUB_POS>(L"RCS X", V_AIMBOT_RCS_X_SNIPER, 0.0f, 1.0f, 0.1f);
+				add_float<UI_SUB_SUB_SUB_POS>(L"RCS Y", V_AIMBOT_RCS_Y_SNIPER, 0.0f, 1.0f, 0.1f);
+			});
+
+			add_tab<UI_SUB_SUB_POS>(L"Heavies", [&]() {
+				add_item<UI_SUB_SUB_SUB_POS>(L"Type", V_AIMBOT_TYPE_HEAVY, m_types, m_colors[UI_TEXT_COL], true);
+
+				if (g_var->get_as<int>(V_AIMBOT_TYPE_HEAVY).value() == 0)
+					add_item<UI_SUB_SUB_SUB_POS>(L"Hitbox", V_AIMBOT_BONE_HEAVY, m_hitboxes, m_colors[UI_TEXT_COL], true);
+
+				add_float<UI_SUB_SUB_SUB_POS>(L"Fov", V_AIMBOT_FOV_HEAVY, 0.0f, 180.0f, 0.5f);
+				add_float<UI_SUB_SUB_SUB_POS>(L"Smooth", V_AIMBOT_SMOOTH_HEAVY, 1.0f, 10.0f, 0.1f, true);
+
+				add_float<UI_SUB_SUB_SUB_POS>(L"RCS X", V_AIMBOT_RCS_X_HEAVY, 0.0f, 1.0f, 0.1f);
+				add_float<UI_SUB_SUB_SUB_POS>(L"RCS Y", V_AIMBOT_RCS_Y_HEAVY, 0.0f, 1.0f, 0.1f);
+			});
+
+			add_tab<UI_SUB_SUB_POS>(L"Smgs", [&]() {
+				add_item<UI_SUB_SUB_SUB_POS>(L"Type", V_AIMBOT_TYPE_SMG, m_types, m_colors[UI_TEXT_COL], true);
+
+				if (g_var->get_as<int>(V_AIMBOT_TYPE_SMG).value() == 0)
+					add_item<UI_SUB_SUB_SUB_POS>(L"Hitbox", V_AIMBOT_BONE_SMG, m_hitboxes, m_colors[UI_TEXT_COL], true);
+
+				add_float<UI_SUB_SUB_SUB_POS>(L"Fov", V_AIMBOT_FOV_SMG, 0.0f, 180.0f, 0.5f);
+				add_float<UI_SUB_SUB_SUB_POS>(L"Smooth", V_AIMBOT_SMOOTH_SMG, 1.0f, 10.0f, 0.1f, true);
+
+				add_float<UI_SUB_SUB_SUB_POS>(L"RCS X", V_AIMBOT_RCS_X_SMG, 0.0f, 1.0f, 0.1f);
+				add_float<UI_SUB_SUB_SUB_POS>(L"RCS Y", V_AIMBOT_RCS_Y_SMG, 0.0f, 1.0f, 0.1f);
+			});
+		});
 	});
 
 	add(L"Trigger", [&]() {

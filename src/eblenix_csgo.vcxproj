@@ -141,7 +141,6 @@
     <ClCompile Include="..\external\minhook\src\hook.c" />
     <ClCompile Include="..\external\minhook\src\trampoline.c" />
     <ClCompile Include="autostrafe.cpp" />
-    <ClCompile Include="auto_pistol.cpp" />
     <ClCompile Include="bhop.cpp" />
     <ClCompile Include="blockbot.cpp" />
     <ClCompile Include="color.cpp" />
@@ -236,6 +235,7 @@
     <ClInclude Include="i_net_channel_info.h" />
     <ClInclude Include="states.h" />
     <ClInclude Include="surface.h" />
+    <ClInclude Include="triggerbot.h" />
     <ClInclude Include="var_defines.h" />
     <ClInclude Include="vec2.h" />
     <ClInclude Include="vec3.h" />

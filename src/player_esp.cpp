@@ -24,7 +24,7 @@ void player_esp_t::think()
 		if ((entity->get_team_num() == g_cs->get_local()->get_team_num()) & !g_var->get_as<bool>(V_ESP_TEAM).value())
 			continue;
 
-		if (!g_cs->get_local()->can_see_entity(entity->get_eye_pos()) & g_var->get_as<bool>(V_ESP_VISIBLE_ONLY).value())
+		if (!g_cs->get_local()->can_see_entity(entity, entity->get_eye_pos()) & g_var->get_as<bool>(V_ESP_VISIBLE_ONLY).value())
 			continue;
 
 		if (!entity->is_moving() & g_var->get_as<bool>(V_ESP_WALKING_ONLY).value())

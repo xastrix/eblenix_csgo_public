@@ -152,7 +152,7 @@ public:
 	bool                  is_life_state();
 	int                   get_move_type();
 	c_base_weapon*        get_active_weapon();
-	bool                  can_see_entity(const vec3& pos);
+	bool                  can_see_entity(c_base_entity* entity, const vec3& pos);
 	vec3                  get_bone_position(int bone_id);
 	vec3                  get_hitbox_position(int hitbox_id);
 	bool                  is_moving();

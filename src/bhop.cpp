@@ -5,6 +5,8 @@
 
 void bunnyhop_t::think(user_cmd_t* cmd)
 {
+	static uint8_t u{};
+
 	if (!g_var->get_as<bool>(V_MISC_MOVEMENT_BUNNYHOP).value())
 		return;
 
@@ -13,7 +15,6 @@ void bunnyhop_t::think(user_cmd_t* cmd)
 		g_cs->get_local()->get_move_type() == movetype_observer)
 		return;
 
-	static uint8_t u{};
 	if (!(u & 0x1) && (u & 0x2)) {
 		u &= ~0x2;
 		cmd->m_buttons |= in_jump;

@@ -64,16 +64,21 @@ c_base_weapon* c_base_player::get_active_weapon()
 	return g_cs->m_entity_list->get_client_entity<c_base_weapon*>(weapon);
 }
 
-bool c_base_player::can_see_entity(const vec3& pos)
+bool c_base_player::can_see_entity(c_base_entity* entity, const vec3& pos)
 {
-	trace_t        tr;
+	trace_t      tr;
+	ray_t        ray;
 	trace_filter filter;
+	vec3         src = get_eye_pos(), dir = (pos - src);
 
 	filter.m_fp = this;
 
-	g_cs->m_trace->trace_ray(ray_t(get_eye_pos(), pos), MASK_SHOT | CONTENTS_GRATE, &filter, &tr);
+	normalize(dir);
+	ray.init(src, pos);
 
-	return tr.m_entity == this || tr.m_fraction > 0.97f;
+	g_cs->m_trace->trace_ray(ray, MASK_SHOT | CONTENTS_GRATE, &filter, &tr);
+
+	return tr.m_entity == entity || tr.m_fraction > 0.97f;
 }
 
 vec3 c_base_player::get_bone_position(int bone_id)

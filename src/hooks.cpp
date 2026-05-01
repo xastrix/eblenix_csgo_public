@@ -1,6 +1,7 @@
 #include "hooks.h"
 
 #include "aimbot.h"
+#include "triggerbot.h"
 #include "visuals.h"
 #include "hud.h"
 #include "movement.h"
@@ -25,6 +26,7 @@ static bool __stdcall create_move_h(float input_sample_frametime, user_cmd_t* cm
 		if (!GLOBAL(b_flags[BF_PANIC]))
 		{
 			g_aimbot->run(cmd);
+			g_triggerbot->run(cmd);
 			g_move->run(cmd);
 
 			if (g_cs->m_engine->is_connected())
@@ -363,7 +365,7 @@ static void __stdcall draw_set_color_h(int r, int g, int b, int a)
 							if ((entity->get_team_num() == g_cs->get_local()->get_team_num()) & !g_var->get_as<bool>(V_ESP_TEAM).value())
 								continue;
 
-							if (!g_cs->get_local()->can_see_entity(entity->get_eye_pos()) & g_var->get_as<bool>(V_ESP_VISIBLE_ONLY).value())
+							if (!g_cs->get_local()->can_see_entity(entity, entity->get_eye_pos()) & g_var->get_as<bool>(V_ESP_VISIBLE_ONLY).value())
 								continue;
 
 							box bbox{};

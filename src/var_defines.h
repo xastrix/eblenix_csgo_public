@@ -11,7 +11,48 @@
 /******************************************************************************/
 
 #define V_AIMBOT_ENABLED "aimbot->enabled"
+#define V_AIMBOT_SILENT "aimbot->silent"
 #define V_AIMBOT_AUTOPISTOL "aimbot->autopistol"
+#define V_AIMBOT_VISIBLE_CHECK "aimbot->visible_check"
+#define V_AIMBOT_SMOKE_CHECK "aimbot->smoke_check"
+#define V_AIMBOT_FLASH_CHECK "aimbot->flash_check"
+#define V_AIMBOT_TEAMMATE_CHECK "aimbot->teammate_check"
+#define V_AIMBOT_JUMP_CHECK "aimbot->jump_check"
+#define V_AIMBOT_SCOPE_CHECK "aimbot->scope_check"
+
+#define V_AIMBOT_TYPE_PISTOL "aimbot->type->pistol"
+#define V_AIMBOT_TYPE_RIFLE "aimbot->type->rifle"
+#define V_AIMBOT_TYPE_SNIPER "aimbot->type->sniper"
+#define V_AIMBOT_TYPE_HEAVY "aimbot->type->heavy"
+#define V_AIMBOT_TYPE_SMG "aimbot->type->smg"
+
+#define V_AIMBOT_BONE_PISTOL "aimbot->bone->pistol"
+#define V_AIMBOT_BONE_RIFLE "aimbot->bone->rifle"
+#define V_AIMBOT_BONE_SNIPER "aimbot->bone->sniper"
+#define V_AIMBOT_BONE_HEAVY "aimbot->bone->heavy"
+#define V_AIMBOT_BONE_SMG "aimbot->bone->smg"
+
+#define V_AIMBOT_FOV_PISTOL "aimbot->fov->pistol"
+#define V_AIMBOT_SMOOTH_PISTOL "aimbot->smooth->pistol"
+#define V_AIMBOT_FOV_RIFLE "aimbot->fov->rifle"
+#define V_AIMBOT_SMOOTH_RIFLE "aimbot->smooth->rifle"
+#define V_AIMBOT_FOV_SNIPER "aimbot->fov->sniper"
+#define V_AIMBOT_SMOOTH_SNIPER "aimbot->smooth->sniper"
+#define V_AIMBOT_FOV_HEAVY "aimbot->fov->heavy"
+#define V_AIMBOT_SMOOTH_HEAVY "aimbot->smooth->heavy"
+#define V_AIMBOT_FOV_SMG "aimbot->fov->smg"
+#define V_AIMBOT_SMOOTH_SMG "aimbot->smooth->smg"
+
+#define V_AIMBOT_RCS_X_PISTOL "aimbot->rcs->pistol->x"
+#define V_AIMBOT_RCS_Y_PISTOL "aimbot->rcs->pistol->y"
+#define V_AIMBOT_RCS_X_RIFLE "aimbot->rcs->rifle->x"
+#define V_AIMBOT_RCS_Y_RIFLE "aimbot->rcs->rifle->y"
+#define V_AIMBOT_RCS_X_SNIPER "aimbot->rcs->sniper->x"
+#define V_AIMBOT_RCS_Y_SNIPER "aimbot->rcs->sniper->y"
+#define V_AIMBOT_RCS_X_HEAVY "aimbot->rcs->heavy->x"
+#define V_AIMBOT_RCS_Y_HEAVY "aimbot->rcs->heavy->y"
+#define V_AIMBOT_RCS_X_SMG "aimbot->rcs->smg->x"
+#define V_AIMBOT_RCS_Y_SMG "aimbot->rcs->smg->y"
 
 /******************************************************************************/
 
