@@ -2,7 +2,6 @@
 
 #include "globals.h"
 #include "fnv.h"
-#include "states.h"
 #include "hud.h"
 #include "ui.h"
 #ifdef LUA_ENABLED
@@ -31,7 +30,7 @@ static unsigned long WINAPI wnd_proc(HWND h, UINT m, WPARAM w, LPARAM l)
 			}
 		}
 
-		if (!(g_state->get_current_state() == SL_SHUTDOWN))
+		if (!(GLOBAL(lib_state.get_state()) == state_t::SL_SHUTDOWN))
 		{
 			g_input->process_message(m, w, l);
 

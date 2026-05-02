@@ -1,7 +1,6 @@
 #include "input.h"
 #include "events.h"
 #include "hooks.h"
-#include "states.h"
 
 #include "fonts.hpp"
 static DWORD  g_numFonts;
@@ -13,16 +12,17 @@ static void __stdcall init(HMODULE I)
 {
 	// waiting for the server browser module (the last module loaded by the game)
 	if (Helpers::wait_for_module(serverBrowserDLL, 600) == WM_TIMEOUT)
-		g_state->set_current_state(SL_SHUTDOWN);
+		g::lib_state.set_state(state_t::SL_SHUTDOWN);
 
 	// waiting for the client module
 	if (Helpers::wait_for_module(clientDLL, 200) == WM_TIMEOUT)
-		g_state->set_current_state(SL_SHUTDOWN);
+		g::lib_state.set_state(state_t::SL_SHUTDOWN);
 
 	// initialize the timer by recording the current steady clock time
 	auto s_time = std::chrono::steady_clock::now();
 
-	g_state->call_state(SL_INIT_BASE, [](state_t& state) {
+	switch (GLOBAL(lib_state.get_state())) {
+	case state_t::SL_INIT_BASE: {
 		g_fonts[0] = AddFontMemResourceEx(astriumwep_ttf, ASTRIUMWEP_TTF_SZ, NULL, &g_numFonts);
 		g_fonts[1] = AddFontMemResourceEx(smallestpixel7_ttf, SMALLESTPIXEL7_TTF_SZ, NULL, &g_numFonts);
 
@@ -37,7 +37,7 @@ static void __stdcall init(HMODULE I)
 			{ Astriumwep12px, 12, "AstriumWep",       FW_NORMAL,   CLEARTYPE_QUALITY },
 			{ Astriumwep16px, 16, "AstriumWep",       FW_NORMAL,   CLEARTYPE_QUALITY },
 			{ Astriumwep25px, 25, "AstriumWep",       FW_NORMAL,   CLEARTYPE_QUALITY },
-	    });
+			});
 
 		if (g_renderer->init(g_cs->m_device))
 			g_ui->init(g_cs->m_device);
@@ -53,10 +53,9 @@ static void __stdcall init(HMODULE I)
 			}
 		}
 #endif
-		state++;
-	});
-
-	g_state->call_state(SL_INIT_VARS, [](state_t& state) {
+		GLOBAL(lib_state)++;
+	}
+	case state_t::SL_INIT_VARS: {
 		g_var->set(V_VISUALS_INTERFACE_SPECTATORS_POS_Y, g_renderer->get_screen_size().y * 0.5f);
 		g_var->set(V_MISC_VISUAL_VIEWMODEL_FOV, Helpers::get_viewmodel_fov());
 
@@ -65,19 +64,17 @@ static void __stdcall init(HMODULE I)
 
 		g_var->set(V_KEYS_ON_TOGGLE_UI, VK_INSERT);
 
-		state++;
-	});
-
-	g_state->call_state(SL_INIT_HOOKS, [](state_t& state) {
+		GLOBAL(lib_state)++;
+	}
+	case state_t::SL_INIT_HOOKS: {
 		g_input->init({ CSGO_CLASS_NAME, 0 });
 		g_hooks->init();
 		g_event->init();
 
-		state++;
-	});
-
-	g_state->call_state(SL_WAITING_FOR_SHUTDOWN, [s_time](state_t& state) {
-		int last_min  = 0;
+		GLOBAL(lib_state)++;
+	}
+	case state_t::SL_WAITING_FOR_SHUTDOWN: {
+		int last_min = 0;
 		int last_hour = 0;
 
 		// set initialised flag
@@ -102,7 +99,7 @@ static void __stdcall init(HMODULE I)
 		// open the ui
 		g_ui->set_menu_state(true);
 
-		while (!(state == SL_SHUTDOWN)) {
+		while (!(GLOBAL(lib_state.get_state()) == state_t::SL_SHUTDOWN)) {
 			std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
 			int total_minutes = Helpers::get_elapsed_time(s_time) / 60000;
@@ -130,9 +127,8 @@ static void __stdcall init(HMODULE I)
 			GLOBAL(i_flags[IF_MINUTES_IN_GAME]) = total_minutes % 60;
 			GLOBAL(i_flags[IF_HOURS_IN_GAME]) = total_hours;
 		}
-	});
-
-	g_state->call_state(SL_SHUTDOWN, [I](state_t& state) {
+	}
+	case state_t::SL_SHUTDOWN: {
 		// reset world brightness if nightmode was enabled
 		if (g_var->get_as<bool>(V_VISUALS_ENABLED).value() &&
 			g_var->get_as<bool>(V_VISUALS_WORLD_NIGHTMODE_ENABLED).value()) {
@@ -184,7 +180,8 @@ static void __stdcall init(HMODULE I)
 
 		// exit thread
 		FreeLibraryAndExitThread(I, EXIT_SUCCESS);
-	});
+	}
+	}
 }
 
 bool __stdcall DllMain(const HMODULE mod, const int32_t r, void*)

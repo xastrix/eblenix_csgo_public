@@ -423,7 +423,6 @@
     <ClInclude Include="i_input.h">
       <Filter>csgo\structs</Filter>
     </ClInclude>
-    <ClInclude Include="states.h" />
     <ClInclude Include="aimbot.h">
       <Filter>features</Filter>
     </ClInclude>

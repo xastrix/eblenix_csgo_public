@@ -36,11 +36,44 @@ enum _integer_flags {
 	maxIntegerFlags,
 };
 
+struct state_t {
+	enum _sl {
+		SL_INIT_BASE,
+		SL_INIT_VARS,
+		SL_INIT_HOOKS,
+		SL_WAITING_FOR_SHUTDOWN,
+		SL_SHUTDOWN,
+	};
+
+	state_t& operator++() {
+		++s;
+		return *this;
+	}
+
+	state_t operator++(int) {
+		state_t tmp = *this;
+		++*this;
+		return tmp;
+	}
+
+	void set_state(int state) {
+		s = state;
+	}
+
+	int get_state() const {
+		return s;
+	}
+
+private:
+	int s{};
+};
+
 namespace g
 {
 	inline bool b_flags[maxBooleanFlags];
 	inline int i_flags[maxIntegerFlags];
 
+	inline state_t lib_state;
 	inline std::string module_list[maxModules] = {
 		"client.dll",
 		"engine.dll",
