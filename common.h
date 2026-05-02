@@ -15,6 +15,9 @@
 /* Path to the configurations directory */
 #define CFG_DIRECTORY_PATHS        BASE_DIRECTORY_NAME "cfg/"
 
+/* Path to the configuration startup file */
+#define CFG_STARTUP_FILE_PATH      BASE_DIRECTORY_NAME "cfg_startup.dat"
+
 /* Configuration keys */
 #define CFG_INT_KEY                "{i32}"
 #define CFG_FLOAT_KEY              "{f32}"

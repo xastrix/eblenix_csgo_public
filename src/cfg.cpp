@@ -7,16 +7,36 @@
 
 #include <files.h>
 
-void cfg::load(const std::wstring& name)
+void c_cfg_mgr::init()
 {
-	std::string cfg_path = CFG_DIRECTORY_PATHS + std::string{ name.begin(), name.end() };
-	std::string data{};
+	load_startup_config();
+}
+
+void c_cfg_mgr::load_startup_config()
+{
+	std::string data;
+
+	if (!(Files::file_exists(CFG_STARTUP_FILE_PATH) == FS_OK)) {
+		Files::write(CFG_STARTUP_FILE_PATH, "a", "");
+		return;
+	}
+
+	if (!(Files::get_file_content(CFG_STARTUP_FILE_PATH, data) == FS_OK))
+		return;
+	
+	load(std::wstring(data.begin(), data.end()));
+}
+
+void c_cfg_mgr::load(const std::wstring& name)
+{
+	std::string cfg_path = CFG_DIRECTORY_PATHS + std::string(name.begin(), name.end());
+	std::string data;
 
 	if (!(Files::read(cfg_path, "rb", data) == FS_OK))
 		return;
 
 	std::string decrypted = Helpers::xor_encrypt_decrypt(data, cfg_path);
-	std::string line{};
+	std::string line;
 
 	size_t pos{};
 	size_t next_pos{};
@@ -59,10 +79,10 @@ void cfg::load(const std::wstring& name)
 	}
 }
 
-void cfg::save(const std::wstring& name)
+void c_cfg_mgr::save(const std::wstring& name)
 {
-	std::string cfg_path = CFG_DIRECTORY_PATHS + std::string{ name.begin(), name.end() };
-	std::string data{};
+	std::string cfg_path = CFG_DIRECTORY_PATHS + std::string(name.begin(), name.end());
+	std::string data;
 
 	Files::make_dirs(CFG_DIRECTORY_PATHS);
 	for (const auto&[k, v] : g_var->get_vars())

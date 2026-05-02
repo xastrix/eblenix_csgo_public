@@ -578,7 +578,7 @@ void c_ui::setup()
 	add(L"Load Settings", [&]() {
 		for (const auto& cfg : cfg_list) {
 			add_function<UI_SUB_POS>(cfg, [cfg]() {
-				cfg::load(cfg);
+				g_cfg->load(cfg);
 			});
 		}
 	});
@@ -586,7 +586,7 @@ void c_ui::setup()
 	add(L"Save Settings", [&]() {
 		for (const auto& cfg : cfg_list) {
 			add_function<UI_SUB_POS>(cfg, [cfg]() {
-				cfg::save(cfg);
+				g_cfg->save(cfg);
 			});
 		}
 	});

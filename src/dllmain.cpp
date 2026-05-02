@@ -1,3 +1,4 @@
+#include "cfg.h"
 #include "input.h"
 #include "events.h"
 #include "hooks.h"
@@ -63,6 +64,8 @@ static void __stdcall init(HMODULE I)
 		g_var->set(V_UI_POS_Y, 80);
 
 		g_var->set(V_KEYS_ON_TOGGLE_UI, VK_INSERT);
+
+		g_cfg->init();
 
 		GLOBAL(lib_state)++;
 	}
