@@ -9,7 +9,6 @@
 
 #include <files.h>
 
-static void init_basic_things(sol::state_view& state);
 static void init_enums(sol::state_view& state);
 static void init_usertypes(sol::state_view& state);
 static void init_global_variables(sol::state_view& state);
@@ -21,6 +20,7 @@ static void init_entity_functions(sol::state_view& state);
 static void init_entity_list_functions(sol::state_view& state);
 static void init_math_functions(sol::state_view& state);
 static void init_util_functions(sol::state_view& state);
+static void init_global_functions(sol::state_view& state);
 static std::string callback_id_to_string(int id);
 
 void c_lua_mgr::init_api()
@@ -36,7 +36,6 @@ void c_lua_mgr::init_api()
 		sol::lib::ffi
 	);
 
-	init_basic_things(state);
 	init_enums(state);
 	init_usertypes(state);
 	init_global_variables(state);
@@ -48,6 +47,7 @@ void c_lua_mgr::init_api()
 	init_entity_list_functions(state);
 	init_math_functions(state);
 	init_util_functions(state);
+	init_global_functions(state);
 
 	state.set_function("register_callback", [&](sol::this_state s, int callback_id, sol::function fn)
 	{
@@ -71,17 +71,6 @@ void c_lua_mgr::init_api()
 	});
 }
 
-static void init_basic_things(sol::state_view& state)
-{
-	state["is_panic"]  = GLOBAL(b_flags[BF_PANIC]);
-	state["unload"]    = [](){ g::unload(); };
-
-	state["vec2"]      = [](float x, float y) { return vec2(x, y); };
-	state["vec3"]      = [](float x, float y, float z) { return vec3(x, y, z); };
-
-	state["color"]     = [](int r, int g, int b, int a) { return color_t(r, g, b, a); };
-}
-
 static void init_enums(sol::state_view& state)
 {
 	state.new_enum("cb",
@@ -95,32 +84,38 @@ static void init_enums(sol::state_view& state)
 		callback_id_to_string(CL_ON_CREATE_MOVE), CL_ON_CREATE_MOVE,
 		callback_id_to_string(CL_ON_WND_PROC),    CL_ON_WND_PROC);
 
-	state.new_enum("RENDERER_TEXTFLAGS",
-		"TEXT_NONE",                              TEXT_NONE,
-		"TEXT_OUTLINE",                           TEXT_OUTLINE,
-		"TEXT_CENTER_X",                          TEXT_CENTER_X
+	state.new_enum("text_flags",
+		"text_none",                              TEXT_NONE,
+		"text_outline",                           TEXT_OUTLINE,
+		"text_center_x",                          TEXT_CENTER_X
 	);
 
-	state.new_enum("CMD_BUTTONS",
-		"IN_ATTACK",                              in_attack,
-		"IN_ATTACK2",                             in_attack2,
-		"IN_JUMP",                                in_jump,
-		"IN_DUCK",                                in_duck,
-		"IN_FORWARD",                             in_forward,
-		"IN_BACK",                                in_back,
-		"IN_USE",                                 in_use,
-		"IN_MOVELEFT",                            in_moveleft,
-		"IN_MOVERIGHT",                           in_moveright,
-		"IN_SCORE",                               in_score,
-		"IN_BULLRUSH",                            in_bullrush
+	state.new_enum("cmd_buttons",
+		"in_attack",                              in_attack,
+		"in_attack2",                             in_attack2,
+		"in_jump",                                in_jump,
+		"in_duck",                                in_duck,
+		"in_forward",                             in_forward,
+		"in_back",                                in_back,
+		"in_use",                                 in_use,
+		"in_moveleft",                            in_moveleft,
+		"in_moveright",                           in_moveright,
+		"in_score",                               in_score,
+		"in_bullrush",                            in_bullrush
 	);
 
-	state.new_enum("MOVE_TYPE",
-		"WALK",                                   movetype_walk,
-		"FLY",                                    movetype_fly,
-		"NOCLIP",                                 movetype_noclip,
-		"LADDER",                                 movetype_ladder,
-		"OBSERVER",                               movetype_observer
+	state.new_enum("move_type",
+		"walk",                                   movetype_walk,
+		"fly",                                    movetype_fly,
+		"noclip",                                 movetype_noclip,
+		"ladder",                                 movetype_ladder,
+		"observer",                               movetype_observer
+	);
+
+
+	state.new_enum("bbox_type",
+		"box_static",                             BT_STATIC,
+		"box_dynamic",                            BT_DYNAMIC
 	);
 }
 
@@ -131,10 +126,17 @@ static void init_usertypes(sol::state_view& state)
 		"y",             &vec2::y
 	);
 
-	state.new_usertype<vec3>("vec3", sol::constructors<vec2(float, float, float)>(),
+	state.new_usertype<vec3>("vec3", sol::constructors<vec3(float, float, float)>(),
 		"x",             &vec3::x,
 		"y",             &vec3::y,
 		"z",             &vec3::z
+	);
+
+	state.new_usertype<box>("bbox", sol::constructors<box(int, int, int, int)>(),
+		"x",             &box::x,
+		"y",             &box::y,
+		"w",             &box::w,
+		"h",             &box::h
 	);
 
 	state.new_usertype<color_t>("color", sol::constructors<color_t(int, int, int, int)>(),
@@ -455,6 +457,10 @@ static void init_math_functions(sol::state_view& state)
 		return Math::w2s(origin, screen);
 	});
 
+	table.set_function("get_bbox", [](c_base_player* e, box& in, _bbox_types type) {
+		return Helpers::get_bbox(e, in, type);
+	});
+
 	state["engine_math"] = table;
 }
 
@@ -467,6 +473,16 @@ static void init_util_functions(sol::state_view& state)
 	});
 
 	state["util"] = table;
+}
+
+static void init_global_functions(sol::state_view& state)
+{
+	state["is_panic"] = GLOBAL(b_flags[BF_PANIC]);
+	state["unload"] = []() { g::unload(); };
+	state["vec2"] = [](float x, float y) { return vec2(x, y); };
+	state["vec3"] = [](float x, float y, float z) { return vec3(x, y, z); };
+	state["color"] = [](int r, int g, int b, int a) { return color_t(r, g, b, a); };
+	state["bbox"] = [](int x, int y, int w, int h) { return box(x, y, w, h); };
 }
 
 static std::string callback_id_to_string(int id)
