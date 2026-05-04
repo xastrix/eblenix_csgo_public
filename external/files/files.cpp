@@ -180,7 +180,22 @@ F_STAT Files::get_file_content(const std::string& filename, std::string& content
 	if (!f.is_open())
 		return FS_FAIL;
 
-	content = { std::istreambuf_iterator<char>(f), std::istreambuf_iterator<char>() };
+	f.seekg(0, std::ios::end);
+	
+	std::streampos sz = f.tellg();
+
+	if (sz == 0) {
+		content.clear();
+		return FS_CONTENT_EMPTY;
+	}
+
+	f.seekg(0, std::ios::beg);
+	content.resize(static_cast<std::size_t>(sz));
+
+	f.read(&content[0], sz);
+
+	if (!f)
+		return FS_FAIL;
 
 	return FS_OK;
 }

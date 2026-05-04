@@ -5,8 +5,9 @@
 #include <filesystem>
 
 enum F_STAT {
-	FS_OK,
+	FS_CONTENT_EMPTY = -2,
 	FS_FAIL = -1,
+	FS_OK,
 };
 
 namespace Files {
