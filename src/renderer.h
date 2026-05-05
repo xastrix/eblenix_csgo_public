@@ -83,10 +83,30 @@ public:
 	}
 
 	void on_reset_end() {
+		HRESULT hr = E_FAIL;
+
 		if (!m_device || !m_sprite)
 			return;
 
 		m_sprite->OnResetDevice();
+		
+		D3DXCreateSprite(m_device, &m_sprite);
+
+		if (m_path.empty() && (m_image && m_image_size > 0))
+			hr = D3DXCreateTextureFromFileInMemoryEx(m_device, m_image, m_image_size, m_width, m_height,
+				D3DX_DEFAULT, 0, D3DFMT_A8B8G8R8, D3DPOOL_DEFAULT, D3DX_DEFAULT, D3DX_DEFAULT, 0, 0, 0, &m_texture);
+		else
+			hr = D3DXCreateTextureFromFileExA(m_device, m_path.c_str(), m_width, m_height,
+				D3DX_DEFAULT, 0, D3DFMT_A8B8G8R8, D3DPOOL_DEFAULT, D3DX_DEFAULT, D3DX_DEFAULT, 0, 0, 0, &m_texture);
+
+		if (FAILED(hr)) {
+			if (m_texture) {
+				m_texture->Release();
+				m_texture = nullptr;
+			}
+		}
+
+		m_hresult = hr;
 	}
 
 	void draw(int x, int y, color_t color) {
