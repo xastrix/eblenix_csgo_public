@@ -60,17 +60,20 @@ static bool __stdcall create_move_h(float input_sample_frametime, user_cmd_t* cm
 static void(__thiscall *o_paint_traverse)(c_panel*, uint32_t, bool, bool);
 static void __stdcall paint_traverse_h(uint32_t panel, bool force_repaint, bool allow_force)
 {
-	static std::uint32_t panels[1];
+	static std::uint32_t panels[2];
+
 	if (GLOBAL(b_flags[BF_INITIALISED]) && !GLOBAL(b_flags[BF_PANIC]))
 	{
 		if (!panels[0])
 		{
-			switch (fnv::hash(g_cs->m_panel->get_panel_name(panel))) {
-			case fnv::hash("HudZoom"): {
+			if (fnv::hash(g_cs->m_panel->get_panel_name(panel)) == fnv::hash("HudZoom"))
 				panels[0] = panel;
-				break;
-			}
-			}
+		}
+
+		if (!panels[1])
+		{
+			if (fnv::hash(g_cs->m_panel->get_panel_name(panel)) == fnv::hash("FocusOverlayPanel"))
+				panels[1] = panel;
 		}
 
 		if ((panels[0] == panel) &&
@@ -119,6 +122,19 @@ static void __stdcall paint_traverse_h(uint32_t panel, bool force_repaint, bool 
 					GLOBAL(b_flags[BF_NIGHTMODE_HOLD]) = false;
 				}
 			}
+		}
+
+		if (panels[1] == panel)
+		{
+#ifdef LUA_ENABLED
+			for (auto _ : LUA_CALLBACK(CL_ON_PAINT_TRAVERSE)) {
+				auto result = _.fn();
+				if (!result.valid()) {
+					sol::error err = result;
+					Helpers::console_printf_with_prefix("[lua]", "%s", err.what());
+				}
+			}
+#endif
 		}
 	}
 }

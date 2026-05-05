@@ -2,10 +2,11 @@
 
 #include "globals.h"
 #include "interfaces.h"
-#include "renderer.h"
 #include "math.h"
 #include "signatures.h"
 #include "helpers.h"
+#include "ui.h"
+#include "input.h"
 
 #include <files.h>
 
@@ -19,6 +20,7 @@ static void init_engine_functions(sol::state_view& state);
 static void init_entity_functions(sol::state_view& state);
 static void init_entity_list_functions(sol::state_view& state);
 static void init_math_functions(sol::state_view& state);
+static void init_surface_functions(sol::state_view& state);
 static void init_util_functions(sol::state_view& state);
 static void init_global_functions(sol::state_view& state);
 static std::string callback_id_to_string(int id);
@@ -46,6 +48,7 @@ void c_lua_mgr::init_api()
 	init_entity_functions(state);
 	init_entity_list_functions(state);
 	init_math_functions(state);
+	init_surface_functions(state);
 	init_util_functions(state);
 	init_global_functions(state);
 
@@ -74,48 +77,48 @@ void c_lua_mgr::init_api()
 static void init_enums(sol::state_view& state)
 {
 	state.new_enum("cb",
-		callback_id_to_string(CL_ON_PREINIT),     CL_ON_PREINIT,
-		callback_id_to_string(CL_ON_INIT),        CL_ON_INIT,
-		callback_id_to_string(CL_ON_UNLOAD),      CL_ON_UNLOAD,
-		callback_id_to_string(CL_ON_PRESENT),     CL_ON_PRESENT,
-		callback_id_to_string(CL_ON_PRESENT_END), CL_ON_PRESENT_END,
-		callback_id_to_string(CL_ON_RESET),       CL_ON_RESET,
-		callback_id_to_string(CL_ON_RESET_END),   CL_ON_RESET_END,
-		callback_id_to_string(CL_ON_CREATE_MOVE), CL_ON_CREATE_MOVE,
-		callback_id_to_string(CL_ON_WND_PROC),    CL_ON_WND_PROC);
+		callback_id_to_string(CL_ON_PREINIT),        CL_ON_PREINIT,
+		callback_id_to_string(CL_ON_INIT),           CL_ON_INIT,
+		callback_id_to_string(CL_ON_UNLOAD),         CL_ON_UNLOAD,
+		callback_id_to_string(CL_ON_PRESENT),        CL_ON_PRESENT,
+		callback_id_to_string(CL_ON_PRESENT_END),    CL_ON_PRESENT_END,
+		callback_id_to_string(CL_ON_RESET),          CL_ON_RESET,
+		callback_id_to_string(CL_ON_RESET_END),      CL_ON_RESET_END,
+		callback_id_to_string(CL_ON_CREATE_MOVE),    CL_ON_CREATE_MOVE,
+		callback_id_to_string(CL_ON_PAINT_TRAVERSE), CL_ON_PAINT_TRAVERSE,
+		callback_id_to_string(CL_ON_WND_PROC),       CL_ON_WND_PROC);
 
 	state.new_enum("text_flags",
-		"text_none",                              TEXT_NONE,
-		"text_outline",                           TEXT_OUTLINE,
-		"text_center_x",                          TEXT_CENTER_X
+		"text_none",                                 TEXT_NONE,
+		"text_outline",                              TEXT_OUTLINE,
+		"text_center_x",                             TEXT_CENTER_X
 	);
 
 	state.new_enum("cmd_buttons",
-		"in_attack",                              in_attack,
-		"in_attack2",                             in_attack2,
-		"in_jump",                                in_jump,
-		"in_duck",                                in_duck,
-		"in_forward",                             in_forward,
-		"in_back",                                in_back,
-		"in_use",                                 in_use,
-		"in_moveleft",                            in_moveleft,
-		"in_moveright",                           in_moveright,
-		"in_score",                               in_score,
-		"in_bullrush",                            in_bullrush
+		"in_attack",                                 in_attack,
+		"in_attack2",                                in_attack2,
+		"in_jump",                                   in_jump,
+		"in_duck",                                   in_duck,
+		"in_forward",                                in_forward,
+		"in_back",                                   in_back,
+		"in_use",                                    in_use,
+		"in_moveleft",                               in_moveleft,
+		"in_moveright",                              in_moveright,
+		"in_score",                                  in_score,
+		"in_bullrush",                               in_bullrush
 	);
 
 	state.new_enum("move_type",
-		"walk",                                   movetype_walk,
-		"fly",                                    movetype_fly,
-		"noclip",                                 movetype_noclip,
-		"ladder",                                 movetype_ladder,
-		"observer",                               movetype_observer
+		"walk",                                      movetype_walk,
+		"fly",                                       movetype_fly,
+		"noclip",                                    movetype_noclip,
+		"ladder",                                    movetype_ladder,
+		"observer",                                  movetype_observer
 	);
 
-
 	state.new_enum("bbox_type",
-		"box_static",                             BT_STATIC,
-		"box_dynamic",                            BT_DYNAMIC
+		"box_static",                                BT_STATIC,
+		"box_dynamic",                               BT_DYNAMIC
 	);
 }
 
@@ -335,6 +338,10 @@ static void init_renderer_functions(sol::state_view& state)
 		return g_renderer->gradient_multi_fill(x, y, w, h, c_a, c_b, c_c, c_d);
 	});
 
+	table.set_function("get_screen_size", []() {
+		return g_renderer->get_screen_size();
+	});
+
 	state["renderer"] = table;
 }
 
@@ -368,8 +375,16 @@ static void init_engine_functions(sol::state_view& state)
 		return g_cs->m_engine->get_view_angles();
 	});
 
+	table.set_function("set_viewangles", [](vec3& angles) {
+		return g_cs->m_engine->set_view_angles(angles);
+	});
+
 	table.set_function("execute_cmd", [](const char* cmd) {
 		return g_cs->m_engine->execute_cmd(cmd);
+	});
+
+	table.set_function("get_product_version_string", []() {
+		return g_cs->m_engine->get_product_version_string();
 	});
 
 	state["engine"] = table;
@@ -464,6 +479,65 @@ static void init_math_functions(sol::state_view& state)
 	state["engine_math"] = table;
 }
 
+static void init_surface_functions(sol::state_view& state)
+{
+	sol::table table = state.create_table();
+
+	table.set_function("set_draw_color", [](int r, int g, int b, int a) {
+		return g_cs->m_surface->set_draw_color(r, g, b, a);
+	});
+
+	table.set_function("draw_filled_rect", [](int x, int y, int w, int h) {
+		return g_cs->m_surface->draw_filled_rect(x, y, w, h);
+	});
+
+	table.set_function("draw_outlined_rect", [](int x, int y, int w, int h) {
+		return g_cs->m_surface->draw_outlined_rect(x, y, w, h);
+	});
+
+	table.set_function("draw_line", [](int x1, int y1, int x2, int y2) {
+		return g_cs->m_surface->draw_line(x1, y1, x2, y2);
+	});
+
+	table.set_function("get_screen_width", []() {
+		int w, h;
+		g_cs->m_surface->get_screen_size(w, h);
+		return w;
+	});
+
+	table.set_function("get_screen_height", []() {
+		int w, h;
+		g_cs->m_surface->get_screen_size(w, h);
+		return h;
+	});
+
+	table.set_function("get_cursor_pos_x", []() {
+		int x, y;
+		g_cs->m_surface->get_cursor_pos(x, y);
+		return x;
+	});
+
+	table.set_function("get_cursor_pos_y", []() {
+		int x, y;
+		g_cs->m_surface->get_cursor_pos(x, y);
+		return y;
+	});
+
+	table.set_function("lock_cursor", []() {
+		return g_cs->m_surface->lock_cursor();
+	});
+
+	table.set_function("unlock_cursor", []() {
+		return g_cs->m_surface->unlock_cursor();
+	});
+
+	table.set_function("play_sound", [](const char* path) {
+		return g_cs->m_surface->play_sound(path);
+	});
+
+	state["surface"] = table;
+}
+
 static void init_util_functions(sol::state_view& state)
 {
 	sol::table table = state.create_table();
@@ -472,17 +546,36 @@ static void init_util_functions(sol::state_view& state)
 		return g_sig->scan_sig(module_name, signature);
 	});
 
+	table.set_function("process_keybd_msg", [](UINT m, WPARAM w) {
+		return g_input->process_keybd_message(m, w);
+	});
+
 	state["util"] = table;
 }
 
 static void init_global_functions(sol::state_view& state)
 {
-	state["is_panic"] = GLOBAL(b_flags[BF_PANIC]);
-	state["unload"] = []() { g::unload(); };
-	state["vec2"] = [](float x, float y) { return vec2(x, y); };
-	state["vec3"] = [](float x, float y, float z) { return vec3(x, y, z); };
-	state["color"] = [](int r, int g, int b, int a) { return color_t(r, g, b, a); };
-	state["bbox"] = [](int x, int y, int w, int h) { return box(x, y, w, h); };
+	state["ispanic"]                = GLOBAL(b_flags[BF_PANIC]);
+	
+	state["menu_opened"]            = g_ui->get_menu_state();
+	state["console_opened"]         = GLOBAL(b_flags[BF_CONSOLE_OPENED]);
+	state["chat_opened"]            = GLOBAL(b_flags[BF_CHAT_OPENED]);
+
+	state["seconds_in_game"]        = GLOBAL(i_flags[IF_SECONDS_IN_GAME]);
+	state["minutes_in_game"]        = GLOBAL(i_flags[IF_MINUTES_IN_GAME]);
+	state["hours_in_game"]          = GLOBAL(i_flags[IF_HOURS_IN_GAME]);
+
+	state["mouse_pos_x"]            = g_input->get_mouse_pos_x();
+	state["mouse_pos_y"]            = g_input->get_mouse_pos_y();
+	state["mouse_wheel"]            = g_input->get_mouse_wheel_accumlate();
+
+	state["vec2"]                   = [](float x, float y) { return vec2(x, y); };
+	state["vec3"]                   = [](float x, float y, float z) { return vec3(x, y, z); };
+
+	state["color"]                  = [](int r, int g, int b, int a) { return color_t(r, g, b, a); };
+	state["bbox"]                   = [](int x, int y, int w, int h) { return box(x, y, w, h); };
+
+	state["unload"]                 = []() { g::unload(); };
 }
 
 static std::string callback_id_to_string(int id)
@@ -511,6 +604,9 @@ static std::string callback_id_to_string(int id)
 	}
 	case CL_ON_CREATE_MOVE: {
 		return "on_move";
+	}
+	case CL_ON_PAINT_TRAVERSE: {
+		return "on_paint_traverse";
 	}
 	case CL_ON_WND_PROC: {
 		return "on_wndproc";
