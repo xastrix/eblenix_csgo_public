@@ -24,16 +24,18 @@ enum _callback_list {
 	CL_ON_CREATE_MOVE,
 	CL_ON_PAINT_TRAVERSE,
 	CL_ON_WND_PROC,
+	CL_ON_GAME_EVENTS,
 	maxCallbacks,
 };
 
 struct lua_core_t {
-	int id;
+	int index;
 	sol::protected_function fn;
 };
 
 using lua_list_t  = std::vector<std::pair<std::wstring, bool>>;
 using lua_event_t = std::map<int, std::vector<lua_core_t>>;
+using lua_game_event_t = std::map<std::string, std::vector<lua_core_t>>;
 
 class c_lua_mgr {
 public:
@@ -72,9 +74,9 @@ private:
 	std::string get_script_update_datetime(const std::wstring& name);
 
 private:
-	lua_State*  m_state;
-	lua_event_t m_lua_event;
-	lua_list_t  m_lua_list;
+	lua_State*       m_state;
+	lua_event_t      m_lua_event;
+	lua_list_t       m_lua_list;
 };
 
 inline std::shared_ptr<c_lua_mgr> g_lua = c_lua_mgr::make_shared();

@@ -7,6 +7,7 @@
 #include "helpers.h"
 #include "ui.h"
 #include "input.h"
+#include "events.h"
 
 #include <files.h>
 
@@ -52,7 +53,8 @@ void c_lua_mgr::init_api()
 	init_util_functions(state);
 	init_global_functions(state);
 
-	state.set_function("register_callback", [&](sol::this_state s, int callback_id, sol::function fn)
+	sol::function register_callback =
+		state.set_function("register_callback", [&](sol::this_state s, int callback_id, sol::function fn)
 	{
 		sol::state_view state{ s };
 		sol::table rs = state["debug"]["getinfo"](2, ("S"));
@@ -86,7 +88,8 @@ static void init_enums(sol::state_view& state)
 		callback_id_to_string(CL_ON_RESET_END),      CL_ON_RESET_END,
 		callback_id_to_string(CL_ON_CREATE_MOVE),    CL_ON_CREATE_MOVE,
 		callback_id_to_string(CL_ON_PAINT_TRAVERSE), CL_ON_PAINT_TRAVERSE,
-		callback_id_to_string(CL_ON_WND_PROC),       CL_ON_WND_PROC);
+		callback_id_to_string(CL_ON_WND_PROC),       CL_ON_WND_PROC,
+		callback_id_to_string(CL_ON_GAME_EVENTS),    CL_ON_GAME_EVENTS);
 
 	state.new_enum("text_flags",
 		"text_none",                                 TEXT_NONE,
@@ -154,6 +157,12 @@ static void init_usertypes(sol::state_view& state)
 		"end_draw",      [](sprite_t& sprite) { sprite.end(); },
 		"on_reset",      [](sprite_t& sprite) { sprite.on_reset(); },
 		"on_reset_end",  [](sprite_t& sprite) { sprite.on_reset_end(); }
+	);
+
+	state.new_usertype<c_game_event>("game_event",
+		"get_name",      [](c_game_event* _event) { return _event->get_name(); },
+		"get_int",       [](c_game_event* _event, const char* name) { return _event->get_int(name); },
+		"get_string",    [](c_game_event* _event, const char* name) { return _event->get_string(name); }
 	);
 
 	state.new_usertype<player_info_t>("player_info",
@@ -610,6 +619,9 @@ static std::string callback_id_to_string(int id)
 	}
 	case CL_ON_WND_PROC: {
 		return "on_wndproc";
+	}
+	case CL_ON_GAME_EVENTS: {
+		return "on_game_events";
 	}
 	}
 

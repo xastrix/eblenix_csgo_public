@@ -5,42 +5,45 @@
 #include "color.h"
 #include "interfaces.h"
 #include "fnv.h"
-
+#ifdef LUA_ENABLED
+#include "luas.h"
+#endif
 #include "visuals.h"
-
-static std::vector<std::pair<uint32_t, std::function<void(c_game_event*)>>> g_event_list{};
-
-static void listen_event(c_game_event_listener2* listener, const char* name, std::function<void(c_game_event*)> fn)
-{
-	if (!g_cs->m_event_manager->add_listener(listener, name))
-		return;
-
-	g_event_list.push_back({ fnv::hash(name), fn });
-}
 
 void c_event_list::init()
 {
-	listen_event(this, "player_hurt", [](c_game_event* event) {
+	g_cs->m_event_manager->add_listener(this, "player_hurt");
+	g_cs->m_event_manager->add_listener(this, "player_death");
+	g_cs->m_event_manager->add_listener(this, "player_death");
+	g_cs->m_event_manager->add_listener(this, "player_disconnect");
+	g_cs->m_event_manager->add_listener(this, "round_prestart");
+	g_cs->m_event_manager->add_listener(this, "round_start");
+	g_cs->m_event_manager->add_listener(this, "bomb_planted");
+	g_cs->m_event_manager->add_listener(this, "bomb_exploded");
+	g_cs->m_event_manager->add_listener(this, "bomb_defused");
+}
+
+void c_event_list::fire_game_event(c_game_event* _event)
+{
+	const auto name_hash = fnv::hash(_event->get_name());
+
+	switch (fnv::hash(_event->get_name())) {
+	case fnv::hash("player_hurt"): {
 		if (g_var->get_as<bool>(V_MISC_EVENT_LOGS_PLAYER_HURT).value()) {
 			auto attacker_ent_id = g_cs->m_entity_list->get_client_entity<c_base_entity*>(
-				g_cs->m_engine->get_player_for_user_id(event->get_int("attacker"))
-			);
+				g_cs->m_engine->get_player_for_user_id(_event->get_int("attacker")));
 
-			if (attacker_ent_id == g_cs->get_local())
-			{
-				auto ent_index = g_cs->m_engine->get_player_for_user_id(event->get_int("userid"));
-				auto hitbox = event->get_int("hitgroup");
+			if (attacker_ent_id == g_cs->get_local()) {
+				auto ent_index = g_cs->m_engine->get_player_for_user_id(_event->get_int("userid"));
+				auto hitbox = _event->get_int("hitgroup");
 
-				if (hitbox)
-				{
-					auto damage = event->get_int("dmg_health");
+				if (hitbox) {
+					auto damage = _event->get_int("dmg_health");
 
-					if (damage)
-					{
-						auto health = event->get_int("health");
+					if (damage) {
+						auto health = _event->get_int("health");
 
-						if (health >= 0)
-						{
+						if (health >= 0) {
 							player_info_t info;
 							g_cs->m_engine->get_player_info(ent_index, &info);
 
@@ -54,65 +57,62 @@ void c_event_list::init()
 				}
 			}
 		}
-	});
-
-	listen_event(this, "item_purchase", [](c_game_event* event) {
+		break;
+	}
+	case fnv::hash("item_purchase"): {
 		if (g_var->get_as<bool>(V_MISC_EVENT_LOGS_PLAYER_PURCHASE).value()) {
-			auto ent_index = g_cs->m_engine->get_player_for_user_id(event->get_int("userid"));
+			auto ent_index = g_cs->m_engine->get_player_for_user_id(_event->get_int("userid"));
 
-			if (ent_index)
-			{
+			if (ent_index) {
 				auto entity = g_cs->m_entity_list->get_client_entity<c_base_entity*>(ent_index);
 
-				if (entity->get_team_num() != g_cs->get_local()->get_team_num())
-				{
+				if (entity->get_team_num() != g_cs->get_local()->get_team_num()) {
 					player_info_t info;
 					g_cs->m_engine->get_player_info(ent_index, &info);
 
 					std::string player_name{ info.m_player_name };
 					std::transform(player_name.begin(), player_name.end(), player_name.begin(), tolower);
 
-					const auto weapon = event->get_string("weapon");
+					const auto weapon = _event->get_string("weapon");
 
 					Helpers::console_printf_with_prefix("[Eblenix]", "A %s purchased %s",
 						player_name.c_str(), weapon != "weapon_unknown" ? weapon : "?");
 				}
 			}
 		}
-	});
-
-	listen_event(this, "round_start", [](c_game_event*) {
+		break;
+	}
+	case fnv::hash("round_start"): {
 		GLOBAL(b_flags[BF_BOMB_PLANTED]) = false;
 		player_esp_t::get_instance().on_round_start_e();
-	});
-
-	listen_event(this, "bomb_planted", [](c_game_event*) { 
-		GLOBAL(b_flags[BF_BOMB_PLANTED]) = true;
-	});
-
-	listen_event(this, "bomb_exploded", [](c_game_event*) {
-		GLOBAL(b_flags[BF_BOMB_PLANTED]) = false;
-	});
-
-	listen_event(this, "bomb_defused", [](c_game_event*) {
-		GLOBAL(b_flags[BF_BOMB_PLANTED]) = false;
-	});
-}
-
-void c_event_list::fire_game_event(c_game_event* event)
-{
-	for (const auto& e : g_event_list)
-	{
-		if (fnv::hash(event->get_name()) == e.first)
-			e.second(event);
+		break;
 	}
+	case fnv::hash("bomb_planted"): {
+		GLOBAL(b_flags[BF_BOMB_PLANTED]) = true;
+		break;
+	}
+	case fnv::hash("bomb_exploded"): {
+		GLOBAL(b_flags[BF_BOMB_PLANTED]) = false;
+		break;
+	}
+	case fnv::hash("bomb_defused"): {
+		GLOBAL(b_flags[BF_BOMB_PLANTED]) = false;
+		break;
+	}
+	}
+
+#ifdef LUA_ENABLED
+	for (auto _ : LUA_CALLBACK(CL_ON_GAME_EVENTS)) {
+		auto result = _.fn(_event);
+		if (!result.valid()) {
+			sol::error err = result;
+			Helpers::console_printf_with_prefix("[lua]", "%s", err.what());
+		}
+	}
+#endif
 }
 
 void c_event_list::undo()
 {
-	if (g_event_list.empty())
-		return;
-
-	g_event_list.clear();
 	g_cs->m_event_manager->remove_listener(this);
 }

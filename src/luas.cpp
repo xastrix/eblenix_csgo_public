@@ -111,7 +111,7 @@ bool c_lua_mgr::unload_script(const std::wstring& name)
 
 		for (auto& hk : ev.second)
 		{
-			if (hk.id == get_script_index_by_name(name))
+			if (hk.index == get_script_index_by_name(name))
 				ev.second.erase(ev.second.begin() + pos);
 
 			pos++;

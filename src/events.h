@@ -16,7 +16,7 @@ public:
 	void undo();
 
 private:
-	void fire_game_event(c_game_event* event);
+	void fire_game_event(c_game_event* _event);
 };
 
 inline std::shared_ptr<c_event_list> g_event = c_event_list::make_shared();
