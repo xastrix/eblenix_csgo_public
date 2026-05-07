@@ -1,8 +1,8 @@
 # eblenix_csgo_public
 A hack for counter-strike global offensive, created solely for educational purposes in the process of learning gamehacking, which I sometimes used while playing csgo.
 
-![showcase](media/showcase.png)
-(See more screenshots at the [link](media/))
+
+(See media at the [link](media/))
 
 # How to use
 Clone the repository
