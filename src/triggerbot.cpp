@@ -23,7 +23,7 @@ void c_triggerbot::run(user_cmd_t* cmd)
 
 	calc_trace_to_players(cmd, &filter, src, dst, ray, &tr);
 
-	if (!tr.m_entity || tr.m_entity->get_client_class()->class_id != ccsplayer)
+	if (!tr.m_entity || tr.m_entity->get_client_class()->m_class_id != ccsplayer)
 		return;
 
 	if (tr.m_entity == g_cs->get_local() || tr.m_entity->get_dormant() ||

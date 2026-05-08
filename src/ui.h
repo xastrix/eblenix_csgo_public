@@ -43,27 +43,27 @@ enum _ui_sprites {
 
 struct m_entry
 {
-	std::wstring m_name{};
-	bool m_space{};
+	std::wstring m_name;
+	bool m_space;
 };
 
 struct s_entry
 {
-	std::wstring m_name{};
-	std::string m_var{};
+	std::wstring m_name;
+	std::string m_var;
 
-	float m_float_step{},
-		  m_float_min{},
-		  m_float_max{};
+	float m_float_step,
+		  m_float_min,
+		  m_float_max;
 
-	int m_int_step{},
-		m_int_min{},
-		m_int_max{};
+	int m_int_step,
+		m_int_min,
+		m_int_max;
 
-	bool m_space{},
-		 m_key_hold{};
+	bool m_space,
+		 m_key_hold;
 
-	_ui_states m_state{};
+	_ui_states m_state;
 
 	std::function<void()> m_fn{};
 	std::vector<std::wstring> m_items{};
@@ -212,16 +212,16 @@ private:
 	void clear();
 
 private:
-	bool m_opened{},
+	bool m_opened,
 	     s_opened[maxUISubs]{};
 
-	int m_entry_pos{},
-		m_entry_sz{},
+	int m_entry_pos,
+		m_entry_sz,
 		s_entry_pos[maxUISubs]{},
 		s_entry_sz[maxUISubs]{};
 
-	float current_animation_progress{},
-		  target_animation_progress{};
+	float current_animation_progress,
+		  target_animation_progress;
 
 	m_entry m_entry[MAX_MENU_ENTRIES]{};
 	s_entry s_entries[MAX_SUB_ENTRIES][maxUISubs]{};

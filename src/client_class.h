@@ -293,10 +293,13 @@ enum _class_ids {
 
 class c_client_class {
 public:
-	create_client_class_fn create_fn;
-	create_event_fn create_event_fn;
-	char* network_name;
-	recv_table* recvtable_ptr;
-	c_client_class* next_ptr;
-	_class_ids class_id;
+	create_client_class_fn m_create_fn;
+	create_event_fn        m_create_event_fn;
+	
+	char*                  m_network_name;
+	
+	recv_table*            m_recvtable_ptr;
+	c_client_class*        m_next_ptr;
+	
+	_class_ids             m_class_id;
 };

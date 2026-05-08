@@ -42,7 +42,7 @@ private:
 	std::vector<int> pattern_to_bytes(const std::string& signature);
 
 private:
-	sig_t m_signatures[maxSignatures];
+	sig_t m_signatures[maxSignatures]{};
 };
 
 inline std::shared_ptr<c_sig> g_sig = c_sig::make_shared();

@@ -488,8 +488,3 @@ std::string Helpers::get_current_time()
 
 	return buf;
 }
-
-long long Helpers::get_elapsed_time(const std::chrono::steady_clock::time_point start_time)
-{
-	return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start_time).count();
-}

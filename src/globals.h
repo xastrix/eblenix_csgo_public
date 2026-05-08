@@ -4,6 +4,7 @@
 
 #include <string>
 #include <vector>
+#include <thread>
 
 enum _module_list {
 	clientDLL,
@@ -65,13 +66,13 @@ struct state_t {
 	}
 
 private:
-	int s{};
+	int s;
 };
 
 namespace g
 {
-	inline bool b_flags[maxBooleanFlags];
-	inline int i_flags[maxIntegerFlags];
+	inline bool b_flags[maxBooleanFlags]{};
+	inline int i_flags[maxIntegerFlags]{};
 
 	inline state_t lib_state;
 	inline std::string module_list[maxModules] = {
@@ -85,6 +86,7 @@ namespace g
 		"serverbrowser.dll",
 	};
 
+	void handle_playing_time(const std::chrono::steady_clock::time_point start_time, int interval);
 	void unload();
 }
 

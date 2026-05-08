@@ -18,7 +18,7 @@ public:
 		return std::shared_ptr<c_cfg_mgr>(new c_cfg_mgr());
 	}
 
-	void undo() {};
+	void undo() {}
 };
 
 inline std::shared_ptr<c_cfg_mgr> g_cfg = c_cfg_mgr::make_shared();

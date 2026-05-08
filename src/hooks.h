@@ -81,7 +81,6 @@ struct hook_t {
 		m_hooked = true;
 	}
 
-	/* Get index of the hook */
 	int get_index() {
 		return m_index;
 	}
@@ -110,12 +109,12 @@ struct hook_t {
 	}
 
 private:
-	int    m_index{};    // Index of the virtual function in the vtable
-	void*  m_addr{};     // Address of the function or object containing the function
-	void*  m_src{};      // Original function pointer obtained from the vtable
-	void*  m_target{};   // Target function to hook (redirect to)
-	void** m_orig{};     // Pointer to the original function pointer (for calling original)
-	bool   m_hooked{};   // Hook status flag
+	int    m_index;     // Index of the virtual function in the vtable
+	void*  m_addr;      // Address of the function or object containing the function
+	void*  m_src;       // Original function pointer obtained from the vtable
+	void*  m_target;    // Target function to hook (redirect to)
+	void** m_orig;      // Pointer to the original function pointer (for calling original)
+	bool   m_hooked;    // Hook status flag
 };
 
 class c_hooks {
@@ -129,7 +128,7 @@ public:
 	void undo();
 
 private:
-	hook_t m_hooks[maxHooks];
+	hook_t m_hooks[maxHooks]{};
 };
 
 inline std::shared_ptr<c_hooks> g_hooks = c_hooks::make_shared();

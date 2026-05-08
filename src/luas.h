@@ -33,9 +33,8 @@ struct lua_core_t {
 	sol::protected_function fn;
 };
 
-using lua_list_t  = std::vector<std::pair<std::wstring, bool>>;
-using lua_event_t = std::map<int, std::vector<lua_core_t>>;
-using lua_game_event_t = std::map<std::string, std::vector<lua_core_t>>;
+using lua_list_t       = std::vector<std::pair<std::wstring, bool>>;
+using lua_event_t      = std::map<int, std::vector<lua_core_t>>;
 
 class c_lua_mgr {
 public:
@@ -49,6 +48,7 @@ public:
 	int get_script_index_by_name(const std::wstring& name);
 	std::wstring get_script_name_by_index(int index);
 	bool get_loaded_by_index(int index);
+	std::vector<std::wstring> get_script_list();
 
 	const std::vector<lua_core_t>& operator[](int callback_id) const {
 		static const std::vector<lua_core_t> tmp;
@@ -74,9 +74,9 @@ private:
 	std::string get_script_update_datetime(const std::wstring& name);
 
 private:
-	lua_State*       m_state;
-	lua_event_t      m_lua_event;
-	lua_list_t       m_lua_list;
+	lua_State*  m_state;
+	lua_event_t m_lua_event;
+	lua_list_t  m_lua_list;
 };
 
 inline std::shared_ptr<c_lua_mgr> g_lua = c_lua_mgr::make_shared();

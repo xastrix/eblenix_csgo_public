@@ -169,6 +169,16 @@ bool c_lua_mgr::get_loaded_by_index(int index)
 	return false;
 }
 
+std::vector<std::wstring> c_lua_mgr::get_script_list()
+{
+	std::vector<std::wstring> ret;
+
+	for (const auto& script : m_lua_list)
+		ret.push_back(script.first);
+
+	return ret;
+}
+
 std::string c_lua_mgr::get_script_update_datetime(const std::wstring& name)
 {
 	int64_t diff = Files::get_file_diff(LUA_DIRECTORY_PATHS + std::string(name.begin(), name.end()));

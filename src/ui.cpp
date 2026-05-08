@@ -16,7 +16,7 @@ void c_ui::init(IDirect3DDevice9* device)
 
 void c_ui::run()
 {
-	float old_progress{};
+	float old_progress;
 	calc_animation_progress(g_var->get_as<float>(V_UI_SPEED_ANIMATION).value(), g_cs->m_globals->frame_time, old_progress);
 
 	m_colors[UI_TEXT_COL] = color_t(253, 253, 253,
@@ -93,8 +93,8 @@ void c_ui::setup()
 		add_bool<UI_SUB_POS>(L"Jump", V_AIMBOT_JUMP_CHECK, true);
 
 		add_tab<UI_SUB_POS>(L"Weapons", [&]() {
-			std::vector<std::wstring> m_hitboxes{ L"Head", L"Neck", L"Chest", L"Stomach", L"Pelvis" };
-			std::vector<std::wstring> m_types{ L"Hitbox", L"Nearest" };
+			std::vector<std::wstring> m_hitboxes = { L"Head", L"Neck", L"Chest", L"Stomach", L"Pelvis" };
+			std::vector<std::wstring> m_types = { L"Hitbox", L"Nearest" };
 
 			add_tab<UI_SUB_SUB_POS>(L"Pistols", [&]() {
 				add_item<UI_SUB_SUB_SUB_POS>(L"Type", V_AIMBOT_TYPE_PISTOL, m_types, m_colors[UI_TEXT_COL], true);
@@ -465,34 +465,26 @@ void c_ui::setup()
 
 #ifdef LUA_ENABLED
 	add(L"Lua (" + std::to_wstring(lua_list.size()) + L")", [&]() {
-		std::vector<std::wstring> luas{};
+		if (!lua_list.empty()) {
+			add_item<UI_SUB_POS>(L"Lua", V_LUA_INDEX, g_lua->get_script_list(), g_lua->get_loaded_by_index(
+				g_var->get_as<int>(V_LUA_INDEX).value()) ? m_colors[UI_MAIN_COL] : m_colors[UI_TEXT_COL], true);
 
-		if (!lua_list.empty())
-		{
-			for (const auto& script : lua_list)
-				luas.push_back(script.first);
+			add_function<UI_SUB_POS>(L"Load", []() {
+				g_lua->load_script(g_lua->get_script_name_by_index(g_var->get_as<int>(V_LUA_INDEX).value()));
+			});
+
+			add_function<UI_SUB_POS>(L"Unload", []() {
+				g_lua->unload_script(g_lua->get_script_name_by_index(g_var->get_as<int>(V_LUA_INDEX).value()));
+			}, true);
+
+			add_function<UI_SUB_POS>(L"Reload Scripts", []() {
+				g_lua->reload_active_scripts();
+			});
 		}
-		else
-			luas.push_back(L"-");
 
-		add_item<UI_SUB_POS>(L"Lua", V_LUA_INDEX, luas, g_lua->get_loaded_by_index(
-			g_var->get_as<int>(V_LUA_INDEX).value()) ? m_colors[UI_MAIN_COL] : m_colors[UI_TEXT_COL], true);
-
-		add_function<UI_SUB_POS>(L"Load", []() {
-			g_lua->load_script(g_lua->get_script_name_by_index(g_var->get_as<int>(V_LUA_INDEX).value()));
-		});
-
-		add_function<UI_SUB_POS>(L"Unload", []() {
-			g_lua->unload_script(g_lua->get_script_name_by_index(g_var->get_as<int>(V_LUA_INDEX).value()));
-		}, true);
-
-		add_function<UI_SUB_POS>(L"Reload Scripts", []() {
-			g_lua->reload_active_scripts();
-		});
-
-		add_function<UI_SUB_POS>(L"Refresh Scripts", []() {
-			g_var->set(V_LUA_INDEX, 0);
+		add_function<UI_SUB_POS>(L"Refresh Scripts", [&]() {
 			g_lua->refresh_scripts();
+			s_entry_pos[UI_SUB_POS] = 0;
 		});
 	});
 #endif

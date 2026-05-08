@@ -21,7 +21,7 @@ static void __stdcall init(HMODULE I)
 
 	// initialize the timer by recording the current steady clock time
 	auto s_time = std::chrono::steady_clock::now();
-
+	
 	switch (GLOBAL(lib_state.get_state())) {
 	case state_t::SL_INIT_BASE: {
 		g_fonts[0] = AddFontMemResourceEx(astriumwep_ttf, ASTRIUMWEP_TTF_SZ, NULL, &g_numFonts);
@@ -38,7 +38,7 @@ static void __stdcall init(HMODULE I)
 			{ Astriumwep12px, 12, "AstriumWep",       FW_NORMAL,   CLEARTYPE_QUALITY },
 			{ Astriumwep16px, 16, "AstriumWep",       FW_NORMAL,   CLEARTYPE_QUALITY },
 			{ Astriumwep25px, 25, "AstriumWep",       FW_NORMAL,   CLEARTYPE_QUALITY },
-			});
+		});
 
 		if (g_renderer->init(g_cs->m_device))
 			g_ui->init(g_cs->m_device);
@@ -77,10 +77,6 @@ static void __stdcall init(HMODULE I)
 		GLOBAL(lib_state)++;
 	}
 	case state_t::SL_WAITING_FOR_SHUTDOWN: {
-		int last_min = 0;
-		int last_hour = 0;
-
-		// set initialised flag
 		GLOBAL(b_flags[BF_INITIALISED]) = true;
 
 #ifdef LUA_ENABLED
@@ -94,42 +90,14 @@ static void __stdcall init(HMODULE I)
 		}
 #endif
 
-		// set unload key
 		g_input->add_hk(VK_F12, []() {
 			g::unload();
 		});
 
-		// open the ui
 		g_ui->set_menu_state(true);
 
-		while (!(GLOBAL(lib_state.get_state()) == state_t::SL_SHUTDOWN)) {
-			std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-
-			int total_minutes = Helpers::get_elapsed_time(s_time) / 60000;
-			int total_hours = total_minutes / 60;
-
-			if (total_hours != last_hour) {
-				last_hour = total_hours;
-
-				GLOBAL(i_flags[IF_HOURS_IN_GAME]) = 0;
-
-				GLOBAL(i_flags[IF_MINUTES_IN_GAME]) = 0;
-				GLOBAL(i_flags[IF_SECONDS_IN_GAME]) = 0;
-
-				last_min = 0;
-			}
-
-			if (total_minutes != last_min) {
-				last_min = total_minutes;
-				GLOBAL(i_flags[IF_SECONDS_IN_GAME]) = 0;
-			}
-			else {
-				GLOBAL(i_flags[IF_SECONDS_IN_GAME]) = (Helpers::get_elapsed_time(s_time) % 60000) / 1000;
-			}
-
-			GLOBAL(i_flags[IF_MINUTES_IN_GAME]) = total_minutes % 60;
-			GLOBAL(i_flags[IF_HOURS_IN_GAME]) = total_hours;
-		}
+		while (!(GLOBAL(lib_state.get_state()) == state_t::SL_SHUTDOWN))
+			g::handle_playing_time(s_time, 1000);
 	}
 	case state_t::SL_SHUTDOWN: {
 		// reset world brightness if nightmode was enabled
@@ -161,7 +129,6 @@ static void __stdcall init(HMODULE I)
 		}
 #endif
 
-		// free stuff
 		g_event->undo();
 		g_hooks->undo();
 		g_input->undo();
@@ -171,7 +138,6 @@ static void __stdcall init(HMODULE I)
 #endif
 		g_var->undo();
 
-		// free loaded fonts
 		for (int i = 0; i <= 1; i++) {
 			if (g_fonts[i]) {
 				RemoveFontMemResourceEx(g_fonts[i]);
@@ -181,7 +147,6 @@ static void __stdcall init(HMODULE I)
 
 		g_numFonts = 0;
 
-		// exit thread
 		FreeLibraryAndExitThread(I, EXIT_SUCCESS);
 	}
 	}
@@ -192,10 +157,7 @@ bool __stdcall DllMain(const HMODULE mod, const int32_t r, void*)
 	if (!(r == DLL_PROCESS_ATTACH))
 		return false;
 
-	// disables thread library calls
 	DisableThreadLibraryCalls(mod);
-
-	// sets a custom handler for unhandled exceptions
 	SetUnhandledExceptionFilter(exception_handler::custom_exception_filter);
 
 	if (const auto h = CreateThread(nullptr, 0, reinterpret_cast<LPTHREAD_START_ROUTINE>(init), mod, 0, nullptr))

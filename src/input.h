@@ -67,9 +67,9 @@ struct mouse_t {
 	}
 
 private:
-	int m_mouse_pos_x{};
-	int m_mouse_pos_y{};
-	int m_wheel_accumulate{};
+	int m_mouse_pos_x;
+	int m_mouse_pos_y;
+	int m_wheel_accumulate;
 };
 
 class c_input : public mouse_t {
@@ -95,8 +95,8 @@ public:
 	void undo();
 
 private:
-	HWND                  m_hwnd{};
-	WNDPROC               m_old_wnd_proc{};
+	HWND                  m_hwnd;
+	WNDPROC               m_old_wnd_proc;
 	_input_states         m_key_map[256]{};
 	std::function<void()> m_hotkeys[256]{};
 };

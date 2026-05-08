@@ -11,12 +11,12 @@ struct entity_object {
 
 	bool in_class_id(const _class_ids _class_id) {
 		auto temp_ent{ reinterpret_cast<c_base_entity*>(m_entity) };
-		return temp_ent->get_client_class()->class_id == _class_id;
+		return temp_ent->get_client_class()->m_class_id == _class_id;
 	}
 
 	bool is_network_name(const std::string& name) {
 		auto temp_ent{ reinterpret_cast<c_base_entity*>(m_entity) };
-		return std::string{ temp_ent->get_client_class()->network_name }.find(name) != std::string::npos;
+		return std::string{ temp_ent->get_client_class()->m_network_name }.find(name) != std::string::npos;
 	}
 
 	bool world_to_screen() {
@@ -86,7 +86,7 @@ void world_esp_t::think()
 		{
 			if (GLOBAL(b_flags[BF_BOMB_PLANTED]))
 			{
-				if (entity->get_client_class()->class_id == cplantedc4)
+				if (entity->get_client_class()->m_class_id == cplantedc4)
 				{
 					const auto bomb = reinterpret_cast<c_base_plantedc4*>(entity);
 					const auto explode_time = bomb->c4_blow() - g_cs->m_globals->cur_time;
@@ -153,7 +153,7 @@ void world_esp_t::on_do_post_screen_effects()
 
 		if (g_var->get_as<bool>(V_GLOW_C4).value())
 		{
-			if (client_class->class_id == cc4 || client_class->class_id == cplantedc4)
+			if (client_class->m_class_id == cc4 || client_class->m_class_id == cplantedc4)
 			{
 				glow.set_glow(
 					g_var->get_as<int>(V_GLOW_C4_COL_R).value() / 255.0f,
@@ -167,7 +167,7 @@ void world_esp_t::on_do_post_screen_effects()
 		if (!glow_object->is_moving() & g_var->get_as<bool>(V_GLOW_WALKING_ONLY).value())
 			continue;
 
-		if (client_class->class_id == ccsplayer)
+		if (client_class->m_class_id == ccsplayer)
 		{
 			const auto is_enemy = glow_object->get_team_num() != g_cs->get_local()->get_team_num();
 			const auto is_teammate = glow_object->get_team_num() == g_cs->get_local()->get_team_num();
