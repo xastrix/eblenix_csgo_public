@@ -24,6 +24,7 @@ static void init_math_functions(sol::state_view& state);
 static void init_surface_functions(sol::state_view& state);
 static void init_util_functions(sol::state_view& state);
 static void init_global_functions(sol::state_view& state);
+static void init_lists(sol::state_view& state);
 static std::string callback_id_to_string(int id);
 
 void c_lua_mgr::init_api()
@@ -52,9 +53,9 @@ void c_lua_mgr::init_api()
 	init_surface_functions(state);
 	init_util_functions(state);
 	init_global_functions(state);
+	init_lists(state);
 
-	sol::function register_callback =
-		state.set_function("register_callback", [&](sol::this_state s, int callback_id, sol::function fn)
+	state.set_function("register_callback", [&](sol::this_state s, int callback_id, sol::function fn)
 	{
 		sol::state_view state{ s };
 		sol::table rs = state["debug"]["getinfo"](2, ("S"));
@@ -122,6 +123,32 @@ static void init_enums(sol::state_view& state)
 	state.new_enum("bbox_type",
 		"box_static",                                BT_STATIC,
 		"box_dynamic",                               BT_DYNAMIC
+	);
+
+	state.new_enum("e_list",
+		g_event_list[PLAYER_HURT],                   PLAYER_HURT,
+		g_event_list[PLAYER_DEATH],                  PLAYER_DEATH,
+		g_event_list[PLAYER_SPAWN],                  PLAYER_SPAWN,
+		g_event_list[PLAYER_CONNECT],                PLAYER_CONNECT,
+		g_event_list[PLAYER_DISCONNECT],             PLAYER_DISCONNECT,
+		g_event_list[PLAYER_FOOTSTEP],               PLAYER_FOOTSTEP,
+		g_event_list[PLAYER_FALLDAMAGE],             PLAYER_FALLDAMAGE,
+		g_event_list[PLAYER_GIVEN_C4],               PLAYER_GIVEN_C4,
+		g_event_list[HOSTAGE_HURT],                  HOSTAGE_HURT,
+		g_event_list[HOSTAGE_KILLED],                HOSTAGE_KILLED,
+		g_event_list[HOSTAGE_RESCUED],               HOSTAGE_RESCUED,
+		g_event_list[ITEM_PURCHASE],                 ITEM_PURCHASE,
+		g_event_list[ROUND_PRESTART],                ROUND_PRESTART,
+		g_event_list[ROUND_START],                   ROUND_START,
+		g_event_list[ROUND_END],                     ROUND_END,
+		g_event_list[BOMB_BEGINPLANT],               BOMB_BEGINPLANT,
+		g_event_list[BOMB_PLANTED],                  BOMB_PLANTED,
+		g_event_list[BOMB_EXPLODED],                 BOMB_EXPLODED,
+		g_event_list[BOMB_BEGINDEFUSE],              BOMB_BEGINDEFUSE,
+		g_event_list[BOMB_ABORTDEFUSE],              BOMB_ABORTDEFUSE,
+		g_event_list[BOMB_DEFUSED],                  BOMB_DEFUSED,
+		g_event_list[BOMB_DROPPED],                  BOMB_DROPPED,
+		g_event_list[BOMB_BEEP],                     BOMB_BEEP
 	);
 }
 
@@ -585,6 +612,17 @@ static void init_global_functions(sol::state_view& state)
 	state["bbox"]                   = [](int x, int y, int w, int h) { return box(x, y, w, h); };
 
 	state["unload"]                 = []() { g::unload(); };
+}
+
+static void init_lists(sol::state_view& state)
+{
+	sol::table e_list = state.create_table_with();
+
+	for (int i = 0; i < maxEvents; i++) {
+		e_list[i] = g_event_list[i];
+	}
+
+	state["event_list"] = e_list;
 }
 
 static std::string callback_id_to_string(int id)
