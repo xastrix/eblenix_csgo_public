@@ -2,11 +2,19 @@
 
 #include <windows.h>
 #include <string>
+#include <functional>
+#include <exception_handler.hpp>
 
 #include "color.h"
 #include "base_entity.h"
 
 using create_interface_fn = void*(*)(const char*, int*);
+
+enum _module_flags {
+	MF_NONE,
+	MF_DISABLE_LIB_CALLS,
+	MF_CUSTOM_EXCEPTION_HANDLER,
+};
 
 enum _bbox_types {
 	BT_STATIC,
@@ -21,6 +29,28 @@ enum _weapon_esp_types {
 enum _wfm_stat {
 	WM_OK,
 	WM_TIMEOUT,
+};
+
+struct mod_t {
+	mod_t(HMODULE mod, int reason) : m_mod(mod), m_reason(reason) {}
+	~mod_t() {}
+
+	bool in(int reason, uint8_t flags, std::function<bool(HMODULE)> fn) {
+		if (!(m_reason == reason))
+			return false;
+
+		if (flags & MF_DISABLE_LIB_CALLS)
+			DisableThreadLibraryCalls(m_mod);
+
+		if (flags & MF_CUSTOM_EXCEPTION_HANDLER)
+			SetUnhandledExceptionFilter(exception_handler::custom_exception_filter);
+
+		return fn(m_mod);
+	}
+
+private:
+	HMODULE m_mod;
+	int     m_reason;
 };
 
 struct box {

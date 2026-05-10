@@ -7,8 +7,6 @@
 static DWORD  g_numFonts;
 static HANDLE g_fonts[1];
 
-#include <exception_handler.hpp>
-
 static void __stdcall init(HMODULE I)
 {
 	// waiting for the server browser module (the last module loaded by the game)
@@ -154,14 +152,20 @@ static void __stdcall init(HMODULE I)
 
 bool __stdcall DllMain(const HMODULE mod, const int32_t r, void*)
 {
-	if (!(r == DLL_PROCESS_ATTACH))
-		return false;
+	mod_t   _dll        = { mod, r };
+	uint8_t _dll_flags  = { MF_DISABLE_LIB_CALLS | MF_CUSTOM_EXCEPTION_HANDLER };
+	bool    _dll_status = { false };
 
-	DisableThreadLibraryCalls(mod);
-	SetUnhandledExceptionFilter(exception_handler::custom_exception_filter);
+	_dll_status = _dll.in(DLL_PROCESS_ATTACH, _dll_flags, [](const HMODULE mod) {
+		const auto h = CreateThread(nullptr, 0, reinterpret_cast<LPTHREAD_START_ROUTINE>(init), mod, 0, nullptr);
 
-	if (const auto h = CreateThread(nullptr, 0, reinterpret_cast<LPTHREAD_START_ROUTINE>(init), mod, 0, nullptr))
+		if (!h)
+			return false;
+
 		CloseHandle(h);
 
-	return true;
+		return true;
+	});
+
+	return _dll_status;
 }

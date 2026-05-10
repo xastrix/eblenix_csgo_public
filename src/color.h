@@ -25,7 +25,7 @@ public:
 			get_var_value(var_name + R_COL_P),
 			get_var_value(var_name + G_COL_P),
 			get_var_value(var_name + B_COL_P),
-	} {};
+	} {}
 
 	D3DCOLOR get() const {
 		return D3DCOLOR_RGBA(m_color[0], m_color[1], m_color[2], m_color[3]);
@@ -42,8 +42,6 @@ public:
 	}
 
 private:
-	std::array<int, 4> m_color{};
-
 	int get_var_value(const std::string& key) const {
 		auto opt = g_var->get_as<int>(key);
 
@@ -52,6 +50,9 @@ private:
 
 		return opt.value();
 	}
+
+private:
+	std::array<int, 4> m_color;
 };
 
 struct range_clr_t {
