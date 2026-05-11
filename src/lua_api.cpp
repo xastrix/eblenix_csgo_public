@@ -238,7 +238,7 @@ static void init_convar_functions(sol::state_view& state)
 	});
 
 	table.set_function("console_color_printf", [](const color_t& col, const char* msg) {
-		return g_cs->m_cvar->console_color_printf(col.get(), msg);
+		return g_cs->m_cvar->console_color_printf(col.get_revert(), msg);
 	});
 
 	state["convar"] = table;
@@ -609,6 +609,8 @@ static void init_global_functions(sol::state_view& state)
 	state["vec3"]                   = [](float x, float y, float z) { return vec3(x, y, z); };
 
 	state["color"]                  = [](int r, int g, int b, int a) { return color_t(r, g, b, a); };
+	state["color_revert"]           = [](int r, int g, int b, int a) { return color_t(a, r, g, b); };
+
 	state["bbox"]                   = [](int x, int y, int w, int h) { return box(x, y, w, h); };
 
 	state["unload"]                 = []() { g::unload(); };
