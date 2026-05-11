@@ -77,7 +77,7 @@ bool c_lua_mgr::load_script(const std::wstring& name)
 	if (it != m_lua_list.end() && it->second == true)
 		return false;
 
-	auto status = state.script_file(LUA_DIRECTORY_PATHS + std::string(name.begin(), name.end()),
+	auto status = state.script_file(LUA_DIRECTORY_PATHS + Helpers::stutf8(name),
 		[](lua_State*, sol::protected_function_result result) {
 		if (!result.valid()) {
 			sol::error err = result;
@@ -181,6 +181,8 @@ std::vector<std::wstring> c_lua_mgr::get_script_list()
 
 std::string c_lua_mgr::get_script_update_datetime(const std::wstring& name)
 {
+	std::string ret;
+
 	int64_t diff = Files::get_file_diff(LUA_DIRECTORY_PATHS + std::string(name.begin(), name.end()));
 
 	int64_t s = diff / 1000;
@@ -188,25 +190,12 @@ std::string c_lua_mgr::get_script_update_datetime(const std::wstring& name)
 	int64_t h = (s % 86400) / 3600;
 	int64_t m = (s % 3600) / 60;
 
-	std::string result;
+	if (d > 0) ret += std::to_string(d) + "d ";
+	if (h > 0) ret += std::to_string(h) + "h ";
+	if (m > 0 || (!d && !h)) ret += std::to_string(m) + " min ago";
+	if (ret.empty()) ret = "just now";
 
-	if (d > 0) {
-		result += std::to_string(d) + "d ";
-	}
-
-	if (h > 0) {
-		result += std::to_string(h) + "h ";
-	}
-
-	if (m > 0 || (!d && !h)) {
-		result += std::to_string(m) + " min ago";
-	}
-
-	if (result.empty()) {
-		result = "just now";
-	}
-
-	return result;
+	return ret;
 }
 
 void c_lua_mgr::undo()

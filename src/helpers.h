@@ -107,6 +107,9 @@ namespace Helpers
 	/* Converts a utf-8 encoded std::string to a wide-character std::wstring */
 	std::wstring stws(const std::string& string);
 
+	/* Converts a wide-character std::wstring to a utf-8 encoded std::string */
+	std::string stutf8(const std::wstring& string);
+
 	/* XOR encryption/decryption */
 	std::string xor_encrypt_decrypt(const std::string& data, const std::string& key);
 

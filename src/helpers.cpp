@@ -378,6 +378,12 @@ std::wstring Helpers::stws(const std::string& string)
 	return str.from_bytes(string);
 }
 
+std::string Helpers::stutf8(const std::wstring& string)
+{
+	std::wstring_convert<std::codecvt_utf8<wchar_t>> str{};
+	return str.to_bytes(string);
+}
+
 std::string Helpers::xor_encrypt_decrypt(const std::string& data, const std::string& key)
 {
 	std::string result = data;
