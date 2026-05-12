@@ -184,16 +184,30 @@ std::string c_lua_mgr::get_script_update_datetime(const std::wstring& name)
 	std::string ret;
 
 	int64_t diff = Files::get_file_diff(LUA_DIRECTORY_PATHS + std::string(name.begin(), name.end()));
+	int64_t s    = diff        / 1000;
+	int64_t d    = s           / 86400;
+	int64_t h    = (s % 86400) / 3600;
+	int64_t m    = (s % 3600)  / 60;
 
-	int64_t s = diff / 1000;
-	int64_t d = s / 86400;
-	int64_t h = (s % 86400) / 3600;
-	int64_t m = (s % 3600) / 60;
+	if (d > 0)
+	{
+		if (d >= 60) {
+			ret = "a very long time ago";
+			return ret;
+		}
 
-	if (d > 0) ret += std::to_string(d) + "d ";
-	if (h > 0) ret += std::to_string(h) + "h ";
-	if (m > 0 || (!d && !h)) ret += std::to_string(m) + " min ago";
-	if (ret.empty()) ret = "just now";
+		else
+			ret += std::to_string(d) + "d ";
+	}
+
+	if (h > 0)
+		ret += std::to_string(h) + "h ";
+
+	if (m > 0 || (!d && !h))
+		ret += std::to_string(m) + " min ago";
+
+	if (ret.empty())
+		ret = "just now";
 
 	return ret;
 }

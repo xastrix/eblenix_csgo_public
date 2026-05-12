@@ -1,9 +1,9 @@
 #pragma once
 
 extern "C" {
-   #include <lua.h>
-   #include <lualib.h>
-   #include <lauxlib.h>
+	#include <lua.h>
+	#include <lualib.h>
+	#include <lauxlib.h>
 }
 
 #include <sol.hpp>
@@ -33,8 +33,8 @@ struct lua_core_t {
 	sol::protected_function fn;
 };
 
-using lua_list_t       = std::vector<std::pair<std::wstring, bool>>;
-using lua_event_t      = std::map<int, std::vector<lua_core_t>>;
+using lua_list_t = std::vector<std::pair<std::wstring, bool>>;
+using lua_event_t = std::map<int, std::vector<lua_core_t>>;
 
 class c_lua_mgr {
 public:

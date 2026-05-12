@@ -153,7 +153,7 @@ void c_input::process_keybd_message(UINT m, WPARAM w)
 		return;
 	}
 
-	if ((state == state_up && m_key_map[key] == state_down))
+	if (state == state_up && m_key_map[key] == state_down)
 	{
 		m_key_map[key] = state_pressed;
 
@@ -178,13 +178,11 @@ void c_input::process_keybd_message(UINT m, WPARAM w)
 
 std::wstring c_input::virtual_key_to_wstring(unsigned int vk)
 {
-	std::wstring k{ L"?" };
-	auto map{ MapVirtualKeyW(vk, MAPVK_VK_TO_VSC) };
+	std::wstring ret = L"?";
+	auto         map = MapVirtualKeyW(vk, MAPVK_VK_TO_VSC);
 
 	switch (vk) {
-	case 0: {
-		return k;
-	}
+	case 0: return ret;
 	case VK_LEFT:
 	case VK_UP:
 	case VK_RIGHT:
@@ -206,12 +204,12 @@ std::wstring c_input::virtual_key_to_wstring(unsigned int vk)
 	default:
 		wchar_t buf[128]{};
 		if (GetKeyNameTextW(map << 16, buf, 128)) {
-			k = buf;
-			std::transform(k.begin(), k.end(), k.begin(), toupper);
+			ret = buf;
+			std::transform(ret.begin(), ret.end(), ret.begin(), toupper);
 		}
 	}
 
-	return k;
+	return ret;
 }
 
 WNDPROC c_input::get_wnd_proc()
