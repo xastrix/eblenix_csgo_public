@@ -37,8 +37,23 @@ void c_lua_mgr::init_api()
 		sol::lib::string,
 		sol::lib::utf8,
 		sol::lib::bit32,
+		sol::lib::math,
 		sol::lib::ffi
 	);
+
+	for (const auto& fn : std::vector<std::string>{
+		"getmetatable",
+		"setmetatable",
+		"print",
+		"collectgarbage",
+		"dofile",
+		"load",
+		"loadfile",
+		"xpcall",
+		"pcall",
+		"__nil_callback",
+	})
+		state[fn] = sol::nil;
 
 	init_enums(state);
 	init_usertypes(state);
@@ -54,6 +69,10 @@ void c_lua_mgr::init_api()
 	init_util_functions(state);
 	init_global_functions(state);
 	init_lists(state);
+
+	state.set_function("print", [](const char* msg) {
+		return g_cs->m_cvar->console_printf(msg);
+	});
 
 	state.set_function("register_callback", [&](sol::this_state s, int callback_id, sol::function fn)
 	{
