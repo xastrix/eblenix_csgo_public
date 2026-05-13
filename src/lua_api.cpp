@@ -616,9 +616,7 @@ static void init_global_functions(sol::state_view& state)
 	state["console_opened"]         = GLOBAL(b_flags[BF_CONSOLE_OPENED]);
 	state["chat_opened"]            = GLOBAL(b_flags[BF_CHAT_OPENED]);
 
-	state["seconds_in_game"]        = GLOBAL(i_flags[IF_SECONDS_IN_GAME]);
-	state["minutes_in_game"]        = GLOBAL(i_flags[IF_MINUTES_IN_GAME]);
-	state["hours_in_game"]          = GLOBAL(i_flags[IF_HOURS_IN_GAME]);
+	state["hours_played"]           = GLOBAL(i_flags[IF_HOURS_IN_GAME]);
 
 	state["mouse_pos_x"]            = g_input->get_mouse_pos_x();
 	state["mouse_pos_y"]            = g_input->get_mouse_pos_y();
