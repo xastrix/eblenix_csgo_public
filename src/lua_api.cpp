@@ -51,7 +51,7 @@ void c_lua_mgr::init_api(sol::state_view state)
 	});
 
 	m_env.set_function("register_callback", [&](sol::this_state s, int callback_id, sol::function fn) {
-		std::string src;
+		std::string src = "?.lua";
 		int line;
 
 		lua_Debug ar;
@@ -69,8 +69,8 @@ void c_lua_mgr::init_api(sol::state_view state)
 			return;
 		}
 
-		std::string  path_str = (src[0] == '@') ? src.substr(1) : src;
-		std::wstring name     = std::filesystem::path(path_str).filename().wstring();
+		std::string  path = (src[0] == '@') ? src.substr(1) : src;
+		std::wstring name = std::filesystem::path(path).filename().wstring();
 
 		m_lua_event[callback_id].push_back({ get_script_index_by_name(name), fn });
 
@@ -288,7 +288,7 @@ static void init_renderer_functions(sol::environment& env, sol::state_view state
 			&ret);
 
 		if (FAILED(hr)) {
-			std::string src;
+			std::string src = "?.lua";
 			int line;
 
 			lua_Debug ar;
@@ -316,7 +316,7 @@ static void init_renderer_functions(sol::environment& env, sol::state_view state
 		ret->init(g_renderer->get_device(), { LUA_DIRECTORY_PATHS + path }, width, height);
 
 		if (FAILED(ret->get_result())) {
-			std::string src;
+			std::string src = "?.lua";
 			int line;
 
 			lua_Debug ar;
@@ -522,7 +522,7 @@ static void init_entity_list_functions(sol::environment& env, sol::state_view st
 
 static void init_math_functions(sol::environment& env, sol::state_view state)
 {
-	sol::table table = state.create_table();
+	sol::table table = state["math"];
 
 	table.set_function("world_to_screen", [](const vec3& origin, vec3& screen) {
 		return Math::w2s(origin, screen);
@@ -532,7 +532,7 @@ static void init_math_functions(sol::environment& env, sol::state_view state)
 		return Helpers::get_bbox(e, in, type);
 	});
 
-	env["engine_math"] = table;
+	env["math"] = table;
 }
 
 static void init_surface_functions(sol::environment& env, sol::state_view state)

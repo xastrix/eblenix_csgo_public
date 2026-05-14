@@ -10,23 +10,21 @@
 void c_lua_mgr::init()
 {
 	m_state = sol::state();
-	sol::state_view state = m_state;
-
-	state.open_libraries(sol::lib::base, sol::lib::string, sol::lib::utf8,
+	m_state.open_libraries(sol::lib::base, sol::lib::string, sol::lib::utf8,
 		sol::lib::math, sol::lib::ffi, sol::lib::os);
 
-	m_env = sol::environment(state, sol::create, state.globals());
+	m_env = sol::environment(m_state, sol::create, m_state.globals());
 	
-	for (const auto& lib : { "string", "utf8", "math", "ffi" }) {
-		m_env[lib] = state[lib];
+	for (const auto& lib : { "string", "utf8", "ffi" }) {
+		m_env[lib] = m_state[lib];
 	}
 
 	for (const auto& func : { "ipairs", "pairs", "next", "select",
 		"tonumber", "tostring", "type", "pcall", "xpcall" }) {
-		m_env[func] = state[func];
+		m_env[func] = m_state[func];
 	}
 
-	init_api(state);
+	init_api(m_state);
 
 	refresh_scripts();
 	load_startup_scripts();
