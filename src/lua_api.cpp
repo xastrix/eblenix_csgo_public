@@ -11,83 +11,66 @@
 
 #include <files.h>
 
-static void init_enums(sol::state_view& state);
-static void init_usertypes(sol::state_view& state);
-static void init_global_variables(sol::state_view& state);
-static void init_convar_functions(sol::state_view& state);
-static void init_cvar_functions(sol::state_view& state);
-static void init_renderer_functions(sol::state_view& state);
-static void init_engine_functions(sol::state_view& state);
-static void init_entity_functions(sol::state_view& state);
-static void init_entity_list_functions(sol::state_view& state);
-static void init_math_functions(sol::state_view& state);
-static void init_surface_functions(sol::state_view& state);
-static void init_util_functions(sol::state_view& state);
-static void init_global_functions(sol::state_view& state);
-static void init_lists(sol::state_view& state);
+static void init_enums(sol::environment& env);
+static void init_usertypes(sol::environment& env, sol::state_view state);
+static void init_global_variables(sol::environment& env, sol::state_view state);
+static void init_convar_functions(sol::environment& env, sol::state_view state);
+static void init_cvar_functions(sol::environment& env, sol::state_view state);
+static void init_renderer_functions(sol::environment& env, sol::state_view state);
+static void init_engine_functions(sol::environment& env, sol::state_view state);
+static void init_entity_functions(sol::environment& env, sol::state_view state);
+static void init_entity_list_functions(sol::environment& env, sol::state_view state);
+static void init_math_functions(sol::environment& env, sol::state_view state);
+static void init_surface_functions(sol::environment& env, sol::state_view state);
+static void init_util_functions(sol::environment& env, sol::state_view state);
+static void init_global_functions(sol::environment& env);
+static void init_lists(sol::environment& env, sol::state_view state);
+static void init_safe_env(sol::environment& env, sol::state_view state);
 static std::string callback_id_to_string(int id);
 
-void c_lua_mgr::init_api()
+void c_lua_mgr::init_api(sol::state_view state)
 {
-	sol::state_view state = m_state;
+	init_enums(m_env);
+	init_usertypes(m_env, state);
+	init_global_variables(m_env, state);
+	init_convar_functions(m_env, state);
+	init_cvar_functions(m_env, state);
+	init_renderer_functions(m_env, state);
+	init_engine_functions(m_env, state);
+	init_entity_functions(m_env, state);
+	init_entity_list_functions(m_env, state);
+	init_math_functions(m_env, state);
+	init_surface_functions(m_env, state);
+	init_util_functions(m_env, state);
+	init_global_functions(m_env);
+	init_lists(m_env, state);
+	init_safe_env(m_env, state);
 
-	state.open_libraries
-	(
-		sol::lib::base,
-		sol::lib::string,
-		sol::lib::utf8,
-		sol::lib::bit32,
-		sol::lib::math,
-		sol::lib::ffi
-	);
-
-	for (const auto& fn : std::vector<std::string>{
-		"getmetatable",
-		"setmetatable",
-		"print",
-		"collectgarbage",
-		"dofile",
-		"load",
-		"loadfile",
-		"xpcall",
-		"pcall",
-		"__nil_callback",
-	})
-		state[fn] = sol::nil;
-
-	init_enums(state);
-	init_usertypes(state);
-	init_global_variables(state);
-	init_convar_functions(state);
-	init_cvar_functions(state);
-	init_renderer_functions(state);
-	init_engine_functions(state);
-	init_entity_functions(state);
-	init_entity_list_functions(state);
-	init_math_functions(state);
-	init_surface_functions(state);
-	init_util_functions(state);
-	init_global_functions(state);
-	init_lists(state);
-
-	state.set_function("print", [](const char* msg) {
+	m_env.set_function("print", [](const char* msg) {
 		return g_cs->m_cvar->console_printf(msg);
 	});
 
-	state.set_function("register_callback", [&](sol::this_state s, int callback_id, sol::function fn)
-	{
-		sol::state_view state{ s };
-		sol::table rs = state["debug"]["getinfo"](2, ("S"));
+	m_env.set_function("register_callback", [&](sol::this_state s, int callback_id, sol::function fn) {
+		std::string src;
+		int line;
 
-		std::string src = rs["source"];
-		int line        = rs["currentline"];
+		lua_Debug ar;
+		if (lua_getstack(s, 1, &ar))
+		{
+			if (lua_getinfo(s, "Sl", &ar))
+			{
+				src = ar.source;
+				line = ar.currentline;
+			}
+		}
 
 		if (callback_id <= CL_NONE || callback_id >= maxCallbacks) {
 			Helpers::console_printf_with_prefix("[lua]", "%s:%i: Failed to register callback (Invalid callback id)", src.substr(1).c_str(), line);
 			return;
 		}
 
-		std::wstring name = std::filesystem::path(src.substr(1)).filename().wstring();
+		std::string  path_str = (src[0] == '@') ? src.substr(1) : src;
+		std::wstring name     = std::filesystem::path(path_str).filename().wstring();
 
 		m_lua_event[callback_id].push_back({ get_script_index_by_name(name), fn });
 
@@ -96,9 +79,9 @@ void c_lua_mgr::init_api()
 	});
 }
 
-static void init_enums(sol::state_view& state)
+static void init_enums(sol::environment& env)
 {
-	state.new_enum("cb",
+	env.new_enum("cb",
 		callback_id_to_string(CL_ON_PREINIT),        CL_ON_PREINIT,
 		callback_id_to_string(CL_ON_INIT),           CL_ON_INIT,
 		callback_id_to_string(CL_ON_UNLOAD),         CL_ON_UNLOAD,
@@ -111,13 +94,13 @@ static void init_enums(sol::state_view& state)
 		callback_id_to_string(CL_ON_WND_PROC),       CL_ON_WND_PROC,
 		callback_id_to_string(CL_ON_GAME_EVENTS),    CL_ON_GAME_EVENTS);
 
-	state.new_enum("text_flags",
+	env.new_enum("text_flags",
 		"text_none",                                 TEXT_NONE,
 		"text_outline",                              TEXT_OUTLINE,
 		"text_center_x",                             TEXT_CENTER_X
 	);
 
-	state.new_enum("cmd_buttons",
+	env.new_enum("cmd_buttons",
 		"in_attack",                                 in_attack,
 		"in_attack2",                                in_attack2,
 		"in_jump",                                   in_jump,
@@ -131,7 +114,7 @@ static void init_enums(sol::state_view& state)
 		"in_bullrush",                               in_bullrush
 	);
 
-	state.new_enum("move_type",
+	env.new_enum("move_type",
 		"walk",                                      movetype_walk,
 		"fly",                                       movetype_fly,
 		"noclip",                                    movetype_noclip,
@@ -139,12 +122,12 @@ static void init_enums(sol::state_view& state)
 		"observer",                                  movetype_observer
 	);
 
-	state.new_enum("bbox_type",
+	env.new_enum("bbox_type",
 		"box_static",                                BT_STATIC,
 		"box_dynamic",                               BT_DYNAMIC
 	);
 
-	state.new_enum("e_list",
+	env.new_enum("e_list",
 		g_event_list[PLAYER_HURT],                   PLAYER_HURT,
 		g_event_list[PLAYER_DEATH],                  PLAYER_DEATH,
 		g_event_list[PLAYER_SPAWN],                  PLAYER_SPAWN,
@@ -171,33 +154,33 @@ static void init_enums(sol::state_view& state)
 	);
 }
 
-static void init_usertypes(sol::state_view& state)
+static void init_usertypes(sol::environment& env, sol::state_view state)
 {
-	state.new_usertype<vec2>("vec2", sol::constructors<vec2(float, float)>(),
+	env["vec2"] = state.new_usertype<vec2>("vec2", sol::constructors<vec2(float, float)>(),
 		"x",             &vec2::x,
 		"y",             &vec2::y
 	);
 
-	state.new_usertype<vec3>("vec3", sol::constructors<vec3(float, float, float)>(),
+	env["vec3"] = state.new_usertype<vec3>("vec3", sol::constructors<vec3(float, float, float)>(),
 		"x",             &vec3::x,
 		"y",             &vec3::y,
 		"z",             &vec3::z
 	);
 
-	state.new_usertype<box>("bbox", sol::constructors<box(int, int, int, int)>(),
+	env["bbox"] = state.new_usertype<box>("bbox", sol::constructors<box(int, int, int, int)>(),
 		"x",             &box::x,
 		"y",             &box::y,
 		"w",             &box::w,
 		"h",             &box::h
 	);
 
-	state.new_usertype<color_t>("color", sol::constructors<color_t(int, int, int, int)>(),
+	env["color"] = state.new_usertype<color_t>("color", sol::constructors<color_t(int, int, int, int)>(),
 		"r",             [](const color_t& c) { return c.get_arr()[0]; },
 		"g",             [](const color_t& c) { return c.get_arr()[1]; },
 		"b",             [](const color_t& c) { return c.get_arr()[2]; },
 		"a",             [](const color_t& c) { return c.get_arr()[3]; });
 
-	state.new_usertype<sprite_t>("sprite",
+	env["sprite"] = state.new_usertype<sprite_t>("sprite",
 		"begin_draw",    [](sprite_t& sprite) { sprite.begin(D3DXSPRITE_DONOTMODIFY_RENDERSTATE); },
 		"draw",          [](sprite_t& sprite, int x, int y, color_t c) { sprite.draw(x, y, c); },
 		"end_draw",      [](sprite_t& sprite) { sprite.end(); },
@@ -205,13 +188,13 @@ static void init_usertypes(sol::state_view& state)
 		"on_reset_end",  [](sprite_t& sprite) { sprite.on_reset_end(); }
 	);
 
-	state.new_usertype<c_game_event>("game_event",
+	env["game_event"] = state.new_usertype<c_game_event>("game_event",
 		"get_name",      [](c_game_event* _event) { return _event->get_name(); },
 		"get_int",       [](c_game_event* _event, const char* name) { return _event->get_int(name); },
 		"get_string",    [](c_game_event* _event, const char* name) { return _event->get_string(name); }
 	);
 
-	state.new_usertype<player_info_t>("player_info",
+	env["player_info"] = state.new_usertype<player_info_t>("player_info",
 		"name",          sol::readonly(&player_info_t::m_player_name),
 		"friendsname",   sol::readonly(&player_info_t::m_friends_name),
 		"user_id",       sol::readonly(&player_info_t::m_user_id),
@@ -219,7 +202,7 @@ static void init_usertypes(sol::state_view& state)
 		"ishltv",        sol::readonly(&player_info_t::m_is_hltv)
 	);
 
-	state.new_usertype<user_cmd_t>("user_cmd",
+	env["user_cmd"] = state.new_usertype<user_cmd_t>("user_cmd",
 		"cmd_number",    sol::readonly(&user_cmd_t::m_command_number),
 		"forward_move",  &user_cmd_t::m_forwardmove,
 		"side_move",     &user_cmd_t::m_sidemove,
@@ -228,7 +211,7 @@ static void init_usertypes(sol::state_view& state)
 	);
 }
 
-static void init_global_variables(sol::state_view& state)
+static void init_global_variables(sol::environment& env, sol::state_view state)
 {
 	sol::table table = state.create_table();
 
@@ -241,10 +224,10 @@ static void init_global_variables(sol::state_view& state)
 	table["tick_count"]         = g_cs->m_globals->tick_count;
 	table["max_clients"]        = g_cs->m_globals->max_clients;
 
-	state["globals"] = table;
+	env["globals"] = table;
 }
 
-static void init_convar_functions(sol::state_view& state)
+static void init_convar_functions(sol::environment& env, sol::state_view state)
 {
 	sol::table table = state.create_table();
 
@@ -260,10 +243,10 @@ static void init_convar_functions(sol::state_view& state)
 		return g_cs->m_cvar->console_color_printf(col.get_revert(), msg);
 	});
 
-	state["convar"] = table;
+	env["convar"] = table;
 }
 
-static void init_cvar_functions(sol::state_view& state)
+static void init_cvar_functions(sol::environment& env, sol::state_view state)
 {
 	sol::table table = state.create_table();
 
@@ -283,10 +266,10 @@ static void init_cvar_functions(sol::state_view& state)
 		return c->set_value(v);
 	});
 
-	state["cvar"] = table;
+	env["cvar"] = table;
 }
 
-static void init_renderer_functions(sol::state_view& state)
+static void init_renderer_functions(sol::environment& env, sol::state_view state)
 {
 	sol::table table = state.create_table();
 
@@ -305,14 +288,23 @@ static void init_renderer_functions(sol::state_view& state)
 			&ret);
 
 		if (FAILED(hr)) {
-			sol::state_view state{ s };
-			sol::table rs = state["debug"]["getinfo"](2, ("Sl"));
+			std::string src;
+			int line;
 
-			std::string src = rs["source"];
-			int line        = rs["currentline"];
+			lua_Debug ar;
+			if (lua_getstack(s, 1, &ar))
+			{
+				if (lua_getinfo(s, "Sl", &ar))
+				{
+					src = ar.source;
+					line = ar.currentline;
+				}
+			}
+
+			std::string name = (src[0] == '@') ? src.substr(1) : src;
 
 			Helpers::console_printf_with_prefix("[lua]",
-				"%s:%i: Failed to create font", src.substr(1).c_str(), line);
+				"%s:%i: Failed to create font", name.c_str(), line);
 		}
 
 		return ret;
@@ -324,14 +316,23 @@ static void init_renderer_functions(sol::state_view& state)
 		ret->init(g_renderer->get_device(), { LUA_DIRECTORY_PATHS + path }, width, height);
 
 		if (FAILED(ret->get_result())) {
-			sol::state_view state{ s };
-			sol::table rs = state["debug"]["getinfo"](2, ("Sl"));
+			std::string src;
+			int line;
 
-			std::string src = rs["source"];
-			int line        = rs["currentline"];
+			lua_Debug ar;
+			if (lua_getstack(s, 1, &ar))
+			{
+				if (lua_getinfo(s, "Sl", &ar))
+				{
+					src = ar.source;
+					line = ar.currentline;
+				}
+			}
+
+			std::string name = (src[0] == '@') ? src.substr(1) : src;
 
 			Helpers::console_printf_with_prefix("[lua]",
-				"%s:%i: Failed to create sprite", src.substr(1).c_str(), line);
+				"%s:%i: Failed to create sprite", name.c_str(), line);
 		}
 
 		return ret;
@@ -397,10 +398,10 @@ static void init_renderer_functions(sol::state_view& state)
 		return g_renderer->get_screen_size();
 	});
 
-	state["renderer"] = table;
+	env["renderer"] = table;
 }
 
-static void init_engine_functions(sol::state_view& state)
+static void init_engine_functions(sol::environment& env, sol::state_view state)
 {
 	sol::table table = state.create_table();
 
@@ -442,10 +443,10 @@ static void init_engine_functions(sol::state_view& state)
 		return g_cs->m_engine->get_product_version_string();
 	});
 
-	state["engine"] = table;
+	env["engine"] = table;
 }
 
-static void init_entity_functions(sol::state_view& state)
+static void init_entity_functions(sol::environment& env, sol::state_view state)
 {
 	sol::table table = state.create_table();
 
@@ -497,10 +498,10 @@ static void init_entity_functions(sol::state_view& state)
 		return e->is_spotted() = v;
 	});
 
-	state["entity"] = table;
+	env["entity"] = table;
 }
 
-static void init_entity_list_functions(sol::state_view& state)
+static void init_entity_list_functions(sol::environment& env, sol::state_view state)
 {
 	sol::table table = state.create_table();
 
@@ -516,10 +517,10 @@ static void init_entity_list_functions(sol::state_view& state)
 		return g_cs->m_entity_list->get_highest_index();
 	});
 
-	state["entity_list"] = table;
+	env["entity_list"] = table;
 }
 
-static void init_math_functions(sol::state_view& state)
+static void init_math_functions(sol::environment& env, sol::state_view state)
 {
 	sol::table table = state.create_table();
 
@@ -531,10 +532,10 @@ static void init_math_functions(sol::state_view& state)
 		return Helpers::get_bbox(e, in, type);
 	});
 
-	state["engine_math"] = table;
+	env["engine_math"] = table;
 }
 
-static void init_surface_functions(sol::state_view& state)
+static void init_surface_functions(sol::environment& env, sol::state_view state)
 {
 	sol::table table = state.create_table();
 
@@ -590,10 +591,10 @@ static void init_surface_functions(sol::state_view& state)
 		return g_cs->m_surface->play_sound(path);
 	});
 
-	state["surface"] = table;
+	env["surface"] = table;
 }
 
-static void init_util_functions(sol::state_view& state)
+static void init_util_functions(sol::environment& env, sol::state_view state)
 {
 	sol::table table = state.create_table();
 
@@ -605,35 +606,35 @@ static void init_util_functions(sol::state_view& state)
 		return g_input->process_keybd_message(m, w);
 	});
 
-	state["util"] = table;
+	env["util"] = table;
 }
 
-static void init_global_functions(sol::state_view& state)
+static void init_global_functions(sol::environment& env)
 {
-	state["ispanic"]                = GLOBAL(b_flags[BF_PANIC]);
+	env["ispanic"]                = GLOBAL(b_flags[BF_PANIC]);
 	
-	state["menu_opened"]            = g_ui->get_menu_state();
-	state["console_opened"]         = GLOBAL(b_flags[BF_CONSOLE_OPENED]);
-	state["chat_opened"]            = GLOBAL(b_flags[BF_CHAT_OPENED]);
+	env["menu_opened"]            = g_ui->get_menu_state();
+	env["console_opened"]         = GLOBAL(b_flags[BF_CONSOLE_OPENED]);
+	env["chat_opened"]            = GLOBAL(b_flags[BF_CHAT_OPENED]);
 
-	state["hours_played"]           = GLOBAL(i_flags[IF_HOURS_IN_GAME]);
+	env["hours_played"]           = GLOBAL(i_flags[IF_HOURS_IN_GAME]);
 
-	state["mouse_pos_x"]            = g_input->get_mouse_pos_x();
-	state["mouse_pos_y"]            = g_input->get_mouse_pos_y();
-	state["mouse_wheel"]            = g_input->get_mouse_wheel_accumlate();
+	env["mouse_pos_x"]            = g_input->get_mouse_pos_x();
+	env["mouse_pos_y"]            = g_input->get_mouse_pos_y();
+	env["mouse_wheel"]            = g_input->get_mouse_wheel_accumlate();
 
-	state["vec2"]                   = [](float x, float y) { return vec2(x, y); };
-	state["vec3"]                   = [](float x, float y, float z) { return vec3(x, y, z); };
+	env["vec2"]                   = [](float x, float y) { return vec2(x, y); };
+	env["vec3"]                   = [](float x, float y, float z) { return vec3(x, y, z); };
 
-	state["color"]                  = [](int r, int g, int b, int a) { return color_t(r, g, b, a); };
-	state["color_revert"]           = [](int r, int g, int b, int a) { return color_t(a, r, g, b); };
+	env["color"]                  = [](int r, int g, int b, int a) { return color_t(r, g, b, a); };
+	env["color_revert"]           = [](int r, int g, int b, int a) { return color_t(a, r, g, b); };
 
-	state["bbox"]                   = [](int x, int y, int w, int h) { return box(x, y, w, h); };
+	env["bbox"]                   = [](int x, int y, int w, int h) { return box(x, y, w, h); };
 
-	state["unload"]                 = []() { g::unload(); };
+	env["unload"]                 = []() { g::unload(); };
 }
 
-static void init_lists(sol::state_view& state)
+static void init_lists(sol::environment& env, sol::state_view state)
 {
 	sol::table e_list = state.create_table_with();
 
@@ -641,7 +642,20 @@ static void init_lists(sol::state_view& state)
 		e_list[i] = g_event_list[i];
 	}
 
-	state["event_list"] = e_list;
+	env["event_list"] = e_list;
+}
+
+static void init_safe_env(sol::environment& env, sol::state_view state)
+{
+	sol::table safe_os = state.create_table();
+
+	safe_os["time"]     = state["os"]["time"];
+	safe_os["clock"]    = state["os"]["clock"];
+	safe_os["difftime"] = state["os"]["difftime"];
+	safe_os["date"]     = state["os"]["date"];
+
+	env["os"] = safe_os;
+	env["_G"] = env;
 }
 
 static std::string callback_id_to_string(int id)

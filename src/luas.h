@@ -69,14 +69,15 @@ public:
 	void undo();
 
 private:
-	void init_api();
+	void init_api(sol::state_view state);
 	void load_startup_scripts();
 	std::string get_script_update_datetime(const std::wstring& name);
 
 private:
-	lua_State*  m_state;
-	lua_event_t m_lua_event;
-	lua_list_t  m_lua_list;
+	sol::state       m_state;
+	sol::environment m_env;
+	lua_event_t      m_lua_event;
+	lua_list_t       m_lua_list;
 };
 
 inline std::shared_ptr<c_lua_mgr> g_lua = c_lua_mgr::make_shared();

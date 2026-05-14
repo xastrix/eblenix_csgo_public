@@ -9,12 +9,25 @@
 
 void c_lua_mgr::init()
 {
-	undo();
+	m_state = sol::state();
+	sol::state_view state = m_state;
 
-	m_state = luaL_newstate();
-	luaL_openlibs(m_state);
+	state.open_libraries(sol::lib::base, sol::lib::string, sol::lib::utf8,
+		sol::lib::math, sol::lib::ffi, sol::lib::os);
 
-	init_api();
+	m_env = sol::environment(state, sol::create, state.globals());
+	
+	for (const auto& lib : { "string", "utf8", "math", "ffi" }) {
+		m_env[lib] = state[lib];
+	}
+
+	for (const auto& func : { "ipairs", "pairs", "next", "select",
+		"tonumber", "tostring", "type", "pcall", "xpcall" }) {
+		m_env[func] = state[func];
+	}
+
+	init_api(state);
+
 	refresh_scripts();
 	load_startup_scripts();
 }
@@ -77,15 +90,24 @@ bool c_lua_mgr::load_script(const std::wstring& name)
 	if (it != m_lua_list.end() && it->second == true)
 		return false;
 
-	auto status = state.script_file(LUA_DIRECTORY_PATHS + Helpers::stutf8(name),
-		[](lua_State*, sol::protected_function_result result) {
-		if (!result.valid()) {
-			sol::error err = result;
-			Helpers::console_printf_with_prefix("[lua]", "%s", err.what());
-		}
+	sol::load_result res = state.load_file(LUA_DIRECTORY_PATHS + Helpers::stutf8(name));
 
-		return result;
-	});
+	if (!res.valid()) {
+		sol::error err = res;
+		Helpers::console_printf_with_prefix("[lua]", "%s", err.what());
+		return false;
+	}
+
+	sol::protected_function target = res;
+	sol::set_environment(m_env, target);
+
+	sol::protected_function_result status = target();
+
+	if (!status.valid()) {
+		sol::error err = status;
+		Helpers::console_printf_with_prefix("[lua]", "%s", err.what());
+		return false;
+	}
 
 	if (it != m_lua_list.end() && status.valid())
 		it->second = true;
@@ -214,11 +236,11 @@ std::string c_lua_mgr::get_script_update_datetime(const std::wstring& name)
 
 void c_lua_mgr::undo()
 {
-	if (m_state == nullptr)
+	if (!m_state.lua_state())
 		return;
 
-	lua_gc(m_state, LUA_GCCOLLECT, 0);
-	lua_close(m_state);
+	m_env = sol::lua_nil;
 	
-	m_state = nullptr;
+	m_state.collect_garbage();
+	m_state = sol::state(nullptr);
 }
