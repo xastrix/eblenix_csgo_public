@@ -68,7 +68,7 @@ struct s_entry
 	std::function<void()> m_fn{};
 	std::vector<std::wstring> m_items{};
 
-	color_t m_item_text_col{};
+	c_color m_item_text_col{};
 };
 
 class c_ui {
@@ -153,7 +153,7 @@ private:
 	}
 
 	template <_ui_subs pos>
-	void add_item(const std::wstring& name, const std::string& var, std::vector<std::wstring> items, color_t item_text_col, bool space = false) {
+	void add_item(const std::wstring& name, const std::string& var, std::vector<std::wstring> items, c_color item_text_col, bool space = false) {
 		s_entries[s_entry_sz[pos]][pos].m_name = name;
 		s_entries[s_entry_sz[pos]][pos].m_var = var;
 
@@ -226,7 +226,7 @@ private:
 	m_entry m_entry[MAX_MENU_ENTRIES]{};
 	s_entry s_entries[MAX_SUB_ENTRIES][maxUISubs]{};
 
-	color_t   m_colors                [maxUIColors]{};
+	c_color   m_colors                [maxUIColors]{};
 	sprite_t* m_sprites = new sprite_t[maxUISprites]{};
 };
 

@@ -393,7 +393,7 @@ static void __stdcall draw_set_color_h(int r, int g, int b, int a)
 								if ((center.x >= bbox.x && center.x <= bbox.x + bbox.w &&
 									center.y >= bbox.y && center.y <= bbox.y + bbox.h))
 								{
-									color_t on_target_col{ V_ESP_CROSSHAIR_COL };
+									c_color on_target_col{ V_ESP_CROSSHAIR_COL };
 
 									return o_draw_set_color(g_cs->m_surface,
 										on_target_col.get_arr()[0],

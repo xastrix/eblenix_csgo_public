@@ -19,7 +19,7 @@ void c_ui::draw(int x, int y)
 	auto menu_logo_x = x + 1;
 	auto menu_logo_y = y - m_sprites[UI_SPRITE_LOGO].get_height() + 1;
 
-	auto draw_float = [](float value, int x, int y, color_t color) {
+	auto draw_float = [](float value, int x, int y, c_color color) {
 		char ss[256];
 		sprintf_s(ss, "%.2f", value);
 
@@ -30,7 +30,7 @@ void c_ui::draw(int x, int y)
 	};
 
 	auto idx{ 0 };
-	auto draw_bool = [&](bool value, int x, int y, color_t first, color_t second) {
+	auto draw_bool = [&](bool value, int x, int y, c_color first, c_color second) {
 		static std::vector<float> min_x{}, max_x{}, anim_x{};
 
 		if (idx >= min_x.size()) {
@@ -49,14 +49,14 @@ void c_ui::draw(int x, int y)
 		++idx;
 	};
 
-	auto draw_int = [](int value, int x, int y, color_t color) {
+	auto draw_int = [](int value, int x, int y, c_color color) {
 		const auto font = FONT(Tahoma12px);
 		const auto string_width = g_font->get_text_width(std::to_string(value), font);
 
 		g_font->draw_string(std::to_string(value), x - string_width - 20, y - 11, font, TEXT_OUTLINE, color);
 	};
 
-	auto draw_hotkey = [](int k, int x, int x_text, int y, int y_text, int h, bool hold, color_t color, color_t background_color) {
+	auto draw_hotkey = [](int k, int x, int x_text, int y, int y_text, int h, bool hold, c_color color, c_color background_color) {
 		const auto kss = g_input->virtual_key_to_wstring(k);
 
 		const auto font = FONT(Tahoma12px);
@@ -68,7 +68,7 @@ void c_ui::draw(int x, int y)
 			y_text - 11, font, TEXT_OUTLINE, color);
 	};
 
-	auto draw_item = [](std::wstring item, int x, int y, color_t color) {
+	auto draw_item = [](std::wstring item, int x, int y, c_color color) {
 		if (item.length() > 20)
 			item = item.substr(0, 20) + L"...";
 
@@ -78,7 +78,7 @@ void c_ui::draw(int x, int y)
 		g_font->draw_stringW(item, x - string_width - 20, y - 11, font, TEXT_OUTLINE, color);
 	};
 
-	m_sprites[UI_SPRITE_LOGO].draw(menu_logo_x, menu_logo_y, color_t(255, 255, 255,
+	m_sprites[UI_SPRITE_LOGO].draw(menu_logo_x, menu_logo_y, c_color(255, 255, 255,
 		static_cast<int>(target_animation_progress * 255.0f)));
 
 	for (int i = 0; i < m_entry_sz; i++)

@@ -143,7 +143,6 @@
     <ClCompile Include="autostrafe.cpp" />
     <ClCompile Include="bhop.cpp" />
     <ClCompile Include="blockbot.cpp" />
-    <ClCompile Include="color.cpp" />
     <ClCompile Include="hud.cpp" />
     <ClCompile Include="luas.cpp" />
     <ClCompile Include="lua_api.cpp" />

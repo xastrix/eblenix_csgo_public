@@ -115,8 +115,8 @@ void world_esp_t::think()
 					const float center_y = screen_size.y * 0.5f;
 					const float center_x = screen_size.x * 0.5f;
 
-					g_renderer->line(0, center_y, screen_size.x, center_y, color_t(0, 0, 0, 155));
-					g_renderer->line(center_x, 0, center_x, screen_size.y, color_t(0, 0, 0, 155));
+					g_renderer->line(0, center_y, screen_size.x, center_y, c_color(0, 0, 0, 155));
+					g_renderer->line(center_x, 0, center_x, screen_size.y, c_color(0, 0, 0, 155));
 				}
 			}
 		}
@@ -177,7 +177,7 @@ void world_esp_t::on_do_post_screen_effects()
 
 			if (g_var->get_as<bool>(V_GLOW_HEALTH_BASED).value())
 			{
-				color_t health_col = color_t::calc_health_color(glow_object->get_health());
+				c_color health_col = c_color::calc_health_color(glow_object->get_health());
 
 				glow_enemy_col[0] = health_col.get_arr()[0] / 255.0f;
 				glow_enemy_col[1] = health_col.get_arr()[1] / 255.0f;
@@ -286,7 +286,7 @@ void world_esp_t::on_scene_end()
 					float col[3];
 					if (g_var->get_as<bool>(V_CHAMS_HEALTH_BASED).value())
 					{
-						color_t health_col = color_t::calc_health_color(entity->get_health());
+						c_color health_col = c_color::calc_health_color(entity->get_health());
 
 						col[0] = health_col.get_arr()[0] / 255.0f;
 						col[1] = health_col.get_arr()[1] / 255.0f;
@@ -359,7 +359,7 @@ void world_esp_t::draw_projectiles(c_base_entity* entity)
 	if (!projectiles.world_to_screen())
 		return;
 
-	const auto col = color_t(V_VISUALS_WORLD_GRENADES_COL);
+	const auto col = c_color(V_VISUALS_WORLD_GRENADES_COL);
 
 	auto y_dist_pos = 10;
 
@@ -438,7 +438,7 @@ void world_esp_t::draw_entity_objects(c_base_entity* entity, std::vector<std::pa
 	if (!entities.world_to_screen())
 		return;
 
-	const auto col = color_t(V_VISUALS_WORLD_ITEMS_COL);
+	const auto col = c_color(V_VISUALS_WORLD_ITEMS_COL);
 
 	char distance[256];
 	sprintf_s(distance, "%im", static_cast<int>(g_cs->get_local()->get_vec_origin().distance_to(entities.get_origin())));
@@ -475,7 +475,7 @@ void world_esp_t::draw_dropped_weapons(c_base_entity* entity)
 		if (!weapon || !weapon->item_definition_index())
 			return;
 
-		const auto col = color_t(V_VISUALS_WORLD_WEAPONS_COL);
+		const auto col = c_color(V_VISUALS_WORLD_WEAPONS_COL);
 
 		auto y_ammo_bar_pos = 14;
 		auto y_dist_pos = g_var->get_as<bool>(V_VISUALS_WORLD_WEAPONS_AMMO_BAR).value() ? 18 : 11;
@@ -503,9 +503,9 @@ void world_esp_t::draw_dropped_weapons(c_base_entity* entity)
 			width *= weapon->clip1_count();
 			width /= weapon->get_weapon_data()->m_weapon_max_clip;
 
-			const auto ammo_bar_col = color_t(V_VISUALS_WORLD_WEAPONS_AMMO_BAR_COL);
+			const auto ammo_bar_col = c_color(V_VISUALS_WORLD_WEAPONS_AMMO_BAR_COL);
 
-			g_renderer->rect_fill(dropped_weapons.get_pos().x - 20, dropped_weapons.get_pos().y + y_ammo_bar_pos, 42, 4, color_t(3, 3, 3));
+			g_renderer->rect_fill(dropped_weapons.get_pos().x - 20, dropped_weapons.get_pos().y + y_ammo_bar_pos, 42, 4, c_color(3, 3, 3));
 			g_renderer->rect_fill(dropped_weapons.get_pos().x - 19, dropped_weapons.get_pos().y + y_ammo_bar_pos + 1, width, 2, ammo_bar_col);
 		}
 
@@ -527,7 +527,7 @@ void world_esp_t::draw_planted_bomb(c_base_plantedc4* entity, const float explod
 	if (!planted_bomb.world_to_screen())
 		return;
 
-	const auto col = color_t(V_VISUALS_WORLD_C4_COL);
+	const auto col = c_color(V_VISUALS_WORLD_C4_COL);
 
 	auto time_bar_offset = 16;
 	auto defuse_bar_offset = g_var->get_as<bool>(V_VISUALS_WORLD_C4_TIME_BAR).value() ? 23 : 16;
@@ -570,7 +570,7 @@ void world_esp_t::draw_planted_bomb(c_base_plantedc4* entity, const float explod
 			if (adjust_damage > g_cs->get_local()->get_health() || adjust_damage == 100)
 			{
 				g_font->draw_string("Dead", planted_bomb.get_pos().x, planted_bomb.get_pos().y - 12, FONT(Tahoma12px),
-					TEXT_OUTLINE | TEXT_CENTER_X, color_t(245, 92, 108, 255));
+					TEXT_OUTLINE | TEXT_CENTER_X, c_color(245, 92, 108, 255));
 			}
 			else
 			{
@@ -582,11 +582,11 @@ void world_esp_t::draw_planted_bomb(c_base_plantedc4* entity, const float explod
 		}
 	}
 
-	const auto background_col = color_t(3, 3, 3);
+	const auto background_col = c_color(3, 3, 3);
 
 	if (g_var->get_as<bool>(V_VISUALS_WORLD_C4_TIME_BAR).value())
 	{
-		const auto time_bar_col = color_t(V_VISUALS_WORLD_C4_COL_TIME_BAR);
+		const auto time_bar_col = c_color(V_VISUALS_WORLD_C4_COL_TIME_BAR);
 
 		g_renderer->rect_fill(planted_bomb.get_pos().x - 20, planted_bomb.get_pos().y + time_bar_offset, Helpers::get_c4_server_time(), 4, background_col);
 		g_renderer->rect_fill(planted_bomb.get_pos().x - 19, planted_bomb.get_pos().y + time_bar_offset + 1, explode_time - 1, 2, time_bar_col);
@@ -604,7 +604,7 @@ void world_esp_t::draw_planted_bomb(c_base_plantedc4* entity, const float explod
 			auto count_down = entity->defuse_count_down() - (g_cs->get_local()->get_tick_base() * g_cs->m_globals->interval_per_tick);
 			auto max_defuse_time = defuser->has_defuser() ? defuse_time_with_kits : defuse_time_without_kits;
 
-			const auto defuse_bar_col = color_t(V_VISUALS_WORLD_C4_COL_DEFUSE_BAR);
+			const auto defuse_bar_col = c_color(V_VISUALS_WORLD_C4_COL_DEFUSE_BAR);
 
 			g_renderer->rect_fill(planted_bomb.get_pos().x - 20, planted_bomb.get_pos().y + defuse_bar_offset, Helpers::get_c4_server_time(), 4, background_col);
 			g_renderer->rect_fill(planted_bomb.get_pos().x - 19, planted_bomb.get_pos().y + defuse_bar_offset + 1, (Helpers::get_c4_server_time() * count_down / max_defuse_time) - 1, 2, defuse_bar_col);

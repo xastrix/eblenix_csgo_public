@@ -89,7 +89,7 @@ void player_esp_t::player_rendering(int index, c_base_player* entity, box bbox)
 	auto       armor  = entity->get_armor_value();
 	const auto weapon = entity->get_active_weapon();
 
-	const auto background_col = color_t(3, 3, 3, 255 * m_alpha[index]);
+	const auto background_col = c_color(3, 3, 3, 255 * m_alpha[index]);
 
 	if (g_var->get_as<bool>(V_ESP_NAME_ENABLED).value())
 	{
@@ -113,13 +113,13 @@ void player_esp_t::player_rendering(int index, c_base_player* entity, box bbox)
 			player_name = player_name.substr(0, 10) + L"...";
 
 		g_font->draw_stringW(player_name, bbox.x + (bbox.w / 2), bbox.y - 14,
-			FONT(Tahoma12px), TEXT_OUTLINE | TEXT_CENTER_X, color_t(V_ESP_NAME_COL, 255 * m_alpha[index]));
+			FONT(Tahoma12px), TEXT_OUTLINE | TEXT_CENTER_X, c_color(V_ESP_NAME_COL, 255 * m_alpha[index]));
 	}
 
 	if (g_var->get_as<bool>(V_ESP_BOX_ENABLED).value())
 	{
-		const auto col = color_t(V_ESP_BOX_COL, 255 * m_alpha[index]);
-		const auto outline_col = color_t(V_ESP_BOX_COL, 30 * m_alpha[index]);
+		const auto col = c_color(V_ESP_BOX_COL, 255 * m_alpha[index]);
+		const auto outline_col = c_color(V_ESP_BOX_COL, 30 * m_alpha[index]);
 
 		switch (g_var->get_as<int>(V_ESP_BOX_TYPE).value()) {
 		case 0: {
@@ -177,20 +177,20 @@ void player_esp_t::player_rendering(int index, c_base_player* entity, box bbox)
 			case 0: {
 				g_renderer->rect_fill(bbox.x - 6, bbox.y - 1, 4, bbox.h + 3, background_col);
 				g_renderer->rect_fill(bbox.x - 5, bbox.y + (bbox.h + 1) - pixel_value, 2, pixel_value,
-					color_t(V_ESP_HEALTH_COL, 255 * m_alpha[index]));
+					c_color(V_ESP_HEALTH_COL, 255 * m_alpha[index]));
 				break;
 			}
 			case 1: {
 				g_renderer->rect_fill(bbox.x - 6, bbox.y - 1, 4, bbox.h + 3, background_col);
 				g_renderer->rect_fill(bbox.x - 5, bbox.y + (bbox.h + 1) - pixel_value, 2, pixel_value,
-					color_t::calc_health_color(hp, 255 * m_alpha[index]));
+					c_color::calc_health_color(hp, 255 * m_alpha[index]));
 				break;
 			}
 			case 2: {
 				g_renderer->rect_fill(bbox.x - 6, bbox.y - 1, 4, bbox.h + 3, background_col);
 				g_renderer->gradient_v(bbox.x - 5, bbox.y + (bbox.h + 1) - pixel_value, 2, pixel_value,
-					color_t(V_ESP_HEALTH_GRADIENT_COL, 255 * m_alpha[index]),
-					color_t(V_ESP_HEALTH_GRADIENT_COL2, 255 * m_alpha[index]));
+					c_color(V_ESP_HEALTH_GRADIENT_COL, 255 * m_alpha[index]),
+					c_color(V_ESP_HEALTH_GRADIENT_COL2, 255 * m_alpha[index]));
 				break;
 			}
 			}
@@ -210,7 +210,7 @@ void player_esp_t::player_rendering(int index, c_base_player* entity, box bbox)
 	{
 		if (weapon)
 		{
-			const auto col = color_t(V_ESP_WEAPON_COL, 255 * m_alpha[index]);
+			const auto col = c_color(V_ESP_WEAPON_COL, 255 * m_alpha[index]);
 
 			auto offset = 4;
 			switch (g_var->get_as<int>(V_ESP_WEAPON_TYPE).value()) {
@@ -244,14 +244,14 @@ void player_esp_t::player_rendering(int index, c_base_player* entity, box bbox)
 			case 0: {
 				g_renderer->rect_fill(bbox.x - 1, bbox.y + bbox.h + 3, bbox.w + 3, 4, background_col);
 				g_renderer->rect_fill(bbox.x, bbox.y + bbox.h + 4, ((bbox.w + 1) * armor) / 100, 2,
-					color_t(V_ESP_ARMOR_COL, 255 * m_alpha[index]));
+					c_color(V_ESP_ARMOR_COL, 255 * m_alpha[index]));
 				break;
 			}
 			case 1: {
 				g_renderer->rect_fill(bbox.x - 1, bbox.y + bbox.h + 3, bbox.w + 3, 4, background_col);
 				g_renderer->gradient_h(bbox.x, bbox.y + bbox.h + 4, ((bbox.w + 1) * armor) / 100, 2,
-					color_t(V_ESP_ARMOR_GRADIENT_COL, 255 * m_alpha[index]),
-					color_t(V_ESP_ARMOR_GRADIENT_COL2, 255 * m_alpha[index]));
+					c_color(V_ESP_ARMOR_GRADIENT_COL, 255 * m_alpha[index]),
+					c_color(V_ESP_ARMOR_GRADIENT_COL2, 255 * m_alpha[index]));
 				break;
 			}
 			}
@@ -293,12 +293,12 @@ void player_esp_t::player_rendering(int index, c_base_player* entity, box bbox)
 						switch (g_var->get_as<int>(V_ESP_SKELETON_TYPE).value()) {
 						case 0: {
 							g_renderer->line(s_parent[0], s_parent[1], s_child[0], s_child[1],
-								color_t(V_ESP_SKELETON_COL, 255 * m_alpha[index]));
+								c_color(V_ESP_SKELETON_COL, 255 * m_alpha[index]));
 							break;
 						}
 						case 1: {
 							g_renderer->line(s_parent[0], s_parent[1], s_child[0], s_child[1],
-								color_t::calc_health_color(entity->get_health(), 255 * m_alpha[index])
+								c_color::calc_health_color(entity->get_health(), 255 * m_alpha[index])
 							);
 							break;
 						}
@@ -325,7 +325,7 @@ void player_esp_t::player_rendering(int index, c_base_player* entity, box bbox)
 		if (Math::w2s(start, s_screen) && Math::w2s(end, e_screen))
 		{
 			g_renderer->line(s_screen.x, s_screen.y, e_screen.x, e_screen.y,
-				color_t(V_ESP_BARREL_COL, 255 * m_alpha[index]));
+				c_color(V_ESP_BARREL_COL, 255 * m_alpha[index]));
 		}
 	}
 
@@ -340,26 +340,26 @@ void player_esp_t::player_rendering(int index, c_base_player* entity, box bbox)
 			Math::find_position_rotation(pos.x, pos.y, screen_size.x, screen_size.y);
 
 			g_renderer->line(screen_size.x / 2, screen_size.y / 2, pos.x, pos.y,
-				color_t(V_ESP_SNAP_LINES_COL, 255 * m_alpha[index]));
+				c_color(V_ESP_SNAP_LINES_COL, 255 * m_alpha[index]));
 		}
 	}
 
 	if (g_var->get_as<bool>(V_ESP_FLAGS_ENABLED).value())
 	{
-		std::vector<std::pair<std::string, color_t>> flags;
+		std::vector<std::pair<std::string, c_color>> flags;
 
-		const auto col = color_t(V_ESP_FLAGS_COL, 255 * m_alpha[index]);
+		const auto col = c_color(V_ESP_FLAGS_COL, 255 * m_alpha[index]);
 
 		if (g_var->get_as<bool>(V_ESP_FLAGS_HK).value())
 		{
 			if (armor > ARMOR_MIN_VAL)
-				flags.push_back(std::pair<std::string, color_t>(entity->has_helmet() ? "HK" : "K", col));
+				flags.push_back(std::pair<std::string, c_color>(entity->has_helmet() ? "HK" : "K", col));
 		}
 
 		if (g_var->get_as<bool>(V_ESP_FLAGS_HEALTH).value())
 		{
 			if (health)
-				flags.push_back(std::pair<std::string, color_t>(std::to_string(health) + "HP", col));
+				flags.push_back(std::pair<std::string, c_color>(std::to_string(health) + "HP", col));
 		}
 
 		if (g_var->get_as<bool>(V_ESP_FLAGS_MONEY).value())
@@ -367,7 +367,7 @@ void player_esp_t::player_rendering(int index, c_base_player* entity, box bbox)
 			const auto cash = entity->get_cash();
 
 			if (cash)
-				flags.push_back(std::pair<std::string, color_t>(std::to_string(cash) + "$", col));
+				flags.push_back(std::pair<std::string, c_color>(std::to_string(cash) + "$", col));
 		}
 
 		if (g_var->get_as<bool>(V_ESP_FLAGS_AMMO).value())
@@ -382,7 +382,7 @@ void player_esp_t::player_rendering(int index, c_base_player* entity, box bbox)
 					Helpers::is_grenade(weapon))
 					weapon_first_ammo = 0, weapon_second_ammo = 0;
 
-				flags.push_back(std::pair<std::string, color_t>(std::to_string(weapon_first_ammo) + "/" + std::to_string(weapon_second_ammo), col));
+				flags.push_back(std::pair<std::string, c_color>(std::to_string(weapon_first_ammo) + "/" + std::to_string(weapon_second_ammo), col));
 			}
 		}
 
@@ -391,7 +391,7 @@ void player_esp_t::player_rendering(int index, c_base_player* entity, box bbox)
 			const auto flashed = entity->is_flashed();
 
 			if (flashed)
-				flags.push_back(std::pair<std::string, color_t>("Flashed", col));
+				flags.push_back(std::pair<std::string, c_color>("Flashed", col));
 		}
 
 		if (g_var->get_as<bool>(V_ESP_FLAGS_DEFUSING).value())
@@ -399,7 +399,7 @@ void player_esp_t::player_rendering(int index, c_base_player* entity, box bbox)
 			const auto defusing = entity->is_defusing();
 
 			if (defusing)
-				flags.push_back(std::pair<std::string, color_t>("Defusing", col));
+				flags.push_back(std::pair<std::string, c_color>("Defusing", col));
 		}
 
 		if (g_var->get_as<bool>(V_ESP_FLAGS_DISTANCE).value())
@@ -411,7 +411,7 @@ void player_esp_t::player_rendering(int index, c_base_player* entity, box bbox)
 				char distance[256];
 				sprintf_s(distance, "%im", static_cast<int>(dist));
 
-				flags.push_back(std::pair<std::string, color_t>(distance, col));
+				flags.push_back(std::pair<std::string, c_color>(distance, col));
 			}
 		}
 
@@ -420,7 +420,7 @@ void player_esp_t::player_rendering(int index, c_base_player* entity, box bbox)
 			const auto scoped = entity->is_scoped();
 
 			if (scoped)
-				flags.push_back(std::pair<std::string, color_t>("Scoped", col));
+				flags.push_back(std::pair<std::string, c_color>("Scoped", col));
 		}
 
 		auto fl_pos = 0;

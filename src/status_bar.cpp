@@ -30,13 +30,13 @@ void status_bar_t::draw()
 
 	vec2 screen_size = g_renderer->get_screen_size();
 
-	g_renderer->rect_fill(m_rect_min, m_rect_max, color_t(20, 20, 20, menu_shadow_alpha));
+	g_renderer->rect_fill(m_rect_min, m_rect_max, c_color(20, 20, 20, menu_shadow_alpha));
 
 	g_renderer->rect_fill(m_rect_min.x + 3, m_rect_min.y + 3, 2, 11,
-		GLOBAL(b_flags[BF_INITIALISED]) ? color_t(V_UI_COL) : color_t(164, 164, 164));
+		GLOBAL(b_flags[BF_INITIALISED]) ? c_color(V_UI_COL) : c_color(164, 164, 164));
 
 	g_font->draw_string(_PRODUCT_NAME, m_rect_min.x + 10, m_rect_min.y + 2,
-		FONT(Tahoma12px), TEXT_OUTLINE, color_t(255, 255, 255));
+		FONT(Tahoma12px), TEXT_OUTLINE, c_color(255, 255, 255));
 
 	if (g_ui->get_menu_state())
 	{
@@ -50,12 +50,12 @@ void status_bar_t::draw()
 				bool is_hovered = g_input->is_hovered(ctx_list_min, ctx_list_min + ctx_list_max);
 				bool is_actived = g_var->get_as<bool>(m_vars[i].second).value();
 
-				g_renderer->rect_fill(ctx_list_min, ctx_list_max, color_t(20, 20, 20, menu_shadow_alpha - 20));
+				g_renderer->rect_fill(ctx_list_min, ctx_list_max, c_color(20, 20, 20, menu_shadow_alpha - 20));
 				g_renderer->rect_fill(ctx_list_min.x + 3, ctx_list_min.y + 3, 2, 11,
-					is_actived ? color_t(V_UI_COL) : color_t(164, 164, 164));
+					is_actived ? c_color(V_UI_COL) : c_color(164, 164, 164));
 
 				g_font->draw_string(m_vars[i].first, ctx_list_min.x + 9, ctx_list_min.y + 2, FONT(Tahoma12px), TEXT_OUTLINE,
-					is_hovered ? color_t(V_UI_COL) : color_t(255, 255, 255));
+					is_hovered ? c_color(V_UI_COL) : c_color(255, 255, 255));
 			}
 		}
 	}
@@ -66,10 +66,10 @@ void status_bar_t::draw()
 	auto push_item = [&](const std::string& label, ID3DXFont* font, bool v) {
 		const auto string_width = g_font->get_text_width(label, font);
 
-		g_renderer->rect_fill(m_rect_min.x - string_width - x - 13, m_rect_min.y, string_width + 11, 17, color_t(20, 20, 20, menu_shadow_alpha));
-		g_renderer->rect_fill(m_rect_min.x - string_width - x - 10, m_rect_min.y + 3, 2, 11, v ? color_t(V_UI_COL) : color_t(164, 164, 164));
+		g_renderer->rect_fill(m_rect_min.x - string_width - x - 13, m_rect_min.y, string_width + 11, 17, c_color(20, 20, 20, menu_shadow_alpha));
+		g_renderer->rect_fill(m_rect_min.x - string_width - x - 10, m_rect_min.y + 3, 2, 11, v ? c_color(V_UI_COL) : c_color(164, 164, 164));
 
-		g_font->draw_string(label, m_rect_min.x - string_width - x - 6, m_rect_min.y + 2, font, TEXT_OUTLINE, color_t(255, 255, 255));
+		g_font->draw_string(label, m_rect_min.x - string_width - x - 6, m_rect_min.y + 2, font, TEXT_OUTLINE, c_color(255, 255, 255));
 
 		x += string_width + 13;
 	};

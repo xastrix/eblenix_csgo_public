@@ -107,9 +107,6 @@
     <ClCompile Include="vec3.cpp">
       <Filter>csgo\math</Filter>
     </ClCompile>
-    <ClCompile Include="color.cpp">
-      <Filter>helpers\renderer</Filter>
-    </ClCompile>
     <ClCompile Include="..\external\exception_handler\exception_handler.cpp">
       <Filter>external\exception_handler</Filter>
     </ClCompile>

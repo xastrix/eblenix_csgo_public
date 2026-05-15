@@ -73,7 +73,7 @@ D3DVIEWPORT9 c_renderer::get_viewport()
 	return vp;
 }
 
-void c_renderer::rect(vec2 pos, vec2 size, color_t c)
+void c_renderer::rect(vec2 pos, vec2 size, c_color c)
 {
 	vertice_t verts[5] = {
 		{ int(pos.x), int(pos.y), 0.01f, 0.01f, c.get() },
@@ -87,7 +87,7 @@ void c_renderer::rect(vec2 pos, vec2 size, color_t c)
 	m_device->DrawPrimitiveUP(D3DPT_LINESTRIP, 4, &verts, 20);
 }
 
-void c_renderer::rect_fill(vec2 pos, vec2 size, color_t c)
+void c_renderer::rect_fill(vec2 pos, vec2 size, c_color c)
 {
 	vertice_t verts[4] = {
 		{ int(pos.x), int(pos.y), 0.01f, 0.01f, c.get() },
@@ -100,7 +100,7 @@ void c_renderer::rect_fill(vec2 pos, vec2 size, color_t c)
 	m_device->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, 2, &verts, 20);
 }
 
-void c_renderer::rect_cornered(vec2 pos, vec2 size, float radii, color_t c)
+void c_renderer::rect_cornered(vec2 pos, vec2 size, float radii, c_color c)
 {
 	const float pi = 3.14159265f;
 
@@ -143,7 +143,7 @@ void c_renderer::rect_cornered(vec2 pos, vec2 size, float radii, color_t c)
 	m_device->SetRenderState(D3DRS_ANTIALIASEDLINEENABLE, FALSE);
 }
 
-void c_renderer::rect_fill_cornered(vec2 pos, vec2 size, float radii, color_t c)
+void c_renderer::rect_fill_cornered(vec2 pos, vec2 size, float radii, c_color c)
 {
 	const float pi = 3.14159265f;
 
@@ -189,7 +189,7 @@ void c_renderer::rect_fill_cornered(vec2 pos, vec2 size, float radii, color_t c)
 	m_device->SetRenderState(D3DRS_ANTIALIASEDLINEENABLE, FALSE);
 }
 
-void c_renderer::gradient_v(vec2 pos, vec2 size, color_t c_a, color_t c_b)
+void c_renderer::gradient_v(vec2 pos, vec2 size, c_color c_a, c_color c_b)
 {
 	vertice_t verts[4] = {
 		{ int(pos.x), int(pos.y), 0.01f, 0.01f, c_a.get() },
@@ -202,7 +202,7 @@ void c_renderer::gradient_v(vec2 pos, vec2 size, color_t c_a, color_t c_b)
 	m_device->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, 2, &verts, 20);
 }
 
-void c_renderer::gradient_h(vec2 pos, vec2 size, color_t c_a, color_t c_b)
+void c_renderer::gradient_h(vec2 pos, vec2 size, c_color c_a, c_color c_b)
 {
 	vertice_t verts[4] = {
 		{ int(pos.x), int(pos.y), 0.01f, 0.01f, c_a.get() },
@@ -215,7 +215,7 @@ void c_renderer::gradient_h(vec2 pos, vec2 size, color_t c_a, color_t c_b)
 	m_device->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, 2, &verts, 20);
 }
 
-void c_renderer::gradient_multi_fill(vec2 pos, vec2 size, color_t c_a, color_t c_b, color_t c_c, color_t c_d)
+void c_renderer::gradient_multi_fill(vec2 pos, vec2 size, c_color c_a, c_color c_b, c_color c_c, c_color c_d)
 {
 	vertice_t verts[4] = {
 		{ int(pos.x), int(pos.y), 0.01f, 0.01f, c_a.get() },
@@ -228,7 +228,7 @@ void c_renderer::gradient_multi_fill(vec2 pos, vec2 size, color_t c_a, color_t c
 	m_device->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, 2, &verts, 20);
 }
 
-void c_renderer::gradient_multi(vec2 pos, vec2 size, color_t c_a, color_t c_b, color_t c_c, color_t c_d)
+void c_renderer::gradient_multi(vec2 pos, vec2 size, c_color c_a, c_color c_b, c_color c_c, c_color c_d)
 {
 	vertice_t verts[5] = {
 		{ int(pos.x), int(pos.y), 0.01f, 0.01f, c_a.get() },
@@ -242,7 +242,7 @@ void c_renderer::gradient_multi(vec2 pos, vec2 size, color_t c_a, color_t c_b, c
 	m_device->DrawPrimitiveUP(D3DPT_LINESTRIP, 4, &verts, 20);
 }
 
-void c_renderer::line(vec2 a, vec2 b, color_t c)
+void c_renderer::line(vec2 a, vec2 b, c_color c)
 {
 	vertice_t verts[2] = {
 		{ (int)a.x, (int)a.y, 0.01f, 0.01f, c.get() },
@@ -253,7 +253,7 @@ void c_renderer::line(vec2 a, vec2 b, color_t c)
 	m_device->DrawPrimitiveUP(D3DPT_LINELIST, 1, &verts, 20);
 }
 
-void c_renderer::circle(vec2 center, float radius, color_t c)
+void c_renderer::circle(vec2 center, float radius, c_color c)
 {
 	vertice_t verts[CIRCLE_POINTS + 1]{};
 
@@ -279,7 +279,7 @@ void c_renderer::circle(vec2 center, float radius, color_t c)
 	m_device->SetRenderState(D3DRS_ANTIALIASEDLINEENABLE, FALSE);
 }
 
-void c_renderer::circle_fill(vec2 center, float radius, color_t c)
+void c_renderer::circle_fill(vec2 center, float radius, c_color c)
 {
 	vertice_t verts[CIRCLE_POINTS + 1]{};
 
@@ -305,7 +305,7 @@ void c_renderer::circle_fill(vec2 center, float radius, color_t c)
 	m_device->SetRenderState(D3DRS_ANTIALIASEDLINEENABLE, FALSE);
 }
 
-void c_renderer::corner_box(vec2 pos, vec2 size, float cx, float cy, color_t c)
+void c_renderer::corner_box(vec2 pos, vec2 size, float cx, float cy, c_color c)
 {
 	line(pos.x, pos.y, pos.x + (size.x / cx), pos.y, c);
 	line(pos.x, pos.y, pos.x, pos.y + (size.y / cy), c);

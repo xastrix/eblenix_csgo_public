@@ -454,7 +454,7 @@ void Helpers::console_printf_with_prefix(const char* prefix, const char* fmt, ..
 	std::vsnprintf(buf.data(), buf.size(), fmt, ap);
 	va_end(ap);
 
-	g_cs->m_cvar->console_color_printf(color_t(255, V_UI_COL).get_revert(), "%s ", prefix);
+	g_cs->m_cvar->console_color_printf(c_color(255, V_UI_COL).get_revert(), "%s ", prefix);
 	g_cs->m_cvar->console_printf("%s\n", buf.data());
 }
 

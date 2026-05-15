@@ -19,19 +19,19 @@ void c_ui::run()
 	float old_progress;
 	calc_animation_progress(g_var->get_as<float>(V_UI_SPEED_ANIMATION).value(), g_cs->m_globals->frame_time, old_progress);
 
-	m_colors[UI_TEXT_COL] = color_t(253, 253, 253,
+	m_colors[UI_TEXT_COL] = c_color(253, 253, 253,
 		static_cast<int>(target_animation_progress * 255.0f));
 
-	m_colors[UI_MAIN_COL] = color_t(V_UI_COL,
+	m_colors[UI_MAIN_COL] = c_color(V_UI_COL,
 		static_cast<int>(target_animation_progress * 255.0f));
 
-	m_colors[UI_PRIMARY_COL] = color_t(V_UI_COL,
+	m_colors[UI_PRIMARY_COL] = c_color(V_UI_COL,
 		static_cast<int>(target_animation_progress * 130.0f));
 
-	m_colors[UI_SHADOW_COL] = color_t(20, 20, 20,
+	m_colors[UI_SHADOW_COL] = c_color(20, 20, 20,
 		static_cast<int>(target_animation_progress * g_var->get_as<int>(V_UI_COL_A).value()));
 
-	m_colors[UI_OUTLINE_COL] = color_t(40, 40, 40,
+	m_colors[UI_OUTLINE_COL] = c_color(40, 40, 40,
 		static_cast<int>(target_animation_progress * 255.0f));
 
 	if (target_animation_progress > 0.0f)
@@ -619,7 +619,7 @@ void c_ui::clear()
 		s_entries[i][UI_SUB_POS].m_state = UI_NONE_STATE;
 
 		s_entries[i][UI_SUB_POS].m_items.clear();
-		s_entries[i][UI_SUB_POS].m_item_text_col = color_t();
+		s_entries[i][UI_SUB_POS].m_item_text_col = c_color();
 
 		s_entries[i][UI_SUB_POS].m_fn = []() {};
 	}
@@ -640,7 +640,7 @@ void c_ui::clear()
 		s_entries[i][UI_SUB_SUB_POS].m_state = UI_NONE_STATE;
 
 		s_entries[i][UI_SUB_SUB_POS].m_items.clear();
-		s_entries[i][UI_SUB_SUB_POS].m_item_text_col = color_t();
+		s_entries[i][UI_SUB_SUB_POS].m_item_text_col = c_color();
 
 		s_entries[i][UI_SUB_SUB_POS].m_fn = []() {};
 	}
@@ -661,7 +661,7 @@ void c_ui::clear()
 		s_entries[i][UI_SUB_SUB_SUB_POS].m_state = UI_NONE_STATE;
 
 		s_entries[i][UI_SUB_SUB_SUB_POS].m_items.clear();
-		s_entries[i][UI_SUB_SUB_SUB_POS].m_item_text_col = color_t();
+		s_entries[i][UI_SUB_SUB_SUB_POS].m_item_text_col = c_color();
 
 		s_entries[i][UI_SUB_SUB_SUB_POS].m_fn = []() {};
 	}

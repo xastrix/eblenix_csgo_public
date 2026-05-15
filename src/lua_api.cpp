@@ -175,15 +175,15 @@ static void init_usertypes(sol::environment& env, sol::state_view state)
 		"h",             &box::h
 	);
 
-	env["color"] = state.new_usertype<color_t>("color", sol::constructors<color_t(int, int, int, int)>(),
-		"r",             [](const color_t& c) { return c.get_arr()[0]; },
-		"g",             [](const color_t& c) { return c.get_arr()[1]; },
-		"b",             [](const color_t& c) { return c.get_arr()[2]; },
-		"a",             [](const color_t& c) { return c.get_arr()[3]; });
+	env["color"] = state.new_usertype<c_color>("color", sol::constructors<c_color(int, int, int, int)>(),
+		"r",             [](const c_color& c) { return c.get_arr()[0]; },
+		"g",             [](const c_color& c) { return c.get_arr()[1]; },
+		"b",             [](const c_color& c) { return c.get_arr()[2]; },
+		"a",             [](const c_color& c) { return c.get_arr()[3]; });
 
 	env["sprite"] = state.new_usertype<sprite_t>("sprite",
 		"begin_draw",    [](sprite_t& sprite) { sprite.begin(D3DXSPRITE_DONOTMODIFY_RENDERSTATE); },
-		"draw",          [](sprite_t& sprite, int x, int y, color_t c) { sprite.draw(x, y, c); },
+		"draw",          [](sprite_t& sprite, int x, int y, c_color c) { sprite.draw(x, y, c); },
 		"end_draw",      [](sprite_t& sprite) { sprite.end(); },
 		"on_reset",      [](sprite_t& sprite) { sprite.on_reset(); },
 		"on_reset_end",  [](sprite_t& sprite) { sprite.on_reset_end(); }
@@ -279,7 +279,7 @@ static void init_convar_functions(sol::environment& env, sol::state_view state)
 		return g_cs->m_cvar->console_printf(msg);
 	});
 
-	table.set_function("console_color_printf", [](const color_t& col, const char* msg) {
+	table.set_function("console_color_printf", [](const c_color& col, const char* msg) {
 		return g_cs->m_cvar->console_color_printf(col.get_revert(), msg);
 	});
 
@@ -374,7 +374,7 @@ static void init_renderer_functions(sol::environment& env, sol::state_view state
 		return ret;
 	});
 
-	table.set_function("text", [](const std::string& str, int x, int y, ID3DXFont* font, uint8_t flags, color_t c) {
+	table.set_function("text", [](const std::string& str, int x, int y, ID3DXFont* font, uint8_t flags, c_color c) {
 		return g_font->draw_string(str, x, y, font, flags, c);
 	});
 
@@ -386,47 +386,47 @@ static void init_renderer_functions(sol::environment& env, sol::state_view state
 		return g_font->get_text_height(str, font);
 	});
 
-	table.set_function("rect", [](int x, int y, int w, int h, color_t c) {
+	table.set_function("rect", [](int x, int y, int w, int h, c_color c) {
 		return g_renderer->rect(x, y, w, h, c);
 	});
 
-	table.set_function("rect_cornered", [](int x, int y, int w, int h, float radii, color_t c) {
+	table.set_function("rect_cornered", [](int x, int y, int w, int h, float radii, c_color c) {
 		return g_renderer->rect_cornered(x, y, w, h, radii, c);
 	});
 
-	table.set_function("rect_fill", [](int x, int y, int w, int h, color_t c) {
+	table.set_function("rect_fill", [](int x, int y, int w, int h, c_color c) {
 		return g_renderer->rect_fill(x, y, w, h, c);
 	});
 
-	table.set_function("rect_fill_cornered", [](int x, int y, int w, int h, float radii, color_t c) {
+	table.set_function("rect_fill_cornered", [](int x, int y, int w, int h, float radii, c_color c) {
 		return g_renderer->rect_fill_cornered(x, y, w, h, radii, c);
 	});
 
-	table.set_function("line", [](int x, int y, int w, int h, color_t c) {
+	table.set_function("line", [](int x, int y, int w, int h, c_color c) {
 		return g_renderer->line(x, y, w, h, c);
 	});
 
-	table.set_function("circle", [](int x, int y, float radius, color_t c) {
+	table.set_function("circle", [](int x, int y, float radius, c_color c) {
 		return g_renderer->circle(x, y, radius, c);
 	});
 
-	table.set_function("circle_fill", [](int x, int y, float radius, color_t c) {
+	table.set_function("circle_fill", [](int x, int y, float radius, c_color c) {
 		return g_renderer->circle_fill(x, y, radius, c);
 	});
 
-	table.set_function("gradient_horizontal", [](int x, int y, int w, int h, color_t c_a, color_t c_b) {
+	table.set_function("gradient_horizontal", [](int x, int y, int w, int h, c_color c_a, c_color c_b) {
 		return g_renderer->gradient_h(x, y, w, h, c_a, c_b);
 	});
 
-	table.set_function("gradient_vertical", [](int x, int y, int w, int h, color_t c_a, color_t c_b) {
+	table.set_function("gradient_vertical", [](int x, int y, int w, int h, c_color c_a, c_color c_b) {
 		return g_renderer->gradient_v(x, y, w, h, c_a, c_b);
 	});
 
-	table.set_function("gradient_multi", [](int x, int y, int w, int h, color_t c_a, color_t c_b, color_t c_c, color_t c_d) {
+	table.set_function("gradient_multi", [](int x, int y, int w, int h, c_color c_a, c_color c_b, c_color c_c, c_color c_d) {
 		return g_renderer->gradient_multi(x, y, w, h, c_a, c_b, c_c, c_d);
 	});
 
-	table.set_function("gradient_multi_fill", [](int x, int y, int w, int h, color_t c_a, color_t c_b, color_t c_c, color_t c_d) {
+	table.set_function("gradient_multi_fill", [](int x, int y, int w, int h, c_color c_a, c_color c_b, c_color c_c, c_color c_d) {
 		return g_renderer->gradient_multi_fill(x, y, w, h, c_a, c_b, c_c, c_d);
 	});
 
@@ -662,8 +662,8 @@ static void init_global_functions(sol::environment& env)
 	env["vec2"]                   = [](float x, float y) { return vec2(x, y); };
 	env["vec3"]                   = [](float x, float y, float z) { return vec3(x, y, z); };
 
-	env["color"]                  = [](int r, int g, int b, int a) { return color_t(r, g, b, a); };
-	env["color_revert"]           = [](int r, int g, int b, int a) { return color_t(a, r, g, b); };
+	env["color"]                  = [](int r, int g, int b, int a) { return c_color(r, g, b, a); };
+	env["color_revert"]           = [](int r, int g, int b, int a) { return c_color(a, r, g, b); };
 
 	env["bbox"]                   = [](int x, int y, int w, int h) { return box(x, y, w, h); };
 

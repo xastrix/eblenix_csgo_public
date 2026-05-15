@@ -27,11 +27,11 @@ void spectators_t::draw()
 	if (!g_cs->m_engine->is_in_game())
 		return;
 
-	g_renderer->rect_fill(m_rect_min, m_rect_max, color_t(20, 20, 20, menu_shadow_alpha));
-	g_renderer->rect_fill(m_rect_min.x + 3, m_rect_min.y + 3, 2, 12, color_t(V_UI_COL));
+	g_renderer->rect_fill(m_rect_min, m_rect_max, c_color(20, 20, 20, menu_shadow_alpha));
+	g_renderer->rect_fill(m_rect_min.x + 3, m_rect_min.y + 3, 2, 12, c_color(V_UI_COL));
 
 	g_font->draw_string("Spectators", m_rect_min.x + 9, m_rect_min.y + 2,
-		FONT(Tahoma12px), TEXT_OUTLINE, color_t(255, 255, 255));
+		FONT(Tahoma12px), TEXT_OUTLINE, c_color(255, 255, 255));
 
 	int y = 1;
 	for (int i = 1; i <= g_cs->m_globals->max_clients; i++) {
@@ -59,8 +59,8 @@ void spectators_t::draw()
 		if (spectator_target != g_cs->get_local())
 			continue;
 
-		g_renderer->rect_fill(m_rect_min.x, m_rect_min.y + (19 * y), m_rect_max.x, m_rect_max.y, color_t(20, 20, 20, menu_shadow_alpha));
-		g_renderer->rect_fill(m_rect_min.x + 3, m_rect_min.y + 3 + (19 * y), 2, 12, color_t(164, 164, 164));
+		g_renderer->rect_fill(m_rect_min.x, m_rect_min.y + (19 * y), m_rect_max.x, m_rect_max.y, c_color(20, 20, 20, menu_shadow_alpha));
+		g_renderer->rect_fill(m_rect_min.x + 3, m_rect_min.y + 3 + (19 * y), 2, 12, c_color(164, 164, 164));
 
 		player_info_t info;
 		g_cs->m_engine->get_player_info(i, &info);
@@ -71,7 +71,7 @@ void spectators_t::draw()
 			player_name = player_name.substr(0, 14) + L"...";
 
 		g_font->draw_stringW(player_name, m_rect_min.x + 9, m_rect_min.y + 2 + (19 * y),
-			FONT(Tahoma12px), TEXT_OUTLINE, color_t(255, 255, 255));
+			FONT(Tahoma12px), TEXT_OUTLINE, c_color(255, 255, 255));
 
 		y++;
 	}

@@ -109,7 +109,7 @@ public:
 		m_hresult = hr;
 	}
 
-	void draw(int x, int y, color_t color) {
+	void draw(int x, int y, c_color color) {
 		if (!m_device || !m_texture || !m_sprite)
 			return;
 
@@ -154,63 +154,63 @@ public:
 	void set_viewport(D3DVIEWPORT9 vp);
 	D3DVIEWPORT9 get_viewport();
 
-	void rect(vec2 pos, vec2 size, color_t c);
-	void rect(float x, float y, float w, float h, color_t c) {
+	void rect(vec2 pos, vec2 size, c_color c);
+	void rect(float x, float y, float w, float h, c_color c) {
 		return rect({ x, y }, { w, h }, c);
 	}
 
-	void rect_fill(vec2 pos, vec2 size, color_t c);
-	void rect_fill(float x, float y, float w, float h, color_t c) {
+	void rect_fill(vec2 pos, vec2 size, c_color c);
+	void rect_fill(float x, float y, float w, float h, c_color c) {
 		return rect_fill({ x, y }, { w, h }, c);
 	}
 
-	void rect_cornered(vec2 pos, vec2 size, float radii, color_t c);
-	void rect_cornered(float x, float y, float w, float h, float radii, color_t c) {
+	void rect_cornered(vec2 pos, vec2 size, float radii, c_color c);
+	void rect_cornered(float x, float y, float w, float h, float radii, c_color c) {
 		return rect_cornered({ x, y }, { w, h }, radii, c);
 	}
 
-	void rect_fill_cornered(vec2 pos, vec2 size, float radii, color_t c);
-	void rect_fill_cornered(float x, float y, float w, float h, float radii, color_t c) {
+	void rect_fill_cornered(vec2 pos, vec2 size, float radii, c_color c);
+	void rect_fill_cornered(float x, float y, float w, float h, float radii, c_color c) {
 		return rect_fill_cornered({ x, y }, { w, h }, radii, c);
 	}
 
-	void gradient_v(vec2 pos, vec2 size, color_t c_a, color_t c_b);
-	void gradient_v(float x, float y, float w, float h, color_t c_a, color_t c_b) {
+	void gradient_v(vec2 pos, vec2 size, c_color c_a, c_color c_b);
+	void gradient_v(float x, float y, float w, float h, c_color c_a, c_color c_b) {
 		return gradient_v({ x, y }, { w, h }, c_a, c_b);
 	}
 
-	void gradient_h(vec2 pos, vec2 size, color_t c_a, color_t c_b);
-	void gradient_h(float x, float y, float w, float h, color_t c_a, color_t c_b) {
+	void gradient_h(vec2 pos, vec2 size, c_color c_a, c_color c_b);
+	void gradient_h(float x, float y, float w, float h, c_color c_a, c_color c_b) {
 		return gradient_h({ x, y }, { w, h }, c_a, c_b);
 	}
 
-	void gradient_multi_fill(vec2 pos, vec2 size, color_t c_a, color_t c_b, color_t c_c, color_t c_d);
-	void gradient_multi_fill(float x, float y, float w, float h, color_t c_a, color_t c_b, color_t c_c, color_t c_d) {
+	void gradient_multi_fill(vec2 pos, vec2 size, c_color c_a, c_color c_b, c_color c_c, c_color c_d);
+	void gradient_multi_fill(float x, float y, float w, float h, c_color c_a, c_color c_b, c_color c_c, c_color c_d) {
 		return gradient_multi_fill({ x, y }, { w, h }, c_a, c_b, c_c, c_d);
 	}
 
-	void gradient_multi(vec2 pos, vec2 size, color_t c_a, color_t c_b, color_t c_c, color_t c_d);
-	void gradient_multi(float x, float y, float w, float h, color_t c_a, color_t c_b, color_t c_c, color_t c_d) {
+	void gradient_multi(vec2 pos, vec2 size, c_color c_a, c_color c_b, c_color c_c, c_color c_d);
+	void gradient_multi(float x, float y, float w, float h, c_color c_a, c_color c_b, c_color c_c, c_color c_d) {
 		return gradient_multi({ x, y }, { w, h }, c_a, c_b, c_c, c_d);
 	}
 
-	void line(vec2 a, vec2 b, color_t c);
-	void line(float x, float y, float w, float h, color_t c) {
+	void line(vec2 a, vec2 b, c_color c);
+	void line(float x, float y, float w, float h, c_color c) {
 		return line({ x, y }, { w, h }, c);
 	}
 
-	void circle(vec2 center, float radius, color_t c);
-	void circle(float x, float y, float radius, color_t c) {
+	void circle(vec2 center, float radius, c_color c);
+	void circle(float x, float y, float radius, c_color c) {
 		return circle({ x, y }, radius, c);
 	}
 
-	void circle_fill(vec2 center, float radius, color_t c);
-	void circle_fill(float x, float y, float radius, color_t c) {
+	void circle_fill(vec2 center, float radius, c_color c);
+	void circle_fill(float x, float y, float radius, c_color c) {
 		return circle_fill({ x, y }, radius, c);
 	}
 
-	void corner_box(vec2 pos, vec2 size, float cx, float cy, color_t c);
-	void corner_box(float x, float y, float w, float h, float cx, float cy, color_t c) {
+	void corner_box(vec2 pos, vec2 size, float cx, float cy, c_color c);
+	void corner_box(float x, float y, float w, float h, float cx, float cy, c_color c) {
 		return corner_box({ x, y }, { w, h }, cx, cy, c);
 	}
 

@@ -27,7 +27,7 @@ void c_fonts::restore(IDirect3DDevice9* device)
 	init(device, {});
 }
 
-void c_fonts::draw_string(const std::string& string, float x, float y, ID3DXFont* font, uint8_t flags, color_t color)
+void c_fonts::draw_string(const std::string& string, float x, float y, ID3DXFont* font, uint8_t flags, c_color color)
 {
 	RECT r{ x, y, x, y };
 	RECT o_r{ x + 1, y + 1, x + 1, y + 1 };
@@ -40,12 +40,12 @@ void c_fonts::draw_string(const std::string& string, float x, float y, ID3DXFont
 	}
 
 	if (flags & TEXT_OUTLINE)
-		font->DrawTextA(NULL, string.c_str(), -1, &o_r, DT_NOCLIP, color_t(0, 0, 0, color.get_arr()[3]).get());
+		font->DrawTextA(NULL, string.c_str(), -1, &o_r, DT_NOCLIP, c_color(0, 0, 0, color.get_arr()[3]).get());
 
 	font->DrawTextA(NULL, string.c_str(), -1, &r, DT_NOCLIP, color.get());
 }
 
-void c_fonts::draw_stringW(const std::wstring& string, float x, float y, ID3DXFont* font, uint8_t flags, color_t color)
+void c_fonts::draw_stringW(const std::wstring& string, float x, float y, ID3DXFont* font, uint8_t flags, c_color color)
 {
 	RECT r{ x, y, x, y };
 	RECT o_r{ x + 1, y + 1, x + 1, y + 1 };
@@ -58,7 +58,7 @@ void c_fonts::draw_stringW(const std::wstring& string, float x, float y, ID3DXFo
 	}
 
 	if (flags & TEXT_OUTLINE)
-		font->DrawTextW(NULL, string.c_str(), -1, &o_r, DT_NOCLIP, color_t(0, 0, 0, color.get_arr()[3]).get());
+		font->DrawTextW(NULL, string.c_str(), -1, &o_r, DT_NOCLIP, c_color(0, 0, 0, color.get_arr()[3]).get());
 
 	font->DrawTextW(NULL, string.c_str(), -1, &r, DT_NOCLIP, color.get());
 }
