@@ -1,6 +1,7 @@
 #include "luas.h"
 
 #include "globals.h"
+#include "cfg.h"
 #include "interfaces.h"
 #include "math.h"
 #include "signatures.h"
@@ -13,7 +14,8 @@
 
 static void init_enums(sol::environment& env);
 static void init_usertypes(sol::environment& env, sol::state_view state);
-static void init_global_variables(sol::environment& env, sol::state_view state);
+static void init_globals_variables(sol::environment& env, sol::state_view state);
+static void init_cfg_functions(sol::environment& env, sol::state_view state);
 static void init_convar_functions(sol::environment& env, sol::state_view state);
 static void init_cvar_functions(sol::environment& env, sol::state_view state);
 static void init_renderer_functions(sol::environment& env, sol::state_view state);
@@ -32,7 +34,8 @@ void c_lua_mgr::init_api(sol::state_view state)
 {
 	init_enums(m_env);
 	init_usertypes(m_env, state);
-	init_global_variables(m_env, state);
+	init_globals_variables(m_env, state);
+	init_cfg_functions(m_env, state);
 	init_convar_functions(m_env, state);
 	init_cvar_functions(m_env, state);
 	init_renderer_functions(m_env, state);
@@ -55,10 +58,8 @@ void c_lua_mgr::init_api(sol::state_view state)
 		int line;
 
 		lua_Debug ar;
-		if (lua_getstack(s, 1, &ar))
-		{
-			if (lua_getinfo(s, "Sl", &ar))
-			{
+		if (lua_getstack(s, 1, &ar)) {
+			if (lua_getinfo(s, "Sl", &ar)) {
 				src = ar.source;
 				line = ar.currentline;
 			}
@@ -211,7 +212,7 @@ static void init_usertypes(sol::environment& env, sol::state_view state)
 	);
 }
 
-static void init_global_variables(sol::environment& env, sol::state_view state)
+static void init_globals_variables(sol::environment& env, sol::state_view state)
 {
 	sol::table table = state.create_table();
 
@@ -225,6 +226,45 @@ static void init_global_variables(sol::environment& env, sol::state_view state)
 	table["max_clients"]        = g_cs->m_globals->max_clients;
 
 	env["globals"] = table;
+}
+
+static void init_cfg_functions(sol::environment& env, sol::state_view state)
+{
+	sol::table table = state.create_table();
+
+	table.set_function("get_int", [](const std::string& key) {
+		return g_var->get_as<int>(key);
+	});
+
+	table.set_function("get_float", [](const std::string& key) {
+		return g_var->get_as<float>(key);
+	});
+
+	table.set_function("get_bool", [](const std::string& key) {
+		return g_var->get_as<bool>(key);
+	});
+
+	table.set_function("set_int", [](const std::string& key, int v) {
+		return g_var->set(key, v);
+	});
+
+	table.set_function("set_float", [](const std::string& key, float v) {
+		return g_var->set(key, v);
+	});
+
+	table.set_function("set_bool", [](const std::string& key, bool v) {
+		return g_var->set(key, v);
+	});
+
+	table.set_function("load", [](const std::string& name) {
+		return g_cfg->load(std::wstring(name.begin(), name.end()));
+	});
+
+	table.set_function("save", [](const std::string& name) {
+		return g_cfg->save(std::wstring(name.begin(), name.end()));
+	});
+
+	env["cfg"] = table;
 }
 
 static void init_convar_functions(sol::environment& env, sol::state_view state)
@@ -292,10 +332,8 @@ static void init_renderer_functions(sol::environment& env, sol::state_view state
 			int line;
 
 			lua_Debug ar;
-			if (lua_getstack(s, 1, &ar))
-			{
-				if (lua_getinfo(s, "Sl", &ar))
-				{
+			if (lua_getstack(s, 1, &ar)) {
+				if (lua_getinfo(s, "Sl", &ar)) {
 					src = ar.source;
 					line = ar.currentline;
 				}
@@ -320,10 +358,8 @@ static void init_renderer_functions(sol::environment& env, sol::state_view state
 			int line;
 
 			lua_Debug ar;
-			if (lua_getstack(s, 1, &ar))
-			{
-				if (lua_getinfo(s, "Sl", &ar))
-				{
+			if (lua_getstack(s, 1, &ar)) {
+				if (lua_getinfo(s, "Sl", &ar)) {
 					src = ar.source;
 					line = ar.currentline;
 				}

@@ -1,7 +1,6 @@
 #include "globals.h"
 
 #include "ui.h"
-#include "helpers.h"
 
 static long long get_elapsed_time(const std::chrono::steady_clock::time_point start_time)
 {
