@@ -29,6 +29,7 @@ static void init_global_functions(sol::environment& env);
 static void init_lists(sol::environment& env, sol::state_view state);
 static void init_safe_env(sol::environment& env, sol::state_view state);
 static std::string callback_id_to_string(int id);
+static uint64_t g_temp_id;
 
 void c_lua_mgr::init_api(sol::state_view state)
 {
@@ -55,7 +56,7 @@ void c_lua_mgr::init_api(sol::state_view state)
 
 	m_env.set_function("register_callback", [&](sol::this_state s, int callback_id, sol::function fn) {
 		std::string src = "?.lua";
-		int line;
+		int line = -1;
 
 		lua_Debug ar;
 		if (lua_getstack(s, 1, &ar)) {
@@ -65,18 +66,70 @@ void c_lua_mgr::init_api(sol::state_view state)
 			}
 		}
 
+		std::string path = (src[0] == '@') ? src.substr(1) : src;
+
 		if (callback_id <= CL_NONE || callback_id >= maxCallbacks) {
-			Helpers::console_printf_with_prefix("[lua]", "%s:%i: Failed to register callback (Invalid callback id)", src.substr(1).c_str(), line);
-			return;
+			Helpers::console_printf_with_prefix("[lua]", "%s:%i: Failed to register callback (Invalid callback id)", path.c_str(), line);
+			return uint64_t{};
 		}
 
-		std::string  path = (src[0] == '@') ? src.substr(1) : src;
 		std::wstring name = std::filesystem::path(path).filename().wstring();
 
-		m_lua_event[callback_id].push_back({ get_script_index_by_name(name), fn });
+		g_temp_id++;
+		m_lua_event[callback_id].push_back({ g_temp_id, get_script_index_by_name(name), false, fn });
 
 		Helpers::console_printf_with_prefix("[lua]", "Subscribed to %s in %s (Updated %s)",
 			callback_id_to_string(callback_id).c_str(), std::string(name.begin(), name.end()).c_str(), get_script_update_datetime(name).c_str());
+
+		return g_temp_id;
+	});
+
+	m_env.set_function("unregister_callback", [&](sol::this_state s, int callback_id, uint64_t temp_id) {
+		std::string src = "?.lua";
+		int line = -1;
+
+		lua_Debug ar;
+		if (lua_getstack(s, 1, &ar)) {
+			if (lua_getinfo(s, "Sl", &ar)) {
+				src = ar.source;
+				line = ar.currentline;
+			}
+		}
+
+		std::string path = (src[0] == '@') ? src.substr(1) : src;
+
+		if (callback_id <= CL_NONE || callback_id >= maxCallbacks) {
+			Helpers::console_printf_with_prefix("[lua]", "%s:%i: Failed to unregister callback (Invalid callback id)", path.c_str(), line);
+			return;
+		}
+
+		auto it = m_lua_event.find(callback_id);
+		if (it == m_lua_event.end()) {
+			Helpers::console_printf_with_prefix("[lua]", "%s:%i: Failed to unregister callback (Callback %s is not registered)",
+				path.c_str(), line, callback_id_to_string(callback_id).c_str());
+			return;
+		}
+
+		auto& vec = it->second;
+		bool found_tmp = false;
+
+		for (auto& entry : vec) {
+			if (entry.tmp_id == temp_id) {
+				entry.nulled = true;
+				found_tmp = true;
+				break;
+			}
+		}
+
+		if (!found_tmp) {
+			Helpers::console_printf_with_prefix("[lua]", "%s:%i: Failed to unregister callback (Invalid handle)", path.c_str(), line);
+			return;
+		}
+
+		std::wstring name = std::filesystem::path(path).filename().wstring();
+
+		Helpers::console_printf_with_prefix("[lua]", "Unsubscribed from %s in %s",
+			callback_id_to_string(callback_id).c_str(), std::string(name.begin(), name.end()).c_str());
 	});
 }
 
@@ -329,7 +382,7 @@ static void init_renderer_functions(sol::environment& env, sol::state_view state
 
 		if (FAILED(hr)) {
 			std::string src = "?.lua";
-			int line;
+			int line = -1;
 
 			lua_Debug ar;
 			if (lua_getstack(s, 1, &ar)) {
@@ -355,7 +408,7 @@ static void init_renderer_functions(sol::environment& env, sol::state_view state
 
 		if (FAILED(ret->get_result())) {
 			std::string src = "?.lua";
-			int line;
+			int line = -1;
 
 			lua_Debug ar;
 			if (lua_getstack(s, 1, &ar)) {

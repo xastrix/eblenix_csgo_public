@@ -45,6 +45,8 @@ static void __stdcall init(HMODULE I)
 		g_lua->init();
 
 		for (auto _ : LUA_CALLBACK(CL_ON_PREINIT)) {
+			if (_.nulled) continue;
+
 			auto result = _.fn();
 			if (!result.valid()) {
 				sol::error err = result;
@@ -119,6 +121,8 @@ static void __stdcall init(HMODULE I)
 #ifdef LUA_ENABLED
 		// register a lua callback for the cheat unload event
 		for (auto _ : LUA_CALLBACK(CL_ON_UNLOAD)) {
+			if (_.nulled) continue;
+
 			auto result = _.fn();
 			if (!result.valid()) {
 				sol::error err = result;

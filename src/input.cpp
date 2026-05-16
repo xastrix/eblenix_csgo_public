@@ -36,6 +36,8 @@ static unsigned long WINAPI wnd_proc(HWND h, UINT m, WPARAM w, LPARAM l)
 
 #ifdef LUA_ENABLED
 			for (auto _ : LUA_CALLBACK(CL_ON_WND_PROC)) {
+				if (_.nulled) continue;
+
 				auto result = _.fn(m, w, l);
 				if (!result.valid()) {
 					sol::error err = result;

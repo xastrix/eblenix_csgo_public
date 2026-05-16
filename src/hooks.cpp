@@ -44,6 +44,8 @@ static bool __stdcall create_move_h(float input_sample_frametime, user_cmd_t* cm
 
 #ifdef LUA_ENABLED
 		for (auto _ : LUA_CALLBACK(CL_ON_CREATE_MOVE)) {
+			if (_.nulled) continue;
+
 			auto result = _.fn(cmd);
 			if (!result.valid()) {
 				sol::error err = result;
@@ -128,6 +130,8 @@ static void __stdcall paint_traverse_h(uint32_t panel, bool force_repaint, bool 
 		{
 #ifdef LUA_ENABLED
 			for (auto _ : LUA_CALLBACK(CL_ON_PAINT_TRAVERSE)) {
+				if (_.nulled) continue;
+
 				auto result = _.fn();
 				if (!result.valid()) {
 					sol::error err = result;
@@ -146,6 +150,8 @@ static long D3DAPI present_h(IDirect3DDevice9* device, RECT* source_rect, RECT* 
 
 #ifdef LUA_ENABLED
 	for (auto _ : LUA_CALLBACK(CL_ON_PRESENT)) {
+		if (_.nulled) continue;
+
 		auto result = _.fn();
 		if (!result.valid()) {
 			sol::error err = result;
@@ -163,6 +169,8 @@ static long D3DAPI present_h(IDirect3DDevice9* device, RECT* source_rect, RECT* 
 
 #ifdef LUA_ENABLED
 	for (auto _ : LUA_CALLBACK(CL_ON_PRESENT_END)) {
+		if (_.nulled) continue;
+
 		auto result = _.fn();
 		if (!result.valid()) {
 			sol::error err = result;
@@ -181,6 +189,8 @@ static long D3DAPI reset_h(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* pres
 {
 #ifdef LUA_ENABLED
 	for (auto _ : LUA_CALLBACK(CL_ON_RESET)) {
+		if (_.nulled) continue;
+
 		auto result = _.fn();
 		if (!result.valid()) {
 			sol::error err = result;
@@ -203,6 +213,8 @@ static long D3DAPI reset_h(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* pres
 
 #ifdef LUA_ENABLED
 		for (auto _ : LUA_CALLBACK(CL_ON_RESET_END)) {
+			if (_.nulled) continue;
+
 			auto result = _.fn(device);
 			if (!result.valid()) {
 				sol::error err = result;

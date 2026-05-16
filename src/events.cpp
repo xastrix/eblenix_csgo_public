@@ -111,6 +111,8 @@ void c_event_list::fire_game_event(c_game_event* _event)
 
 #ifdef LUA_ENABLED
 	for (auto _ : LUA_CALLBACK(CL_ON_GAME_EVENTS)) {
+		if (_.nulled) continue;
+
 		auto result = _.fn(_event);
 		if (!result.valid()) {
 			sol::error err = result;

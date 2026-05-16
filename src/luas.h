@@ -29,7 +29,9 @@ enum _callback_list {
 };
 
 struct lua_core_t {
+	uint64_t tmp_id;
 	int index;
+	bool nulled;
 	sol::protected_function fn;
 };
 
@@ -52,9 +54,11 @@ public:
 
 	const std::vector<lua_core_t>& operator[](int callback_id) const {
 		static const std::vector<lua_core_t> tmp;
+
 		auto it = m_lua_event.find(callback_id);
 		if (it != m_lua_event.end())
 			return it->second;
+
 		return tmp;
 	}
 
