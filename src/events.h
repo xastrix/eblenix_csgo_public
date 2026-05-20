@@ -36,12 +36,11 @@ enum _event_list {
 class c_event_list : public c_game_event_listener2 {
 public:
 	void init();
+	void undo();
 
 	static std::shared_ptr<c_event_list> make_shared() {
 		return std::shared_ptr<c_event_list>(new c_event_list());
 	}
-
-	void undo();
 
 private:
 	void fire_game_event(c_game_event* _event);

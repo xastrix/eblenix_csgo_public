@@ -216,10 +216,6 @@ public:
 
 	void build_lookup_table();
 
-	static std::shared_ptr<c_renderer> make_shared() {
-		return std::shared_ptr<c_renderer>(new c_renderer());
-	}
-
 	IDirect3DDevice9* get_device() {
 		return m_device;
 	}
@@ -232,6 +228,10 @@ public:
 	void end();
 
 	void undo();
+
+	static std::shared_ptr<c_renderer> make_shared() {
+		return std::shared_ptr<c_renderer>(new c_renderer());
+	}
 
 private:
 	IDirect3DDevice9*            m_device;

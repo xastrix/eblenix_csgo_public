@@ -63,10 +63,6 @@ class c_csgo : public c_interfaces {
 public:
 	void init();
 
-	static std::shared_ptr<c_csgo> make_shared() {
-		return std::shared_ptr<c_csgo>(new c_csgo());
-	}
-
 	void init_local(const local_t& local);
 	
 	c_base_player* get_local() {
@@ -74,6 +70,10 @@ public:
 			return nullptr;
 
 		return m_local.get();
+	}
+
+	static std::shared_ptr<c_csgo> make_shared() {
+		return std::shared_ptr<c_csgo>(new c_csgo());
 	}
 
 private:

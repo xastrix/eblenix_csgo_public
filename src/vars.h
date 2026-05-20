@@ -296,16 +296,16 @@ public:
 		return std::nullopt;
 	}
 
-	static std::shared_ptr<c_var_mgr> make_shared() {
-		return std::shared_ptr<c_var_mgr>(new c_var_mgr());
-	}
-
 	vars_t get_vars() {
 		return m_vars;
 	}
 
 	void undo() {
 		m_vars.clear();
+	}
+
+	static std::shared_ptr<c_var_mgr> make_shared() {
+		return std::shared_ptr<c_var_mgr>(new c_var_mgr());
 	}
 
 private:

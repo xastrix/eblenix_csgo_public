@@ -90,7 +90,7 @@ static void __stdcall init(HMODULE I)
 		}
 #endif
 
-		g_input->add_hk(VK_F12, []() {
+		g_input->add_hk(VK_F12, [](int) {
 			g::unload();
 		});
 

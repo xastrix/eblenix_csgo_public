@@ -66,11 +66,11 @@ public:
 		return m_lua_list;
 	}
 
+	void undo();
+
 	static std::shared_ptr<c_lua_mgr> make_shared() {
 		return std::shared_ptr<c_lua_mgr>(new c_lua_mgr());
 	}
-
-	void undo();
 
 private:
 	void init_api(sol::state_view state);

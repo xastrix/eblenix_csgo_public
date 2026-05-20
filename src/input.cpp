@@ -61,11 +61,6 @@ void c_input::init(const std::pair<LPCSTR, LPCSTR>& wnd)
 	m_old_wnd_proc = reinterpret_cast<WNDPROC>(SetWindowLongA(m_hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(wnd_proc)));
 }
 
-void c_input::add_hk(unsigned int vk, std::function<void()> fn)
-{
-	m_hotkeys[vk] = fn;
-}
-
 void c_input::process_message(UINT m, WPARAM w, LPARAM l)
 {
 	if (!GLOBAL(b_flags[BF_CONSOLE_OPENED]) && !GLOBAL(b_flags[BF_CHAT_OPENED]))
@@ -95,8 +90,8 @@ void c_input::process_mouse_message(UINT m, WPARAM w, LPARAM l)
 		static draggable_object_t ui_drag_obj{ ui_pos_x, ui_pos_y, 180, 255 };
 
 		if (move_object(ui_drag_obj, m)) {
-			g_var->set(V_UI_POS_X, ui_drag_obj.m_x);
-			g_var->set(V_UI_POS_Y, ui_drag_obj.m_y);
+			g_var->set(V_UI_POS_X, ui_drag_obj.get_x());
+			g_var->set(V_UI_POS_Y, ui_drag_obj.get_y());
 		}
 
 		g_hud->process_message(m);
@@ -164,7 +159,7 @@ void c_input::process_keybd_message(UINT m, WPARAM w)
 		auto& hotkey_callback = m_hotkeys[key];
 
 		if (hotkey_callback)
-			hotkey_callback();
+			hotkey_callback(key);
 	}
 	else
 	{
@@ -176,6 +171,34 @@ void c_input::process_keybd_message(UINT m, WPARAM w)
 		if (g_ui->get_menu_state())
 			g_ui->handle_input(key);
 	}
+}
+
+bool c_input::move_object(draggable_object_t& o, UINT m)
+{
+	switch (m) {
+	case WM_LBUTTONDOWN: {
+		if (m_mouse_pos_x >= o.get_x() && m_mouse_pos_x <= o.get_x() + o.get_width() &&
+			m_mouse_pos_y >= o.get_y() && m_mouse_pos_y <= o.get_y() + o.get_height()) {
+			o.set_dragging(true);
+			o.set_drag_x(m_mouse_pos_x - o.get_x());
+			o.set_drag_y(m_mouse_pos_y - o.get_y());
+		}
+		break;
+	}
+	case WM_MOUSEMOVE: {
+		if (o.get_dragging()) {
+			o.set_x(m_mouse_pos_x - o.get_drag_x());
+			o.set_y(m_mouse_pos_y - o.get_drag_y());
+		}
+		break;
+	}
+	case WM_LBUTTONUP: {
+		o.set_dragging(false);
+		break;
+	}
+	}
+
+	return o.get_dragging();
 }
 
 std::wstring c_input::virtual_key_to_wstring(unsigned int vk)
@@ -212,11 +235,6 @@ std::wstring c_input::virtual_key_to_wstring(unsigned int vk)
 	}
 
 	return ret;
-}
-
-WNDPROC c_input::get_wnd_proc()
-{
-	return m_old_wnd_proc;
 }
 
 void c_input::undo()

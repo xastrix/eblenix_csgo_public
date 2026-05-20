@@ -86,10 +86,10 @@ void spectators_t::handle_move(UINT m)
 
 	if (g_input->move_object(spec_drag_obj, m))
 	{
-		m_rect_min.y = spec_drag_obj.m_y;
+		m_rect_min.y = spec_drag_obj.get_y();
 		g_var->set(V_VISUALS_INTERFACE_SPECTATORS_POS_Y, m_rect_min.y);
 	}
 
 	else
-		spec_drag_obj.m_y = m_rect_min.y;
+		spec_drag_obj.set_y(m_rect_min.y);
 }

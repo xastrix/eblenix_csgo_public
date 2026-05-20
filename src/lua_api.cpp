@@ -13,46 +13,49 @@
 #include <files.h>
 
 static void init_enums(sol::environment& env);
-static void init_usertypes(sol::environment& env, sol::state_view state);
-static void init_globals_variables(sol::environment& env, sol::state_view state);
-static void init_cfg_functions(sol::environment& env, sol::state_view state);
-static void init_convar_functions(sol::environment& env, sol::state_view state);
-static void init_cvar_functions(sol::environment& env, sol::state_view state);
-static void init_renderer_functions(sol::environment& env, sol::state_view state);
-static void init_engine_functions(sol::environment& env, sol::state_view state);
-static void init_entity_functions(sol::environment& env, sol::state_view state);
-static void init_entity_list_functions(sol::environment& env, sol::state_view state);
+static void init_usertypes(sol::environment& env);
+static void init_globals_variables(sol::environment& env);
+static void init_cfg_functions(sol::environment& env);
+static void init_convar_functions(sol::environment& env);
+static void init_cvar_functions(sol::environment& env);
+static void init_renderer_functions(sol::environment& env);
+static void init_engine_functions(sol::environment& env);
+static void init_entity_functions(sol::environment& env);
+static void init_entity_list_functions(sol::environment& env);
 static void init_math_functions(sol::environment& env, sol::state_view state);
-static void init_surface_functions(sol::environment& env, sol::state_view state);
-static void init_util_functions(sol::environment& env, sol::state_view state);
+static void init_surface_functions(sol::environment& env);
+static void init_util_functions(sol::environment& env);
 static void init_global_functions(sol::environment& env);
-static void init_lists(sol::environment& env, sol::state_view state);
+static void init_lists(sol::environment& env);
 static void init_safe_env(sol::environment& env, sol::state_view state);
+
+/* Convert callback id to string */
 static std::string callback_id_to_string(int id);
+
+/* Unique id for registered callbacks */
 static uint64_t g_temp_id;
 
 void c_lua_mgr::init_api(sol::state_view state)
 {
 	init_enums(m_env);
-	init_usertypes(m_env, state);
-	init_globals_variables(m_env, state);
-	init_cfg_functions(m_env, state);
-	init_convar_functions(m_env, state);
-	init_cvar_functions(m_env, state);
-	init_renderer_functions(m_env, state);
-	init_engine_functions(m_env, state);
-	init_entity_functions(m_env, state);
-	init_entity_list_functions(m_env, state);
-	init_math_functions(m_env, state);
-	init_surface_functions(m_env, state);
-	init_util_functions(m_env, state);
-	init_global_functions(m_env);
-	init_lists(m_env, state);
-	init_safe_env(m_env, state);
+	init_usertypes(m_env);
 
-	m_env.set_function("print", [](const char* msg) {
-		return g_cs->m_cvar->console_printf(msg);
-	});
+	init_globals_variables(m_env);
+
+	init_cfg_functions(m_env);
+	init_convar_functions(m_env);
+	init_cvar_functions(m_env);
+	init_renderer_functions(m_env);
+	init_engine_functions(m_env);
+	init_entity_functions(m_env);
+	init_entity_list_functions(m_env);
+	init_math_functions(m_env, state);
+	init_surface_functions(m_env);
+	init_util_functions(m_env);
+	init_global_functions(m_env);
+
+	init_lists(m_env);
+	init_safe_env(m_env, state);
 
 	m_env.set_function("register_callback", [&](sol::this_state s, int callback_id, sol::function fn) {
 		std::string src = "?.lua";
@@ -208,33 +211,33 @@ static void init_enums(sol::environment& env)
 	);
 }
 
-static void init_usertypes(sol::environment& env, sol::state_view state)
+static void init_usertypes(sol::environment& env)
 {
-	env["vec2"] = state.new_usertype<vec2>("vec2", sol::constructors<vec2(float, float)>(),
+	env.new_usertype<vec2>("vec2", sol::constructors<vec2(float, float)>(),
 		"x",             &vec2::x,
 		"y",             &vec2::y
 	);
 
-	env["vec3"] = state.new_usertype<vec3>("vec3", sol::constructors<vec3(float, float, float)>(),
+	env.new_usertype<vec3>("vec3", sol::constructors<vec3(float, float, float)>(),
 		"x",             &vec3::x,
 		"y",             &vec3::y,
 		"z",             &vec3::z
 	);
 
-	env["bbox"] = state.new_usertype<box>("bbox", sol::constructors<box(int, int, int, int)>(),
+	env.new_usertype<box>("bbox", sol::constructors<box(int, int, int, int)>(),
 		"x",             &box::x,
 		"y",             &box::y,
 		"w",             &box::w,
 		"h",             &box::h
 	);
 
-	env["color"] = state.new_usertype<c_color>("color", sol::constructors<c_color(int, int, int, int)>(),
+	env.new_usertype<c_color>("color", sol::constructors<c_color(int, int, int, int)>(),
 		"r",             [](const c_color& c) { return c.get_arr()[0]; },
 		"g",             [](const c_color& c) { return c.get_arr()[1]; },
 		"b",             [](const c_color& c) { return c.get_arr()[2]; },
 		"a",             [](const c_color& c) { return c.get_arr()[3]; });
 
-	env["sprite"] = state.new_usertype<sprite_t>("sprite",
+	env.new_usertype<sprite_t>("sprite",
 		"begin_draw",    [](sprite_t& sprite) { sprite.begin(D3DXSPRITE_DONOTMODIFY_RENDERSTATE); },
 		"draw",          [](sprite_t& sprite, int x, int y, c_color c) { sprite.draw(x, y, c); },
 		"end_draw",      [](sprite_t& sprite) { sprite.end(); },
@@ -242,13 +245,13 @@ static void init_usertypes(sol::environment& env, sol::state_view state)
 		"on_reset_end",  [](sprite_t& sprite) { sprite.on_reset_end(); }
 	);
 
-	env["game_event"] = state.new_usertype<c_game_event>("game_event",
+	env.new_usertype<c_game_event>("game_event",
 		"get_name",      [](c_game_event* _event) { return _event->get_name(); },
 		"get_int",       [](c_game_event* _event, const char* name) { return _event->get_int(name); },
 		"get_string",    [](c_game_event* _event, const char* name) { return _event->get_string(name); }
 	);
 
-	env["player_info"] = state.new_usertype<player_info_t>("player_info",
+	env.new_usertype<player_info_t>("player_info",
 		"name",          sol::readonly(&player_info_t::m_player_name),
 		"friendsname",   sol::readonly(&player_info_t::m_friends_name),
 		"user_id",       sol::readonly(&player_info_t::m_user_id),
@@ -256,7 +259,7 @@ static void init_usertypes(sol::environment& env, sol::state_view state)
 		"ishltv",        sol::readonly(&player_info_t::m_is_hltv)
 	);
 
-	env["user_cmd"] = state.new_usertype<user_cmd_t>("user_cmd",
+	env.new_usertype<user_cmd_t>("user_cmd",
 		"cmd_number",    sol::readonly(&user_cmd_t::m_command_number),
 		"forward_move",  &user_cmd_t::m_forwardmove,
 		"side_move",     &user_cmd_t::m_sidemove,
@@ -265,9 +268,9 @@ static void init_usertypes(sol::environment& env, sol::state_view state)
 	);
 }
 
-static void init_globals_variables(sol::environment& env, sol::state_view state)
+static void init_globals_variables(sol::environment& env)
 {
-	sol::table table = state.create_table();
+	sol::table table = env.create();
 
 	table["frame_count"]        = g_cs->m_globals->frame_count;
 	table["frame_time"]         = g_cs->m_globals->frame_time;
@@ -281,9 +284,9 @@ static void init_globals_variables(sol::environment& env, sol::state_view state)
 	env["globals"] = table;
 }
 
-static void init_cfg_functions(sol::environment& env, sol::state_view state)
+static void init_cfg_functions(sol::environment& env)
 {
-	sol::table table = state.create_table();
+	sol::table table = env.create();
 
 	table.set_function("get_int", [](const std::string& key) {
 		return g_var->get_as<int>(key);
@@ -320,9 +323,9 @@ static void init_cfg_functions(sol::environment& env, sol::state_view state)
 	env["cfg"] = table;
 }
 
-static void init_convar_functions(sol::environment& env, sol::state_view state)
+static void init_convar_functions(sol::environment& env)
 {
-	sol::table table = state.create_table();
+	sol::table table = env.create();
 
 	table.set_function("find_convar", [](const char* var_name) {
 		return g_cs->m_cvar->get_convar(var_name);
@@ -339,9 +342,9 @@ static void init_convar_functions(sol::environment& env, sol::state_view state)
 	env["convar"] = table;
 }
 
-static void init_cvar_functions(sol::environment& env, sol::state_view state)
+static void init_cvar_functions(sol::environment& env)
 {
-	sol::table table = state.create_table();
+	sol::table table = env.create();
 
 	table.set_function("get_int", [](convar* c) {
 		return c->get_int();
@@ -362,9 +365,9 @@ static void init_cvar_functions(sol::environment& env, sol::state_view state)
 	env["cvar"] = table;
 }
 
-static void init_renderer_functions(sol::environment& env, sol::state_view state)
+static void init_renderer_functions(sol::environment& env)
 {
-	sol::table table = state.create_table();
+	sol::table table = env.create();
 
 	table.set_function("create_font", [](sol::this_state s, const std::string& name, int px, uint32_t weight, DWORD quality) {
 		ID3DXFont* ret;
@@ -490,9 +493,9 @@ static void init_renderer_functions(sol::environment& env, sol::state_view state
 	env["renderer"] = table;
 }
 
-static void init_engine_functions(sol::environment& env, sol::state_view state)
+static void init_engine_functions(sol::environment& env)
 {
-	sol::table table = state.create_table();
+	sol::table table = env.create();
 
 	table.set_function("get_local_player", []() {
 		return g_cs->m_engine->get_local_player();
@@ -535,9 +538,9 @@ static void init_engine_functions(sol::environment& env, sol::state_view state)
 	env["engine"] = table;
 }
 
-static void init_entity_functions(sol::environment& env, sol::state_view state)
+static void init_entity_functions(sol::environment& env)
 {
-	sol::table table = state.create_table();
+	sol::table table = env.create();
 
 	table.set_function("get_health", [](c_base_player* e) {
 		return e->get_health();
@@ -590,9 +593,9 @@ static void init_entity_functions(sol::environment& env, sol::state_view state)
 	env["entity"] = table;
 }
 
-static void init_entity_list_functions(sol::environment& env, sol::state_view state)
+static void init_entity_list_functions(sol::environment& env)
 {
-	sol::table table = state.create_table();
+	sol::table table = env.create();
 
 	table.set_function("get_entity", [](int index) {
 		return g_cs->m_entity_list->get_client_entity<c_base_player*>(index);
@@ -624,9 +627,9 @@ static void init_math_functions(sol::environment& env, sol::state_view state)
 	env["math"] = table;
 }
 
-static void init_surface_functions(sol::environment& env, sol::state_view state)
+static void init_surface_functions(sol::environment& env)
 {
-	sol::table table = state.create_table();
+	sol::table table = env.create();
 
 	table.set_function("set_draw_color", [](int r, int g, int b, int a) {
 		return g_cs->m_surface->set_draw_color(r, g, b, a);
@@ -683,9 +686,9 @@ static void init_surface_functions(sol::environment& env, sol::state_view state)
 	env["surface"] = table;
 }
 
-static void init_util_functions(sol::environment& env, sol::state_view state)
+static void init_util_functions(sol::environment& env)
 {
-	sol::table table = state.create_table();
+	sol::table table = env.create();
 
 	table.set_function("find_pattern", [](const std::string& module_name, const std::string& signature) {
 		return g_sig->scan_sig(module_name, signature);
@@ -720,12 +723,13 @@ static void init_global_functions(sol::environment& env)
 
 	env["bbox"]                   = [](int x, int y, int w, int h) { return box(x, y, w, h); };
 
-	env["unload"]                 = []() { g::unload(); };
+	env["unload"]                 = []() { return g::unload(); };
+	env["print"]                  = [](const char* msg) { return g_cs->m_cvar->console_printf(msg); };
 }
 
-static void init_lists(sol::environment& env, sol::state_view state)
+static void init_lists(sol::environment& env)
 {
-	sol::table e_list = state.create_table_with();
+	sol::table e_list = env.create_with();
 
 	for (int i = 0; i < maxEvents; i++) {
 		e_list[i] = g_event_list[i];
@@ -736,12 +740,17 @@ static void init_lists(sol::environment& env, sol::state_view state)
 
 static void init_safe_env(sol::environment& env, sol::state_view state)
 {
-	sol::table safe_os = state.create_table();
+	sol::table safe_os = env.create();
 
 	safe_os["time"]     = state["os"]["time"];
 	safe_os["clock"]    = state["os"]["clock"];
 	safe_os["difftime"] = state["os"]["difftime"];
 	safe_os["date"]     = state["os"]["date"];
+
+	for (const auto& fn : { "ipairs", "pairs", "next", "select",
+		"tonumber", "tostring", "type", "pcall", "xpcall" }) {
+		env[fn] = state[fn];
+	}
 
 	env["os"] = safe_os;
 	env["_G"] = env;

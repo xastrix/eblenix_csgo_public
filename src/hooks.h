@@ -120,12 +120,11 @@ private:
 class c_hooks {
 public:
 	void init();
+	void undo();
 
 	static std::shared_ptr<c_hooks> make_shared() {
 		return std::shared_ptr<c_hooks>(new c_hooks());
 	}
-
-	void undo();
 
 private:
 	hook_t m_hooks[maxHooks]{};

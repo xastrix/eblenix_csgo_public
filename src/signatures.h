@@ -29,12 +29,12 @@ public:
 
 	sig_t scan_sig(const std::string& module_name, const std::string& signature);
 
-	static std::shared_ptr<c_sig> make_shared() {
-		return std::shared_ptr<c_sig>(new c_sig());
-	}
-
 	sig_t operator[](_signature_list index) const {
 		return m_signatures[index];
+	}
+
+	static std::shared_ptr<c_sig> make_shared() {
+		return std::shared_ptr<c_sig>(new c_sig());
 	}
 
 private:

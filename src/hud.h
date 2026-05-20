@@ -69,12 +69,11 @@ private:
 class c_hud {
 public:
 	void run();
+	void process_message(UINT m);
 
 	static std::shared_ptr<c_hud> make_shared() {
 		return std::shared_ptr<c_hud>(new c_hud());
 	}
-
-	void process_message(UINT m);
 };
 
 inline std::shared_ptr<c_hud> g_hud = c_hud::make_shared();

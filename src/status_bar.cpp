@@ -47,7 +47,7 @@ void status_bar_t::draw()
 				vec2 ctx_list_min(m_rect_min.x + 10, m_rect_min.y + 20 + (i * 18));
 				vec2 ctx_list_max(m_rect_max.x - 10, 17);
 
-				bool is_hovered = g_input->is_hovered(ctx_list_min, ctx_list_min + ctx_list_max);
+				bool is_hovered = g_input->mouse_is_hovered(ctx_list_min, ctx_list_min + ctx_list_max);
 				bool is_actived = g_var->get_as<bool>(m_vars[i].second).value();
 
 				g_renderer->rect_fill(ctx_list_min, ctx_list_max, c_color(20, 20, 20, menu_shadow_alpha - 20));
@@ -167,7 +167,7 @@ void status_bar_t::draw()
 
 void status_bar_t::handle_click(bool left_click, bool right_click)
 {
-	if (g_input->is_hovered(m_rect_min, m_rect_min + m_rect_max))
+	if (g_input->mouse_is_hovered(m_rect_min, m_rect_min + m_rect_max))
 	{
 		if (!m_ctx_menu_open && right_click)
 			m_ctx_menu_open = true;
@@ -183,12 +183,12 @@ void status_bar_t::handle_click(bool left_click, bool right_click)
 			vec2 ctx_list_min(m_rect_min.x + 10, m_rect_min.y + 20 + (i * 18));
 			vec2 ctx_list_max(m_rect_max.x - 10, 17);
 
-			if (g_input->is_hovered(ctx_list_min, ctx_list_min + ctx_list_max) && left_click)
+			if (g_input->mouse_is_hovered(ctx_list_min, ctx_list_min + ctx_list_max) && left_click)
 				g_var->set(m_vars[i].second, !g_var->get_as<bool>(m_vars[i].second).value());
 		}
 
-		if ((!g_input->is_hovered(m_rect_min, m_rect_min + m_rect_max) &&
-			 !g_input->is_hovered(ctx_content_min, ctx_content_min + ctx_content_max)) && (left_click || right_click))
+		if ((!g_input->mouse_is_hovered(m_rect_min, m_rect_min + m_rect_max) &&
+			 !g_input->mouse_is_hovered(ctx_content_min, ctx_content_min + ctx_content_max)) && (left_click || right_click))
 			m_ctx_menu_open = false;
 	}
 }
@@ -202,10 +202,10 @@ void status_bar_t::handle_move(UINT m)
 
 	if (g_input->move_object(bar_drag_obj, m))
 	{
-		m_rect_min.y = bar_drag_obj.m_y;
+		m_rect_min.y = bar_drag_obj.get_y();
 		g_var->set(V_VISUALS_INTERFACE_STATUS_POS_Y, m_rect_min.y);
 	}
 
 	else
-		bar_drag_obj.m_y = m_rect_min.y;
+		bar_drag_obj.set_y(m_rect_min.y);
 }

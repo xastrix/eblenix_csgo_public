@@ -82,14 +82,14 @@ public:
 	void handle_toggle_keys(unsigned int vk);
 	void handle_input(unsigned int vk);
 
-	static std::shared_ptr<c_ui> make_shared() {
-		return std::shared_ptr<c_ui>(new c_ui());
-	}
-
 	bool get_menu_state() { return m_opened; }
 	void set_menu_state(bool v) { m_opened = v; }
 
 	void undo();
+
+	static std::shared_ptr<c_ui> make_shared() {
+		return std::shared_ptr<c_ui>(new c_ui());
+	}
 
 private:
 	void calc_animation_progress(float anim_time, float delta_time, float& old_alpha);

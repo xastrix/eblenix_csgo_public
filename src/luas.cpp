@@ -19,11 +19,6 @@ void c_lua_mgr::init()
 		m_env[lib] = m_state[lib];
 	}
 
-	for (const auto& func : { "ipairs", "pairs", "next", "select",
-		"tonumber", "tostring", "type", "pcall", "xpcall" }) {
-		m_env[func] = m_state[func];
-	}
-
 	init_api(m_state);
 
 	refresh_scripts();
