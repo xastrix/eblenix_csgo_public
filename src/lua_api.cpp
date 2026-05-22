@@ -331,12 +331,22 @@ static void init_convar_functions(sol::environment& env)
 		return g_cs->m_cvar->get_convar(var_name);
 	});
 
-	table.set_function("console_printf", [](const char* msg) {
-		return g_cs->m_cvar->console_printf(msg);
+	table.set_function("console_printf", [](sol::this_state s, const char* msg, sol::variadic_args as) {
+		sol::state_view state{ s };
+
+		sol::function format = state["string"]["format"];
+		std::string   res    = format(msg, as);
+
+		return g_cs->m_cvar->console_printf("%s", res.c_str());
 	});
 
-	table.set_function("console_color_printf", [](const c_color& col, const char* msg) {
-		return g_cs->m_cvar->console_color_printf(col.get_revert(), msg);
+	table.set_function("console_color_printf", [](sol::this_state s, const c_color& col, const char* msg, sol::variadic_args as) {
+		sol::state_view state{ s };
+
+		sol::function format = state["string"]["format"];
+		std::string   res    = format(msg, as);
+
+		return g_cs->m_cvar->console_color_printf(col.get_revert(), "%s", res.c_str());
 	});
 
 	env["convar"] = table;
@@ -724,7 +734,14 @@ static void init_global_functions(sol::environment& env)
 	env["bbox"]                   = [](int x, int y, int w, int h) { return box(x, y, w, h); };
 
 	env["unload"]                 = []() { return g::unload(); };
-	env["print"]                  = [](const char* msg) { return g_cs->m_cvar->console_printf(msg); };
+	env["print"]                  = [](sol::this_state s, const char* msg, sol::variadic_args as) {
+		sol::state_view state{ s };
+
+		sol::function format = state["string"]["format"];
+		std::string   res    = format(msg, as);
+
+		return g_cs->m_cvar->console_printf("%s", res.c_str());
+	};
 }
 
 static void init_lists(sol::environment& env)
