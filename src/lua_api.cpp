@@ -209,6 +209,22 @@ static void init_enums(sol::environment& env)
 		g_event_list[BOMB_DROPPED],                  BOMB_DROPPED,
 		g_event_list[BOMB_BEEP],                     BOMB_BEEP
 	);
+
+	env.new_enum("surface_text_flags",
+		"none",                                      sff_none,
+		"italic",                                    sff_italic,
+		"underline",                                 ssf_underline,
+		"strikeout",                                 sff_strikeout,
+		"symbol",                                    sff_symbol,
+		"antialias",                                 sff_antialias,
+		"gaussianblur",                              sff_gaussianblur,
+		"rotary",                                    sff_rotary,
+		"dropshadow",                                sff_dropshadow,
+		"additive",                                  sff_additive,
+		"outline",                                   sff_outline,
+		"custom",                                    sff_custom,
+		"bitmap",                                    sff_bitmap
+	);
 }
 
 static void init_usertypes(sol::environment& env)
@@ -645,6 +661,10 @@ static void init_surface_functions(sol::environment& env)
 		return g_cs->m_surface->set_draw_color(r, g, b, a);
 	});
 
+	table.set_function("set_text_color", [](int r, int g, int b, int a) {
+		return g_cs->m_surface->set_text_color(r, g, b, a);
+	});
+
 	table.set_function("draw_filled_rect", [](int x, int y, int w, int h) {
 		return g_cs->m_surface->draw_filled_rect(x, y, w, h);
 	});
@@ -655,6 +675,18 @@ static void init_surface_functions(sol::environment& env)
 
 	table.set_function("draw_line", [](int x1, int y1, int x2, int y2) {
 		return g_cs->m_surface->draw_line(x1, y1, x2, y2);
+	});
+
+	table.set_function("draw_text_font", [](surface_font_t font) {
+		return g_cs->m_surface->draw_text_font(font);
+	});
+
+	table.set_function("draw_text_pos", [](int x, int y) {
+		return g_cs->m_surface->draw_text_pos(x, y);
+	});
+
+	table.set_function("draw_render_text", [](const std::wstring& text) {
+		return g_cs->m_surface->draw_render_text(text.c_str(), text.length());
 	});
 
 	table.set_function("get_screen_width", []() {
@@ -687,6 +719,14 @@ static void init_surface_functions(sol::environment& env)
 
 	table.set_function("unlock_cursor", []() {
 		return g_cs->m_surface->unlock_cursor();
+	});
+
+	table.set_function("font_create", []() {
+		return g_cs->m_surface->font_create();
+	});
+
+	table.set_function("set_font_glyph", [](surface_font_t font, const char* name, int tall, int weight, int blur, int scanlines, int flags) {
+		return g_cs->m_surface->set_font_glyph(font, name, tall, weight, blur, scanlines, flags);
 	});
 
 	table.set_function("play_sound", [](const char* path) {
