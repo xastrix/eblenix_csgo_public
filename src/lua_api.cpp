@@ -258,7 +258,8 @@ static void init_usertypes(sol::environment& env)
 		"draw",          [](sprite_t& sprite, int x, int y, c_color c) { sprite.draw(x, y, c); },
 		"end_draw",      [](sprite_t& sprite) { sprite.end(); },
 		"on_reset",      [](sprite_t& sprite) { sprite.on_reset(); },
-		"on_reset_end",  [](sprite_t& sprite) { sprite.on_reset_end(); }
+		"on_reset_end",  [](sprite_t& sprite) { sprite.on_reset_end(); },
+		"destroy",       [](sprite_t* sprite) { if (sprite) delete sprite; }
 	);
 
 	env.new_usertype<c_game_event>("game_event",
@@ -328,12 +329,12 @@ static void init_cfg_functions(sol::environment& env)
 		return g_var->set(key, v);
 	});
 
-	table.set_function("load", [](const std::string& name) {
-		return g_cfg->load(std::wstring(name.begin(), name.end()));
+	table.set_function("load", [](const std::wstring& name) {
+		return g_cfg->load(name);
 	});
 
-	table.set_function("save", [](const std::string& name) {
-		return g_cfg->save(std::wstring(name.begin(), name.end()));
+	table.set_function("save", [](const std::wstring& name) {
+		return g_cfg->save(name);
 	});
 
 	env["cfg"] = table;
@@ -685,8 +686,8 @@ static void init_surface_functions(sol::environment& env)
 		return g_cs->m_surface->draw_text_pos(x, y);
 	});
 
-	table.set_function("draw_render_text", [](const std::wstring& text) {
-		return g_cs->m_surface->draw_render_text(text.c_str(), text.length());
+	table.set_function("draw_render_text", [](const std::wstring& str) {
+		return g_cs->m_surface->draw_render_text(str.c_str(), str.length());
 	});
 
 	table.set_function("get_screen_width", []() {

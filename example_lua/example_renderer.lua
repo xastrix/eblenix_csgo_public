@@ -20,9 +20,11 @@ register_callback(cb.on_present, function()
 	renderer.circle_fill(153, 35, 13.0, white)
 	renderer.gradient_horizontal(173, 20, 30, 30, red, blue)
 	renderer.gradient_vertical(210, 20, 30, 30, red, blue)
+	renderer.gradient_multi(245, 20, 30, 30, red, blue, blue2, green)
+	renderer.gradient_multi_fill(285, 20, 30, 30, green, blue2, blue, red)
 
 	s:begin_draw()
-	s:draw(245, 20, white)
+	s:draw(323, 20, white)
 end)
 
 register_callback(cb.on_present_end, function()
@@ -35,4 +37,8 @@ end)
 
 register_callback(cb.on_reset_end, function()
 	s:on_reset_end()
+end)
+
+register_callback(cb.on_unload, function()
+	s:destroy()
 end)

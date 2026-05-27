@@ -11,6 +11,18 @@
 
 class c_sprite_mgr {
 public:
+	~c_sprite_mgr() {
+		if (m_texture) {
+			m_texture->Release();
+			m_texture = nullptr;
+		}
+
+		if (m_sprite) {
+			m_sprite->Release();
+			m_sprite = nullptr;
+		}
+	}
+
 	void init(IDirect3DDevice9* device, const byte* img, const size_t img_size, int width, int height) {
 		HRESULT hr = E_FAIL;
 
@@ -90,8 +102,6 @@ public:
 
 		m_sprite->OnResetDevice();
 		
-		D3DXCreateSprite(m_device, &m_sprite);
-
 		if (m_path.empty() && (m_image && m_image_size > 0))
 			hr = D3DXCreateTextureFromFileInMemoryEx(m_device, m_image, m_image_size, m_width, m_height,
 				D3DX_DEFAULT, 0, D3DFMT_A8B8G8R8, D3DPOOL_DEFAULT, D3DX_DEFAULT, D3DX_DEFAULT, 0, 0, 0, &m_texture);
