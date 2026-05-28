@@ -39,7 +39,7 @@ _interface_status Interface::init()
 
 	RegisterClassExA(&m_wc);
 
-	m_hwnd = CreateWindowExA(WS_EX_TRANSPARENT, m_class_name.c_str(), m_window_name.c_str(), WS_POPUP,
+	m_hwnd = CreateWindowExA(0, m_class_name.c_str(), m_window_name.c_str(), WS_POPUP | WS_MINIMIZEBOX,
 		CW_USEDEFAULT, CW_USEDEFAULT, m_width, m_height, nullptr, nullptr, nullptr, 0);
 
 	if (!m_hwnd) {

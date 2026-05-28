@@ -17,18 +17,20 @@ enum _fonts {
 };
 
 struct font_t {
-	_fonts      m_index{};
-	int         m_px{};
-	std::string m_name{};
-	uint32_t    m_weight{};
-	DWORD       m_quality{};
+	_fonts      m_index;
+	int         m_px;
+	std::string m_name;
+	uint32_t    m_weight;
+	DWORD       m_quality;
 };
 
 struct vertex_t {
-	float       m_x{}, m_y{}, m_z{};
-	float       m_rhw{};
-	D3DCOLOR    m_color{};
-	float       m_tu{}, m_tv{};
+	float       m_x,
+				m_y,
+				m_z;
+	float       m_rhw;
+	D3DCOLOR    m_color;
+	float       m_tu, m_tv;
 };
 
 struct d3d {
@@ -58,6 +60,18 @@ private:
 };
 
 struct sprite_manager {
+	~sprite_manager() {
+		if (m_texture) {
+			m_texture->Release();
+			m_texture = nullptr;
+		}
+
+		if (m_sprite) {
+			m_sprite->Release();
+			m_sprite = nullptr;
+		}
+	}
+
 	void init(IDirect3DDevice9* device, const byte* img, const size_t img_size, int width, int height) {
 		m_width = width;
 		m_height = height;
@@ -116,13 +130,13 @@ struct sprite_manager {
 	int get_height() { return m_height; }
 
 private:
-	int                   m_width{};
-	int                   m_height{};
+	int                   m_width;
+	int                   m_height;
 	IDirect3DDevice9*     m_device{};
 	ID3DXSprite*          m_sprite{};
 	IDirect3DTexture9*    m_texture{};
-	const byte*           m_image{};
-	size_t                m_image_size{};
+	const byte*           m_image;
+	size_t                m_image_size;
 };
 
 using sprite_t = sprite_manager;

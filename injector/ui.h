@@ -31,8 +31,8 @@ struct ui_util_t {
 };
 
 struct ui_notify_t {
-	std::string m_msg{};
-	std::chrono::steady_clock::time_point m_start_time{};
+	std::string m_msg;
+	std::chrono::steady_clock::time_point m_start_time;
 };
 
 namespace ui
@@ -63,7 +63,7 @@ namespace ui
 	private:
 		ui_rect_t                m_rect{};
 		ui_erect_t               m_erect{};
-		bool                     m_blocked{};
+		bool                     m_blocked;
 		std::vector<ui_notify_t> m_logs{};
 	};
 

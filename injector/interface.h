@@ -50,12 +50,12 @@ private:
 	LPDIRECT3D9           m_d3d9{};
 	LPDIRECT3DDEVICE9     m_device{};
 	D3DPRESENT_PARAMETERS m_present_params{};
-	std::string           m_window_name{};
-	std::string           m_class_name{};
+	std::string           m_window_name;
+	std::string           m_class_name;
 	int                   m_width{ 385 };
 	int                   m_height{ 120 };
-	int                   m_mouse_pos_x{},
-		                  m_mouse_pos_y{};
+	int                   m_mouse_pos_x,
+		                  m_mouse_pos_y;
 };
 
 inline Interface g_interface;
