@@ -254,6 +254,12 @@
     <ClCompile Include="lua_api.cpp">
       <Filter>luas</Filter>
     </ClCompile>
+    <ClCompile Include="..\external\aes\aes.cpp">
+      <Filter>external\aes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\aes\aes_clipboard.cpp">
+      <Filter>external\aes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="netvar_manager.h">
@@ -540,6 +546,12 @@
     <ClInclude Include="triggerbot.h">
       <Filter>features</Filter>
     </ClInclude>
+    <ClInclude Include="..\external\aes\aes.hpp">
+      <Filter>external\aes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external\aes\aes_clipboard.hpp">
+      <Filter>external\aes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="csgo">
@@ -643,6 +655,9 @@
     </Filter>
     <Filter Include="luas">
       <UniqueIdentifier>{ca31e01d-e3de-4f9b-82ef-ea8ecbdea381}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="external\aes">
+      <UniqueIdentifier>{eb802d17-e78d-4a83-b1d7-b1374c15a7ec}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

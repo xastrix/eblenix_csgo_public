@@ -11,6 +11,7 @@
 #include "events.h"
 
 #include <files.h>
+#include <aes_clipboard.hpp>
 
 static void init_enums(sol::environment& env);
 static void init_usertypes(sol::environment& env);
@@ -25,6 +26,7 @@ static void init_entity_list_functions(sol::environment& env);
 static void init_math_functions(sol::environment& env, sol::state_view state);
 static void init_surface_functions(sol::environment& env);
 static void init_util_functions(sol::environment& env);
+static void init_clipboard_functions(sol::environment& env);
 static void init_global_functions(sol::environment& env);
 static void init_lists(sol::environment& env);
 static void init_safe_env(sol::environment& env, sol::state_view state);
@@ -52,6 +54,7 @@ void c_lua_mgr::init_api(sol::state_view state)
 	init_math_functions(m_env, state);
 	init_surface_functions(m_env);
 	init_util_functions(m_env);
+	init_clipboard_functions(m_env);
 	init_global_functions(m_env);
 
 	init_lists(m_env);
@@ -750,6 +753,180 @@ static void init_util_functions(sol::environment& env)
 	});
 
 	env["util"] = table;
+}
+
+static void init_clipboard_functions(sol::environment& env)
+{
+	sol::table table = env.create();
+
+	table.set_function("register_format", [](const std::string& format) {
+		return RegisterClipboardFormatA(format.c_str());
+	});
+
+	table.set_function("aes_crypt", [](sol::this_state s, uint32_t format, const std::string& key, const std::string& plain_text) {
+		std::string src = "?.lua";
+		int line = -1;
+
+		lua_Debug ar;
+		if (lua_getstack(s, 1, &ar)) {
+			if (lua_getinfo(s, "Sl", &ar)) {
+				src = ar.source;
+				line = ar.currentline;
+			}
+		}
+
+		std::string path = (src[0] == '@') ? src.substr(1) : src;
+
+		if (key.length() != 32) {
+			Helpers::console_printf_with_prefix("[lua]", "%s:%i: Invalid aes key length (Must be 32)", path.c_str(), line);
+			return;
+		}
+
+		return aes_export_encrypted_to_clipboard(format, key, plain_text);
+	});
+
+	table.set_function("aes_decrypt", [](sol::this_state s, uint32_t format, const std::string& key) {
+		std::string src = "?.lua";
+		int line = -1;
+
+		lua_Debug ar;
+		if (lua_getstack(s, 1, &ar)) {
+			if (lua_getinfo(s, "Sl", &ar)) {
+				src = ar.source;
+				line = ar.currentline;
+			}
+		}
+
+		std::string path = (src[0] == '@') ? src.substr(1) : src;
+
+		if (key.length() != 32) {
+			Helpers::console_printf_with_prefix("[lua]", "%s:%i: Invalid aes key length (Must be 32)", path.c_str(), line);
+			return std::string{};
+		}
+
+		return aes_import_decrypted_from_clipboard(format, key);
+	});
+
+	table.set_function("get_data", [](sol::this_state s, uint32_t format) {
+		std::string ret;
+		std::string src = "?.lua";
+		int line = -1;
+
+		lua_Debug ar;
+		if (lua_getstack(s, 1, &ar)) {
+			if (lua_getinfo(s, "Sl", &ar)) {
+				src = ar.source;
+				line = ar.currentline;
+			}
+		}
+
+		std::string path = (src[0] == '@') ? src.substr(1) : src;
+
+		if (!OpenClipboard(nullptr)) {
+			Helpers::console_printf_with_prefix("[lua]", "%s:%i: Failed to open clipboard", path.c_str(), line);
+			return ret;
+		}
+
+		auto h = GetClipboardData(format);
+
+		if (h == nullptr) {
+			CloseClipboard();
+			Helpers::console_printf_with_prefix("[lua]", "%s:%i: GetClipboardData fail", path.c_str(), line);
+			return ret;
+		}
+
+		void* p = GlobalLock(h);
+
+		if (p == nullptr) {
+			CloseClipboard();
+			Helpers::console_printf_with_prefix("[lua]", "%s:%i: GlobalLock fail", path.c_str(), line);
+			return ret;
+		}
+
+		ret = (char*)p;
+
+		GlobalUnlock(h);
+		CloseClipboard();
+
+		return ret;
+	});
+
+	table.set_function("set_data", [](sol::this_state s, uint32_t format, const std::string& data) {
+		std::string src = "?.lua";
+		int line = -1;
+
+		lua_Debug ar;
+		if (lua_getstack(s, 1, &ar)) {
+			if (lua_getinfo(s, "Sl", &ar)) {
+				src = ar.source;
+				line = ar.currentline;
+			}
+		}
+
+		std::string path = (src[0] == '@') ? src.substr(1) : src;
+
+		if (!OpenClipboard(nullptr)) {
+			Helpers::console_printf_with_prefix("[lua]", "%s:%i: Failed to open clipboard", path.c_str(), line);
+			return;
+		}
+
+		if (!EmptyClipboard()) {
+			CloseClipboard();
+			Helpers::console_printf_with_prefix("[lua]", "%s:%i: Failed to empty clipboard", path.c_str(), line);
+			return;
+		}
+
+		auto h = GlobalAlloc(GMEM_MOVEABLE, data.size() + 1);
+		if (h == nullptr) {
+			CloseClipboard();
+			Helpers::console_printf_with_prefix("[lua]", "%s:%i: GlobalAlloc fail", path.c_str(), line);
+			return;
+		}
+
+		void* p = GlobalLock(h);
+		memcpy(p, data.c_str(), data.size() + 1);
+
+		GlobalUnlock(h);
+
+		if (SetClipboardData(format, h) == nullptr) {
+			GlobalFree(h);
+			CloseClipboard();
+			Helpers::console_printf_with_prefix("[lua]", "%s:%i: SetClipboardData fail", path.c_str(), line);
+			return;
+		}
+
+		CloseClipboard();
+	});
+
+	table.set_function("set_empty", [](sol::this_state s) {
+		std::string src = "?.lua";
+		int line = -1;
+
+		lua_Debug ar;
+		if (lua_getstack(s, 1, &ar)) {
+			if (lua_getinfo(s, "Sl", &ar)) {
+				src = ar.source;
+				line = ar.currentline;
+			}
+		}
+
+		std::string path = (src[0] == '@') ? src.substr(1) : src;
+
+		if (!OpenClipboard(nullptr)) {
+			Helpers::console_printf_with_prefix("[lua]", "%s:%i: Failed to open clipboard", path.c_str(), line);
+			return;
+		}
+
+		if (!EmptyClipboard()) {
+			CloseClipboard();
+			Helpers::console_printf_with_prefix("[lua]", "%s:%i: Failed to empty clipboard", path.c_str(), line);
+			return;
+		}
+
+		CloseClipboard();
+	});
+
+	env["clip"] = table;
 }
 
 static void init_global_functions(sol::environment& env)

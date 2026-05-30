@@ -47,14 +47,14 @@
     <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)obj\$(ProjectName)\$(Configuration)\</IntDir>
     <LibraryPath>$(DXSDK_DIR)Lib\x86;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)external\minhook\include;$(SolutionDir)external\files;$(SolutionDir)external\exception_handler;$(SolutionDir)external\lua;$(SolutionDir)external\sol;$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)external\minhook\include;$(SolutionDir)external\files;$(SolutionDir)external\exception_handler;$(SolutionDir)external\lua;$(SolutionDir)external\sol;$(SolutionDir)external\aes;$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
     <TargetName>$(ProjectName)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)obj\$(ProjectName)\$(Configuration)\</IntDir>
     <LibraryPath>$(DXSDK_DIR)Lib\x86;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)external\minhook\include;$(SolutionDir)external\files;$(SolutionDir)external\exception_handler;$(SolutionDir)external\lua;$(SolutionDir)external\sol;$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)external\minhook\include;$(SolutionDir)external\files;$(SolutionDir)external\exception_handler;$(SolutionDir)external\lua;$(SolutionDir)external\sol;$(SolutionDir)external\aes;$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
     <TargetName>$(ProjectName)</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -99,6 +99,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\external\aes\aes.cpp" />
+    <ClCompile Include="..\external\aes\aes_clipboard.cpp" />
     <ClCompile Include="..\external\exception_handler\exception_handler.cpp" />
     <ClCompile Include="..\external\files\files.cpp" />
     <ClCompile Include="..\external\lua\lapi.c" />
@@ -186,6 +188,8 @@
     <ClCompile Include="world_esp.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\external\aes\aes.hpp" />
+    <ClInclude Include="..\external\aes\aes_clipboard.hpp" />
     <ClInclude Include="..\external\exception_handler\exception_handler.hpp" />
     <ClInclude Include="..\external\files\files.h" />
     <ClInclude Include="..\external\lua\lapi.h" />
