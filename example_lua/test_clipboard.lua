@@ -9,7 +9,7 @@ local key    = "YOU-NEED-TO-CREATE-A-32-CHAR-KEY"
 -- Encrypt the text using the custom format and the key
 clip.aes_crypt(format, key, "Encrypted message!")
 
-h = register_callback(cb.on_present, function()
+h = register_callback(cb.on_frame_stage_notify, function()
 	print("==== *LUA* Testing clipboard ===============================\n")
 
 	-- Print the decrypted text to the console
@@ -26,5 +26,5 @@ h = register_callback(cb.on_present, function()
 	clip.set_empty()
 
 	-- Unregister the callback to prevent infinite loops
-	unregister_callback(cb.on_present, h)
+	unregister_callback(cb.on_frame_stage_notify, h)
 end)

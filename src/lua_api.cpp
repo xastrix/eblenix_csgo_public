@@ -15,7 +15,7 @@
 
 static void init_enums(sol::environment& env);
 static void init_usertypes(sol::environment& env);
-static void init_globals_variables(sol::environment& env);
+static void init_global_vars_functions(sol::environment& env);
 static void init_cfg_functions(sol::environment& env);
 static void init_convar_functions(sol::environment& env);
 static void init_cvar_functions(sol::environment& env);
@@ -42,8 +42,7 @@ void c_lua_mgr::init_api(sol::state_view state)
 	init_enums(m_env);
 	init_usertypes(m_env);
 
-	init_globals_variables(m_env);
-
+	init_global_vars_functions(m_env);
 	init_cfg_functions(m_env);
 	init_convar_functions(m_env);
 	init_cvar_functions(m_env);
@@ -290,18 +289,18 @@ static void init_usertypes(sol::environment& env)
 	);
 }
 
-static void init_globals_variables(sol::environment& env)
+static void init_global_vars_functions(sol::environment& env)
 {
 	sol::table table = env.create();
 
-	table["frame_count"]        = g_cs->m_globals->frame_count;
-	table["frame_time"]         = g_cs->m_globals->frame_time;
-	table["absolute_frametime"] = g_cs->m_globals->absolute_frametime;
-	table["cur_time"]           = g_cs->m_globals->cur_time;
-	table["real_time"]          = g_cs->m_globals->real_time;
-	table["interval_per_tick"]  = g_cs->m_globals->interval_per_tick;
-	table["tick_count"]         = g_cs->m_globals->tick_count;
-	table["max_clients"]        = g_cs->m_globals->max_clients;
+	table["get_frame_count"]        = []() { return g_cs->m_globals->frame_count; };
+	table["get_frame_time"]         = []() { return g_cs->m_globals->frame_time; };
+	table["get_absolute_frametime"] = []() { return g_cs->m_globals->absolute_frametime; };
+	table["get_cur_time"]           = []() { return g_cs->m_globals->cur_time; };
+	table["get_real_time"]          = []() { return g_cs->m_globals->real_time; };
+	table["get_interval_per_tick"]  = []() { return g_cs->m_globals->interval_per_tick; };
+	table["get_tick_count"]         = []() { return g_cs->m_globals->tick_count; };
+	table["get_max_clients"]        = []() { return g_cs->m_globals->max_clients; };
 
 	env["globals"] = table;
 }
@@ -933,17 +932,17 @@ static void init_clipboard_functions(sol::environment& env)
 
 static void init_global_functions(sol::environment& env)
 {
-	env["ispanic"]                = GLOBAL(b_flags[BF_PANIC]);
+	env["ispanic"]                = []() { return GLOBAL(b_flags[BF_PANIC]); };
 	
-	env["menu_opened"]            = g_ui->get_menu_state();
-	env["console_opened"]         = GLOBAL(b_flags[BF_CONSOLE_OPENED]);
-	env["chat_opened"]            = GLOBAL(b_flags[BF_CHAT_OPENED]);
+	env["menu_opened"]            = []() { return g_ui->get_menu_state(); };
+	env["console_opened"]         = []() { return GLOBAL(b_flags[BF_CONSOLE_OPENED]); };
+	env["chat_opened"]            = []() { return GLOBAL(b_flags[BF_CHAT_OPENED]); };
 
-	env["hours_played"]           = GLOBAL(i_flags[IF_HOURS_IN_GAME]);
+	env["hours_played"]           = []() { return GLOBAL(i_flags[IF_HOURS_IN_GAME]); };
 
-	env["mouse_pos_x"]            = g_input->get_mouse_pos_x();
-	env["mouse_pos_y"]            = g_input->get_mouse_pos_y();
-	env["mouse_wheel"]            = g_input->get_mouse_wheel_accumlate();
+	env["mouse_pos_x"]            = []() { return g_input->get_mouse_pos_x(); };
+	env["mouse_pos_y"]            = []() { return g_input->get_mouse_pos_y(); };
+	env["mouse_wheel"]            = []() { return g_input->get_mouse_wheel_accumlate(); };
 
 	env["vec2"]                   = [](float x, float y) { return vec2(x, y); };
 	env["vec3"]                   = [](float x, float y, float z) { return vec3(x, y, z); };
