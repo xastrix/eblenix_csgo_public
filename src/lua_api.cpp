@@ -378,19 +378,19 @@ static void init_cvar_functions(sol::environment& env)
 {
 	sol::table table = env.create();
 
-	table.set_function("get_int", [](convar* c) {
+	table.set_function("get_int", [](c_convar* c) {
 		return c->get_int();
 	});
 
-	table.set_function("get_float", [](convar* c) {
+	table.set_function("get_float", [](c_convar* c) {
 		return c->get_float();
 	});
 
-	table.set_function("set_int", [](convar* c, int v) {
+	table.set_function("set_int", [](c_convar* c, int v) {
 		return c->set_value(v);
 	});
 
-	table.set_function("set_float", [](convar* c, float v) {
+	table.set_function("set_float", [](c_convar* c, float v) {
 		return c->set_value(v);
 	});
 

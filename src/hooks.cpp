@@ -361,8 +361,8 @@ static bool __fastcall is_connected_h(void* _ecx, void*)
 	return ret;
 }
 
-static bool(__thiscall *o_sv_cheats_boolean)(convar*);
-static bool __fastcall sv_cheats_boolean_h(convar* convar, int)
+static bool(__thiscall *o_sv_cheats_boolean)(c_convar*);
+static bool __fastcall sv_cheats_boolean_h(c_convar* convar, int)
 {
 	if (_ReturnAddress() == SIG(S_CAM_THINK))
 		return true;
@@ -503,7 +503,7 @@ void c_hooks::init()
 	m_hooks[HK_ISCONNECTED].hook<c_engine_client*, IS_CONNECTED_FN_INDEX>(g_cs->m_engine,
 		is_connected_h, reinterpret_cast<void**>(&o_is_connected));
 
-	m_hooks[HK_SVCHEATSBOOLEAN].hook<convar*, SV_CHEATS_BOOLEAN_FN_INDEX>(g_cs->m_cvar->get_convar("sv_cheats"),
+	m_hooks[HK_SVCHEATSBOOLEAN].hook<c_convar*, SV_CHEATS_BOOLEAN_FN_INDEX>(g_cs->m_cvar->get_convar("sv_cheats"),
 		sv_cheats_boolean_h, reinterpret_cast<void**>(&o_sv_cheats_boolean));
 
 	m_hooks[HK_DRAWSETCOLOR].hook<c_surface_draw_manager*, DRAW_SET_COLOR_FN_INDEX>(g_cs->m_surface,
