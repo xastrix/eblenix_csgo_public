@@ -82,6 +82,8 @@ static void __stdcall init(HMODULE I)
 #ifdef LUA_ENABLED
 		// register a lua callback for the cheat load event
 		for (auto _ : LUA_CALLBACK(CL_ON_INIT)) {
+			if (_.nulled) continue;
+
 			auto result = _.fn();
 			if (!result.valid()) {
 				sol::error err = result;

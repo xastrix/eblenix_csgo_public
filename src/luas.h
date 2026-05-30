@@ -25,6 +25,7 @@ enum _callback_list {
 	CL_ON_PAINT_TRAVERSE,
 	CL_ON_WND_PROC,
 	CL_ON_GAME_EVENTS,
+	CL_ON_FRAME_STAGE,
 	maxCallbacks,
 };
 

@@ -152,7 +152,9 @@ static void init_enums(sol::environment& env)
 		callback_id_to_string(CL_ON_CREATE_MOVE),    CL_ON_CREATE_MOVE,
 		callback_id_to_string(CL_ON_PAINT_TRAVERSE), CL_ON_PAINT_TRAVERSE,
 		callback_id_to_string(CL_ON_WND_PROC),       CL_ON_WND_PROC,
-		callback_id_to_string(CL_ON_GAME_EVENTS),    CL_ON_GAME_EVENTS);
+		callback_id_to_string(CL_ON_GAME_EVENTS),    CL_ON_GAME_EVENTS,
+		callback_id_to_string(CL_ON_FRAME_STAGE),    CL_ON_FRAME_STAGE
+	);
 
 	env.new_enum("text_flags",
 		"text_none",                                 TEXT_NONE,
@@ -1026,6 +1028,9 @@ static std::string callback_id_to_string(int id)
 	}
 	case CL_ON_GAME_EVENTS: {
 		return "on_game_events";
+	}
+	case CL_ON_FRAME_STAGE: {
+		return "on_frame_stage_notify";
 	}
 	}
 

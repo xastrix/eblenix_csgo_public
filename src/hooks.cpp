@@ -424,6 +424,24 @@ static void __stdcall draw_set_color_h(int r, int g, int b, int a)
 	return o_draw_set_color(g_cs->m_surface, r, g, b, a);
 }
 
+static void(__thiscall *o_frame_stage_notify)(c_base_client*, int);
+static void __stdcall frame_stage_notify_h(int stage)
+{
+#ifdef LUA_ENABLED
+	for (auto _ : LUA_CALLBACK(CL_ON_FRAME_STAGE)) {
+		if (_.nulled) continue;
+
+		auto result = _.fn(stage);
+		if (!result.valid()) {
+			sol::error err = result;
+			Helpers::console_printf_with_prefix("[lua]", "%s", err.what());
+		}
+	}
+#endif
+
+	return o_frame_stage_notify(g_cs->m_client, stage);
+}
+
 static void(__thiscall *o_level_init_post_entity)(c_base_client*);
 static void __fastcall level_init_post_entity_h()
 {
@@ -490,6 +508,9 @@ void c_hooks::init()
 
 	m_hooks[HK_DRAWSETCOLOR].hook<c_surface_draw_manager*, DRAW_SET_COLOR_FN_INDEX>(g_cs->m_surface,
 		draw_set_color_h, reinterpret_cast<void**>(&o_draw_set_color));
+
+	m_hooks[HK_FRAMESTAGENOTIFY].hook<c_base_client*, FRAME_STAGE_NOTIFY_FN_INDEX>(g_cs->m_client,
+		frame_stage_notify_h, reinterpret_cast<void**>(&o_frame_stage_notify));
 
 	m_hooks[HK_LEVELINITPOSTENTITY].hook<c_base_client*, LEVEL_INIT_POST_ENTITY_FN_INDEX>(g_cs->m_client,
 		level_init_post_entity_h, reinterpret_cast<void**>(&o_level_init_post_entity));

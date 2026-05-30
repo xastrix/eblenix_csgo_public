@@ -49,6 +49,7 @@ enum fn_num {
 	IS_CONNECTED_FN_INDEX                = 27,
 	SV_CHEATS_BOOLEAN_FN_INDEX           = 13,
 	DRAW_SET_COLOR_FN_INDEX              = 15,
+	FRAME_STAGE_NOTIFY_FN_INDEX          = 37,
 	LEVEL_INIT_POST_ENTITY_FN_INDEX      = 6,
 	SHUTDOWN_FN_INDEX                    = 4,
 };
