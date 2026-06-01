@@ -53,6 +53,12 @@ private:
 	int     m_reason;
 };
 
+struct module_t {
+	uintptr_t m_base_address;
+	std::string m_name;
+	size_t m_size;
+};
+
 struct box {
 	box() = default;
 	box(int x, int y, int w, int h) : x(x), y(y), w(w), h(h) {};
@@ -130,6 +136,9 @@ namespace Helpers
 
 	/* Returns the current local time as a formatted string "HH:MM:SS" */
 	std::string get_current_time();
+
+	/* Returns the module information by name (base address, name, size) */
+	module_t get_module(const std::string& name);
 
 	/* RAII class to temporarily change memory protection of a specified memory region
 	   Restores original protection when the object is destroyed */

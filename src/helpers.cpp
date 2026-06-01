@@ -5,6 +5,8 @@
 #include "signatures.h"
 #include "math.h"
 
+#include <psapi.h>
+
 using line_goes_through_smoke = bool(__cdecl*)(vec3, vec3);
 
 bool Helpers::is_pistol(c_base_weapon* weapon)
@@ -493,4 +495,36 @@ std::string Helpers::get_current_time()
 		local_time->tm_hour, local_time->tm_min, local_time->tm_sec);
 
 	return buf;
+}
+
+module_t Helpers::get_module(const std::string& name)
+{
+	module_t ret;
+	MODULEINFO mod_info{ 0 };
+
+	auto mod = GetModuleHandleA(name.empty() ? nullptr : name.c_str());
+	if (!mod)
+		return ret;
+
+	ret.m_base_address = reinterpret_cast<uintptr_t>(mod);
+	
+	char path[MAX_PATH];
+	if (GetModuleFileNameA(mod, path, MAX_PATH)) {
+		std::string full_path = path;
+
+		size_t last_slash = full_path.find_last_of("\\/");
+
+		if (last_slash != std::string::npos)
+			ret.m_name = full_path.substr(last_slash + 1);
+
+		else
+			ret.m_name = full_path;
+	}
+	else
+		ret.m_name = name;
+
+	if (GetModuleInformation(GetCurrentProcess(), mod, &mod_info, sizeof(mod_info)))
+		ret.m_size = static_cast<size_t>(mod_info.SizeOfImage);
+
+	return ret;
 }

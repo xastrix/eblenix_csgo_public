@@ -27,6 +27,7 @@ static void init_math_functions(sol::environment& env, sol::state_view state);
 static void init_surface_functions(sol::environment& env);
 static void init_util_functions(sol::environment& env);
 static void init_clipboard_functions(sol::environment& env);
+static void init_memory_functions(sol::environment& env);
 static void init_global_functions(sol::environment& env);
 static void init_lists(sol::environment& env);
 static void init_safe_env(sol::environment& env, sol::state_view state);
@@ -54,6 +55,7 @@ void c_lua_mgr::init_api(sol::state_view state)
 	init_surface_functions(m_env);
 	init_util_functions(m_env);
 	init_clipboard_functions(m_env);
+	init_memory_functions(m_env);
 	init_global_functions(m_env);
 
 	init_lists(m_env);
@@ -286,6 +288,12 @@ static void init_usertypes(sol::environment& env)
 		"side_move",     &user_cmd_t::m_sidemove,
 		"up_move",       &user_cmd_t::m_upmove,
 		"buttons",       &user_cmd_t::m_buttons
+	);
+
+	env.new_usertype<module_t>("module",
+		"name",          &module_t::m_name,
+		"addr",          sol::readonly(&module_t::m_base_address),
+		"size",          sol::readonly(&module_t::m_size)
 	);
 }
 
@@ -928,6 +936,57 @@ static void init_clipboard_functions(sol::environment& env)
 	});
 
 	env["clip"] = table;
+}
+
+static void init_memory_functions(sol::environment& env)
+{
+	sol::table table = env.create();
+
+	table.set_function("get_module", [](const std::string& name) {
+		return Helpers::get_module(name);
+	});
+
+	table.set_function("r8", [](const uintptr_t a) {
+		return Helpers::read<int8_t>(a);
+	});
+
+	table.set_function("ru8", [](const uintptr_t a) {
+		return Helpers::read<uint8_t>(a);
+	});
+
+	table.set_function("r16", [](const uintptr_t a) {
+		return Helpers::read<int16_t>(a);
+	});
+
+	table.set_function("ru16", [](const uintptr_t a) {
+		return Helpers::read<uint16_t>(a);
+	});
+
+	table.set_function("r32", [](const uintptr_t a) {
+		return Helpers::read<int32_t>(a);
+	});
+
+	table.set_function("rf32", [](const uintptr_t a) {
+		return Helpers::read<float>(a);
+	});
+
+	table.set_function("ru32", [](const uintptr_t a) {
+		return Helpers::read<uint32_t>(a);
+	});
+
+	table.set_function("rd32", [](const uintptr_t a) {
+		return Helpers::read<double>(a);
+	});
+
+	table.set_function("rb", [](const uintptr_t a) {
+		return Helpers::read<bool>(a);
+	});
+
+	table.set_function("rs", [](const uintptr_t a) {
+		return std::string(reinterpret_cast<const char*>(a));
+	});
+
+	env["mem"] = table;
 }
 
 static void init_global_functions(sol::environment& env)
