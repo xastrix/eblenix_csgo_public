@@ -229,6 +229,7 @@
     <ClInclude Include="..\external\minhook\src\trampoline.h" />
     <ClInclude Include="..\external\sol\sol.hpp" />
     <ClInclude Include="color.h" />
+    <ClInclude Include="command_line.h" />
     <ClInclude Include="events.h" />
     <ClInclude Include="font.h" />
     <ClInclude Include="hud.h" />

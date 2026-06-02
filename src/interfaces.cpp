@@ -25,6 +25,8 @@ void c_csgo::init()
 	m_input = Helpers::read<input_t*>(reinterpret_cast<uintptr_t>(SIG(S_INPUT)));
 	m_weapon_system = Helpers::read<c_weapon_system*>(reinterpret_cast<uintptr_t>(SIG(S_WEAPON_SYSTEM)));
 	m_glow_manager = Helpers::read_ptr<c_glow_manager*>(*reinterpret_cast<uintptr_t*>(SIG(S_GLOW_MANAGER)));
+
+	m_cmd_line = Helpers::get_export<command_line_t>(GLOBAL(module_list[tier0DLL]), "CommandLine")();
 }
 
 void c_csgo::init_local(const local_t& local)

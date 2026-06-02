@@ -16,6 +16,7 @@
 #include "d3d9.h"
 #include "weapon_system.h"
 #include "glow_manager.h"
+#include "command_line.h"
 
 #include "i_input.h"
 
@@ -42,6 +43,7 @@ public:
 	input_t* m_input;
 	c_weapon_system* m_weapon_system;
 	c_glow_manager* m_glow_manager;
+	c_command_line* m_cmd_line;
 };
 
 struct local_t {

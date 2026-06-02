@@ -552,6 +552,9 @@
     <ClInclude Include="..\external\aes\aes_clipboard.hpp">
       <Filter>external\aes</Filter>
     </ClInclude>
+    <ClInclude Include="command_line.h">
+      <Filter>csgo\engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="csgo">

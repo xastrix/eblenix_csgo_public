@@ -27,6 +27,7 @@ static void init_math_functions(sol::environment& env, sol::state_view state);
 static void init_surface_functions(sol::environment& env);
 static void init_clipboard_functions(sol::environment& env);
 static void init_memory_functions(sol::environment& env);
+static void init_cmdl_functions(sol::environment& env);
 static void init_global_functions(sol::environment& env);
 static void init_lists(sol::environment& env);
 static void init_safe_env(sol::environment& env, sol::state_view state);
@@ -54,6 +55,7 @@ void c_lua_mgr::init_api(sol::state_view state)
 	init_surface_functions(m_env);
 	init_clipboard_functions(m_env);
 	init_memory_functions(m_env);
+	init_cmdl_functions(m_env);
 	init_global_functions(m_env);
 
 	init_lists(m_env);
@@ -974,6 +976,25 @@ static void init_memory_functions(sol::environment& env)
 	});
 
 	env["mem"] = table;
+}
+
+static void init_cmdl_functions(sol::environment& env)
+{
+	sol::table table = env.create();
+
+	table.set_function("get_cmd_line", []() {
+		return g_cs->m_cmd_line->get_cmd_line();
+	});
+
+	table.set_function("get_parm_count", []() {
+		return g_cs->m_cmd_line->parm_count();
+	});
+
+	table.set_function("has_parm", [](const std::string& parm) {
+		return g_cs->m_cmd_line->has_parm(parm.c_str());
+	});
+
+	env["cmdl"] = table;
 }
 
 static void init_global_functions(sol::environment& env)

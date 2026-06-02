@@ -15,6 +15,7 @@ enum _module_list {
 	vguiMatSurfaceDLL,
 	materialsystemDLL,
 	serverBrowserDLL,
+	tier0DLL,
 	maxModules,
 };
 
@@ -84,6 +85,7 @@ namespace g
 		"vguimatsurface.dll",
 		"materialsystem.dll",
 		"serverbrowser.dll",
+		"tier0.dll",
 	};
 
 	void handle_playing_time(const std::chrono::steady_clock::time_point start_time, int interval);
