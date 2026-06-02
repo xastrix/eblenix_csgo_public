@@ -25,7 +25,6 @@ static void init_entity_functions(sol::environment& env);
 static void init_entity_list_functions(sol::environment& env);
 static void init_math_functions(sol::environment& env, sol::state_view state);
 static void init_surface_functions(sol::environment& env);
-static void init_util_functions(sol::environment& env);
 static void init_clipboard_functions(sol::environment& env);
 static void init_memory_functions(sol::environment& env);
 static void init_global_functions(sol::environment& env);
@@ -53,7 +52,6 @@ void c_lua_mgr::init_api(sol::state_view state)
 	init_entity_list_functions(m_env);
 	init_math_functions(m_env, state);
 	init_surface_functions(m_env);
-	init_util_functions(m_env);
 	init_clipboard_functions(m_env);
 	init_memory_functions(m_env);
 	init_global_functions(m_env);
@@ -749,21 +747,6 @@ static void init_surface_functions(sol::environment& env)
 	env["surface"] = table;
 }
 
-static void init_util_functions(sol::environment& env)
-{
-	sol::table table = env.create();
-
-	table.set_function("find_pattern", [](const std::string& module_name, const std::string& signature) {
-		return g_sig->scan_sig(module_name, signature);
-	});
-
-	table.set_function("process_keybd_msg", [](UINT m, WPARAM w) {
-		return g_input->process_keybd_message(m, w);
-	});
-
-	env["util"] = table;
-}
-
 static void init_clipboard_functions(sol::environment& env)
 {
 	sol::table table = env.create();
@@ -946,6 +929,10 @@ static void init_memory_functions(sol::environment& env)
 		return Helpers::get_module(name);
 	});
 
+	table.set_function("pattern_scan", [](const std::string& module_name, const std::string& signature) {
+		return reinterpret_cast<uintptr_t>(g_sig->scan_sig(module_name, signature));
+	});
+
 	table.set_function("r8", [](const uintptr_t a) {
 		return Helpers::read<int8_t>(a);
 	});
@@ -1011,6 +998,7 @@ static void init_global_functions(sol::environment& env)
 
 	env["bbox"]                   = [](int x, int y, int w, int h) { return box(x, y, w, h); };
 
+	env["process_keybd_msg"]      = [](UINT m, WPARAM w) { return g_input->process_keybd_message(m, w); };
 	env["unload"]                 = []() { return g::unload(); };
 	env["print"]                  = [](sol::this_state s, const char* msg, sol::variadic_args as) {
 		sol::state_view state{ s };

@@ -20,8 +20,8 @@ register_callback(cb.on_wndproc, function(m, w, l)
                 local vk = r == 0 and vk_up or vk_down
 
 				-- function for simulating key presses
-                util.process_keybd_msg(wm_keydown, vk)
-                util.process_keybd_msg(wm_keyup, vk)
+                process_keybd_msg(wm_keydown, vk)
+                process_keybd_msg(wm_keyup, vk)
 
                 last_time = current_time
             end
