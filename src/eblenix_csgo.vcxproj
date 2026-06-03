@@ -152,7 +152,6 @@
     <ClCompile Include="events.cpp" />
     <ClCompile Include="font.cpp" />
     <ClCompile Include="math.cpp" />
-    <ClCompile Include="netvar_manager.cpp" />
     <ClCompile Include="game_event_mgr.cpp" />
     <ClCompile Include="render_view.cpp" />
     <ClCompile Include="spectators.cpp" />
@@ -242,7 +241,6 @@
     <ClInclude Include="var_defines.h" />
     <ClInclude Include="vec2.h" />
     <ClInclude Include="vec3.h" />
-    <ClInclude Include="netvar_manager.h" />
     <ClInclude Include="vec4.h" />
     <ClInclude Include="vec_util.h" />
     <ClInclude Include="view_setup.h" />

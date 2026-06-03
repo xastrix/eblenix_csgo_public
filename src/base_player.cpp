@@ -1,7 +1,6 @@
 #include "base_entity.h"
 
 #include "signatures.h"
-#include "netvar_manager.h"
 #include "interfaces.h"
 #include "math.h"
 #include "helpers.h"
@@ -9,19 +8,19 @@
 int c_base_player::get_health()
 {
 	return Helpers::read<int>(uintptr_t(this) +
-		netvar_manager::get_address("DT_CSPlayer::m_iHealth"));
+		Helpers::get_netvar("DT_CSPlayer::m_iHealth"));
 }
 
 vec3 c_base_player::get_velocity()
 {
 	return Helpers::read<vec3>(uintptr_t(this) +
-		netvar_manager::get_address("DT_BasePlayer::m_vecVelocity[0]"));
+		Helpers::get_netvar("DT_BasePlayer::m_vecVelocity[0]"));
 }
 
 vec3 c_base_player::get_view_offset()
 {
 	return Helpers::read<vec3>(uintptr_t(this) +
-		netvar_manager::get_address("DT_BasePlayer::m_vecViewOffset[0]"));
+		Helpers::get_netvar("DT_BasePlayer::m_vecViewOffset[0]"));
 }
 
 vec3 c_base_player::get_eye_pos()
@@ -32,31 +31,31 @@ vec3 c_base_player::get_eye_pos()
 int c_base_player::get_tick_base()
 {
 	return Helpers::read<int>(uintptr_t(this) +
-		netvar_manager::get_address("DT_CSPlayer::m_nTickBase"));
+		Helpers::get_netvar("DT_CSPlayer::m_nTickBase"));
 }
 
 int c_base_player::get_flags()
 {
 	return Helpers::read<int>(uintptr_t(this) +
-		netvar_manager::get_address("DT_CSPlayer::m_fFlags"));
+		Helpers::get_netvar("DT_CSPlayer::m_fFlags"));
 }
 
 bool c_base_player::is_life_state()
 {
 	return Helpers::read<int>(uintptr_t(this) +
-		netvar_manager::get_address("DT_CSPlayer::m_lifeState")) == 0;
+		Helpers::get_netvar("DT_CSPlayer::m_lifeState")) == 0;
 }
 
 int c_base_player::get_move_type()
 {
-	static int type = netvar_manager::get_address("DT_BaseEntity::m_nRenderMode") + 1;
+	static int type = Helpers::get_netvar("DT_BaseEntity::m_nRenderMode") + 1;
 	return Helpers::read<int>(uintptr_t(this) + type);
 }
 
 c_base_weapon* c_base_player::get_active_weapon()
 {
 	auto weapon = Helpers::read<uintptr_t>(uintptr_t(this)
-		+ netvar_manager::get_address("DT_CSPlayer::m_hActiveWeapon")) & 0xFFF;
+		+ Helpers::get_netvar("DT_CSPlayer::m_hActiveWeapon")) & 0xFFF;
 
 	if (!weapon)
 		return nullptr;
@@ -124,31 +123,31 @@ bool c_base_player::is_moving()
 bool c_base_player::has_gun_game_immunity()
 {
 	return Helpers::read<bool>(uintptr_t(this) +
-		netvar_manager::get_address("DT_CSPlayer::m_bGunGameImmunity"));
+		Helpers::get_netvar("DT_CSPlayer::m_bGunGameImmunity"));
 }
 
 int c_base_player::hitbox_set()
 {
 	return Helpers::read<int>(uintptr_t(this) +
-		netvar_manager::get_address("DT_BasePlayer::m_nHitboxSet"));
+		Helpers::get_netvar("DT_BasePlayer::m_nHitboxSet"));
 }
 
 vec3 c_base_player::aim_punch_angle()
 {
 	return Helpers::read<vec3>(uintptr_t(this) +
-		netvar_manager::get_address("DT_BasePlayer::m_aimPunchAngle"));
+		Helpers::get_netvar("DT_BasePlayer::m_aimPunchAngle"));
 }
 
 bool c_base_player::is_scoped()
 {
 	return Helpers::read<bool>(uintptr_t(this) +
-		netvar_manager::get_address("DT_CSPlayer::m_bIsScoped"));
+		Helpers::get_netvar("DT_CSPlayer::m_bIsScoped"));
 }
 
 float c_base_player::get_flash_duration()
 {
 	return Helpers::read<float>(uintptr_t(this) +
-		netvar_manager::get_address("DT_CSPlayer::m_flFlashDuration") - 0xC);
+		Helpers::get_netvar("DT_CSPlayer::m_flFlashDuration") - 0xC);
 }
 
 bool c_base_player::is_flashed()
@@ -162,25 +161,25 @@ bool c_base_player::is_flashed()
 int c_base_player::get_armor_value()
 {
 	return Helpers::read<int>(uintptr_t(this) +
-		netvar_manager::get_address("DT_CSPlayer::m_ArmorValue"));
+		Helpers::get_netvar("DT_CSPlayer::m_ArmorValue"));
 }
 
 vec3 c_base_player::get_eye_angles()
 {
 	return Helpers::read<vec3>(uintptr_t(this) +
-		netvar_manager::get_address("DT_CSPlayer::m_angEyeAngles"));
+		Helpers::get_netvar("DT_CSPlayer::m_angEyeAngles"));
 }
 
 bool c_base_player::has_helmet()
 {
 	return Helpers::read<bool>(uintptr_t(this) +
-		netvar_manager::get_address("DT_CSPlayer::m_bHasHelmet"));
+		Helpers::get_netvar("DT_CSPlayer::m_bHasHelmet"));
 }
 
 bool c_base_player::has_defuser()
 {
 	return Helpers::read<bool>(uintptr_t(this) +
-		netvar_manager::get_address("DT_CSPlayer::m_bHasDefuser"));
+		Helpers::get_netvar("DT_CSPlayer::m_bHasDefuser"));
 }
 
 bool c_base_player::has_c4()
@@ -194,23 +193,23 @@ bool c_base_player::has_c4()
 int c_base_player::get_cash()
 {
 	return Helpers::read<int>(uintptr_t(this) +
-		netvar_manager::get_address("DT_CSPlayer::m_iAccount"));
+		Helpers::get_netvar("DT_CSPlayer::m_iAccount"));
 }
 
 bool c_base_player::is_defusing()
 {
 	return Helpers::read<bool>(uintptr_t(this) +
-		netvar_manager::get_address("DT_CSPlayer::m_bIsDefusing"));
+		Helpers::get_netvar("DT_CSPlayer::m_bIsDefusing"));
 }
 
 float c_base_player::get_duck_amount()
 {
 	return Helpers::read<float>(uintptr_t(this) +
-		netvar_manager::get_address("DT_CSPlayer::m_flDuckAmount"));
+		Helpers::get_netvar("DT_CSPlayer::m_flDuckAmount"));
 }
 
 unsigned long c_base_player::get_observer_target()
 {
 	return Helpers::read<unsigned long>(uintptr_t(this) +
-		netvar_manager::get_address("DT_BasePlayer::m_hObserverTarget"));
+		Helpers::get_netvar("DT_BasePlayer::m_hObserverTarget"));
 }

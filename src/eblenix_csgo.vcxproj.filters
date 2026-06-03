@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="netvar_manager.cpp">
-      <Filter>csgo\netvar_manager</Filter>
-    </ClCompile>
     <ClCompile Include="signatures.cpp">
       <Filter>csgo\signatures</Filter>
     </ClCompile>
@@ -262,9 +259,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="netvar_manager.h">
-      <Filter>csgo\netvar_manager</Filter>
-    </ClInclude>
     <ClInclude Include="signatures.h">
       <Filter>csgo\signatures</Filter>
     </ClInclude>
@@ -574,9 +568,6 @@
     </Filter>
     <Filter Include="csgo\signatures">
       <UniqueIdentifier>{c5d5b8fc-2558-46af-ab9c-ab23c1badec2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="csgo\netvar_manager">
-      <UniqueIdentifier>{81a8e153-bdd1-4c44-93f1-39271e8c72e8}</UniqueIdentifier>
     </Filter>
     <Filter Include="csgo\vgui">
       <UniqueIdentifier>{3e03b735-d874-4354-a41c-f48316e9f9ba}</UniqueIdentifier>

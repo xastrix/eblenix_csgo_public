@@ -140,6 +140,9 @@ namespace Helpers
 	/* Returns the module information by name (base address, name, size) */
 	module_t get_module(const std::string& name);
 
+	/* Returns the netvar offset by its name ("Table::Prop") */
+	uintptr_t get_netvar(const std::string& netvar);
+
 	/* RAII class to temporarily change memory protection of a specified memory region
 	   Restores original protection when the object is destroyed */
 	struct unprotect_t {

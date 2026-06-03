@@ -1,6 +1,5 @@
 #include "base_entity.h"
 
-#include "netvar_manager.h"
 #include "helpers.h"
 
 c_client_renderable* c_base_entity::get_renderable()
@@ -28,7 +27,7 @@ bool c_base_entity::get_dormant()
 int c_base_entity::get_team_num()
 {
 	return Helpers::read<int>(uintptr_t(this) +
-		netvar_manager::get_address("DT_CSPlayer::m_iTeamNum"));
+		Helpers::get_netvar("DT_CSPlayer::m_iTeamNum"));
 }
 
 bool c_base_entity::setup_bones(matrix3x4_t* out, int max_bones, int mask, float time)
@@ -58,13 +57,13 @@ vec3 c_base_entity::get_absolute_origin()
 vec3 c_base_entity::get_vec_origin()
 {
 	return Helpers::read<vec3>(uintptr_t(this) +
-		netvar_manager::get_address("DT_BasePlayer::m_vecOrigin"));
+		Helpers::get_netvar("DT_BasePlayer::m_vecOrigin"));
 }
 
 bool& c_base_entity::is_spotted()
 {
 	return Helpers::read<bool>(uintptr_t(this) +
-		netvar_manager::get_address("DT_BaseEntity::m_bSpotted"));
+		Helpers::get_netvar("DT_BaseEntity::m_bSpotted"));
 }
 
 int c_base_entity::draw_model(int flags, uint8_t alpha)
@@ -76,11 +75,11 @@ int c_base_entity::draw_model(int flags, uint8_t alpha)
 vec3 c_base_entity::mins()
 {
 	return Helpers::read<vec3>(uintptr_t(this) +
-		netvar_manager::get_address("DT_BaseEntity::m_vecMins"));
+		Helpers::get_netvar("DT_BaseEntity::m_vecMins"));
 }
 
 vec3 c_base_entity::maxs()
 {
 	return Helpers::read<vec3>(uintptr_t(this) +
-		netvar_manager::get_address("DT_BaseEntity::m_vecMaxs"));
+		Helpers::get_netvar("DT_BaseEntity::m_vecMaxs"));
 }
