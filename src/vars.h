@@ -251,7 +251,8 @@ public:
 		set(V_UI_COL_G, 115);
 		set(V_UI_COL_B, 150);
 		set(V_UI_COL_A, 130);
-		set(V_UI_SPEED_ANIMATION, 10.0f);
+		set(V_UI_ANIM_TOGGLE, 10.0f);
+		set(V_UI_ANIM_CHECKBOX_SWITCH, 0.2f);
 		set(V_UI_MOUSE_WHEEL_NAVIGATION, false);
 
 		set(V_KEYS_ON_TOGGLE_AIMBOT, 0);

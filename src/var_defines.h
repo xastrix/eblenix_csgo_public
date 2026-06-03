@@ -317,7 +317,9 @@
 #define V_UI_COL_B V_UI_COL B_COL_P
 #define V_UI_COL_A V_UI_COL A_COL_P
 
-#define V_UI_SPEED_ANIMATION "ui->animation_speed"
+#define V_UI_ANIM_TOGGLE "ui->anim->toggle"
+#define V_UI_ANIM_CHECKBOX_SWITCH "ui->anim->checkbox_switch"
+
 #define V_UI_MOUSE_WHEEL_NAVIGATION "ui->mouse_wheel_navigation"
 
 /******************************************************************************/

@@ -1,6 +1,7 @@
 #include "ui.h"
 
 #include "input.h"
+#include "interfaces.h"
 
 void c_ui::draw(int x, int y)
 {
@@ -31,16 +32,20 @@ void c_ui::draw(int x, int y)
 
 	auto idx{ 0 };
 	auto draw_bool = [&](bool value, int x, int y, c_color first, c_color second) {
-		static std::vector<float> min_x{}, max_x{}, anim_x{};
+		static std::vector<float> anim_x{};
 
-		if (idx >= min_x.size()) {
-			min_x.resize(idx + 1, 38.0f);
-			max_x.resize(idx + 1, 25.0f);
-			anim_x.resize(idx + 1, 37.0f);
-		}
+		if (idx >= anim_x.size())
+			anim_x.resize(idx + 1, value ? 25.0f : 37.0f);
 
-		float switched_x = value ? max_x[idx] : min_x[idx];
-		anim_x[idx] += (switched_x - anim_x[idx]) * 0.1f;
+		const float target_x = value ? 25.0f : 38.0f;
+		const float speed = g_var->get_as<float>(V_UI_ANIM_CHECKBOX_SWITCH).value();
+
+		float delta_time = std::clamp(g_cs->m_globals->frame_time, 0.0001f, 0.1f);
+
+		float fps_factor = delta_time * 60.0f;
+		float final_step = std::clamp(speed * fps_factor, 0.0f, 1.0f);
+
+		anim_x[idx] += (target_x - anim_x[idx]) * final_step;
 
 		g_renderer->rect_fill(x - 38, y - 11, 26, 14, m_colors[UI_OUTLINE_COL]);
 		g_renderer->gradient_h(x - static_cast<int>(anim_x[idx]), y - 10, 12, 12,

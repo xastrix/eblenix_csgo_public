@@ -17,7 +17,7 @@ void c_ui::init(IDirect3DDevice9* device)
 void c_ui::run()
 {
 	float old_progress;
-	calc_animation_progress(g_var->get_as<float>(V_UI_SPEED_ANIMATION).value(), g_cs->m_globals->frame_time, old_progress);
+	calc_animation_progress(g_var->get_as<float>(V_UI_ANIM_TOGGLE).value(), g_cs->m_globals->frame_time, old_progress);
 
 	m_colors[UI_TEXT_COL] = c_color(253, 253, 253,
 		static_cast<int>(target_animation_progress * 255.0f));
@@ -445,7 +445,10 @@ void c_ui::setup()
 
 		add_tab<UI_SUB_POS>(L"Menu", [&]() {
 			add_bool<UI_SUB_SUB_POS>(L"Menu MWheel Control", V_UI_MOUSE_WHEEL_NAVIGATION);
-			add_float<UI_SUB_SUB_POS>(L"Menu Animation Speed", V_UI_SPEED_ANIMATION, 2.0f, 10.0f, 0.5f, true);
+			add_tab<UI_SUB_SUB_POS>(L"Menu Animations", [&]() {
+				add_float<UI_SUB_SUB_SUB_POS>(L"Menu Toggle", V_UI_ANIM_TOGGLE, 2.0f, 10.0f, 0.5f);
+				add_float<UI_SUB_SUB_SUB_POS>(L"Menu Checkbox Switch", V_UI_ANIM_CHECKBOX_SWITCH, 0.1f, 0.3f, 0.1f);
+			}, true);
 
 			add_int<UI_SUB_SUB_POS>(L"Menu R", V_UI_COL_R, 0, 255, 1);
 			add_int<UI_SUB_SUB_POS>(L"Menu G", V_UI_COL_G, 0, 255, 1);
