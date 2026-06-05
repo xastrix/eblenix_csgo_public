@@ -271,26 +271,23 @@ public:
 		for (auto& v : m_vars) {
 			if (v.first == key) {
 				if (v.second != value)
-					v.second = std::move(value);
+					v.second = value;
 
 				return;
 			}
 		}
 
-		m_vars.emplace_back(std::move(key), std::move(value));
+		m_vars.emplace_back(key, value);
 	}
 
 	template <typename T>
 	std::optional<T> get_as(const std::string& key) {
 		for (const auto& v : m_vars) {
 			if (v.first == key) {
-				std::optional<var_type> opt{ v.second };
+				if (const auto* val = std::get_if<T>(&v.second))
+					return *val;
 
-				if (opt.has_value()) {
-					if (const auto val = std::get_if<T>(&opt.value())) {
-						return *val;
-					}
-				}
+				break;
 			}
 		}
 
@@ -310,7 +307,7 @@ public:
 	}
 
 private:
-	vars_t m_vars{};
+	vars_t m_vars;
 };
 
 inline std::shared_ptr<c_var_mgr> g_var = c_var_mgr::make_shared();
