@@ -317,16 +317,79 @@ static void init_cfg_functions(sol::environment& env)
 {
 	sol::table table = env.create();
 
-	table.set_function("get_int", [](const std::string& key) {
-		return g_var->get_as<int>(key);
+	table.set_function("get_int", [](sol::this_state s, const std::string& key) {
+		auto ret = g_var->get_as<int>(key);
+
+		if (!ret.has_value()) {
+			std::string src = "?.lua";
+			int line = -1;
+
+			lua_Debug ar;
+			if (lua_getstack(s, 1, &ar)) {
+				if (lua_getinfo(s, "Sl", &ar)) {
+					src = ar.source;
+					line = ar.currentline;
+				}
+			}
+
+			std::string path = (src[0] == '@') ? src.substr(1) : src;
+			Helpers::console_printf_with_prefix("[lua]",
+				"%s:%i: '%s' was not found or has a different type", path.c_str(), line, key.c_str());
+
+			return 0;
+		}
+
+		return ret.value();
 	});
 
-	table.set_function("get_float", [](const std::string& key) {
-		return g_var->get_as<float>(key);
+	table.set_function("get_float", [](sol::this_state s, const std::string& key) {
+		auto ret = g_var->get_as<float>(key);
+
+		if (!ret.has_value()) {
+			std::string src = "?.lua";
+			int line = -1;
+
+			lua_Debug ar;
+			if (lua_getstack(s, 1, &ar)) {
+				if (lua_getinfo(s, "Sl", &ar)) {
+					src = ar.source;
+					line = ar.currentline;
+				}
+			}
+
+			std::string path = (src[0] == '@') ? src.substr(1) : src;
+			Helpers::console_printf_with_prefix("[lua]",
+				"%s:%i: '%s' was not found or has a different type", path.c_str(), line, key.c_str());
+
+			return 0.0f;
+		}
+
+		return ret.value();
 	});
 
-	table.set_function("get_bool", [](const std::string& key) {
-		return g_var->get_as<bool>(key);
+	table.set_function("get_bool", [](sol::this_state s, const std::string& key) {
+		auto ret = g_var->get_as<bool>(key);
+
+		if (!ret.has_value()) {
+			std::string src = "?.lua";
+			int line = -1;
+
+			lua_Debug ar;
+			if (lua_getstack(s, 1, &ar)) {
+				if (lua_getinfo(s, "Sl", &ar)) {
+					src = ar.source;
+					line = ar.currentline;
+				}
+			}
+
+			std::string path = (src[0] == '@') ? src.substr(1) : src;
+			Helpers::console_printf_with_prefix("[lua]",
+				"%s:%i: '%s' was not found or has a different type", path.c_str(), line, key.c_str());
+
+			return false;
+		}
+
+		return ret.value();
 	});
 
 	table.set_function("set_int", [](const std::string& key, int v) {
