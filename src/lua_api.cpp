@@ -32,6 +32,10 @@ static void init_global_functions(sol::environment& env);
 static void init_lists(sol::environment& env);
 static void init_safe_env(sol::environment& env, sol::state_view state);
 
+/* Get some info from lua debug stack */
+struct lua_dbg_t { std::string path{ LUA_DIRECTORY_PATHS "?.lua" }; int line{ -1 }; };
+static lua_dbg_t get_dbg_info(sol::this_state s);
+
 /* Convert callback id to string */
 static std::string callback_id_to_string(int id);
 
@@ -62,25 +66,14 @@ void c_lua_mgr::init_api(sol::state_view state)
 	init_safe_env(m_env, state);
 
 	m_env.set_function("register_callback", [&](sol::this_state s, int callback_id, sol::function fn) {
-		std::string src = "?.lua";
-		int line = -1;
-
-		lua_Debug ar;
-		if (lua_getstack(s, 1, &ar)) {
-			if (lua_getinfo(s, "Sl", &ar)) {
-				src = ar.source;
-				line = ar.currentline;
-			}
-		}
-
-		std::string path = (src[0] == '@') ? src.substr(1) : src;
+		lua_dbg_t dbg = get_dbg_info(s);
 
 		if (callback_id <= CL_NONE || callback_id >= maxCallbacks) {
-			Helpers::console_printf_with_prefix("[lua]", "%s:%i: Failed to register callback (Invalid callback id)", path.c_str(), line);
+			Helpers::console_printf_with_prefix("[lua]", "%s:%i: Failed to register callback (Invalid callback id)", dbg.path.c_str(), dbg.line);
 			return uint64_t{};
 		}
 
-		std::wstring name = std::filesystem::path(path).filename().wstring();
+		std::wstring name = std::filesystem::path(dbg.path).filename().wstring();
 
 		g_temp_id++;
 		m_lua_event[callback_id].push_back({ g_temp_id, get_script_index_by_name(name), false, fn });
@@ -92,28 +85,17 @@ void c_lua_mgr::init_api(sol::state_view state)
 	});
 
 	m_env.set_function("unregister_callback", [&](sol::this_state s, int callback_id, uint64_t temp_id) {
-		std::string src = "?.lua";
-		int line = -1;
-
-		lua_Debug ar;
-		if (lua_getstack(s, 1, &ar)) {
-			if (lua_getinfo(s, "Sl", &ar)) {
-				src = ar.source;
-				line = ar.currentline;
-			}
-		}
-
-		std::string path = (src[0] == '@') ? src.substr(1) : src;
+		lua_dbg_t dbg = get_dbg_info(s);
 
 		if (callback_id <= CL_NONE || callback_id >= maxCallbacks) {
-			Helpers::console_printf_with_prefix("[lua]", "%s:%i: Failed to unregister callback (Invalid callback id)", path.c_str(), line);
+			Helpers::console_printf_with_prefix("[lua]", "%s:%i: Failed to unregister callback (Invalid callback id)", dbg.path.c_str(), dbg.line);
 			return;
 		}
 
 		auto it = m_lua_event.find(callback_id);
 		if (it == m_lua_event.end()) {
 			Helpers::console_printf_with_prefix("[lua]", "%s:%i: Failed to unregister callback (Callback %s is not registered)",
-				path.c_str(), line, callback_id_to_string(callback_id).c_str());
+				dbg.path.c_str(), dbg.line, callback_id_to_string(callback_id).c_str());
 			return;
 		}
 
@@ -129,11 +111,11 @@ void c_lua_mgr::init_api(sol::state_view state)
 		}
 
 		if (!found_tmp) {
-			Helpers::console_printf_with_prefix("[lua]", "%s:%i: Failed to unregister callback (Invalid handle)", path.c_str(), line);
+			Helpers::console_printf_with_prefix("[lua]", "%s:%i: Failed to unregister callback (Invalid handle)", dbg.path.c_str(), dbg.line);
 			return;
 		}
 
-		std::wstring name = std::filesystem::path(path).filename().wstring();
+		std::wstring name = std::filesystem::path(dbg.path).filename().wstring();
 
 		Helpers::console_printf_with_prefix("[lua]", "Unsubscribed from %s in %s",
 			callback_id_to_string(callback_id).c_str(), std::string(name.begin(), name.end()).c_str());
@@ -321,20 +303,9 @@ static void init_cfg_functions(sol::environment& env)
 		auto ret = g_var->get_as<int>(key);
 
 		if (!ret.has_value()) {
-			std::string src = "?.lua";
-			int line = -1;
-
-			lua_Debug ar;
-			if (lua_getstack(s, 1, &ar)) {
-				if (lua_getinfo(s, "Sl", &ar)) {
-					src = ar.source;
-					line = ar.currentline;
-				}
-			}
-
-			std::string path = (src[0] == '@') ? src.substr(1) : src;
+			lua_dbg_t dbg = get_dbg_info(s);
 			Helpers::console_printf_with_prefix("[lua]",
-				"%s:%i: '%s' was not found or has a different type", path.c_str(), line, key.c_str());
+				"%s:%i: '%s' was not found or has a different type", dbg.path.c_str(), dbg.line, key.c_str());
 
 			return 0;
 		}
@@ -346,20 +317,9 @@ static void init_cfg_functions(sol::environment& env)
 		auto ret = g_var->get_as<float>(key);
 
 		if (!ret.has_value()) {
-			std::string src = "?.lua";
-			int line = -1;
-
-			lua_Debug ar;
-			if (lua_getstack(s, 1, &ar)) {
-				if (lua_getinfo(s, "Sl", &ar)) {
-					src = ar.source;
-					line = ar.currentline;
-				}
-			}
-
-			std::string path = (src[0] == '@') ? src.substr(1) : src;
+			lua_dbg_t dbg = get_dbg_info(s);
 			Helpers::console_printf_with_prefix("[lua]",
-				"%s:%i: '%s' was not found or has a different type", path.c_str(), line, key.c_str());
+				"%s:%i: '%s' was not found or has a different type", dbg.path.c_str(), dbg.line, key.c_str());
 
 			return 0.0f;
 		}
@@ -371,20 +331,9 @@ static void init_cfg_functions(sol::environment& env)
 		auto ret = g_var->get_as<bool>(key);
 
 		if (!ret.has_value()) {
-			std::string src = "?.lua";
-			int line = -1;
-
-			lua_Debug ar;
-			if (lua_getstack(s, 1, &ar)) {
-				if (lua_getinfo(s, "Sl", &ar)) {
-					src = ar.source;
-					line = ar.currentline;
-				}
-			}
-
-			std::string path = (src[0] == '@') ? src.substr(1) : src;
+			lua_dbg_t dbg = get_dbg_info(s);
 			Helpers::console_printf_with_prefix("[lua]",
-				"%s:%i: '%s' was not found or has a different type", path.c_str(), line, key.c_str());
+				"%s:%i: '%s' was not found or has a different type", dbg.path.c_str(), dbg.line, key.c_str());
 
 			return false;
 		}
@@ -486,21 +435,9 @@ static void init_renderer_functions(sol::environment& env)
 			&ret);
 
 		if (FAILED(hr)) {
-			std::string src = "?.lua";
-			int line = -1;
-
-			lua_Debug ar;
-			if (lua_getstack(s, 1, &ar)) {
-				if (lua_getinfo(s, "Sl", &ar)) {
-					src = ar.source;
-					line = ar.currentline;
-				}
-			}
-
-			std::string name = (src[0] == '@') ? src.substr(1) : src;
-
+			lua_dbg_t dbg = get_dbg_info(s);
 			Helpers::console_printf_with_prefix("[lua]",
-				"%s:%i: Failed to create font", name.c_str(), line);
+				"%s:%i: Failed to create font", dbg.path.c_str(), dbg.line);
 		}
 
 		return ret;
@@ -512,21 +449,9 @@ static void init_renderer_functions(sol::environment& env)
 		ret->init(g_renderer->get_device(), { LUA_DIRECTORY_PATHS + path }, width, height);
 
 		if (FAILED(ret->get_result())) {
-			std::string src = "?.lua";
-			int line = -1;
-
-			lua_Debug ar;
-			if (lua_getstack(s, 1, &ar)) {
-				if (lua_getinfo(s, "Sl", &ar)) {
-					src = ar.source;
-					line = ar.currentline;
-				}
-			}
-
-			std::string name = (src[0] == '@') ? src.substr(1) : src;
-
+			lua_dbg_t dbg = get_dbg_info(s);
 			Helpers::console_printf_with_prefix("[lua]",
-				"%s:%i: Failed to create sprite", name.c_str(), line);
+				"%s:%i: Failed to create sprite", dbg.path.c_str(), dbg.line);
 		}
 
 		return ret;
@@ -821,21 +746,10 @@ static void init_clipboard_functions(sol::environment& env)
 	});
 
 	table.set_function("aes_crypt", [](sol::this_state s, uint32_t format, const std::string& key, const std::string& plain_text) {
-		std::string src = "?.lua";
-		int line = -1;
-
-		lua_Debug ar;
-		if (lua_getstack(s, 1, &ar)) {
-			if (lua_getinfo(s, "Sl", &ar)) {
-				src = ar.source;
-				line = ar.currentline;
-			}
-		}
-
-		std::string path = (src[0] == '@') ? src.substr(1) : src;
+		lua_dbg_t dbg = get_dbg_info(s);
 
 		if (key.length() != 32) {
-			Helpers::console_printf_with_prefix("[lua]", "%s:%i: Invalid aes key length (Must be 32)", path.c_str(), line);
+			Helpers::console_printf_with_prefix("[lua]", "%s:%i: Invalid aes key length (Must be 32)", dbg.path.c_str(), dbg.line);
 			return;
 		}
 
@@ -843,21 +757,10 @@ static void init_clipboard_functions(sol::environment& env)
 	});
 
 	table.set_function("aes_decrypt", [](sol::this_state s, uint32_t format, const std::string& key) {
-		std::string src = "?.lua";
-		int line = -1;
-
-		lua_Debug ar;
-		if (lua_getstack(s, 1, &ar)) {
-			if (lua_getinfo(s, "Sl", &ar)) {
-				src = ar.source;
-				line = ar.currentline;
-			}
-		}
-
-		std::string path = (src[0] == '@') ? src.substr(1) : src;
+		lua_dbg_t dbg = get_dbg_info(s);
 
 		if (key.length() != 32) {
-			Helpers::console_printf_with_prefix("[lua]", "%s:%i: Invalid aes key length (Must be 32)", path.c_str(), line);
+			Helpers::console_printf_with_prefix("[lua]", "%s:%i: Invalid aes key length (Must be 32)", dbg.path.c_str(), dbg.line);
 			return std::string{};
 		}
 
@@ -866,21 +769,10 @@ static void init_clipboard_functions(sol::environment& env)
 
 	table.set_function("get_data", [](sol::this_state s, uint32_t format) {
 		std::string ret;
-		std::string src = "?.lua";
-		int line = -1;
-
-		lua_Debug ar;
-		if (lua_getstack(s, 1, &ar)) {
-			if (lua_getinfo(s, "Sl", &ar)) {
-				src = ar.source;
-				line = ar.currentline;
-			}
-		}
-
-		std::string path = (src[0] == '@') ? src.substr(1) : src;
+		lua_dbg_t   dbg = get_dbg_info(s);
 
 		if (!OpenClipboard(nullptr)) {
-			Helpers::console_printf_with_prefix("[lua]", "%s:%i: Failed to open clipboard", path.c_str(), line);
+			Helpers::console_printf_with_prefix("[lua]", "%s:%i: Failed to open clipboard", dbg.path.c_str(), dbg.line);
 			return ret;
 		}
 
@@ -888,7 +780,7 @@ static void init_clipboard_functions(sol::environment& env)
 
 		if (h == nullptr) {
 			CloseClipboard();
-			Helpers::console_printf_with_prefix("[lua]", "%s:%i: GetClipboardData fail", path.c_str(), line);
+			Helpers::console_printf_with_prefix("[lua]", "%s:%i: GetClipboardData fail", dbg.path.c_str(), dbg.line);
 			return ret;
 		}
 
@@ -896,7 +788,7 @@ static void init_clipboard_functions(sol::environment& env)
 
 		if (p == nullptr) {
 			CloseClipboard();
-			Helpers::console_printf_with_prefix("[lua]", "%s:%i: GlobalLock fail", path.c_str(), line);
+			Helpers::console_printf_with_prefix("[lua]", "%s:%i: GlobalLock fail", dbg.path.c_str(), dbg.line);
 			return ret;
 		}
 
@@ -909,34 +801,23 @@ static void init_clipboard_functions(sol::environment& env)
 	});
 
 	table.set_function("set_data", [](sol::this_state s, uint32_t format, const std::string& data) {
-		std::string src = "?.lua";
-		int line = -1;
-
-		lua_Debug ar;
-		if (lua_getstack(s, 1, &ar)) {
-			if (lua_getinfo(s, "Sl", &ar)) {
-				src = ar.source;
-				line = ar.currentline;
-			}
-		}
-
-		std::string path = (src[0] == '@') ? src.substr(1) : src;
+		lua_dbg_t dbg = get_dbg_info(s);
 
 		if (!OpenClipboard(nullptr)) {
-			Helpers::console_printf_with_prefix("[lua]", "%s:%i: Failed to open clipboard", path.c_str(), line);
+			Helpers::console_printf_with_prefix("[lua]", "%s:%i: Failed to open clipboard", dbg.path.c_str(), dbg.line);
 			return;
 		}
 
 		if (!EmptyClipboard()) {
 			CloseClipboard();
-			Helpers::console_printf_with_prefix("[lua]", "%s:%i: Failed to empty clipboard", path.c_str(), line);
+			Helpers::console_printf_with_prefix("[lua]", "%s:%i: Failed to empty clipboard", dbg.path.c_str(), dbg.line);
 			return;
 		}
 
 		auto h = GlobalAlloc(GMEM_MOVEABLE, data.size() + 1);
 		if (h == nullptr) {
 			CloseClipboard();
-			Helpers::console_printf_with_prefix("[lua]", "%s:%i: GlobalAlloc fail", path.c_str(), line);
+			Helpers::console_printf_with_prefix("[lua]", "%s:%i: GlobalAlloc fail", dbg.path.c_str(), dbg.line);
 			return;
 		}
 
@@ -948,7 +829,7 @@ static void init_clipboard_functions(sol::environment& env)
 		if (SetClipboardData(format, h) == nullptr) {
 			GlobalFree(h);
 			CloseClipboard();
-			Helpers::console_printf_with_prefix("[lua]", "%s:%i: SetClipboardData fail", path.c_str(), line);
+			Helpers::console_printf_with_prefix("[lua]", "%s:%i: SetClipboardData fail", dbg.path.c_str(), dbg.line);
 			return;
 		}
 
@@ -956,27 +837,16 @@ static void init_clipboard_functions(sol::environment& env)
 	});
 
 	table.set_function("set_empty", [](sol::this_state s) {
-		std::string src = "?.lua";
-		int line = -1;
-
-		lua_Debug ar;
-		if (lua_getstack(s, 1, &ar)) {
-			if (lua_getinfo(s, "Sl", &ar)) {
-				src = ar.source;
-				line = ar.currentline;
-			}
-		}
-
-		std::string path = (src[0] == '@') ? src.substr(1) : src;
+		lua_dbg_t dbg = get_dbg_info(s);
 
 		if (!OpenClipboard(nullptr)) {
-			Helpers::console_printf_with_prefix("[lua]", "%s:%i: Failed to open clipboard", path.c_str(), line);
+			Helpers::console_printf_with_prefix("[lua]", "%s:%i: Failed to open clipboard", dbg.path.c_str(), dbg.line);
 			return;
 		}
 
 		if (!EmptyClipboard()) {
 			CloseClipboard();
-			Helpers::console_printf_with_prefix("[lua]", "%s:%i: Failed to empty clipboard", path.c_str(), line);
+			Helpers::console_printf_with_prefix("[lua]", "%s:%i: Failed to empty clipboard", dbg.path.c_str(), dbg.line);
 			return;
 		}
 
@@ -1165,4 +1035,23 @@ static std::string callback_id_to_string(int id)
 	}
 
 	return "?";
+}
+
+static lua_dbg_t get_dbg_info(sol::this_state s)
+{
+	lua_dbg_t ret;
+	lua_Debug ar;
+
+	if (!lua_getstack(s, 1, &ar))
+		return ret;
+
+	if (!lua_getinfo(s, "Sl", &ar))
+		return ret;
+
+	std::string src = ar.source;
+
+	ret.path = (!src.empty() && src[0] == '@') ? src.substr(1) : src;
+	ret.line = ar.currentline;
+
+	return ret;
 }
