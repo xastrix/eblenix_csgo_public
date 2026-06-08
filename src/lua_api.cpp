@@ -341,15 +341,39 @@ static void init_cfg_functions(sol::environment& env)
 		return ret.value();
 	});
 
-	table.set_function("set_int", [](const std::string& key, int v) {
+	table.set_function("set_int", [](sol::this_state s, const std::string& key, int v) {
+		if (!g_var->get_as<int>(key).has_value()) {
+			lua_dbg_t dbg = get_dbg_info(s);
+			Helpers::console_printf_with_prefix("[lua]",
+				"%s:%i: '%s' was not found", dbg.path.c_str(), dbg.line, key.c_str());
+
+			return;
+		}
+
 		return g_var->set(key, v);
 	});
 
-	table.set_function("set_float", [](const std::string& key, float v) {
+	table.set_function("set_float", [](sol::this_state s, const std::string& key, float v) {
+		if (!g_var->get_as<float>(key).has_value()) {
+			lua_dbg_t dbg = get_dbg_info(s);
+			Helpers::console_printf_with_prefix("[lua]",
+				"%s:%i: '%s' was not found", dbg.path.c_str(), dbg.line, key.c_str());
+
+			return;
+		}
+
 		return g_var->set(key, v);
 	});
 
-	table.set_function("set_bool", [](const std::string& key, bool v) {
+	table.set_function("set_bool", [](sol::this_state s, const std::string& key, bool v) {
+		if (!g_var->get_as<bool>(key).has_value()) {
+			lua_dbg_t dbg = get_dbg_info(s);
+			Helpers::console_printf_with_prefix("[lua]",
+				"%s:%i: '%s' was not found", dbg.path.c_str(), dbg.line, key.c_str());
+
+			return;
+		}
+
 		return g_var->set(key, v);
 	});
 
