@@ -234,6 +234,7 @@
     <ClInclude Include="events.h" />
     <ClInclude Include="font.h" />
     <ClInclude Include="hud.h" />
+    <ClInclude Include="localize.h" />
     <ClInclude Include="luas.h" />
     <ClInclude Include="math.h" />
     <ClInclude Include="matrix.h" />

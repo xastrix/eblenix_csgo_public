@@ -549,6 +549,9 @@
     <ClInclude Include="command_line.h">
       <Filter>csgo\engine</Filter>
     </ClInclude>
+    <ClInclude Include="localize.h">
+      <Filter>csgo\engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="csgo">

@@ -18,7 +18,8 @@ void c_csgo::init()
 	m_model_render = Helpers::get_interface<c_model_render>(GLOBAL(module_list[engineDLL]), ENGINE_MODEL_INTERFACE_VERSION);
 	m_render_view = Helpers::get_interface<c_render_view>(GLOBAL(module_list[engineDLL]), ENGINE_RENDER_VIEW_INTERFACE_VERSION);
 	m_event_manager = Helpers::get_interface<c_game_event_manager2>(GLOBAL(module_list[engineDLL]), GAME_EVENT_MANAGER_INTERFACE_VERSION);
-	
+	m_localize = Helpers::get_interface<c_localize>(GLOBAL(module_list[localizeDLL]), LOCALIZE_INTERFACE_VERSION);
+
 	m_device = *Helpers::read<IDirect3DDevice9**>(reinterpret_cast<uintptr_t>(SIG(S_DEVICE)));
 	m_globals = *Helpers::read<c_global_vars**>((*reinterpret_cast<uintptr_t**>(m_client))[11] + 10);
 	m_client_mode = *Helpers::read<uintptr_t**>((*reinterpret_cast<uintptr_t**>(m_client))[10] + 5);
@@ -27,6 +28,18 @@ void c_csgo::init()
 	m_glow_manager = Helpers::read_ptr<c_glow_manager*>(*reinterpret_cast<uintptr_t*>(SIG(S_GLOW_MANAGER)));
 
 	m_cmd_line = Helpers::get_export<command_line_t>(GLOBAL(module_list[tier0DLL]), "CommandLine")();
+}
+
+DWORD c_csgo::find_hud_element(const char* name)
+{
+	static void* _this = *reinterpret_cast<DWORD**>(SIG(S_HUD_ELEMENT));
+	if (!_this)
+		return 0;
+
+	static auto fn
+		= reinterpret_cast<DWORD(__thiscall*)(void*, const char*)>(SIG(S_FIND_HUD_ELEMENT));
+
+	return fn(_this, name);
 }
 
 void c_csgo::init_local(const local_t& local)

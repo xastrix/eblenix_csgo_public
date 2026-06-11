@@ -264,12 +264,9 @@ bool Helpers::is_behind_smoke(const vec3 start, const vec3 end)
 
 bool Helpers::is_chat_opened()
 {
-	static void* _this = *reinterpret_cast<DWORD**>(SIG(S_HUD_ELEMENT));
-	if (!_this)
+	auto ccsgo_hudchat = g_cs->find_hud_element("CCSGO_HudChat");
+	if (!ccsgo_hudchat)
 		return false;
-
-	static auto fn = reinterpret_cast<DWORD(__thiscall*)(void*, const char*)>(SIG(S_FIND_HUD_ELEMENT));
-	auto ccsgo_hudchat = fn(_this, "CCSGO_HudChat");
 
 	return read<bool>(ccsgo_hudchat + 13);
 }

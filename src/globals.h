@@ -15,6 +15,7 @@ enum _module_list {
 	materialsystemDLL,
 	serverBrowserDLL,
 	tier0DLL,
+	localizeDLL,
 	maxModules,
 };
 
@@ -85,6 +86,7 @@ namespace g
 		"materialsystem.dll",
 		"serverbrowser.dll",
 		"tier0.dll",
+		"localize.dll",
 	};
 
 	void handle_playing_time(const std::chrono::steady_clock::time_point start_time, int interval);

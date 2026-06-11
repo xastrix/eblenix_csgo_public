@@ -17,6 +17,7 @@
 #include "weapon_system.h"
 #include "glow_manager.h"
 #include "command_line.h"
+#include "localize.h"
 
 #include "i_input.h"
 
@@ -38,6 +39,7 @@ public:
 	c_model_render* m_model_render;
 	c_render_view* m_render_view;
 	c_game_event_manager2* m_event_manager;
+	c_localize* m_localize;
 	IDirect3DDevice9* m_device;
 	uintptr_t* m_client_mode;
 	input_t* m_input;
@@ -65,6 +67,7 @@ class c_csgo : public c_interfaces {
 public:
 	void init();
 
+	DWORD find_hud_element(const char* name);
 	void init_local(const local_t& local);
 	
 	c_base_player* get_local() {
