@@ -1,9 +1,8 @@
 #pragma once
 
-#include "../common.h"
-
-#include <string>
+#include <common.h>
 #include <windows.h>
+#include <string>
 
 enum _game_list {
 	CSGO,
