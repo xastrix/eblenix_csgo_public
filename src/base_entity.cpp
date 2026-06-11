@@ -60,12 +60,6 @@ vec3 c_base_entity::get_vec_origin()
 		Helpers::get_netvar("DT_BasePlayer::m_vecOrigin"));
 }
 
-bool& c_base_entity::is_spotted()
-{
-	return Helpers::read<bool>(uintptr_t(this) +
-		Helpers::get_netvar("DT_BaseEntity::m_bSpotted"));
-}
-
 int c_base_entity::draw_model(int flags, uint8_t alpha)
 {
 	using original_fn = int(__thiscall*)(c_client_renderable*, int, uint8_t);

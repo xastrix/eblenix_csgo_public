@@ -218,64 +218,79 @@ static void init_enums(sol::environment& env)
 static void init_usertypes(sol::environment& env)
 {
 	env.new_usertype<vec2>("vec2", sol::constructors<vec2(float, float)>(),
-		"x",             &vec2::x,
-		"y",             &vec2::y
+		"x",                   &vec2::x,
+		"y",                   &vec2::y
 	);
 
 	env.new_usertype<vec3>("vec3", sol::constructors<vec3(float, float, float)>(),
-		"x",             &vec3::x,
-		"y",             &vec3::y,
-		"z",             &vec3::z
+		"x",                   &vec3::x,
+		"y",                   &vec3::y,
+		"z",                   &vec3::z
 	);
 
 	env.new_usertype<box>("bbox", sol::constructors<box(int, int, int, int)>(),
-		"x",             &box::x,
-		"y",             &box::y,
-		"w",             &box::w,
-		"h",             &box::h
+		"x",                   &box::x,
+		"y",                   &box::y,
+		"w",                   &box::w,
+		"h",                   &box::h
 	);
 
 	env.new_usertype<c_color>("color", sol::constructors<c_color(int, int, int, int)>(),
-		"r",             [](const c_color& c) { return c.get_arr()[0]; },
-		"g",             [](const c_color& c) { return c.get_arr()[1]; },
-		"b",             [](const c_color& c) { return c.get_arr()[2]; },
-		"a",             [](const c_color& c) { return c.get_arr()[3]; });
+		"r",                   [](const c_color& c) { return c.get_arr()[0]; },
+		"g",                   [](const c_color& c) { return c.get_arr()[1]; },
+		"b",                   [](const c_color& c) { return c.get_arr()[2]; },
+		"a",                   [](const c_color& c) { return c.get_arr()[3]; }
+	);
 
 	env.new_usertype<sprite_t>("sprite",
-		"begin_draw",    [](sprite_t& sprite) { sprite.begin(D3DXSPRITE_DONOTMODIFY_RENDERSTATE); },
-		"draw",          [](sprite_t& sprite, int x, int y, c_color c) { sprite.draw(x, y, c); },
-		"end_draw",      [](sprite_t& sprite) { sprite.end(); },
-		"on_reset",      [](sprite_t& sprite) { sprite.on_reset(); },
-		"on_reset_end",  [](sprite_t& sprite) { sprite.on_reset_end(); },
-		"destroy",       [](sprite_t* sprite) { if (sprite) delete sprite; }
+		"begin_draw",          [](sprite_t& sprite) { sprite.begin(D3DXSPRITE_DONOTMODIFY_RENDERSTATE); },
+		"draw",                [](sprite_t& sprite, int x, int y, c_color c) { sprite.draw(x, y, c); },
+		"end_draw",            [](sprite_t& sprite) { sprite.end(); },
+		"on_reset",            [](sprite_t& sprite) { sprite.on_reset(); },
+		"on_reset_end",        [](sprite_t& sprite) { sprite.on_reset_end(); },
+		"destroy",             [](sprite_t* sprite) { if (sprite) delete sprite; }
 	);
 
 	env.new_usertype<c_game_event>("game_event",
-		"get_name",      [](c_game_event* _event) { return _event->get_name(); },
-		"get_int",       [](c_game_event* _event, const char* name) { return _event->get_int(name); },
-		"get_string",    [](c_game_event* _event, const char* name) { return _event->get_string(name); }
+		"get_name",            [](c_game_event* _event) { return _event->get_name(); },
+		"get_int",             [](c_game_event* _event, const char* name) { return _event->get_int(name); },
+		"get_string",          [](c_game_event* _event, const char* name) { return _event->get_string(name); }
 	);
 
 	env.new_usertype<player_info_t>("player_info",
-		"name",          sol::readonly(&player_info_t::m_player_name),
-		"friendsname",   sol::readonly(&player_info_t::m_friends_name),
-		"user_id",       sol::readonly(&player_info_t::m_user_id),
-		"fakeplayer",    sol::readonly(&player_info_t::m_is_fake_player),
-		"ishltv",        sol::readonly(&player_info_t::m_is_hltv)
+		"name",                sol::readonly(&player_info_t::m_player_name),
+		"friendsname",         sol::readonly(&player_info_t::m_friends_name),
+		"user_id",             sol::readonly(&player_info_t::m_user_id),
+		"fakeplayer",          sol::readonly(&player_info_t::m_is_fake_player),
+		"ishltv",              sol::readonly(&player_info_t::m_is_hltv)
 	);
 
 	env.new_usertype<user_cmd_t>("user_cmd",
-		"cmd_number",    sol::readonly(&user_cmd_t::m_command_number),
-		"forward_move",  &user_cmd_t::m_forwardmove,
-		"side_move",     &user_cmd_t::m_sidemove,
-		"up_move",       &user_cmd_t::m_upmove,
-		"buttons",       &user_cmd_t::m_buttons
+		"cmd_number",          sol::readonly(&user_cmd_t::m_command_number),
+		"forward_move",        &user_cmd_t::m_forwardmove,
+		"side_move",           &user_cmd_t::m_sidemove,
+		"up_move",             &user_cmd_t::m_upmove,
+		"buttons",             &user_cmd_t::m_buttons
 	);
 
 	env.new_usertype<module_t>("module",
-		"name",          &module_t::m_name,
-		"addr",          sol::readonly(&module_t::m_base_address),
-		"size",          sol::readonly(&module_t::m_size)
+		"name",                &module_t::m_name,
+		"addr",                sol::readonly(&module_t::m_base_address),
+		"size",                sol::readonly(&module_t::m_size)
+	);
+
+	env.new_usertype<c_base_player>("entity",
+		"get_prop_int",        &c_base_player::get_prop<int>,
+		"get_prop_bool",       &c_base_player::get_prop<bool>,
+		"get_prop_float",      &c_base_player::get_prop<float>,
+		"get_prop_double",     &c_base_player::get_prop<double>,
+		"get_prop_vec",        &c_base_player::get_prop<vec3>,
+		"get_prop_string",     &c_base_player::get_prop<const char*>,
+		"set_prop_int",        &c_base_player::set_prop<int>,
+		"set_prop_bool",       &c_base_player::set_prop<bool>,
+		"set_prop_float",      &c_base_player::set_prop<float>,
+		"set_prop_double",     &c_base_player::set_prop<double>,
+		"set_prop_vec",        &c_base_player::set_prop<vec3>
 	);
 }
 
@@ -635,10 +650,6 @@ static void init_entity_functions(sol::environment& env)
 
 	table.set_function("get_abs_origin", [](c_base_player* e) {
 		return e->get_absolute_origin();
-	});
-
-	table.set_function("set_spotted", [](c_base_player* e, bool v) {
-		return e->is_spotted() = v;
 	});
 
 	env["entity"] = table;

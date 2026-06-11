@@ -126,10 +126,31 @@ public:
 	model_t*              get_model();
 	vec3                  get_absolute_origin();
 	vec3                  get_vec_origin();
-	bool&                 is_spotted();
 	int                   draw_model(int flags, uint8_t alpha);
 	vec3                  mins();
 	vec3                  maxs();
+
+	template <typename T>
+	T get_prop(const char* prop) {
+		auto netvar = Helpers::get_netvar(prop);
+
+		if constexpr (std::is_same_v<T, const char*>)
+			return reinterpret_cast<const char*>(uintptr_t(this) + netvar);
+
+		return *reinterpret_cast<T*>(uintptr_t(this) + netvar);
+	}
+
+	template <typename T>
+	void set_prop(const char* prop, const T& v) {
+		auto netvar = Helpers::get_netvar(prop);
+
+		if constexpr (std::is_same_v<T, const char*>) {
+			memcpy(reinterpret_cast<void*>(uintptr_t(this) + netvar), v, strlen(v) + 1);
+			return;
+		}
+		
+		*reinterpret_cast<T*>(uintptr_t(this) + netvar) = v;
+	}
 };
 
 class c_base_weapon : public c_base_entity {

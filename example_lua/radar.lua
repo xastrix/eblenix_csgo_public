@@ -6,7 +6,7 @@ register_callback(cb.on_move, function()
 			local player = entity_list.get_entity(i)
 
 			if (player ~= nil and entity.get_health(player) > 0 and not entity.get_dormant(player)) then
-				entity.set_spotted(player, true)
+				player:set_prop_bool("DT_BaseEntity::m_bSpotted", true)
 			end
 		end
 	end
