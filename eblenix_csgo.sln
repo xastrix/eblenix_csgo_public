@@ -12,6 +12,25 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		common.h = common.h
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lua_samples", "lua_samples", "{2EF3B598-CA59-4AE1-A842-6DFEFF167198}"
+	ProjectSection(SolutionItems) = preProject
+		lua_samples\esp_box.lua = lua_samples\esp_box.lua
+		lua_samples\example_renderer.lua = lua_samples\example_renderer.lua
+		lua_samples\radar.lua = lua_samples\radar.lua
+		lua_samples\test_clipboard.lua = lua_samples\test_clipboard.lua
+		lua_samples\test_command_line.lua = lua_samples\test_command_line.lua
+		lua_samples\test_game_events.lua = lua_samples\test_game_events.lua
+		lua_samples\test_keys.lua = lua_samples\test_keys.lua
+		lua_samples\test_memory.lua = lua_samples\test_memory.lua
+		lua_samples\test_surface.lua = lua_samples\test_surface.lua
+		lua_samples\test_unregister_callback.lua = lua_samples\test_unregister_callback.lua
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "resources", "resources", "{2BAC91CC-F38F-405E-A8BC-EB1E739E00D6}"
+	ProjectSection(SolutionItems) = preProject
+		lua_samples\resources\example_image.png = lua_samples\resources\example_image.png
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -29,6 +48,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2EF3B598-CA59-4AE1-A842-6DFEFF167198} = {9B498A65-C6AD-44F5-A232-332E67D40DF5}
+		{2BAC91CC-F38F-405E-A8BC-EB1E739E00D6} = {2EF3B598-CA59-4AE1-A842-6DFEFF167198}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CDC151BE-5868-4172-829F-6B3FD56C144D}
