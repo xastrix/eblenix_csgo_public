@@ -3,7 +3,6 @@
 #include <windows.h>
 #include <string>
 #include <functional>
-#include <exception_handler.hpp>
 
 #include "color.h"
 #include "base_entity.h"
@@ -13,7 +12,6 @@ using create_interface_fn = void*(*)(const char*, int*);
 enum _module_flags {
 	MF_NONE,
 	MF_DISABLE_LIB_CALLS,
-	MF_CUSTOM_EXCEPTION_HANDLER,
 };
 
 enum _bbox_types {
@@ -41,9 +39,6 @@ struct mod_t {
 
 		if (flags & MF_DISABLE_LIB_CALLS)
 			DisableThreadLibraryCalls(m_mod);
-
-		if (flags & MF_CUSTOM_EXCEPTION_HANDLER)
-			SetUnhandledExceptionFilter(exception_handler::custom_exception_filter);
 
 		return fn(m_mod);
 	}

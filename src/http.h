@@ -7,9 +7,6 @@
 #include <functional>
 #include <queue>
 #include <atomic>
-#ifndef CURL_STATICLIB
-#define CURL_STATICLIB
-#endif
 #include <curl.h>
 
 struct http_res_t {

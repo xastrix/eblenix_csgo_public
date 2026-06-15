@@ -165,7 +165,7 @@ static void __stdcall init(HMODULE I)
 bool __stdcall DllMain(const HMODULE mod, const int32_t r, void*)
 {
 	mod_t   _dll        = { mod, r };
-	uint8_t _dll_flags  = { MF_DISABLE_LIB_CALLS | MF_CUSTOM_EXCEPTION_HANDLER };
+	uint8_t _dll_flags  = { MF_DISABLE_LIB_CALLS };
 	bool    _dll_status = { false };
 
 	_dll_status = _dll.in(DLL_PROCESS_ATTACH, _dll_flags, [](const HMODULE mod) {

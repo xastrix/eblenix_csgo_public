@@ -104,9 +104,6 @@
     <ClCompile Include="vec3.cpp">
       <Filter>csgo\math</Filter>
     </ClCompile>
-    <ClCompile Include="..\external\exception_handler\exception_handler.cpp">
-      <Filter>external\exception_handler</Filter>
-    </ClCompile>
     <ClCompile Include="triggerbot.cpp">
       <Filter>features</Filter>
     </ClCompile>
@@ -412,9 +409,6 @@
     <ClInclude Include="vec_util.h">
       <Filter>csgo\math</Filter>
     </ClInclude>
-    <ClInclude Include="..\external\exception_handler\exception_handler.hpp">
-      <Filter>external\exception_handler</Filter>
-    </ClInclude>
     <ClInclude Include="var_defines.h" />
     <ClInclude Include="vars.h" />
     <ClInclude Include="hud.h">
@@ -682,9 +676,6 @@
     </Filter>
     <Filter Include="helpers\ui">
       <UniqueIdentifier>{9840e7ae-799f-4f14-917f-1544e34cf189}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="external\exception_handler">
-      <UniqueIdentifier>{dafe7bf8-088f-4e41-b097-dbdde06f5e34}</UniqueIdentifier>
     </Filter>
     <Filter Include="external\lua">
       <UniqueIdentifier>{62908aec-16e7-488d-8e01-fb8ab2713e91}</UniqueIdentifier>
