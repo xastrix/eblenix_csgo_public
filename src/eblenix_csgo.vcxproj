@@ -46,15 +46,15 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)obj\$(ProjectName)\$(Configuration)\</IntDir>
-    <LibraryPath>$(DXSDK_DIR)Lib\x86;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)external\minhook\include;$(SolutionDir)external\files;$(SolutionDir)external\exception_handler;$(SolutionDir)external\lua;$(SolutionDir)external\sol;$(SolutionDir)external\aes;$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)external\curl\lib\x86;$(DXSDK_DIR)Lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)external\minhook\include;$(SolutionDir)external\files;$(SolutionDir)external\exception_handler;$(SolutionDir)external\lua;$(SolutionDir)external\sol;$(SolutionDir)external\aes;$(SolutionDir)external\curl\include;$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
     <TargetName>$(ProjectName)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)obj\$(ProjectName)\$(Configuration)\</IntDir>
-    <LibraryPath>$(DXSDK_DIR)Lib\x86;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)external\minhook\include;$(SolutionDir)external\files;$(SolutionDir)external\exception_handler;$(SolutionDir)external\lua;$(SolutionDir)external\sol;$(SolutionDir)external\aes;$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)external\curl\lib\x86;$(DXSDK_DIR)Lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)external\minhook\include;$(SolutionDir)external\files;$(SolutionDir)external\exception_handler;$(SolutionDir)external\lua;$(SolutionDir)external\sol;$(SolutionDir)external\aes;$(SolutionDir)external\curl\include;$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
     <TargetName>$(ProjectName)</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -70,7 +70,13 @@
       <AdditionalIncludeDirectories>$(SolutionDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>d3dx9.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3dx9.lib;ws2_32.lib;
+crypt32.lib
+;wldap32.lib
+;bcrypt.lib;
+iphlpapi.lib;
+secur32.lib;
+libcurl-windows-sspi.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -97,7 +103,13 @@
       <UACExecutionLevel>AsInvoker</UACExecutionLevel>
       <StackReserveSize>
       </StackReserveSize>
-      <AdditionalDependencies>d3dx9.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3dx9.lib;ws2_32.lib;
+crypt32.lib
+;wldap32.lib
+;bcrypt.lib;
+iphlpapi.lib;
+secur32.lib;
+libcurl-windows-sspi.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -144,6 +156,7 @@
     <ClCompile Include="..\external\minhook\src\hde\hde64.c" />
     <ClCompile Include="..\external\minhook\src\hook.c" />
     <ClCompile Include="..\external\minhook\src\trampoline.c" />
+    <ClCompile Include="http.cpp" />
     <ClCompile Include="autostrafe.cpp" />
     <ClCompile Include="bhop.cpp" />
     <ClCompile Include="blockbot.cpp" />
@@ -191,6 +204,18 @@
   <ItemGroup>
     <ClInclude Include="..\external\aes\aes.hpp" />
     <ClInclude Include="..\external\aes\aes_clipboard.hpp" />
+    <ClInclude Include="..\external\curl\include\curl.h" />
+    <ClInclude Include="..\external\curl\include\curlver.h" />
+    <ClInclude Include="..\external\curl\include\easy.h" />
+    <ClInclude Include="..\external\curl\include\header.h" />
+    <ClInclude Include="..\external\curl\include\mprintf.h" />
+    <ClInclude Include="..\external\curl\include\multi.h" />
+    <ClInclude Include="..\external\curl\include\options.h" />
+    <ClInclude Include="..\external\curl\include\stdcheaders.h" />
+    <ClInclude Include="..\external\curl\include\system.h" />
+    <ClInclude Include="..\external\curl\include\typecheck-gcc.h" />
+    <ClInclude Include="..\external\curl\include\urlapi.h" />
+    <ClInclude Include="..\external\curl\include\websockets.h" />
     <ClInclude Include="..\external\exception_handler\exception_handler.hpp" />
     <ClInclude Include="..\external\files\files.h" />
     <ClInclude Include="..\external\lua\lapi.h" />
@@ -229,6 +254,7 @@
     <ClInclude Include="..\external\minhook\src\hde\table64.h" />
     <ClInclude Include="..\external\minhook\src\trampoline.h" />
     <ClInclude Include="..\external\sol\sol.hpp" />
+    <ClInclude Include="http.h" />
     <ClInclude Include="color.h" />
     <ClInclude Include="command_line.h" />
     <ClInclude Include="events.h" />
@@ -288,6 +314,9 @@
     <ClInclude Include="vars.h" />
     <ClInclude Include="fonts.hpp" />
     <ClInclude Include="sprites.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="..\external\curl\lib\x86\libcurl-windows-sspi.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

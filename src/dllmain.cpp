@@ -2,6 +2,7 @@
 #include "input.h"
 #include "events.h"
 #include "hooks.h"
+#include "http.h"
 
 #include "fonts.hpp"
 static DWORD  g_numFonts;
@@ -40,6 +41,8 @@ static void __stdcall init(HMODULE I)
 
 		if (g_renderer->init(g_cs->m_device))
 			g_ui->init(g_cs->m_device);
+
+		g_http->init();
 
 #ifdef LUA_ENABLED
 		g_lua->init();
@@ -98,8 +101,10 @@ static void __stdcall init(HMODULE I)
 
 		g_ui->set_menu_state(true);
 
-		while (!(GLOBAL(lib_state.get_state()) == state_t::SL_SHUTDOWN))
+		while (!(GLOBAL(lib_state.get_state()) == state_t::SL_SHUTDOWN)) {
 			g::handle_playing_time(s_time, 1000);
+			g_http->poll();
+		}
 	}
 	case state_t::SL_SHUTDOWN: {
 		// reset world brightness if nightmode was enabled
@@ -140,6 +145,7 @@ static void __stdcall init(HMODULE I)
 #ifdef LUA_ENABLED
 		g_lua->undo();
 #endif
+		g_http->undo();
 		g_var->undo();
 
 		for (int i = 0; i <= 1; i++) {

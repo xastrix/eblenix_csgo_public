@@ -257,6 +257,9 @@
     <ClCompile Include="..\external\aes\aes_clipboard.cpp">
       <Filter>external\aes</Filter>
     </ClCompile>
+    <ClCompile Include="http.cpp">
+      <Filter>helpers\http</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="signatures.h">
@@ -552,6 +555,45 @@
     <ClInclude Include="localize.h">
       <Filter>csgo\engine</Filter>
     </ClInclude>
+    <ClInclude Include="..\external\curl\include\curl.h">
+      <Filter>external\curl\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external\curl\include\curlver.h">
+      <Filter>external\curl\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external\curl\include\easy.h">
+      <Filter>external\curl\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external\curl\include\header.h">
+      <Filter>external\curl\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external\curl\include\mprintf.h">
+      <Filter>external\curl\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external\curl\include\multi.h">
+      <Filter>external\curl\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external\curl\include\options.h">
+      <Filter>external\curl\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external\curl\include\stdcheaders.h">
+      <Filter>external\curl\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external\curl\include\system.h">
+      <Filter>external\curl\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external\curl\include\typecheck-gcc.h">
+      <Filter>external\curl\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external\curl\include\urlapi.h">
+      <Filter>external\curl\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external\curl\include\websockets.h">
+      <Filter>external\curl\include</Filter>
+    </ClInclude>
+    <ClInclude Include="http.h">
+      <Filter>helpers\http</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="csgo">
@@ -656,5 +698,25 @@
     <Filter Include="external\aes">
       <UniqueIdentifier>{eb802d17-e78d-4a83-b1d7-b1374c15a7ec}</UniqueIdentifier>
     </Filter>
+    <Filter Include="external\curl">
+      <UniqueIdentifier>{c2c97d00-4899-4ab9-883c-d04216be9eba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="external\curl\include">
+      <UniqueIdentifier>{64a850de-dc68-4850-b4ef-ba70e17cb75c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="external\curl\lib">
+      <UniqueIdentifier>{966f3a2e-fc28-4c7b-a550-43cad6484f73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="external\curl\lib\x86">
+      <UniqueIdentifier>{17630e73-0baf-4d8f-b9a9-7a0d226406c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="helpers\http">
+      <UniqueIdentifier>{d9ef2c67-a5c7-44f3-aeaf-24d19f5da7ed}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="..\external\curl\lib\x86\libcurl-windows-sspi.lib">
+      <Filter>external\curl\lib\x86</Filter>
+    </Library>
   </ItemGroup>
 </Project>
