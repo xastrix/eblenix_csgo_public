@@ -18,4 +18,4 @@ public:
 	}
 };
 
-using command_line_t = c_command_line * (__stdcall*)();
+using command_line_t = c_command_line*(__stdcall*)();

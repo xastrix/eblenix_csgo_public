@@ -3,7 +3,6 @@
 #include <vector>
 #include <d3d9.h>
 
-#include "globals.h"
 #include "util.h"
 
 enum _interface_status {
@@ -12,21 +11,13 @@ enum _interface_status {
 };
 
 struct Interface {
-	_interface_status init();
+	_interface_status init(HINSTANCE instance);
 
 	void loop();
 	void on_reset();
 
-	int get_width();
-	int get_height();
-
-	int get_mouse_pos_x();
-	int get_mouse_pos_y();
-
-	bool is_window_active();
-	bool is_window_hovered();
-
-	void set_window_pos(int x, int y);
+	int get_width() { return m_width; }
+	int get_height() { return m_height; }
 
 	void undo();
 
@@ -44,18 +35,19 @@ private:
 		return true;
 	}
 
+	void push_windows_notify(const std::string& title, const std::string& msg, DWORD icon_type = NIIF_INFO);
+
 private:
 	WNDCLASSEX            m_wc{};
+	NOTIFYICONDATAA       m_nid{};
 	HWND                  m_hwnd{};
 	LPDIRECT3D9           m_d3d9{};
 	LPDIRECT3DDEVICE9     m_device{};
 	D3DPRESENT_PARAMETERS m_present_params{};
 	std::string           m_window_name;
 	std::string           m_class_name;
-	int                   m_width{ 385 };
-	int                   m_height{ 120 };
-	int                   m_mouse_pos_x,
-		                  m_mouse_pos_y;
+	int                   m_width{ 480 };
+	int                   m_height{ 340 };
 };
 
 inline Interface g_interface;

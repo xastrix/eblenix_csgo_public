@@ -128,10 +128,10 @@ void Math::adjust_sidemove_for_yaw(const vec3& forward, const vec3& local_angle,
 		delta += 360;
 
 	if (delta > 0.25)
-		cmd->m_sidemove = -best_speed;
+		cmd->sidemove = -best_speed;
 
 	else if (delta < -0.25)
-		cmd->m_sidemove = best_speed;
+		cmd->sidemove = best_speed;
 }
 
 vec3 Math::calculate_angle(const vec3& source, const vec3& destination, const vec3& view_angles)
@@ -176,7 +176,7 @@ void Math::vector_angles(const vec3& forward, vec3& angles)
 float Math::distance_based_fov(const float distance, const vec3 angle, const user_cmd_t* cmd)
 {
 	vec3 aiming_at;
-	angle_vectors(cmd->m_viewangles, aiming_at);
+	angle_vectors(cmd->viewangles, aiming_at);
 	aiming_at *= distance / 10;
 
 	vec3 aim_at;

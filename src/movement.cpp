@@ -14,5 +14,5 @@ void c_move::run(user_cmd_t* cmd)
 	autostrafe_t::get_instance().think(cmd);
 	blockbot_t::get_instance().think(cmd);
 
-	cmd->m_buttons |= in_bullrush;
+	cmd->buttons |= in_bullrush;
 }

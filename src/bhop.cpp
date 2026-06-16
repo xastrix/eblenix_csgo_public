@@ -17,15 +17,15 @@ void bunnyhop_t::think(user_cmd_t* cmd)
 
 	if (!(u & 0x1) && (u & 0x2)) {
 		u &= ~0x2;
-		cmd->m_buttons |= in_jump;
+		cmd->buttons |= in_jump;
 	}
-	else if (cmd->m_buttons & in_jump) {
+	else if (cmd->buttons & in_jump) {
 		if (g_cs->get_local()->get_flags() & fl_onground) {
 			u |= 0x1;
 			u |= 0x2;
 		}
 		else {
-			cmd->m_buttons &= ~in_jump;
+			cmd->buttons &= ~in_jump;
 			u &= ~0x1;
 		}
 	}

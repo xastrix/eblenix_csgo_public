@@ -7,8 +7,6 @@
 
 void player_esp_t::think()
 {
-	box bbox;
-
 	if (!g_var->get_as<bool>(V_ESP_ENABLED).value())
 		return;
 
@@ -35,6 +33,7 @@ void player_esp_t::think()
 
 		calc_player_animation_progress(i, am, entity);
 
+		box bbox;
 		if (Helpers::get_bbox(entity, bbox, static_cast<_bbox_types>(g_var->get_as<int>(V_ESP_RENDER_TYPE).value())))
 			player_rendering(i, entity, bbox);
 	}
@@ -96,7 +95,7 @@ void player_esp_t::player_rendering(int index, c_base_player* entity, box bbox)
 		player_info_t info;
 		g_cs->m_engine->get_player_info(index, &info);
 
-		auto player_name = Helpers::stws(std::string{ info.m_player_name });
+		auto player_name = Helpers::stws(std::string{ info.player_name });
 
 		switch (g_var->get_as<int>(V_ESP_NAME_TYPE).value()) {
 		case 1: {
@@ -274,19 +273,16 @@ void player_esp_t::player_rendering(int index, c_base_player* entity, box bbox)
 
 		if (studio_model)
 		{
-			vec3 v_parent{},
-				v_child{},
-				s_parent{},
-				s_child{};
+			vec3 v_parent, v_child, s_parent, s_child;
 
-			for (int i = 0; i < studio_model->m_bones_count; i++)
+			for (int i = 0; i < studio_model->bones_count; i++)
 			{
 				const auto bone = studio_model->bone(i);
 
-				if (bone && (bone->m_flags & bone_used_by_hitbox) && (bone->m_parent != -1))
+				if (bone && (bone->flags & bone_used_by_hitbox) && (bone->parent != -1))
 				{
 					v_child = entity->get_bone_position(i);
-					v_parent = entity->get_bone_position(bone->m_parent);
+					v_parent = entity->get_bone_position(bone->parent);
 
 					if (Math::w2s(v_parent, s_parent) && Math::w2s(v_child, s_child))
 					{
@@ -311,11 +307,7 @@ void player_esp_t::player_rendering(int index, c_base_player* entity, box bbox)
 
 	if (g_var->get_as<bool>(V_ESP_BARREL_ENABLED).value())
 	{
-		vec3 start{},
-			s_screen{},
-			end{},
-			e_screen{},
-			forward{};
+		vec3 start, s_screen, end, e_screen, forward;
 
 		Math::angle_vectors(entity->get_eye_angles(), forward);
 
@@ -331,7 +323,7 @@ void player_esp_t::player_rendering(int index, c_base_player* entity, box bbox)
 
 	if (g_var->get_as<bool>(V_ESP_SNAP_LINES_ENABLED).value())
 	{
-		vec3 pos{};
+		vec3 pos;
 
 		if (Math::w2s(entity->get_hitbox_position(hitbox_head), pos))
 		{

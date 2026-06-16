@@ -45,7 +45,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>false</ConformanceMode>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <WholeProgramOptimization>false</WholeProgramOptimization>
@@ -61,24 +61,20 @@
       <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
       <StackReserveSize>
       </StackReserveSize>
-      <AdditionalDependencies>d3d9.lib;d3dx9.lib;shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d9.lib;d3dx9.lib;dwmapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="button.cpp" />
-    <ClCompile Include="d3d.cpp" />
-    <ClCompile Include="game_selector.cpp" />
-    <ClCompile Include="group_box.cpp" />
+    <ClCompile Include="font.cpp" />
     <ClCompile Include="interface.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="renderer.cpp" />
     <ClCompile Include="ui.cpp" />
-    <ClCompile Include="util_box.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="csgo_icon.hpp" />
-    <ClInclude Include="d3d.h" />
-    <ClInclude Include="globals.h" />
     <ClInclude Include="interface.h" />
+    <ClInclude Include="renderer.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="ui.h" />
     <ClInclude Include="util.h" />

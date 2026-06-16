@@ -15,20 +15,20 @@ void autostrafe_t::think(user_cmd_t* cmd)
 		g_cs->get_local()->get_move_type() == movetype_observer)
 		return;
 
-	if (cmd->m_buttons & in_forward || cmd->m_buttons & in_back ||
-		cmd->m_buttons & in_moveleft || cmd->m_buttons & in_moveright)
+	if (cmd->buttons & in_forward || cmd->buttons & in_back ||
+		cmd->buttons & in_moveleft || cmd->buttons & in_moveright)
 		return;
 
 	const auto velocity = length_2d(g_cs->get_local()->get_velocity());
 
 	if (velocity > 1.0f && !(g_cs->get_local()->get_flags() & fl_onground))
 	{
-		if (!cmd->m_mousedx) {
-			cmd->m_forwardmove = std::min<float>(450.0f, 5850.0f / velocity);
-			cmd->m_sidemove = (cmd->m_command_number % 2) == 0 ? -450.0f : 450.0f;
+		if (!cmd->mousedx) {
+			cmd->forwardmove = std::min<float>(450.0f, 5850.0f / velocity);
+			cmd->sidemove = (cmd->command_number % 2) == 0 ? -450.0f : 450.0f;
 		}
 		else {
-			cmd->m_sidemove = cmd->m_mousedx < 0.0f ? -450.0f : 450.0f;
+			cmd->sidemove = cmd->mousedx < 0.0f ? -450.0f : 450.0f;
 		}
 	}
 }

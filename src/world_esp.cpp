@@ -11,12 +11,12 @@ struct entity_object {
 
 	bool in_class_id(const _class_ids _class_id) {
 		auto temp_ent{ reinterpret_cast<c_base_entity*>(m_entity) };
-		return temp_ent->get_client_class()->m_class_id == _class_id;
+		return temp_ent->get_client_class()->class_id == _class_id;
 	}
 
 	bool is_network_name(const std::string& name) {
 		auto temp_ent{ reinterpret_cast<c_base_entity*>(m_entity) };
-		return std::string{ temp_ent->get_client_class()->m_network_name }.find(name) != std::string::npos;
+		return std::string{ temp_ent->get_client_class()->network_name }.find(name) != std::string::npos;
 	}
 
 	bool world_to_screen() {
@@ -86,7 +86,7 @@ void world_esp_t::think()
 		{
 			if (GLOBAL(b_flags[BF_BOMB_PLANTED]))
 			{
-				if (entity->get_client_class()->m_class_id == cplantedc4)
+				if (entity->get_client_class()->class_id == cplantedc4)
 				{
 					const auto bomb = reinterpret_cast<c_base_plantedc4*>(entity);
 					const auto explode_time = bomb->c4_blow() - g_cs->m_globals->cur_time;
@@ -141,7 +141,7 @@ void world_esp_t::on_do_post_screen_effects()
 		if (glow.is_unused())
 			continue;
 
-		const auto glow_object = reinterpret_cast<c_base_player*>(glow.m_entity);
+		const auto glow_object = reinterpret_cast<c_base_player*>(glow.entity);
 
 		if (!glow_object || glow_object->get_dormant())
 			continue;
@@ -153,7 +153,7 @@ void world_esp_t::on_do_post_screen_effects()
 
 		if (g_var->get_as<bool>(V_GLOW_C4).value())
 		{
-			if (client_class->m_class_id == cc4 || client_class->m_class_id == cplantedc4)
+			if (client_class->class_id == cc4 || client_class->class_id == cplantedc4)
 			{
 				glow.set_glow(
 					g_var->get_as<int>(V_GLOW_C4_COL_R).value() / 255.0f,
@@ -167,7 +167,7 @@ void world_esp_t::on_do_post_screen_effects()
 		if (!glow_object->is_moving() & g_var->get_as<bool>(V_GLOW_WALKING_ONLY).value())
 			continue;
 
-		if (client_class->m_class_id == ccsplayer)
+		if (client_class->class_id == ccsplayer)
 		{
 			const auto is_enemy = glow_object->get_team_num() != g_cs->get_local()->get_team_num();
 			const auto is_teammate = glow_object->get_team_num() == g_cs->get_local()->get_team_num();
@@ -348,7 +348,7 @@ void world_esp_t::draw_projectiles(c_base_entity* entity)
 		return;
 
 	const auto studio_model = g_cs->m_model_info->get_studio_model(entity->get_model());
-	const auto studio_model_name = std::string{ studio_model->m_name_char_array };
+	const auto studio_model_name = std::string{ studio_model->name_char_array };
 
 	if (!studio_model)
 		return;
@@ -501,7 +501,7 @@ void world_esp_t::draw_dropped_weapons(c_base_entity* entity)
 			auto width = 40;
 
 			width *= weapon->clip1_count();
-			width /= weapon->get_weapon_data()->m_weapon_max_clip;
+			width /= weapon->get_weapon_data()->weapon_max_clip;
 
 			const auto ammo_bar_col = c_color(V_VISUALS_WORLD_WEAPONS_AMMO_BAR_COL);
 

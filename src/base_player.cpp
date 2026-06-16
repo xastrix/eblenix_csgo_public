@@ -70,14 +70,14 @@ bool c_base_player::can_see_entity(c_base_entity* entity, const vec3& pos)
 	trace_filter filter;
 	vec3         src = get_eye_pos(), dir = (pos - src);
 
-	filter.m_fp = this;
+	filter.fp = this;
 
 	normalize(dir);
 	ray.init(src, pos);
 
 	g_cs->m_trace->trace_ray(ray, MASK_SHOT | CONTENTS_GRATE, &filter, &tr);
 
-	return tr.m_entity == entity || tr.m_fraction > 0.97f;
+	return tr.entity == entity || tr.fraction > 0.97f;
 }
 
 vec3 c_base_player::get_bone_position(int bone_id)
@@ -109,8 +109,8 @@ vec3 c_base_player::get_hitbox_position(int hitbox_id)
 	if (!hitbox)
 		return vec3{ 0, 0, 0 };
 
-	Math::transform_vector(hitbox->m_mins, bone_matrix[hitbox->m_bone], min);
-	Math::transform_vector(hitbox->m_maxs, bone_matrix[hitbox->m_bone], max);
+	Math::transform_vector(hitbox->mins, bone_matrix[hitbox->bone], min);
+	Math::transform_vector(hitbox->maxs, bone_matrix[hitbox->bone], max);
 
 	return vec3{ (min.x + max.x) * 0.5f, (min.y + max.y) * 0.5f, (min.z + max.z) * 0.5f };
 }

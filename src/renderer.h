@@ -159,11 +159,6 @@ public:
 	bool init(IDirect3DDevice9* device);
 	bool restore(IDirect3DDevice9* device);
 
-	void set_render_states();
-
-	void set_viewport(D3DVIEWPORT9 vp);
-	D3DVIEWPORT9 get_viewport();
-
 	void rect(vec2 pos, vec2 size, c_color c);
 	void rect(float x, float y, float w, float h, c_color c) {
 		return rect({ x, y }, { w, h }, c);

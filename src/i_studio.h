@@ -75,109 +75,114 @@ enum _hitboxes {
 };
 
 struct studio_bone_t {
-	int             m_name_index;
+	int             name_index;
 
 	inline char* const name(void) const {
-		return ((char*)this) + m_name_index;
+		return ((char*)this) + name_index;
 	}
 
-	int             m_parent;
-	int             m_bone_controller[6];
+	int             parent;
+	int             bone_controller[6];
 
-	vec3            m_pos;
-	quaternion      m_quat;
-	rad_euler       m_rotation;
+	vec3            pos;
+	quaternion      quat;
+	rad_euler       rotation;
 
-	vec3            m_pos_scale;
-	vec3            m_rot_scale;
+	vec3            pos_scale;
+	vec3            rot_scale;
 
-	matrix3x4_t     m_pose_to_bone;
-	quaternion      m_quat_alignement;
-	int             m_flags;
-	int             m_proc_type;
-	int             m_proc_index;
-	mutable int     m_physics_bone;
+	matrix3x4_t     pose_to_bone;
+	quaternion      quat_alignement;
+	int             flags;
+	int             proc_type;
+	int             proc_index;
+	mutable int     physics_bone;
 
 	inline void* procedure() const {
-		if (m_proc_index == 0) return NULL;
-		else return(void*)(((unsigned char*)this) + m_proc_index);
+		if (proc_index == 0)
+			return NULL;
+		else return(void*)(((unsigned char*)this) + proc_index);
 	};
 
-	int             m_surface_prop_idx;
+	int             surface_prop_idx;
 
 	inline char* const surface_prop(void) const {
-		return ((char*)this) + m_surface_prop_idx;
+		return ((char*)this) + surface_prop_idx;
 	}
 
 	inline int get_surface_prop(void) const {
-		return m_surf_prop_lookup;
+		return surf_prop_lookup;
 	}
 
-	int             m_contents;
-	int             m_surf_prop_lookup;
+	int             contents;
+	int             surf_prop_lookup;
 	int             u[7];
 };
 
 struct studio_box_t {
-	int             m_bone;
-	int             m_group;
-	vec3            m_mins;
-	vec3            m_maxs;
-	int             m_name_index;
+	int             bone;
+	int             group;
+	vec3            mins;
+	vec3            maxs;
+	int             name_index;
 	int             u1[3];
-	float           m_radius;
+	float           radius;
 	int             u2[4];
 };
 
 struct studio_hitbox_set_t {
-	int             m_name_index;
-	int             m_hitbox_count;
-	int             m_hitbox_index;
+	int             name_index;
+	int             hitbox_count;
+	int             hitbox_index;
 
 	inline char* const name(void) const {
-		return ((char*)this) + m_name_index;
+		return ((char*)this) + name_index;
 	}
 
 	inline studio_box_t* hitbox(int i) const {
-		return (studio_box_t*)(((unsigned char*)this) + m_hitbox_index) + i;
+		return (studio_box_t*)(((unsigned char*)this) + hitbox_index) + i;
 	}
 };
 
 struct studio_hdr_t {
-	int            m_id;
-	int            m_version;
-	long           m_checksum;
-	char           m_name_char_array[64];
-	int            m_length;
-	vec3           m_eye_pos;
-	vec3           m_illium_pos;
-	vec3           m_hull_mins;
-	vec3           m_hull_maxs;
-	vec3           m_mins;
-	vec3           m_maxs;
-	int            m_flags;
-	int            m_bones_count;
-	int            m_bone_index;
-	int            m_bone_controllers_count;
-	int            m_bone_controller_index;
-	int            m_hitbox_sets_count;
-	int            m_hitbox_set_index;
-	int            m_local_anim_count;
-	int            m_local_anim_index;
-	int            m_local_seq_count;
-	int            m_local_seq_index;
-	int            m_activity_list_version;
-	int            m_events_indexed;
-	int            m_textures_count;
-	int            m_texture_index;
+	int            id;
+	int            version;
+	long           checksum;
+	char           name_char_array[64];
+	int            length;
+	vec3           eye_pos;
+	vec3           illium_pos;
+	vec3           hull_mins;
+	vec3           hull_maxs;
+	vec3           mins;
+	vec3           maxs;
+	int            flags;
+	int            bones_count;
+	int            bone_index;
+	int            bone_controllers_count;
+	int            bone_controller_index;
+	int            hitbox_sets_count;
+	int            hitbox_set_index;
+	int            local_anim_count;
+	int            local_anim_index;
+	int            local_seq_count;
+	int            local_seq_index;
+	int            activity_list_version;
+	int            events_indexed;
+	int            textures_count;
+	int            texture_index;
 
 	studio_hitbox_set_t* hitbox_set(int i) {
-		if (i > m_hitbox_sets_count) return nullptr;
-		return (studio_hitbox_set_t*)((uint8_t*)this + m_hitbox_set_index) + i;
+		if (i > hitbox_sets_count)
+			return nullptr;
+
+		return (studio_hitbox_set_t*)((uint8_t*)this + hitbox_set_index) + i;
 	}
 
 	studio_bone_t* bone(int i) {
-		if (i > m_bones_count) return nullptr;
-		return (studio_bone_t*)((uint8_t*)this + m_bone_index) + i;
+		if (i > bones_count)
+			return nullptr;
+
+		return (studio_bone_t*)((uint8_t*)this + bone_index) + i;
 	}
 };

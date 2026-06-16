@@ -65,7 +65,7 @@ void spectators_t::draw()
 		player_info_t info;
 		g_cs->m_engine->get_player_info(i, &info);
 
-		auto player_name = Helpers::stws(std::string{ info.m_player_name });
+		auto player_name = Helpers::stws(std::string{ info.player_name });
 
 		if (player_name.length() > 14)
 			player_name = player_name.substr(0, 14) + L"...";

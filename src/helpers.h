@@ -49,9 +49,9 @@ private:
 };
 
 struct module_t {
-	uintptr_t m_base_address;
-	std::string m_name;
-	size_t m_size;
+	uintptr_t base_address;
+	std::string name;
+	size_t size;
 };
 
 struct box {

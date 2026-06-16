@@ -84,7 +84,7 @@ void c_ui::draw(int x, int y)
 	};
 
 	m_sprites[UI_SPRITE_LOGO].draw(menu_logo_x, menu_logo_y, c_color(255, 255, 255,
-		static_cast<int>(target_animation_progress * 255.0f)));
+		static_cast<int>(m_target_animation_progress * 255.0f)));
 
 	for (int i = 0; i < m_entry_sz; i++)
 	{
@@ -95,26 +95,26 @@ void c_ui::draw(int x, int y)
 
 		if (i == m_entry_pos)
 		{
-			if (!s_opened[UI_SUB_POS])
+			if (!m_sopened[UI_SUB_POS])
 				g_renderer->rect_fill(menu_box_x, menu_box_y, head_box_width, head_box_height, m_colors[UI_PRIMARY_COL]);
 
 			g_renderer->rect_fill(menu_box_x, menu_box_y, 2, head_box_height, m_colors[UI_MAIN_COL]);
 		}
 
-		g_font->draw_stringW(m_entry[i].m_name, menu_text_x + 3, menu_text_y - 11, FONT(Tahoma12px), TEXT_OUTLINE, m_colors[UI_TEXT_COL]);
+		g_font->draw_stringW(m_entry[i].name, menu_text_x + 3, menu_text_y - 11, FONT(Tahoma12px), TEXT_OUTLINE, m_colors[UI_TEXT_COL]);
 
 		g_font->draw_string("+", menu_text_x + head_box_width - 20, menu_text_y - 11, FONT(Tahoma12px),
-			TEXT_OUTLINE, (i == m_entry_pos && s_opened[UI_SUB_POS]) ? m_colors[UI_MAIN_COL] : m_colors[UI_TEXT_COL]);
+			TEXT_OUTLINE, (i == m_entry_pos && m_sopened[UI_SUB_POS]) ? m_colors[UI_MAIN_COL] : m_colors[UI_TEXT_COL]);
 
 		y += head_box_height + 1;
 
-		if (m_entry[i].m_space)
+		if (m_entry[i].space)
 			y += head_box_height + 1;
 	}
 
 	x += head_box_width + 1;
 
-	if (s_opened[UI_SUB_POS])
+	if (m_sopened[UI_SUB_POS])
 	{
 		auto sub_menu_box_x = x + 1;
 		auto sub_menu_box_y = head_y + head_box_height + 5;
@@ -127,49 +127,49 @@ void c_ui::draw(int x, int y)
 
 			if (i == s_entry_pos[UI_SUB_POS])
 			{
-				if (!s_opened[UI_SUB_SUB_POS])
+				if (!m_sopened[UI_SUB_SUB_POS])
 					g_renderer->rect_fill(sub_menu_box_x, sub_menu_box_y, head_box_width, head_box_height, m_colors[UI_PRIMARY_COL]);
 
 				g_renderer->rect_fill(sub_menu_box_x, sub_menu_box_y, 2, head_box_height, m_colors[UI_MAIN_COL]);
 			}
 
-			g_font->draw_stringW(s_entries[i][UI_SUB_POS].m_name, sub_menu_text_x + 3, sub_menu_text_y - 11,
+			g_font->draw_stringW(s_entries[i][UI_SUB_POS].name, sub_menu_text_x + 3, sub_menu_text_y - 11,
 				FONT(Tahoma12px), TEXT_OUTLINE, m_colors[UI_TEXT_COL]);
 
-			if (s_entries[i][UI_SUB_POS].m_state == UI_TAB_STATE)
+			if (s_entries[i][UI_SUB_POS].state == UI_TAB_STATE)
 			{
 				g_font->draw_string("+", sub_menu_text_x + head_box_width - 20, sub_menu_text_y - 11, FONT(Tahoma12px),
-					TEXT_OUTLINE, (i == s_entry_pos[UI_SUB_POS] && s_opened[UI_SUB_SUB_POS]) ? m_colors[UI_MAIN_COL] : m_colors[UI_TEXT_COL]);
+					TEXT_OUTLINE, (i == s_entry_pos[UI_SUB_POS] && m_sopened[UI_SUB_SUB_POS]) ? m_colors[UI_MAIN_COL] : m_colors[UI_TEXT_COL]);
 			}
 			else
 			{
-				if (s_entries[i][UI_SUB_POS].m_state != UI_FUNCTION_STATE)
+				if (s_entries[i][UI_SUB_POS].state != UI_FUNCTION_STATE)
 				{
-					if (s_entries[i][UI_SUB_POS].m_state == UI_BOOL_STATE)
+					if (s_entries[i][UI_SUB_POS].state == UI_BOOL_STATE)
 					{
-						draw_bool(g_var->get_as<bool>(s_entries[i][UI_SUB_POS].m_var).value(),
+						draw_bool(g_var->get_as<bool>(s_entries[i][UI_SUB_POS].var).value(),
 							sub_menu_text_x + head_box_width, sub_menu_text_y, m_colors[UI_PRIMARY_COL], m_colors[UI_MAIN_COL]);
 					}
-					else if (s_entries[i][UI_SUB_POS].m_state == UI_INT_STATE)
+					else if (s_entries[i][UI_SUB_POS].state == UI_INT_STATE)
 					{
-						draw_int(g_var->get_as<int>(s_entries[i][UI_SUB_POS].m_var).value(),
+						draw_int(g_var->get_as<int>(s_entries[i][UI_SUB_POS].var).value(),
 							sub_menu_text_x + head_box_width, sub_menu_text_y, m_colors[UI_TEXT_COL]);
 					}
-					else if (s_entries[i][UI_SUB_POS].m_state == UI_FLOAT_STATE)
+					else if (s_entries[i][UI_SUB_POS].state == UI_FLOAT_STATE)
 					{
-						draw_float(g_var->get_as<float>(s_entries[i][UI_SUB_POS].m_var).value(),
+						draw_float(g_var->get_as<float>(s_entries[i][UI_SUB_POS].var).value(),
 							sub_menu_text_x + head_box_width, sub_menu_text_y, m_colors[UI_TEXT_COL]);
 					}
-					else if (s_entries[i][UI_SUB_POS].m_state == UI_KEY_STATE)
+					else if (s_entries[i][UI_SUB_POS].state == UI_KEY_STATE)
 					{
-						draw_hotkey(g_var->get_as<int>(s_entries[i][UI_SUB_POS].m_var).value(),
+						draw_hotkey(g_var->get_as<int>(s_entries[i][UI_SUB_POS].var).value(),
 							sub_menu_box_x + head_box_width, sub_menu_text_x + head_box_width, sub_menu_box_y,
-							sub_menu_text_y, head_box_height, s_entries[i][UI_SUB_POS].m_key_hold, m_colors[UI_TEXT_COL], m_colors[UI_MAIN_COL]);
+							sub_menu_text_y, head_box_height, s_entries[i][UI_SUB_POS].key_hold, m_colors[UI_TEXT_COL], m_colors[UI_MAIN_COL]);
 					}
-					else if (s_entries[i][UI_SUB_POS].m_state == UI_ITEM_STATE)
+					else if (s_entries[i][UI_SUB_POS].state == UI_ITEM_STATE)
 					{
-						draw_item(s_entries[i][UI_SUB_POS].m_items[g_var->get_as<int>(s_entries[i][UI_SUB_POS].m_var).value()],
-							sub_menu_text_x + head_box_width, sub_menu_text_y, s_entries[i][UI_SUB_POS].m_item_text_col);
+						draw_item(s_entries[i][UI_SUB_POS].items[g_var->get_as<int>(s_entries[i][UI_SUB_POS].var).value()],
+							sub_menu_text_x + head_box_width, sub_menu_text_y, s_entries[i][UI_SUB_POS].item_text_col);
 					}
 				}
 			}
@@ -177,7 +177,7 @@ void c_ui::draw(int x, int y)
 			sub_menu_box_y += head_box_height + 1;
 			sub_menu_text_y += head_box_height + 1;
 
-			if (s_entries[i][UI_SUB_POS].m_space)
+			if (s_entries[i][UI_SUB_POS].space)
 			{
 				sub_menu_box_y += head_box_height + 1;
 				sub_menu_text_y += head_box_height + 1;
@@ -187,7 +187,7 @@ void c_ui::draw(int x, int y)
 
 	x += head_box_width + 1;
 
-	if (s_opened[UI_SUB_SUB_POS])
+	if (m_sopened[UI_SUB_SUB_POS])
 	{
 		auto sub_sub_menu_box_x = x + 1;
 		auto sub_sub_menu_box_y = head_y + head_box_height + 5;
@@ -200,48 +200,48 @@ void c_ui::draw(int x, int y)
 
 			if (i == s_entry_pos[UI_SUB_SUB_POS])
 			{
-				if (!s_opened[UI_SUB_SUB_SUB_POS])
+				if (!m_sopened[UI_SUB_SUB_SUB_POS])
 					g_renderer->rect_fill(sub_sub_menu_box_x, sub_sub_menu_box_y, head_box_width, head_box_height, m_colors[UI_PRIMARY_COL]);
 
 				g_renderer->rect_fill(sub_sub_menu_box_x, sub_sub_menu_box_y, 2, head_box_height, m_colors[UI_MAIN_COL]);
 			}
 
-			g_font->draw_stringW(s_entries[i][UI_SUB_SUB_POS].m_name, sub_sub_menu_text_x + 3, sub_sub_menu_text_y - 11, FONT(Tahoma12px), TEXT_OUTLINE, m_colors[UI_TEXT_COL]);
+			g_font->draw_stringW(s_entries[i][UI_SUB_SUB_POS].name, sub_sub_menu_text_x + 3, sub_sub_menu_text_y - 11, FONT(Tahoma12px), TEXT_OUTLINE, m_colors[UI_TEXT_COL]);
 
-			if (s_entries[i][UI_SUB_SUB_POS].m_state == UI_TAB_STATE)
+			if (s_entries[i][UI_SUB_SUB_POS].state == UI_TAB_STATE)
 			{
 				g_font->draw_string("+", sub_sub_menu_text_x + head_box_width - 20, sub_sub_menu_text_y - 11, FONT(Tahoma12px),
-					TEXT_OUTLINE, (i == s_entry_pos[UI_SUB_SUB_POS] && s_opened[UI_SUB_SUB_SUB_POS]) ? m_colors[UI_MAIN_COL] : m_colors[UI_TEXT_COL]);
+					TEXT_OUTLINE, (i == s_entry_pos[UI_SUB_SUB_POS] && m_sopened[UI_SUB_SUB_SUB_POS]) ? m_colors[UI_MAIN_COL] : m_colors[UI_TEXT_COL]);
 			}
 			else
 			{
-				if (s_entries[i][UI_SUB_SUB_POS].m_state != UI_FUNCTION_STATE)
+				if (s_entries[i][UI_SUB_SUB_POS].state != UI_FUNCTION_STATE)
 				{
-					if (s_entries[i][UI_SUB_SUB_POS].m_state == UI_BOOL_STATE)
+					if (s_entries[i][UI_SUB_SUB_POS].state == UI_BOOL_STATE)
 					{
-						draw_bool(g_var->get_as<bool>(s_entries[i][UI_SUB_SUB_POS].m_var).value(),
+						draw_bool(g_var->get_as<bool>(s_entries[i][UI_SUB_SUB_POS].var).value(),
 							sub_sub_menu_text_x + head_box_width, sub_sub_menu_text_y, m_colors[UI_PRIMARY_COL], m_colors[UI_MAIN_COL]);
 					}
-					else if (s_entries[i][UI_SUB_SUB_POS].m_state == UI_INT_STATE)
+					else if (s_entries[i][UI_SUB_SUB_POS].state == UI_INT_STATE)
 					{
-						draw_int(g_var->get_as<int>(s_entries[i][UI_SUB_SUB_POS].m_var).value(),
+						draw_int(g_var->get_as<int>(s_entries[i][UI_SUB_SUB_POS].var).value(),
 							sub_sub_menu_text_x + head_box_width, sub_sub_menu_text_y, m_colors[UI_TEXT_COL]);
 					}
-					else if (s_entries[i][UI_SUB_SUB_POS].m_state == UI_FLOAT_STATE)
+					else if (s_entries[i][UI_SUB_SUB_POS].state == UI_FLOAT_STATE)
 					{
-						draw_float(g_var->get_as<float>(s_entries[i][UI_SUB_SUB_POS].m_var).value(),
+						draw_float(g_var->get_as<float>(s_entries[i][UI_SUB_SUB_POS].var).value(),
 							sub_sub_menu_text_x + head_box_width, sub_sub_menu_text_y, m_colors[UI_TEXT_COL]);
 					}
-					else if (s_entries[i][UI_SUB_SUB_POS].m_state == UI_KEY_STATE)
+					else if (s_entries[i][UI_SUB_SUB_POS].state == UI_KEY_STATE)
 					{
-						draw_hotkey(g_var->get_as<int>(s_entries[i][UI_SUB_SUB_POS].m_var).value(),
+						draw_hotkey(g_var->get_as<int>(s_entries[i][UI_SUB_SUB_POS].var).value(),
 							sub_sub_menu_box_x + head_box_width, sub_sub_menu_text_x + head_box_width, sub_sub_menu_box_y,
-							sub_sub_menu_text_y, head_box_height, s_entries[i][UI_SUB_SUB_POS].m_key_hold, m_colors[UI_TEXT_COL], m_colors[UI_MAIN_COL]);
+							sub_sub_menu_text_y, head_box_height, s_entries[i][UI_SUB_SUB_POS].key_hold, m_colors[UI_TEXT_COL], m_colors[UI_MAIN_COL]);
 					}
-					else if (s_entries[i][UI_SUB_SUB_POS].m_state == UI_ITEM_STATE)
+					else if (s_entries[i][UI_SUB_SUB_POS].state == UI_ITEM_STATE)
 					{
-						draw_item(s_entries[i][UI_SUB_SUB_POS].m_items[g_var->get_as<int>(s_entries[i][UI_SUB_SUB_POS].m_var).value()],
-							sub_sub_menu_text_x + head_box_width, sub_sub_menu_text_y, s_entries[i][UI_SUB_SUB_POS].m_item_text_col);
+						draw_item(s_entries[i][UI_SUB_SUB_POS].items[g_var->get_as<int>(s_entries[i][UI_SUB_SUB_POS].var).value()],
+							sub_sub_menu_text_x + head_box_width, sub_sub_menu_text_y, s_entries[i][UI_SUB_SUB_POS].item_text_col);
 					}
 				}
 			}
@@ -249,7 +249,7 @@ void c_ui::draw(int x, int y)
 			sub_sub_menu_box_y += head_box_height + 1;
 			sub_sub_menu_text_y += head_box_height + 1;
 
-			if (s_entries[i][UI_SUB_SUB_POS].m_space)
+			if (s_entries[i][UI_SUB_SUB_POS].space)
 			{
 				sub_sub_menu_box_y += head_box_height + 1;
 				sub_sub_menu_text_y += head_box_height + 1;
@@ -259,7 +259,7 @@ void c_ui::draw(int x, int y)
 
 	x += head_box_width + 1;
 
-	if (s_opened[UI_SUB_SUB_SUB_POS])
+	if (m_sopened[UI_SUB_SUB_SUB_POS])
 	{
 		auto sub_sub_sub_menu_box_x = x + 1;
 		auto sub_sub_sub_menu_box_y = head_y + head_box_height + 5;
@@ -276,42 +276,42 @@ void c_ui::draw(int x, int y)
 				g_renderer->rect_fill(sub_sub_sub_menu_box_x, sub_sub_sub_menu_box_y, 2, head_box_height, m_colors[UI_MAIN_COL]);
 			}
 
-			g_font->draw_stringW(s_entries[i][UI_SUB_SUB_SUB_POS].m_name, sub_sub_sub_menu_text_x + 3, sub_sub_sub_menu_text_y - 11, FONT(Tahoma12px), TEXT_OUTLINE, m_colors[UI_TEXT_COL]);
+			g_font->draw_stringW(s_entries[i][UI_SUB_SUB_SUB_POS].name, sub_sub_sub_menu_text_x + 3, sub_sub_sub_menu_text_y - 11, FONT(Tahoma12px), TEXT_OUTLINE, m_colors[UI_TEXT_COL]);
 
-			if (s_entries[i][UI_SUB_SUB_SUB_POS].m_state != UI_FUNCTION_STATE)
+			if (s_entries[i][UI_SUB_SUB_SUB_POS].state != UI_FUNCTION_STATE)
 			{
-				if (s_entries[i][UI_SUB_SUB_SUB_POS].m_state == UI_BOOL_STATE)
+				if (s_entries[i][UI_SUB_SUB_SUB_POS].state == UI_BOOL_STATE)
 				{
-					draw_bool(g_var->get_as<bool>(s_entries[i][UI_SUB_SUB_SUB_POS].m_var).value(),
+					draw_bool(g_var->get_as<bool>(s_entries[i][UI_SUB_SUB_SUB_POS].var).value(),
 						sub_sub_sub_menu_text_x + head_box_width, sub_sub_sub_menu_text_y, m_colors[UI_PRIMARY_COL], m_colors[UI_MAIN_COL]);
 				}
-				else if (s_entries[i][UI_SUB_SUB_SUB_POS].m_state == UI_INT_STATE)
+				else if (s_entries[i][UI_SUB_SUB_SUB_POS].state == UI_INT_STATE)
 				{
-					draw_int(g_var->get_as<int>(s_entries[i][UI_SUB_SUB_SUB_POS].m_var).value(),
+					draw_int(g_var->get_as<int>(s_entries[i][UI_SUB_SUB_SUB_POS].var).value(),
 						sub_sub_sub_menu_text_x + head_box_width, sub_sub_sub_menu_text_y, m_colors[UI_TEXT_COL]);
 				}
-				else if (s_entries[i][UI_SUB_SUB_SUB_POS].m_state == UI_FLOAT_STATE)
+				else if (s_entries[i][UI_SUB_SUB_SUB_POS].state == UI_FLOAT_STATE)
 				{
-					draw_float(g_var->get_as<float>(s_entries[i][UI_SUB_SUB_SUB_POS].m_var).value(),
+					draw_float(g_var->get_as<float>(s_entries[i][UI_SUB_SUB_SUB_POS].var).value(),
 						sub_sub_sub_menu_text_x + head_box_width, sub_sub_sub_menu_text_y, m_colors[UI_TEXT_COL]);
 				}
-				else if (s_entries[i][UI_SUB_SUB_SUB_POS].m_state == UI_KEY_STATE)
+				else if (s_entries[i][UI_SUB_SUB_SUB_POS].state == UI_KEY_STATE)
 				{
-					draw_hotkey(g_var->get_as<int>(s_entries[i][UI_SUB_SUB_SUB_POS].m_var).value(),
+					draw_hotkey(g_var->get_as<int>(s_entries[i][UI_SUB_SUB_SUB_POS].var).value(),
 						sub_sub_sub_menu_box_x + head_box_width, sub_sub_sub_menu_text_x + head_box_width, sub_sub_sub_menu_box_y,
-						sub_sub_sub_menu_text_y, head_box_height, s_entries[i][UI_SUB_SUB_SUB_POS].m_key_hold, m_colors[UI_TEXT_COL], m_colors[UI_MAIN_COL]);
+						sub_sub_sub_menu_text_y, head_box_height, s_entries[i][UI_SUB_SUB_SUB_POS].key_hold, m_colors[UI_TEXT_COL], m_colors[UI_MAIN_COL]);
 				}
-				else if (s_entries[i][UI_SUB_SUB_SUB_POS].m_state == UI_ITEM_STATE)
+				else if (s_entries[i][UI_SUB_SUB_SUB_POS].state == UI_ITEM_STATE)
 				{
-					draw_item(s_entries[i][UI_SUB_SUB_SUB_POS].m_items[g_var->get_as<int>(s_entries[i][UI_SUB_SUB_SUB_POS].m_var).value()],
-						sub_sub_sub_menu_text_x + head_box_width, sub_sub_sub_menu_text_y, s_entries[i][UI_SUB_SUB_SUB_POS].m_item_text_col);
+					draw_item(s_entries[i][UI_SUB_SUB_SUB_POS].items[g_var->get_as<int>(s_entries[i][UI_SUB_SUB_SUB_POS].var).value()],
+						sub_sub_sub_menu_text_x + head_box_width, sub_sub_sub_menu_text_y, s_entries[i][UI_SUB_SUB_SUB_POS].item_text_col);
 				}
 			}
 
 			sub_sub_sub_menu_box_y += head_box_height + 1;
 			sub_sub_sub_menu_text_y += head_box_height + 1;
 
-			if (s_entries[i][UI_SUB_SUB_SUB_POS].m_space)
+			if (s_entries[i][UI_SUB_SUB_SUB_POS].space)
 			{
 				sub_sub_sub_menu_box_y += head_box_height + 1;
 				sub_sub_sub_menu_text_y += head_box_height + 1;

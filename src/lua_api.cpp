@@ -261,25 +261,25 @@ static void init_usertypes(sol::environment& env)
 	);
 
 	env.new_usertype<player_info_t>("player_info",
-		"name",                sol::readonly(&player_info_t::m_player_name),
-		"friendsname",         sol::readonly(&player_info_t::m_friends_name),
-		"user_id",             sol::readonly(&player_info_t::m_user_id),
-		"fakeplayer",          sol::readonly(&player_info_t::m_is_fake_player),
-		"ishltv",              sol::readonly(&player_info_t::m_is_hltv)
+		"name",                sol::readonly(&player_info_t::player_name),
+		"friendsname",         sol::readonly(&player_info_t::friends_name),
+		"user_id",             sol::readonly(&player_info_t::user_id),
+		"fakeplayer",          sol::readonly(&player_info_t::is_fake_player),
+		"ishltv",              sol::readonly(&player_info_t::is_hltv)
 	);
 
 	env.new_usertype<user_cmd_t>("user_cmd",
-		"cmd_number",          sol::readonly(&user_cmd_t::m_command_number),
-		"forward_move",        &user_cmd_t::m_forwardmove,
-		"side_move",           &user_cmd_t::m_sidemove,
-		"up_move",             &user_cmd_t::m_upmove,
-		"buttons",             &user_cmd_t::m_buttons
+		"cmd_number",          sol::readonly(&user_cmd_t::command_number),
+		"forward_move",        &user_cmd_t::forwardmove,
+		"side_move",           &user_cmd_t::sidemove,
+		"up_move",             &user_cmd_t::upmove,
+		"buttons",             &user_cmd_t::buttons
 	);
 
 	env.new_usertype<module_t>("module",
-		"name",                &module_t::m_name,
-		"addr",                sol::readonly(&module_t::m_base_address),
-		"size",                sol::readonly(&module_t::m_size)
+		"name",                &module_t::name,
+		"addr",                sol::readonly(&module_t::base_address),
+		"size",                sol::readonly(&module_t::size)
 	);
 
 	env.new_usertype<c_base_player>("entity",

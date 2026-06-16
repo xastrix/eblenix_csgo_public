@@ -23,11 +23,11 @@ void c_triggerbot::run(user_cmd_t* cmd)
 
 	calc_trace_to_players(cmd, &filter, src, dst, ray, &tr);
 
-	if (!tr.m_entity || tr.m_entity->get_client_class()->m_class_id != ccsplayer)
+	if (!tr.entity || tr.entity->get_client_class()->class_id != ccsplayer)
 		return;
 
-	if (tr.m_entity == g_cs->get_local() || tr.m_entity->get_dormant() ||
-		!tr.m_entity->is_life_state() || tr.m_entity->has_gun_game_immunity())
+	if (tr.entity == g_cs->get_local() || tr.entity->get_dormant() ||
+		!tr.entity->is_life_state() || tr.entity->has_gun_game_immunity())
 		return;
 
 	const auto weapon = g_cs->get_local()->get_active_weapon();
@@ -64,7 +64,7 @@ void c_triggerbot::clip_trace_to_players(const vec3& start, const vec3& end, uin
 		trace_t tr;
 		g_cs->m_trace->clip_ray_to_entity(ray_t(start, end), mask, ent, &tr);
 
-		if (old_trace->m_fraction > tr.m_fraction)
+		if (old_trace->fraction > tr.fraction)
 			*old_trace = tr;
 	}
 }
@@ -73,10 +73,10 @@ void c_triggerbot::calc_trace_to_players(user_cmd_t* cmd, trace_filter* filter, 
 {
 	constexpr uint32_t mask = CONTENTS_SOLID | CONTENTS_GRATE | CONTENTS_HITBOX;
 
-	filter->m_fp = g_cs->get_local();
+	filter->fp = g_cs->get_local();
 
 	src = g_cs->get_local()->get_eye_pos();
-	Math::angle_vectors(cmd->m_viewangles, dst);
+	Math::angle_vectors(cmd->viewangles, dst);
 
 	ray.init(src, (dst * 8192.0f) + src);
 
@@ -92,10 +92,10 @@ bool c_triggerbot::can_shoot(c_base_weapon* weapon, trace_t trace)
 	if (!g_var->get_as<bool>(V_TRIGGERBOT_FLASH_CHECK).value() && g_cs->get_local()->is_flashed())
 		return false;
 
-	if (!g_var->get_as<bool>(V_TRIGGERBOT_SMOKE_CHECK).value() && Helpers::is_behind_smoke(g_cs->get_local()->get_eye_pos(), trace.m_end))
+	if (!g_var->get_as<bool>(V_TRIGGERBOT_SMOKE_CHECK).value() && Helpers::is_behind_smoke(g_cs->get_local()->get_eye_pos(), trace.end))
 		return false;
 
-	if (!g_var->get_as<bool>(V_TRIGGERBOT_TEAMMATE_CHECK).value() && (g_cs->get_local()->get_team_num() == trace.m_entity->get_team_num()))
+	if (!g_var->get_as<bool>(V_TRIGGERBOT_TEAMMATE_CHECK).value() && (g_cs->get_local()->get_team_num() == trace.entity->get_team_num()))
 		return false;
 
 	if (!g_var->get_as<bool>(V_TRIGGERBOT_JUMP_CHECK).value() && !(g_cs->get_local()->get_flags() & fl_onground))
@@ -114,36 +114,36 @@ void c_triggerbot::shoot(user_cmd_t* cmd, c_base_weapon* weapon, trace_t trace)
 
 	if (g_var->get_as<bool>(V_TRIGGERBOT_HITBOX_HEAD).value())
 	{
-		if (trace.m_hitgroup == hitgroup_head)
+		if (trace.hitgroup == hitgroup_head)
 		{
-			cmd->m_buttons |= Helpers::is_revolver(weapon) ? in_attack2 : in_attack;
+			cmd->buttons |= Helpers::is_revolver(weapon) ? in_attack2 : in_attack;
 		}
 	}
 
 	if (g_var->get_as<bool>(V_TRIGGERBOT_HITBOX_BODY).value())
 	{
-		if (trace.m_hitgroup == hitgroup_chest || trace.m_hitgroup == hitgroup_stomach)
+		if (trace.hitgroup == hitgroup_chest || trace.hitgroup == hitgroup_stomach)
 		{
-			cmd->m_buttons |= Helpers::is_revolver(weapon) ? in_attack2 : in_attack;
+			cmd->buttons |= Helpers::is_revolver(weapon) ? in_attack2 : in_attack;
 		}
 	}
 
 	if (g_var->get_as<bool>(V_TRIGGERBOT_HITBOX_ARMS).value())
 	{
-		if (trace.m_hitgroup == hitgroup_leftarm || trace.m_hitgroup == hitgroup_rightarm)
+		if (trace.hitgroup == hitgroup_leftarm || trace.hitgroup == hitgroup_rightarm)
 		{
-			cmd->m_buttons |= Helpers::is_revolver(weapon) ? in_attack2 : in_attack;
+			cmd->buttons |= Helpers::is_revolver(weapon) ? in_attack2 : in_attack;
 		}
 	}
 
 	if (g_var->get_as<bool>(V_TRIGGERBOT_HITBOX_LEGS).value())
 	{
-		if (trace.m_hitgroup == hitgroup_leftleg || trace.m_hitgroup == hitgroup_rightleg)
+		if (trace.hitgroup == hitgroup_leftleg || trace.hitgroup == hitgroup_rightleg)
 		{
-			cmd->m_buttons |= Helpers::is_revolver(weapon) ? in_attack2 : in_attack;
+			cmd->buttons |= Helpers::is_revolver(weapon) ? in_attack2 : in_attack;
 		}
 	}
 
-	if (Helpers::is_pistol(weapon) && cmd->m_buttons & in_attack)
-		cmd->m_command_number % 2 == 1 ? cmd->m_buttons |= in_attack : cmd->m_buttons &= ~in_attack;
+	if (Helpers::is_pistol(weapon) && cmd->buttons & in_attack)
+		cmd->command_number % 2 == 1 ? cmd->buttons |= in_attack : cmd->buttons &= ~in_attack;
 }

@@ -1,68 +1,68 @@
 #pragma once
 
-class d_variant;
-class recv_table;
-class recv_prop;
+class c_dvariant;
+class c_recv_table;
+class c_recv_prop;
 class c_recv_proxy_data;
 
 using recv_var_proxy_fn = void(*)(const c_recv_proxy_data* data, void* struct_ptr, void* out_ptr);
 using array_length_recv_proxy_fn = void(*)(void* struct_ptr, int object_id, int current_array_length);
-using data_table_recv_var_proxy_fn = void(*)(const recv_prop* prop, void** out_ptr, void* data_ptr, int object_id);
+using data_table_recv_var_proxy_fn = void(*)(const c_recv_prop* prop, void** out_ptr, void* data_ptr, int object_id);
 
-class d_variant {
+class c_dvariant {
 public:
 	union {
-		float m_float;
-		long m_int;
-		char* m_string;
-		void* m_data;
-		float m_vector[3];
-		__int64 m_int64;
+		float _float;
+		long _int;
+		char* _string;
+		void* _data;
+		float _vector[3];
+		__int64 int64;
 	};
 
-	int m_type;
+	int type;
 };
 
 class c_recv_proxy_data {
 public:
-	const recv_prop* m_recv_prop;
-	d_variant        m_value;
+	const c_recv_prop*           recv_prop;
+	c_dvariant                   value;
 	
-	int              m_element_index;
-	int              m_object_id;
+	int                          element_index;
+	int                          object_id;
 };
 
-class recv_prop {
+class c_recv_prop {
 public:
-	char*                        m_prop_name;
+	char*                        prop_name;
 	
-	int                          m_prop_type;
-	int                          m_prop_flags;
-	int                          m_buffer_size;
-	int                          m_is_inside_of_array;
+	int                          prop_type;
+	int                          prop_flags;
+	int                          buffer_size;
+	int                          is_inside_of_array;
 	
-	const void*                  m_extra_data_ptr;
-	recv_prop*                   m_array_prop;
-	array_length_recv_proxy_fn   m_array_length_proxy;
-	recv_var_proxy_fn            m_proxy_fn;
-	data_table_recv_var_proxy_fn m_data_table_proxy_fn;
+	const void*                  extra_data_ptr;
+	c_recv_prop*                 array_prop;
+	array_length_recv_proxy_fn   array_length_proxy;
+	recv_var_proxy_fn            proxy_fn;
+	data_table_recv_var_proxy_fn data_table_proxy_fn;
 	
-	recv_table*                  m_data_table;
-	int                          m_offset;
-	int                          m_element_stride;
-	int                          m_elements_count;
+	c_recv_table*                data_table;
+	int                          offset;
+	int                          element_stride;
+	int                          elements_count;
 	
-	const char*                  m_parent_array_prop_name;
+	const char*                  parent_array_prop_name;
 };
 
-class recv_table {
+class c_recv_table {
 public:
-	recv_prop* m_props;
-	int        m_props_count;
+	c_recv_prop*                 props;
+	int                          props_count;
 
-	void*      m_decoder_ptr;
-	char*      m_table_name;
+	void*                        decoder_ptr;
+	char*                        table_name;
 	
-	bool       m_is_initialized;
-	bool       m_is_in_main_list;
+	bool                         is_initialized;
+	bool                         is_in_main_list;
 };

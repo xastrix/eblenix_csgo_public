@@ -18,3 +18,4 @@ After compilation, a bin folder will appear in the root directory of the project
 - [Minhook](https://github.com/TsudaKageyu/minhook)
 - [Lua 5.4](http://www.lua.org) (+sol)
 - [tiny-AES-C](https://github.com/kokke/tiny-AES-C)
+- [curl](https://github.com/curl/curl)

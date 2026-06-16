@@ -59,51 +59,12 @@ namespace util
 		return (s.st_mode & S_IFREG);
 	}
 
-	inline auto send_msg_to_proc(const HWND target, const char* msg) -> bool
-	{
-		SIZE_T         cb_data{ static_cast<DWORD>(strlen(msg) + 1) };
-		COPYDATASTRUCT cds{ 1, cb_data, const_cast<char*>(msg) };
-
-		auto result = SendMessageA(target, WM_COPYDATA, (WPARAM)nullptr, (LPARAM)&cds);
-
-		return (result != 0);
-	}
-
 	inline auto get_current_path() -> std::string
 	{
 		char path[MAX_PATH];
 		GetCurrentDirectoryA(MAX_PATH, path);
 
 		return std::string{ path } + "\\";
-	}
-
-	inline auto is_dll_used(DWORD proc_id, const std::string& dll_name) -> bool
-	{
-		auto h = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, proc_id);
-		
-		if (h == NULL)
-			return false;
-
-		HMODULE mods[1024]{};
-		DWORD sz{};
-
-		if (EnumProcessModules(h, mods, sizeof(mods), &sz))
-		{
-			TCHAR mod_name[MAX_PATH]{};
-
-			for (unsigned int i = 0; i < (sz / sizeof(HMODULE)); i++) {
-				GetModuleFileNameExA(h, mods[i], mod_name, sizeof(mod_name) / sizeof(TCHAR));
-
-				if (strcmp(PathFindFileNameA(mod_name), dll_name.c_str()) == 0) {
-					CloseHandle(h);
-					return true;
-				}
-			}
-		}
-
-		CloseHandle(h);
-
-		return false;
 	}
 
 	inline auto random_string(int len, const std::string& chars = "qwertyuiopasdfghjklzxcvbnm") -> std::string

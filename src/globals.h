@@ -48,7 +48,7 @@ struct state_t {
 	};
 
 	state_t& operator++() {
-		++s;
+		++m_state;
 		return *this;
 	}
 
@@ -59,15 +59,15 @@ struct state_t {
 	}
 
 	void set_state(int state) {
-		s = state;
+		m_state = state;
 	}
 
 	int get_state() const {
-		return s;
+		return m_state;
 	}
 
 private:
-	int s;
+	int m_state;
 };
 
 namespace g

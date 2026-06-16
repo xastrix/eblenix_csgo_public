@@ -67,19 +67,19 @@ enum _cmd_buttons {
 struct user_cmd_t {
 	virtual ~user_cmd_t() {};
 
-	int     m_command_number;
-	int     m_tick_count;
-	vec3    m_viewangles;
-	vec3    m_aimdirection;
-	float   m_forwardmove;
-	float   m_sidemove;
-	float   m_upmove;
-	int     m_buttons;
-	char    m_impulse;
-	int     m_weaponselect;
-	int     m_weaponsubtype;
-	int     m_randomseed;
-	short   m_mousedx;
-	short   m_mousedy;
-	bool    m_predicted;
+	int     command_number;
+	int     tick_count;
+	vec3    viewangles;
+	vec3    aimdirection;
+	float   forwardmove;
+	float   sidemove;
+	float   upmove;
+	int     buttons;
+	char    impulse;
+	int     weaponselect;
+	int     weaponsubtype;
+	int     randomseed;
+	short   mousedx;
+	short   mousedy;
+	bool    predicted;
 };

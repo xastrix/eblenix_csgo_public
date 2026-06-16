@@ -16,7 +16,7 @@ static bool __stdcall create_move_h(float input_sample_frametime, user_cmd_t* cm
 {
 	auto ret = o_create_move(input_sample_frametime, cmd);
 
-	if (!cmd || !cmd->m_command_number)
+	if (!cmd || !cmd->command_number)
 		return ret;
 
 	g_cs->init_local({ g_cs->m_entity_list->get_client_entity<c_base_player*>(g_cs->m_engine->get_local_player()) });
@@ -33,14 +33,14 @@ static bool __stdcall create_move_h(float input_sample_frametime, user_cmd_t* cm
 			{
 				if (g_var->get_as<bool>(V_MISC_VISUAL_REVEAL_RANKS).value())
 				{
-					if (cmd->m_buttons & in_score)
+					if (cmd->buttons & in_score)
 						g_cs->m_client->dispatch_user_message(cs_um_serverrankrevealall);
 				}
 			}
 		}
 
-		Math::normalize_angles(cmd->m_viewangles);
-		Math::clamp_angles(cmd->m_viewangles);
+		Math::normalize_angles(cmd->viewangles);
+		Math::clamp_angles(cmd->viewangles);
 
 #ifdef LUA_ENABLED
 		for (auto _ : LUA_CALLBACK(CL_ON_CREATE_MOVE)) {
@@ -283,7 +283,7 @@ static void __stdcall draw_model_execute_h(i_mat_render_ctx* ctx, const draw_mod
 		{
 			if (g_cs->m_engine->is_connected() && g_cs->m_engine->is_in_game())
 			{
-				auto model_name = g_cs->m_model_info->get_model_name(info.m_model);
+				auto model_name = g_cs->m_model_info->get_model_name(info.model);
 
 				if (g_var->get_as<bool>(V_VISUALS_REMOVALS_SLEEVES).value())
 				{
@@ -330,7 +330,7 @@ static void __fastcall override_view_h(void* _ecx, void* _edx, c_view_setup* set
 						}
 
 						else
-							setup->m_fov = g_var->get_as<float>(V_MISC_VISUAL_THIRDPERSON_FOV).value();
+							setup->fov = g_var->get_as<float>(V_MISC_VISUAL_THIRDPERSON_FOV).value();
 				}
 
 				else if (!s_tp && g_cs->m_input->in_third_person_mode()) {

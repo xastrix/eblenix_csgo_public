@@ -17,11 +17,11 @@
 #define	CONTENTS_LADDER         0x20000000
 #define CONTENTS_HITBOX         0x40000000
 
-#define	MASK_SHOT               CONTENTS_SOLID | \
-                                CONTENTS_MOVEABLE | \
-                                CONTENTS_MONSTER | \
-                                CONTENTS_WINDOW | \
-                                CONTENTS_DEBRIS | \
+#define	MASK_SHOT               CONTENTS_SOLID     | \
+                                CONTENTS_MOVEABLE  | \
+                                CONTENTS_MONSTER   | \
+                                CONTENTS_WINDOW    | \
+                                CONTENTS_DEBRIS    | \
                                 CONTENTS_HITBOX
 
 enum _trace_types {
@@ -32,68 +32,68 @@ enum _trace_types {
 };
 
 struct ray_t {
-	vec_aligned      m_start;
-	vec_aligned      m_delta;
-	vec_aligned      m_start_offset;
-	vec_aligned      m_extents;
+	vec_aligned      start;
+	vec_aligned      delta;
+	vec_aligned      start_offset;
+	vec_aligned      extents;
 	const
-		matrix3x4_t* m_world_axis_transform;
-	bool             m_is_ray;
-	bool             m_is_swept;
+		matrix3x4_t* world_axis_transform;
+	bool             is_ray;
+	bool             is_swept;
 
-	ray_t() : m_world_axis_transform(NULL), m_is_ray(false), m_is_swept(false) {}
+	ray_t() : world_axis_transform(NULL), is_ray(false), is_swept(false) {}
 
 	ray_t(const vec3& start, const vec3& end) {
 		init(start, end);
 	}
 
-	void init(const vec3& start, const vec3& end) {
-		m_delta = end - start;
+	void init(const vec3& _start, const vec3& end) {
+		delta = end - _start;
 
-		m_is_swept = length(m_delta) != 0;
+		is_swept = length(delta) != 0;
 
-		m_extents = vec3(0.0f, 0.0f, 0.0f);
-		m_world_axis_transform = NULL;
-		m_is_ray = true;
+		extents = vec3(0.0f, 0.0f, 0.0f);
+		world_axis_transform = NULL;
+		is_ray = true;
 
-		m_start_offset = vec3(0.0f, 0.0f, 0.0f);
-		m_start = start;
+		start_offset = vec3(0.0f, 0.0f, 0.0f);
+		start = _start;
 	}
 };
 
 struct csurface_t {
-	const char*    m_name;
-	short          m_surface_props;
-	unsigned short m_flags;
+	const char*    name;
+	short          surface_props;
+	unsigned short flags;
 };
 
 struct cplane_t {
-	vec3          m_normal;
-	float         m_dist;
-	unsigned char m_type;
-	unsigned char m_sign_bits;
+	vec3          normal;
+	float         dist;
+	unsigned char type;
+	unsigned char sign_bits;
 	unsigned char u1[2];
 };
 
 struct trace_t {
-	vec3           m_start;
-	vec3           m_end;
-	cplane_t       m_plane;
-	float          m_fraction;
-	int            m_contents;
-	unsigned short m_disp_flags;
-	bool           m_allsolid;
-	bool           m_startsolid;
-	float          m_fraction_left_solid;
-	csurface_t     m_surface;
-	int            m_hitgroup;
-	short          m_physics_bone;
-	c_base_player* m_entity;
-	int            m_hitbox;
+	vec3           start;
+	vec3           end;
+	cplane_t       plane;
+	float          fraction;
+	int            contents;
+	unsigned short disp_flags;
+	bool           allsolid;
+	bool           startsolid;
+	float          fraction_left_solid;
+	csurface_t     surface;
+	int            hitgroup;
+	short          physics_bone;
+	c_base_player* entity;
+	int            hitbox;
 
-	bool did_hit() const { return m_fraction < 1.0f; }
+	bool did_hit() const { return fraction < 1.0f; }
 	bool did_hit_world() const { return false; }
-	bool did_hit_non_world_entity() const { return m_entity != NULL && !did_hit_world(); }
+	bool did_hit_non_world_entity() const { return entity != NULL && !did_hit_world(); }
 };
 
 class c_trace_filter {
@@ -105,14 +105,14 @@ public:
 class trace_filter : public c_trace_filter {
 public:
 	bool should_hit_entity(c_base_player* entity, int) {
-		return entity != m_fp;
+		return entity != fp;
 	}
 
 	_trace_types get_trace_type() const {
 		return TRACE_EVERYTHING;
 	}
 
-	void* m_fp;
+	void* fp;
 };
 
 class c_engine_trace {

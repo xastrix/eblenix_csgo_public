@@ -8,51 +8,41 @@
     <ClCompile Include="ui.cpp">
       <Filter>interface\ui</Filter>
     </ClCompile>
+    <ClCompile Include="renderer.cpp">
+      <Filter>interface\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="font.cpp">
+      <Filter>interface\renderer</Filter>
+    </ClCompile>
     <ClCompile Include="button.cpp">
       <Filter>interface\ui\controls</Filter>
-    </ClCompile>
-    <ClCompile Include="game_selector.cpp">
-      <Filter>interface\ui\controls</Filter>
-    </ClCompile>
-    <ClCompile Include="group_box.cpp">
-      <Filter>interface\ui\controls</Filter>
-    </ClCompile>
-    <ClCompile Include="util_box.cpp">
-      <Filter>interface\ui\controls</Filter>
-    </ClCompile>
-    <ClCompile Include="d3d.cpp">
-      <Filter>interface</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="util.h" />
-    <ClInclude Include="csgo_icon.hpp">
-      <Filter>resources</Filter>
-    </ClInclude>
     <ClInclude Include="interface.h">
       <Filter>interface</Filter>
     </ClInclude>
-    <ClInclude Include="globals.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="ui.h">
       <Filter>interface\ui</Filter>
     </ClInclude>
-    <ClInclude Include="d3d.h">
-      <Filter>interface</Filter>
+    <ClInclude Include="renderer.h">
+      <Filter>interface\renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="resources">
-      <UniqueIdentifier>{e971f24e-86d1-4f0f-bcf9-984da56bbf9a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="interface">
       <UniqueIdentifier>{1e3ef9c3-dcad-4a6e-928a-942636c4d466}</UniqueIdentifier>
     </Filter>
     <Filter Include="interface\ui">
-      <UniqueIdentifier>{10af7fdc-6480-473b-b686-dcaefe2080be}</UniqueIdentifier>
+      <UniqueIdentifier>{435a00c8-ea0c-49c4-9f68-ee668f14a3dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="interface\renderer">
+      <UniqueIdentifier>{9b158cb3-e3bc-48d0-b797-fd144c215873}</UniqueIdentifier>
     </Filter>
     <Filter Include="interface\ui\controls">
-      <UniqueIdentifier>{3dce9dc7-7fa1-4c50-91c2-21cc0848c4e8}</UniqueIdentifier>
+      <UniqueIdentifier>{d39302d8-419b-4a53-9fcb-a2d4ccbf134b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

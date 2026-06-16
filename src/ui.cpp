@@ -20,21 +20,21 @@ void c_ui::run()
 	calc_animation_progress(g_var->get_as<float>(V_UI_ANIM_TOGGLE).value(), g_cs->m_globals->frame_time, old_progress);
 
 	m_colors[UI_TEXT_COL] = c_color(253, 253, 253,
-		static_cast<int>(target_animation_progress * 255.0f));
+		static_cast<int>(m_target_animation_progress * 255.0f));
 
 	m_colors[UI_MAIN_COL] = c_color(V_UI_COL,
-		static_cast<int>(target_animation_progress * 255.0f));
+		static_cast<int>(m_target_animation_progress * 255.0f));
 
 	m_colors[UI_PRIMARY_COL] = c_color(V_UI_COL,
-		static_cast<int>(target_animation_progress * 130.0f));
+		static_cast<int>(m_target_animation_progress * 130.0f));
 
 	m_colors[UI_SHADOW_COL] = c_color(20, 20, 20,
-		static_cast<int>(target_animation_progress * g_var->get_as<int>(V_UI_COL_A).value()));
+		static_cast<int>(m_target_animation_progress * g_var->get_as<int>(V_UI_COL_A).value()));
 
 	m_colors[UI_OUTLINE_COL] = c_color(40, 40, 40,
-		static_cast<int>(target_animation_progress * 255.0f));
+		static_cast<int>(m_target_animation_progress * 255.0f));
 
-	if (target_animation_progress > 0.0f)
+	if (m_target_animation_progress > 0.0f)
 	{
 		clear();
 		setup();
@@ -48,28 +48,28 @@ void c_ui::run()
 			m_sprites[i].end();
 	}
 
-	current_animation_progress = old_progress;
+	m_current_animation_progress = old_progress;
 }
 
 void c_ui::calc_animation_progress(float anim_time, float delta_time, float& old_alpha)
 {
 	if (m_opened)
 	{
-		target_animation_progress += anim_time * delta_time;
+		m_target_animation_progress += anim_time * delta_time;
 
-		if (target_animation_progress > 1.0f)
-			target_animation_progress = 1.0f;
+		if (m_target_animation_progress > 1.0f)
+			m_target_animation_progress = 1.0f;
 	}
 	else
 	{
-		target_animation_progress -= anim_time * delta_time;
+		m_target_animation_progress -= anim_time * delta_time;
 
-		if (target_animation_progress < 0.0f)
-			target_animation_progress = 0.0f;
+		if (m_target_animation_progress < 0.0f)
+			m_target_animation_progress = 0.0f;
 	}
 
-	old_alpha = current_animation_progress;
-	current_animation_progress = target_animation_progress;
+	old_alpha = m_current_animation_progress;
+	m_current_animation_progress = m_target_animation_progress;
 }
 
 void c_ui::setup()
@@ -602,71 +602,71 @@ void c_ui::on_reset_end()
 void c_ui::clear()
 {
 	for (int i = 0; i < m_entry_sz; i++) {
-		m_entry[i].m_name.clear();
-		m_entry[i].m_space = false;
+		m_entry[i].name.clear();
+		m_entry[i].space = false;
 	}
 
 	for (int i = 0; i < s_entry_sz[UI_SUB_POS]; i++) {
-		s_entries[i][UI_SUB_POS].m_name.clear();
-		s_entries[i][UI_SUB_POS].m_var.clear();
+		s_entries[i][UI_SUB_POS].name.clear();
+		s_entries[i][UI_SUB_POS].var.clear();
 
-		s_entries[i][UI_SUB_POS].m_int_min = 0;
-		s_entries[i][UI_SUB_POS].m_int_max = 0;
-		s_entries[i][UI_SUB_POS].m_int_step = 0;
+		s_entries[i][UI_SUB_POS].int_min = 0;
+		s_entries[i][UI_SUB_POS].int_max = 0;
+		s_entries[i][UI_SUB_POS].int_step = 0;
 
-		s_entries[i][UI_SUB_POS].m_float_min = 0.0f;
-		s_entries[i][UI_SUB_POS].m_float_max = 0.0f;
-		s_entries[i][UI_SUB_POS].m_float_step = 0.0f;
+		s_entries[i][UI_SUB_POS].float_min = 0.0f;
+		s_entries[i][UI_SUB_POS].float_max = 0.0f;
+		s_entries[i][UI_SUB_POS].float_step = 0.0f;
 
-		s_entries[i][UI_SUB_POS].m_space = false;
-		s_entries[i][UI_SUB_POS].m_state = UI_NONE_STATE;
+		s_entries[i][UI_SUB_POS].space = false;
+		s_entries[i][UI_SUB_POS].state = UI_NONE_STATE;
 
-		s_entries[i][UI_SUB_POS].m_items.clear();
-		s_entries[i][UI_SUB_POS].m_item_text_col = c_color();
+		s_entries[i][UI_SUB_POS].items.clear();
+		s_entries[i][UI_SUB_POS].item_text_col = c_color();
 
-		s_entries[i][UI_SUB_POS].m_fn = []() {};
+		s_entries[i][UI_SUB_POS].fn = []() {};
 	}
 
 	for (int i = 0; i < s_entry_sz[UI_SUB_SUB_POS]; i++) {
-		s_entries[i][UI_SUB_SUB_POS].m_name.clear();
-		s_entries[i][UI_SUB_SUB_POS].m_var.clear();
+		s_entries[i][UI_SUB_SUB_POS].name.clear();
+		s_entries[i][UI_SUB_SUB_POS].var.clear();
 
-		s_entries[i][UI_SUB_SUB_POS].m_int_min = 0;
-		s_entries[i][UI_SUB_SUB_POS].m_int_max = 0;
-		s_entries[i][UI_SUB_SUB_POS].m_int_step = 0;
+		s_entries[i][UI_SUB_SUB_POS].int_min = 0;
+		s_entries[i][UI_SUB_SUB_POS].int_max = 0;
+		s_entries[i][UI_SUB_SUB_POS].int_step = 0;
 
-		s_entries[i][UI_SUB_SUB_POS].m_float_min = 0.0f;
-		s_entries[i][UI_SUB_SUB_POS].m_float_max = 0.0f;
-		s_entries[i][UI_SUB_SUB_POS].m_float_step = 0.0f;
+		s_entries[i][UI_SUB_SUB_POS].float_min = 0.0f;
+		s_entries[i][UI_SUB_SUB_POS].float_max = 0.0f;
+		s_entries[i][UI_SUB_SUB_POS].float_step = 0.0f;
 
-		s_entries[i][UI_SUB_SUB_POS].m_space = false;
-		s_entries[i][UI_SUB_SUB_POS].m_state = UI_NONE_STATE;
+		s_entries[i][UI_SUB_SUB_POS].space = false;
+		s_entries[i][UI_SUB_SUB_POS].state = UI_NONE_STATE;
 
-		s_entries[i][UI_SUB_SUB_POS].m_items.clear();
-		s_entries[i][UI_SUB_SUB_POS].m_item_text_col = c_color();
+		s_entries[i][UI_SUB_SUB_POS].items.clear();
+		s_entries[i][UI_SUB_SUB_POS].item_text_col = c_color();
 
-		s_entries[i][UI_SUB_SUB_POS].m_fn = []() {};
+		s_entries[i][UI_SUB_SUB_POS].fn = []() {};
 	}
 
 	for (int i = 0; i < s_entry_sz[UI_SUB_SUB_SUB_POS]; i++) {
-		s_entries[i][UI_SUB_SUB_SUB_POS].m_name.clear();
-		s_entries[i][UI_SUB_SUB_SUB_POS].m_var.clear();
+		s_entries[i][UI_SUB_SUB_SUB_POS].name.clear();
+		s_entries[i][UI_SUB_SUB_SUB_POS].var.clear();
 
-		s_entries[i][UI_SUB_SUB_SUB_POS].m_int_min = 0;
-		s_entries[i][UI_SUB_SUB_SUB_POS].m_int_max = 0;
-		s_entries[i][UI_SUB_SUB_SUB_POS].m_int_step = 0;
+		s_entries[i][UI_SUB_SUB_SUB_POS].int_min = 0;
+		s_entries[i][UI_SUB_SUB_SUB_POS].int_max = 0;
+		s_entries[i][UI_SUB_SUB_SUB_POS].int_step = 0;
 
-		s_entries[i][UI_SUB_SUB_SUB_POS].m_float_min = 0.0f;
-		s_entries[i][UI_SUB_SUB_SUB_POS].m_float_max = 0.0f;
-		s_entries[i][UI_SUB_SUB_SUB_POS].m_float_step = 0.0f;
+		s_entries[i][UI_SUB_SUB_SUB_POS].float_min = 0.0f;
+		s_entries[i][UI_SUB_SUB_SUB_POS].float_max = 0.0f;
+		s_entries[i][UI_SUB_SUB_SUB_POS].float_step = 0.0f;
 
-		s_entries[i][UI_SUB_SUB_SUB_POS].m_space = false;
-		s_entries[i][UI_SUB_SUB_SUB_POS].m_state = UI_NONE_STATE;
+		s_entries[i][UI_SUB_SUB_SUB_POS].space = false;
+		s_entries[i][UI_SUB_SUB_SUB_POS].state = UI_NONE_STATE;
 
-		s_entries[i][UI_SUB_SUB_SUB_POS].m_items.clear();
-		s_entries[i][UI_SUB_SUB_SUB_POS].m_item_text_col = c_color();
+		s_entries[i][UI_SUB_SUB_SUB_POS].items.clear();
+		s_entries[i][UI_SUB_SUB_SUB_POS].item_text_col = c_color();
 
-		s_entries[i][UI_SUB_SUB_SUB_POS].m_fn = []() {};
+		s_entries[i][UI_SUB_SUB_SUB_POS].fn = []() {};
 	}
 
 	m_entry_sz = 0;

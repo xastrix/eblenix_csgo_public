@@ -25,54 +25,6 @@ bool c_renderer::restore(IDirect3DDevice9* device)
 	return true;
 }
 
-void c_renderer::set_render_states()
-{
-	m_device->SetVertexShader(nullptr);
-	m_device->SetPixelShader(nullptr);
-
-	m_device->SetFVF(D3DFVF_XYZRHW | D3DFVF_DIFFUSE);
-
-	m_device->SetRenderState(D3DRS_LIGHTING, FALSE);
-	m_device->SetRenderState(D3DRS_FOGENABLE, FALSE);
-	m_device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-	m_device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
-
-	m_device->SetRenderState(D3DRS_ZENABLE, FALSE);
-	m_device->SetRenderState(D3DRS_SCISSORTESTENABLE, TRUE);
-	m_device->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
-	m_device->SetRenderState(D3DRS_STENCILENABLE, FALSE);
-
-	m_device->SetRenderState(D3DRS_MULTISAMPLEANTIALIAS, FALSE);
-	m_device->SetRenderState(D3DRS_ANTIALIASEDLINEENABLE, FALSE);
-
-	m_device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
-	m_device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
-	m_device->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
-
-	m_device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
-	m_device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
-	m_device->SetRenderState(D3DRS_SEPARATEALPHABLENDENABLE, TRUE);
-	m_device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-	m_device->SetRenderState(D3DRS_SRCBLENDALPHA, D3DBLEND_INVDESTALPHA);
-	m_device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-	m_device->SetRenderState(D3DRS_DESTBLENDALPHA, D3DBLEND_ONE);
-
-	m_device->SetRenderState(D3DRS_SRGBWRITEENABLE, FALSE);
-	m_device->SetRenderState(D3DRS_COLORWRITEENABLE, 0xffffffff);
-}
-
-void c_renderer::set_viewport(D3DVIEWPORT9 vp)
-{
-	m_device->SetViewport(&vp);
-}
-
-D3DVIEWPORT9 c_renderer::get_viewport()
-{
-	D3DVIEWPORT9 vp;
-	m_device->GetViewport(&vp);
-	return vp;
-}
-
 void c_renderer::rect(vec2 pos, vec2 size, c_color c)
 {
 	vertice_t verts[5] = {
@@ -357,7 +309,38 @@ void c_renderer::begin()
 	m_device->GetVertexDeclaration(&m_vert_dec);
 	m_device->GetVertexShader(&m_vert_shader);
 
-	set_render_states();
+	m_device->SetVertexShader(nullptr);
+	m_device->SetPixelShader(nullptr);
+
+	m_device->SetFVF(D3DFVF_XYZRHW | D3DFVF_DIFFUSE);
+
+	m_device->SetRenderState(D3DRS_LIGHTING, FALSE);
+	m_device->SetRenderState(D3DRS_FOGENABLE, FALSE);
+	m_device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+	m_device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+
+	m_device->SetRenderState(D3DRS_ZENABLE, FALSE);
+	m_device->SetRenderState(D3DRS_SCISSORTESTENABLE, TRUE);
+	m_device->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
+	m_device->SetRenderState(D3DRS_STENCILENABLE, FALSE);
+
+	m_device->SetRenderState(D3DRS_MULTISAMPLEANTIALIAS, FALSE);
+	m_device->SetRenderState(D3DRS_ANTIALIASEDLINEENABLE, FALSE);
+
+	m_device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+	m_device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
+	m_device->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
+
+	m_device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+	m_device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
+	m_device->SetRenderState(D3DRS_SEPARATEALPHABLENDENABLE, TRUE);
+	m_device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	m_device->SetRenderState(D3DRS_SRCBLENDALPHA, D3DBLEND_INVDESTALPHA);
+	m_device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+	m_device->SetRenderState(D3DRS_DESTBLENDALPHA, D3DBLEND_ONE);
+
+	m_device->SetRenderState(D3DRS_SRGBWRITEENABLE, FALSE);
+	m_device->SetRenderState(D3DRS_COLORWRITEENABLE, 0xffffffff);
 }
 
 void c_renderer::end()

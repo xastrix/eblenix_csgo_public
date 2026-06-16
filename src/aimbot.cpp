@@ -32,10 +32,10 @@ void c_aimbot::run(user_cmd_t* cmd)
 		{
 			static bool shoot = false;
 
-			if (shoot && (cmd->m_buttons & in_attack))
-				cmd->m_buttons &= ~in_attack;
+			if (shoot && (cmd->buttons & in_attack))
+				cmd->buttons &= ~in_attack;
 
-			shoot = cmd->m_buttons & in_attack ? true : false;
+			shoot = cmd->buttons & in_attack ? true : false;
 		}
 	}
 
@@ -68,15 +68,15 @@ void c_aimbot::run(user_cmd_t* cmd)
 
 	m_angle = Math::calculate_angle(g_cs->get_local()->get_eye_pos(), m_type == 1 ?
 		entity->get_bone_position(Helpers::get_nearest_bone(entity, cmd)) :
-		entity->get_hitbox_position(m_hitbox_id), cmd->m_viewangles + aim_punch);
+		entity->get_hitbox_position(m_hitbox_id), cmd->viewangles + aim_punch);
 
 	clamp(m_angle);
 
 	m_angle /= m_smooth;
-	cmd->m_viewangles += m_angle;
+	cmd->viewangles += m_angle;
 
 	if (!g_var->get_as<bool>(V_AIMBOT_SILENT).value())
-		g_cs->m_engine->set_view_angles(cmd->m_viewangles);
+		g_cs->m_engine->set_view_angles(cmd->viewangles);
 }
 
 bool c_aimbot::can_aim(c_base_player* entity, c_base_weapon* weapon)

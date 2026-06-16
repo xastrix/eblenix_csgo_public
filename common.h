@@ -6,9 +6,6 @@
 /* Window class name for CS */
 #define CSGO_CLASS_NAME            "Valve001"
 
-/* Message for the client (injector) to unload the cheat */
-#define LOADER_UNLOAD_HOOK_MESSAGE "UNLOAD_EBLENIX_MSG"
-
 /* Main directory of the cheat */
 #define BASE_DIRECTORY_NAME        "EBX/"
 

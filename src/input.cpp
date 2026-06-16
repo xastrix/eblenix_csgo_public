@@ -15,21 +15,6 @@ static unsigned long WINAPI wnd_proc(HWND h, UINT m, WPARAM w, LPARAM l)
 {
 	if (GLOBAL(b_flags[BF_INITIALISED]))
 	{
-		// By pressing the unload button in the injector, you are sending a message,
-		// and here we intercept it and call the unload function.
-		if (m == WM_COPYDATA) {
-			const auto pcds = (PCOPYDATASTRUCT)l;
-
-			if (pcds && pcds->dwData == 1) {
-				switch (fnv::hash(static_cast<const char*>(pcds->lpData))) {
-				case fnv::hash(LOADER_UNLOAD_HOOK_MESSAGE): {
-					g::unload();
-					return true;
-				}
-				}
-			}
-		}
-
 		if (!(GLOBAL(lib_state.get_state()) == state_t::SL_SHUTDOWN))
 		{
 			g_input->process_message(m, w, l);

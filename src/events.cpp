@@ -48,7 +48,7 @@ void c_event_list::fire_game_event(c_game_event* _event)
 								player_info_t info;
 								g_cs->m_engine->get_player_info(ent_index, &info);
 
-								std::string player_name{ info.m_player_name };
+								std::string player_name{ info.player_name };
 								std::transform(player_name.begin(), player_name.end(), player_name.begin(), tolower);
 
 								Helpers::console_printf_with_prefix("[Eblenix]", "hit %s in the %s for %d (%d health remains)",
@@ -76,7 +76,7 @@ void c_event_list::fire_game_event(c_game_event* _event)
 					player_info_t info;
 					g_cs->m_engine->get_player_info(ent_index, &info);
 
-					std::string player_name{ info.m_player_name };
+					std::string player_name{ info.player_name };
 					std::transform(player_name.begin(), player_name.end(), player_name.begin(), tolower);
 
 					const auto weapon = _event->get_string("weapon");

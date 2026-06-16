@@ -1,25 +1,12 @@
 #include "interface.h"
 
-#include "resource.h"
 #include "ui.h"
+#include "resource.h"
 
-static LRESULT CALLBACK wnd_proc(HWND h, UINT m, WPARAM w, LPARAM l)
-{
-	switch (m) {
-	case WM_SYSCOMMAND: {
-		if ((w & 0xfff0) == SC_KEYMENU)
-			return 0;
-		break;
-	}
-	case WM_DESTROY: {
-		PostQuitMessage(0);
-	}
-	}
+#include <common.h>
+#include <dwmapi.h>
 
-	return DefWindowProcA(h, m, w, l);
-}
-
-_interface_status Interface::init()
+_interface_status Interface::init(HINSTANCE instance)
 {
 	m_window_name = util::random_string(12);
 	m_class_name = util::random_string(12);
@@ -27,10 +14,25 @@ _interface_status Interface::init()
 	memset(&m_wc, 0, sizeof(m_wc));
 	m_wc.cbSize = sizeof(WNDCLASSEX);
 	m_wc.style = CS_VREDRAW | CS_HREDRAW;
-	m_wc.lpfnWndProc = wnd_proc;
+	m_wc.lpfnWndProc = [](HWND h, UINT m, WPARAM w, LPARAM l) -> LRESULT CALLBACK
+	{
+		switch (m) {
+		case WM_SYSCOMMAND: {
+			if ((w & 0xfff0) == SC_KEYMENU)
+				return 0;
+			break;
+		}
+		case WM_DESTROY: {
+			PostQuitMessage(0);
+			return 0;
+		}
+		}
+
+		return DefWindowProcA(h, m, w, l);
+	};
 	m_wc.cbClsExtra = 0;
 	m_wc.cbWndExtra = 0;
-	m_wc.hInstance = g::instance;
+	m_wc.hInstance = instance;
 	m_wc.hIcon = LoadIconA(m_wc.hInstance, MAKEINTRESOURCE(IDI_ICON1));
 	m_wc.hCursor = LoadCursorA(0, IDC_ARROW);
 	m_wc.lpszMenuName = 0;
@@ -39,13 +41,22 @@ _interface_status Interface::init()
 
 	RegisterClassExA(&m_wc);
 
-	m_hwnd = CreateWindowExA(0, m_class_name.c_str(), m_window_name.c_str(), WS_POPUP | WS_MINIMIZEBOX,
+	m_hwnd = CreateWindowExA(WS_EX_LAYERED, m_class_name.c_str(), m_window_name.c_str(), WS_POPUP | WS_MINIMIZEBOX,
 		CW_USEDEFAULT, CW_USEDEFAULT, m_width, m_height, nullptr, nullptr, nullptr, 0);
 
 	if (!m_hwnd) {
 		UnregisterClassA(m_class_name.c_str(), m_wc.hInstance);
 		return INTERFACE_FAILED;
 	}
+
+	m_nid.cbSize = sizeof(NOTIFYICONDATAA);
+	m_nid.hWnd = m_hwnd;
+	m_nid.uID = 1;
+	m_nid.uFlags = NIF_ICON;
+	m_nid.hIcon = m_wc.hIcon;
+	Shell_NotifyIconA(NIM_ADD, &m_nid);
+
+	SetLayeredWindowAttributes(m_hwnd, RGB(1, 1, 1), 0, LWA_COLORKEY);
 
 	MoveWindow(m_hwnd, (GetSystemMetrics(SM_CXSCREEN) - m_width) / 2,
 		(GetSystemMetrics(SM_CYSCREEN) - m_height) / 2, m_width, m_height, TRUE);
@@ -59,7 +70,6 @@ _interface_status Interface::init()
 	}
 
 	memset(&m_present_params, 0, sizeof(m_present_params));
-
 	m_present_params.Windowed = TRUE;
 	m_present_params.SwapEffect = D3DSWAPEFFECT_DISCARD;
 	m_present_params.BackBufferFormat = D3DFMT_A8R8G8B8;
@@ -83,89 +93,68 @@ _interface_status Interface::init()
 		return INTERFACE_FAILED;
 	}
 
+	g_font.init(m_device, {
+		{ Tahoma12px, 12, "Tahoma", FW_MEDIUM, ANTIALIASED_QUALITY },
+		{ Verdana12px, 12, "Verdana", FW_NORMAL, PROOF_QUALITY },
+		{ Verdana13px, 13, "Verdana", FW_NORMAL, PROOF_QUALITY },
+	});
+
+	g_renderer.init(m_device);
+
 	return INTERFACE_LOADED;
 }
 
 void Interface::loop()
 {
-	static int   game_id;
-	static DWORD game_process_id;
-	static bool  loaded;
-	POINT        p;
-	RECT         r;
+	c_game* games[1];
 
-	if (g_d3d.init(m_device))
-		ui::get->init(m_device, { ui_vec_t(m_width, m_height) });
+	g_ui.set_size(c_vec2(m_width, m_height));
+
+	if (games[0] = g_ui.set_game("CS:GO")) {
+		g_ui.set_group(games[0], "Description", c_vec2(330, 230), [](c_group* ctx) {
+			ctx->add_child(c_ui_mem_pool::alloc<c_label>("A hack for counter-strike global offensive, created"));
+			ctx->add_child(c_ui_mem_pool::alloc<c_label>("solely for educational purposes in the process of"));
+			ctx->add_child(c_ui_mem_pool::alloc<c_label>("learning gamehacking."));
+		});
+
+		games[0]->set_cursor_pos(c_vec2(155, 210));
+
+		g_ui.set_group(games[0], "Actions", c_vec2(210, 80), [this](c_group* ctx) {
+			ctx->add_child(c_ui_mem_pool::alloc<c_button>("Load", [this]() {
+				std::string dll = "eblenix_csgo.dll";
+
+				if (!util::file_exists(dll))
+					return push_windows_notify(_PRODUCT_NAME, dll + " not found", NIIF_WARNING);
+
+				DWORD pid = util::get_proc_id("csgo.exe");
+
+				if (!pid)
+					return push_windows_notify(_PRODUCT_NAME, "CSGO not running", NIIF_WARNING);
+
+				if (!util::inject(pid, dll))
+					return push_windows_notify(_PRODUCT_NAME, "Failed to inject", NIIF_ERROR);
+
+				return PostQuitMessage(0);
+			}));
+		}, true);
+	}
 
 	while (update_frame())
 	{
-		game_process_id = util::get_proc_id(g::game_processes[game_id]);
-		loaded = util::is_dll_used(game_process_id, g::dlls[game_id]);
+		g_ui.poll_input(m_hwnd);
 
-		GetCursorPos(&p);
-		GetWindowRect(m_hwnd, &r);
+		m_device->Clear(0, nullptr, D3DCLEAR_TARGET, D3DCOLOR_XRGB(1, 1, 1), 1.0f, 0);
 
-		if (is_window_active() && is_window_hovered()) {
-			if ((m_mouse_pos_x <= m_width && m_mouse_pos_y <= 25)
-				&& GetAsyncKeyState(VK_LBUTTON) & 0x8000) {
-				set_window_pos(m_mouse_pos_x, m_mouse_pos_y);
-			}
-			else {
-				m_mouse_pos_x = (p.x - r.left);
-				m_mouse_pos_y = (p.y - r.top);
-			}
-		}
-		else {
-			m_mouse_pos_x = 0;
-			m_mouse_pos_y = 0;
-		}
-
-		if (g_d3d.begin_drawing())
+		if (SUCCEEDED(m_device->BeginScene()))
 		{
-			ui::get->begin_frame();
-
-			ui::get->group_box("Games", { 20, 20 }, { 200, 80 }); {
-				ui::get->set_cursor_pos({ 21, 27 });
-				ui::get->game_selector("CSGO Legacy", ui::csgo_ico, &game_id, 0);
+			g_renderer.begin();
+			{
+				g_ui.think();
+				g_ui.draw();
 			}
+			g_renderer.end();
 
-			ui::get->group_box("Actions", { 230, 20 }, { 135, 80 }); {
-				ui::get->button(loaded ? "Unload" : "Load", 115, 24, []() {
-					if (game_id == -1) {
-						ui::get->push_log("Select a game..");
-						return;
-					}
-
-					if (!util::file_exists(g::dlls[game_id])) {
-						ui::get->push_log("Check current directory. " + g::dlls[game_id] + " not found");
-						return;
-					}
-
-					if (!game_process_id) {
-						ui::get->push_log(g::game_processes[game_id] + " is not running");
-						return;
-					}
-
-					if (util::is_dll_used(game_process_id, g::dlls[game_id])) {
-						loaded = !(util::send_msg_to_proc(g::game_windows[game_id], LOADER_UNLOAD_HOOK_MESSAGE));
-						return;
-					}
-
-					loaded = util::inject(game_process_id, g::dlls[game_id]);
-				});
-
-				ui::get->button("Exit", 115, 24, []() {
-					PostQuitMessage(0);
-				});
-			}
-
-			ui::get->util_box({ m_mouse_pos_x, m_mouse_pos_y }, {
-				{ "Exit", []() { PostQuitMessage(0); } },
-			});
-
-			ui::get->end_frame();
-
-			g_d3d.end_drawing();
+			m_device->EndScene();
 		}
 
 		on_reset();
@@ -178,81 +167,36 @@ void Interface::on_reset()
 	if (!(result == D3DERR_DEVICELOST && m_device->TestCooperativeLevel() == D3DERR_DEVICENOTRESET))
 		return;
 
-	g_d3d.undo();
-	ui::get->on_reset();
+	g_font.undo();
+	g_renderer.undo();
 
 	m_device->Reset(&m_present_params);
 
-	ui::get->on_reset_end();
-	g_d3d.create_objects(m_device);
-}
-
-int Interface::get_width()
-{
-	return m_width;
-}
-
-int Interface::get_height()
-{
-	return m_height;
-}
-
-int Interface::get_mouse_pos_x()
-{
-	return m_mouse_pos_x;
-}
-
-int Interface::get_mouse_pos_y()
-{
-	return m_mouse_pos_y;
-}
-
-bool Interface::is_window_active()
-{
-	return (m_hwnd == GetForegroundWindow());
-}
-
-bool Interface::is_window_hovered()
-{
-	return (m_mouse_pos_x >= 0 && m_mouse_pos_x <= 0 + m_width
-		&& m_mouse_pos_y >= 0 && m_mouse_pos_y <= 0 + m_height);
-}
-
-void Interface::set_window_pos(int x, int y)
-{
-	int flags{ SWP_NOZORDER | SWP_NOMOVE | SWP_NOSIZE };
-
-	if (x != 0 && y != 0)
-	{
-		POINT p{};
-		GetCursorPos(&p);
-
-		x = p.x - x;
-		y = p.y - y;
-
-		flags &= ~SWP_NOMOVE;
-	}
-
-	if (m_width != 0 && m_height != 0)
-		flags &= ~SWP_NOSIZE;
-
-	SetWindowPos(m_hwnd, nullptr, x, y, m_width, m_height, flags);
+	g_renderer.init(m_device);
+	g_font.init(m_device, {});
 }
 
 void Interface::undo()
 {
-	g_d3d.undo();
+	c_ui_mem_pool::clear();
 
-	if (m_device) {
-		m_device->Release();
-		m_device = nullptr;
-	}
-
-	if (m_d3d9) {
-		m_d3d9->Release();
-		m_d3d9 = nullptr;
-	}
+	m_nid.cbSize = sizeof(NOTIFYICONDATAA);
+	m_nid.hWnd = m_hwnd;
+	m_nid.uID = 1;
+	Shell_NotifyIconA(NIM_DELETE, &m_nid);
 
 	DestroyWindow(m_hwnd);
 	UnregisterClassA(m_class_name.c_str(), m_wc.hInstance);
+}
+
+void Interface::push_windows_notify(const std::string& title, const std::string& msg, DWORD icon_type)
+{
+	m_nid.uFlags = NIF_INFO;
+
+	strcpy_s(m_nid.szInfoTitle, title.c_str());
+	strcpy_s(m_nid.szInfo, msg.c_str());
+
+	m_nid.dwInfoFlags = icon_type;
+
+	Shell_NotifyIconA(NIM_MODIFY, &m_nid);
 }

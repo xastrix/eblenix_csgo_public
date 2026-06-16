@@ -19,7 +19,7 @@ static void add_props_for_table(
 	netvar_table_map& table_map,
 	const uint32_t table_name_hash,
 	const std::string& table_name,
-	recv_table* table,
+	c_recv_table* table,
 	const size_t child_offset = 0
 );
 static void initialize_props(netvar_table_map& table_map);
@@ -162,7 +162,7 @@ int Helpers::get_nearest_bone(c_base_player* entity, user_cmd_t* cmd)
 	if (!hitbox_set)
 		return -1;
 
-	for (int i = 0; i < hitbox_set->m_hitbox_count; i++)
+	for (int i = 0; i < hitbox_set->hitbox_count; i++)
 	{
 		if (i >= hitbox_max)
 			continue;
@@ -172,12 +172,12 @@ int Helpers::get_nearest_bone(c_base_player* entity, user_cmd_t* cmd)
 		if (!hitbox)
 			continue;
 
-		const auto angle = Math::calculate_angle(g_cs->get_local()->get_eye_pos(), vec3(matrix[hitbox->m_bone].m[0][3], matrix[hitbox->m_bone].m[1][3], matrix[hitbox->m_bone].m[2][3]), cmd->m_viewangles);
+		const auto angle = Math::calculate_angle(g_cs->get_local()->get_eye_pos(), vec3(matrix[hitbox->bone].m[0][3], matrix[hitbox->bone].m[1][3], matrix[hitbox->bone].m[2][3]), cmd->viewangles);
 		const auto this_distance = std::hypotf(angle.x, angle.y);
 
 		if (best_distance > this_distance) {
 			best_distance = this_distance;
-			aim_bone = hitbox->m_bone;
+			aim_bone = hitbox->bone;
 			continue;
 		}
 	}
@@ -200,7 +200,7 @@ int Helpers::find_target_entity(user_cmd_t* cmd, const float fov, vec3& angle)
 		if (!entity || entity == g_cs->get_local() || entity->get_dormant() || !entity->is_life_state() || entity->has_gun_game_immunity())
 			continue;
 
-		angle = Math::calculate_angle(local_eye_pos, entity_bone_pos, cmd->m_viewangles);
+		angle = Math::calculate_angle(local_eye_pos, entity_bone_pos, cmd->viewangles);
 
 		vec3 angles{};
 		Math::vector_angles(local_eye_pos - entity_bone_pos, angles);
@@ -517,7 +517,7 @@ module_t Helpers::get_module(const std::string& name)
 	if (!mod)
 		return ret;
 
-	ret.m_base_address = reinterpret_cast<uintptr_t>(mod);
+	ret.base_address = reinterpret_cast<uintptr_t>(mod);
 	
 	char path[MAX_PATH];
 	if (GetModuleFileNameA(mod, path, MAX_PATH)) {
@@ -526,16 +526,16 @@ module_t Helpers::get_module(const std::string& name)
 		size_t last_slash = full_path.find_last_of("\\/");
 
 		if (last_slash != std::string::npos)
-			ret.m_name = full_path.substr(last_slash + 1);
+			ret.name = full_path.substr(last_slash + 1);
 
 		else
-			ret.m_name = full_path;
+			ret.name = full_path;
 	}
 	else
-		ret.m_name = name;
+		ret.name = name;
 
 	if (GetModuleInformation(GetCurrentProcess(), mod, &mod_info, sizeof(mod_info)))
-		ret.m_size = static_cast<size_t>(mod_info.SizeOfImage);
+		ret.size = static_cast<size_t>(mod_info.SizeOfImage);
 
 	return ret;
 }
@@ -575,27 +575,27 @@ static void add_props_for_table(
 	netvar_table_map& table_map,
 	const uint32_t table_name_hash,
 	const std::string& table_name,
-	recv_table* table,
+	c_recv_table* table,
 	const size_t child_offset
 ) {
-	for (int i = 0; i < table->m_props_count; i++) {
-		auto& prop = table->m_props[i];
+	for (int i = 0; i < table->props_count; i++) {
+		auto& prop = table->props[i];
 
-		auto name = std::string{ prop.m_prop_name };
+		auto name = std::string{ prop.prop_name };
 
-		if (prop.m_data_table && prop.m_elements_count > 0) {
+		if (prop.data_table && prop.elements_count > 0) {
 			if (name.substr(0, 1) == "0")
 				continue;
 
 			add_props_for_table(table_map, table_name_hash, table_name,
-				prop.m_data_table, prop.m_offset + child_offset);
+				prop.data_table, prop.offset + child_offset);
 		}
 
 		if (name.substr(0, 1) != "m")
 			continue;
 
-		const auto name_hash = fnv::hash(prop.m_prop_name);
-		const auto offset = static_cast<uintptr_t>(prop.m_offset) + child_offset;
+		const auto name_hash = fnv::hash(prop.prop_name);
+		const auto offset = static_cast<uintptr_t>(prop.offset) + child_offset;
 
 		table_map[table_name_hash][name_hash] = offset;
 	}
@@ -603,10 +603,10 @@ static void add_props_for_table(
 
 static void initialize_props(netvar_table_map& table_map)
 {
-	for (auto c = g_cs->m_client->get_client_classes(); c; c = c->m_next_ptr)
+	for (auto c = g_cs->m_client->get_client_classes(); c; c = c->next_ptr)
 	{
-		const auto table = c->m_recvtable_ptr;
-		const auto table_name = table->m_table_name;
+		const auto table = c->recvtable_ptr;
+		const auto table_name = table->table_name;
 		const auto table_name_hash = fnv::hash(table_name);
 
 		if (table == nullptr)

@@ -1,72 +1,291 @@
 #pragma once
 
-#include "d3d.h"
+#include "renderer.h"
 
 #include <functional>
-#include <unordered_map>
-#include <thread>
 
-struct ui_vec_t {
-	ui_vec_t(int x = 0, int y = 0) : x(x), y(y) {}
-	int x, y;
+#define UI_START_POSITION_X 120
+#define UI_START_POSITION_Y 30
+
+class c_element {
+public:
+	virtual void think() = 0;
+	virtual void draw() = 0;
+
+	virtual c_element* get_parent() {
+		return m_parent;
+	}
+
+	virtual void set_parent(c_element* parent) {
+		m_parent = parent;
+	}
+
+	virtual bool is_child(c_element* child) {
+		for (auto elem : m_childs) {
+			if (elem == child)
+				return true;
+		}
+		return false;
+	}
+
+	virtual void add_child(c_element* child) {
+		m_childs.push_back(child);
+		child->set_parent(this);
+	}
+
+	virtual void set_label(const std::string& label) {
+		m_label = label;
+	}
+
+	virtual std::string get_label() {
+		return m_label;
+	}
+
+	virtual void set_size(const c_vec2& size) {
+		m_size = size;
+	}
+
+	virtual c_vec2 get_size() {
+		return m_size;
+	}
+
+	virtual void set_position(const c_vec2& position) {
+		m_pos = position;
+	}
+
+	virtual c_vec2& get_position() {
+		return m_pos;
+	}
+
+	virtual c_vec2 get_child_draw_position() {
+		if (m_parent == nullptr)
+			return m_pos;
+
+		return m_parent->get_child_draw_position() + m_pos;
+	}
+
+protected:
+	c_vec2 m_pos;
+	c_vec2 m_size;
+	std::string m_label;
+	std::vector<c_element*> m_childs;
+	c_element* m_parent;
 };
 
-struct ui_rect_t {
-	ui_vec_t m_size;
+class c_game : public c_element {
+public:
+	c_game(const std::string& label) {
+		m_label = label;
+	}
+
+	void think() override {
+		for (auto child : m_childs) {
+			child->think();
+		}
+	}
+
+	void draw() override {
+		for (auto child : m_childs)
+			child->draw();
+	}
+
+	void add_child(c_element* child) override {
+		c_element::add_child(child);
+
+		m_cursor_pos.y += child->get_size().y + 16;
+
+		if (m_cursor_pos.y - 16 >= (m_parent->get_size().y - 32)) {
+			m_cursor_pos.x += child->get_size().x + 16;
+			m_cursor_pos.y = child->get_size().y + 16;
+		}
+
+		child->set_position(m_cursor_pos - c_vec2(0, child->get_size().y + 16));
+	}
+
+	c_vec2 get_child_draw_position() override {
+		return c_element::get_child_draw_position();
+	}
+
+	c_vec2 get_cursor_pos() {
+		return m_cursor_pos;
+	}
+
+	void set_cursor_pos(const c_vec2& pos) {
+		m_cursor_pos = pos;
+	}
+
+private:
+	c_vec2 m_cursor_pos;
 };
 
-struct ui_erect_t {
-	ui_vec_t m_start_pos;
-	ui_vec_t m_end_pos;
+class c_group : public c_element {
+public:
+	c_group(const std::string& label, const c_vec2& size, bool dont_render = false) {
+		m_label = label;
+		m_size = size;
+		m_dont_render = dont_render;
+	}
+
+	void think() override {
+		c_vec2 draw_position(m_parent->get_child_draw_position() + m_pos);
+
+		for (auto child : m_childs) {
+			child->think();
+		}
+	}
+
+	void draw() override {
+		c_vec2 draw_position(m_parent->get_child_draw_position() + m_pos);
+
+		c_vec2 rect_min(draw_position);
+		c_vec2 rect_max(m_size);
+
+		if (!m_dont_render) {
+			g_renderer.rect_fill_cornered(rect_min, rect_max, 20.0f, c_color(17, 17, 17));
+			g_renderer.rect_cornered(rect_min, rect_max, 20.0f, c_color(35, 35, 35));
+
+			g_renderer.rect_fill(rect_min + c_vec2(0, 32), c_vec2(rect_max.x, 1), c_color(35, 35, 35));
+
+			g_font.draw_string(m_label, rect_min.x + 12, rect_min.y + 12,
+				g_font[Verdana12px], TEXT_NONE, c_color(200, 200, 200));
+		}
+
+		for (auto child : m_childs)
+			child->draw();
+	}
+
+	void add_child(c_element* child) override {
+		c_element::add_child(child);
+
+		m_cursor_pos.y += child->get_size().y + 16;
+		child->set_position(m_cursor_pos - c_vec2(0, child->get_size().y + 16));
+	}
+
+	c_vec2 get_child_draw_position() override {
+		return m_parent->get_child_draw_position() + m_pos + c_vec2(16, 45);
+	}
+
+	c_vec2 get_cursor_pos() {
+		return m_cursor_pos;
+	}
+
+	void set_cursor_pos(const c_vec2& pos) {
+		m_cursor_pos = pos;
+	}
+
+	void push_cursor_pos(const c_vec2& pos) {
+		m_cursor_pos += pos;
+	}
+
+	void pop_cursor_pos(const c_vec2& pos) {
+		m_cursor_pos -= pos;
+	}
+
+private:
+	c_vec2 m_cursor_pos;
+	bool m_dont_render;
 };
 
-struct ui_cursor_rect_t {
-	ui_vec_t m_first;
-	ui_vec_t m_second;
+class c_button : public c_element {
+public:
+	c_button(const std::string& label, std::function<void()> callback) {
+		m_label = label;
+		m_size = c_vec2(0, 17);
+		m_callback = callback;
+		m_holding = false;
+	}
+
+	void think() override;
+	void draw() override;
+
+private:
+	std::function<void()> m_callback;
+	bool m_holding;
 };
 
-struct ui_util_t {
-	std::string m_name;
-	std::function<void()> m_fn;
-};
+class c_label : public c_element {
+public:
+	c_label(const std::string& label) {
+		m_label = label;
+	}
 
-struct ui_notify_t {
-	std::string m_msg;
-	std::chrono::steady_clock::time_point m_start_time;
-};
+	void think() override {}
+	void draw() override {
+		c_vec2 draw_position = m_parent->get_child_draw_position() + m_pos;
 
-namespace ui
-{
-	struct ui_base_t {
-		void init(IDirect3DDevice9* device, ui_rect_t rect);
-		void begin_frame();
-
-		void button(const std::string& field, int w, int h, std::function<void()> fn);
-		void group_box(const std::string& field, ui_vec_t pos, ui_vec_t size);
-		void game_selector(const std::string& field, sprite_t* icon, int *selected, int id);
-		void util_box(ui_vec_t pos, std::vector<ui_util_t> list);
-		void text_box(const std::string& field, ui_vec_t pos);
-
-		void set_cursor_pos(ui_vec_t pos);
-		void push_log(const std::string& msg);
-
-		void on_reset();
-		void on_reset_end();
-
-		void end_frame();
-
-	private:
-		bool is_hovered(const ui_cursor_rect_t& rect);
-		bool is_blocked() { return m_blocked; }
-		void set_blocked(bool state) { m_blocked = state; }
-
-	private:
-		ui_rect_t                m_rect{};
-		ui_erect_t               m_erect{};
-		bool                     m_blocked;
-		std::vector<ui_notify_t> m_logs{};
+		c_vec2 label_min(draw_position.x + m_size.x, draw_position.y);
+		g_font.draw_string(m_label, label_min.x, label_min.y,
+			g_font[Verdana13px], TEXT_OUTLINE, c_color(200, 200, 200));
 	};
+};
 
-	inline ui_base_t* get = new ui_base_t();
-	inline sprite_t* csgo_ico = new sprite_t();
-}
+class c_ui_mem_pool {
+public:
+	template <typename T, typename... Args>
+	static T* alloc(Args&&... args) {
+		if (m_index >= MAX_ELEMENTS)
+			return nullptr;
+
+		void* memory_address = m_pool[m_index];
+		T* object = ::new (memory_address) T(std::forward<Args>(args)...);
+
+		m_history[m_index] = object;
+		m_index++;
+
+		return object;
+	}
+
+	static void clear() {
+		for (size_t i = 0; i < m_index; i++) {
+			if (m_history[i]) {
+				m_history[i]->~c_element();
+				m_history[i] = nullptr;
+			}
+		}
+
+		m_index = 0;
+	}
+
+private:
+	static constexpr size_t  MAX_ELEMENTS = 512;
+	static constexpr size_t  MAX_ELEMENT_SIZE = 256;
+
+	inline static uint8_t    m_pool[MAX_ELEMENTS][MAX_ELEMENT_SIZE];
+	inline static c_element* m_history[MAX_ELEMENTS];
+	inline static size_t     m_index = 0;
+};
+
+class c_ui : public c_element {
+public:
+	void think() override;
+	void draw() override;
+
+	c_vec2 get_child_draw_position() override;
+
+	void poll_input(HWND hwnd);
+
+	bool is_key_down(int key);
+	bool is_key_pressed(int key);
+	bool is_key_released(int key);
+
+	c_vec2 get_mouse_pos();
+	c_vec2 get_prev_mouse_pos();
+
+	bool in_bounds(const c_vec2 pos, const c_vec2 size);
+	bool is_hovered(const c_vec2 min, const c_vec2 max);
+
+	c_game* set_game(const std::string& label);
+	c_group* set_group(c_game* game, const std::string& label, const c_vec2& size, std::function<void(c_group*)> items, bool dont_render = false);
+
+private:
+	c_vec2 m_prev_mouse_pos;
+	c_vec2 m_mouse_pos;
+
+	bool m_prev_key_state[256];
+	bool m_key_state[256];
+
+	std::vector<c_game*> m_games;
+	c_game* m_active_game;
+};
+
+inline c_ui g_ui;

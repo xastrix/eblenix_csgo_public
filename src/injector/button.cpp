@@ -1,43 +1,57 @@
 #include "ui.h"
 
-std::unordered_map<std::string, bool> g_Buttons{};
-void ui::ui_base_t::button(const std::string& field, int w, int h, std::function<void()> fn)
+void c_button::think()
 {
-	const auto x = m_erect.m_start_pos.x + 5;
-	const auto y = m_erect.m_start_pos.y + 5;
+	c_vec2 draw_position = m_parent->get_child_draw_position() + m_pos + c_vec2(16, 0);
+	c_vec2 button_size(m_parent->get_size().x - 65, 24);
 
-	ui_cursor_rect_t button_rect = {
-		{ x, y }, { w, h }
-	};
+	c_vec2 item_min(draw_position);
+	c_vec2 item_max(item_min + c_vec2(button_size.x, button_size.y));
 
-	if (is_hovered(button_rect) && !is_blocked()) {
-		g_d3d.draw_filled_rect(x, y, w, h, D3DCOLOR_RGBA(68, 99, 153, 255));
-		g_d3d.draw_rect(x, y, w, h, D3DCOLOR_RGBA(58, 87, 137, 255));
+	if (g_ui.is_hovered(item_min, item_max) && g_ui.is_key_pressed(VK_LBUTTON) && !m_holding) {
+		m_holding = true;
+	}
 
-		if (GetAsyncKeyState(VK_LBUTTON) & 0x8000) {
-			g_Buttons[field] = true;
-			g_d3d.draw_filled_rect(x + 1, y + 1, w - 1, h - 1, D3DCOLOR_RGBA(69, 107, 173, 255));
-		}
-		else {
-			if (g_Buttons[field]) {
-				fn();
-				g_Buttons[field] = false;
-			}
-		}
+	else if (g_ui.is_hovered(item_min, item_max) && g_ui.is_key_released(VK_LBUTTON) && m_holding) {
+		m_callback();
+		m_holding = false;
+	}
+
+	else if (!g_ui.is_hovered(item_min, item_max) && g_ui.is_key_released(VK_LBUTTON) && m_holding) {
+		m_holding = false;
+	}
+}
+
+void c_button::draw()
+{
+	c_vec2 draw_position = m_parent->get_child_draw_position() + m_pos + c_vec2(16, 0);
+	c_vec2 button_size(m_parent->get_size().x - 65, 24);
+
+	c_vec2 item_min(draw_position);
+	c_vec2 item_max(item_min + c_vec2(button_size.x, button_size.y));
+
+	g_renderer.rect_cornered(item_min.x - 1, item_min.y - 1, button_size.x + 2, button_size.y + 2, 5.0f, c_color(10, 10, 10));
+	g_renderer.rect_cornered(item_min.x, item_min.y, button_size.x, button_size.y, 5.0f, c_color(50, 50, 50));
+
+	if (m_holding) {
+		g_renderer.rect_cornered(item_min.x + 1, item_min.y + 1,
+			button_size.x - 2, button_size.y - 2, 5.0f, c_color(10, 10, 10));
 	}
 	else {
-		if (g_Buttons[field])
-			g_Buttons[field] = false;
-
-		g_d3d.draw_filled_rect(x, y, w, h, D3DCOLOR_RGBA(68, 90, 129, 255));
+		if (g_ui.is_hovered(item_min, item_max))
+			g_renderer.rect_cornered(item_min.x + 1, item_min.y + 1,
+				button_size.x - 2, button_size.y - 2, 5.0f, c_color(10, 10, 10));
 	}
 
-	const auto font = g_d3d.get_font(VerdanaBold12px);
-	const auto text_width = g_d3d.get_text_width(field, font);
-	const auto text_height = g_d3d.get_text_height(field, font);
+	const auto text_font = g_font[Verdana12px];
 
-	g_d3d.draw_string(field, x + w / 2 - text_width / 2,
-		y + (h / 2) - (text_height / 2), font, D3DCOLOR_RGBA(233, 233, 233, 255));
+	c_vec2 text_sz = c_vec2(g_font.get_text_width(m_label, text_font),
+		g_font.get_text_height(m_label, text_font));
 
-	m_erect.m_start_pos.y += (h + 8);
+	c_vec2 label_min(
+		draw_position.x + button_size.x / 2 - text_sz.x / 2,
+		draw_position.y + button_size.y / 2 - text_sz.y / 2
+	);
+
+	g_font.draw_string(m_label, label_min.x, label_min.y, text_font, TEXT_OUTLINE, c_color(200, 200, 200));
 }
