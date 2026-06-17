@@ -123,11 +123,8 @@ namespace Helpers
 	/* Prints a formatted message to the in-game console with a specified prefix */
 	void console_printf_with_prefix(const char* prefix, const char* fmt, ...);
 
-	/* Waits for a module specified by index to be loaded within a timeout period */
-	_wfm_stat wait_for_module(int module_index, int ms);
-
-	/* Waits for a module specified by index to be loaded, with a fallback module index */
-	_wfm_stat wait_for_module(int module_index, int fallback_module_index, int ms);
+	/* Waits for all specified modules in the vector to be loaded */
+	_wfm_stat wait_for_module(const std::vector<int>& modules, int ms);
 
 	/* Returns the current local time as a formatted string "HH:MM:SS" */
 	std::string get_current_time();

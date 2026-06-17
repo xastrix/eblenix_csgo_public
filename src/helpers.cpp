@@ -471,26 +471,21 @@ void Helpers::console_printf_with_prefix(const char* prefix, const char* fmt, ..
 	g_cs->m_cvar->console_printf("%s\n", buf.data());
 }
 
-_wfm_stat Helpers::wait_for_module(int module_index, int ms)
+_wfm_stat Helpers::wait_for_module(const std::vector<int>& modules, int ms)
 {
-	return wait_for_module(module_index, maxModules, ms);
-}
-
-_wfm_stat Helpers::wait_for_module(int module_index, int fallback_module_index, int ms)
-{
-	const auto timeout_ms{ 50000 };
-	auto waited_ms{ 0 };
-
-	while (!GetModuleHandleA(GLOBAL(module_list[module_index]).c_str()))
+	for (const auto& module_index : modules)
 	{
-		if (waited_ms >= timeout_ms)
-			return WM_TIMEOUT;
+		const auto timeout_ms{ 50000 };
+		auto waited_ms{ 0 };
 
-		if (fallback_module_index != maxModules)
-			GLOBAL(module_list[module_index]) = GLOBAL(module_list[fallback_module_index]);
+		while (!GetModuleHandleA(GLOBAL(module_list[module_index]).c_str()))
+		{
+			if (waited_ms >= timeout_ms)
+				return WM_TIMEOUT;
 
-		std::this_thread::sleep_for(std::chrono::milliseconds(ms));
-		waited_ms += ms;
+			std::this_thread::sleep_for(std::chrono::milliseconds(ms));
+			waited_ms += ms;
+		}
 	}
 
 	return WM_OK;

@@ -10,19 +10,13 @@ static HANDLE g_fonts[1];
 
 static void __stdcall init(HMODULE I)
 {
-	// waiting for the server browser module (the last module loaded by the game)
-	if (Helpers::wait_for_module(serverBrowserDLL, 600) == WM_TIMEOUT)
-		g::lib_state.set_state(state_t::SL_SHUTDOWN);
+	if (Helpers::wait_for_module({ serverBrowserDLL }, 600) == WM_TIMEOUT)
+		FreeLibraryAndExitThread(I, EXIT_FAILURE);
 
-	// waiting for the client module
-	if (Helpers::wait_for_module(clientDLL, 200) == WM_TIMEOUT)
-		g::lib_state.set_state(state_t::SL_SHUTDOWN);
-
-	// initialize the timer by recording the current steady clock time
 	auto s_time = std::chrono::steady_clock::now();
-	
-	switch (GLOBAL(lib_state.get_state())) {
-	case state_t::SL_INIT_BASE: {
+
+	if (GLOBAL(state) == S_INIT_BASE)
+	{
 		g_fonts[0] = AddFontMemResourceEx(astriumwep_ttf, ASTRIUMWEP_TTF_SZ, NULL, &g_numFonts);
 		g_fonts[1] = AddFontMemResourceEx(smallestpixel7_ttf, SMALLESTPIXEL7_TTF_SZ, NULL, &g_numFonts);
 
@@ -57,9 +51,12 @@ static void __stdcall init(HMODULE I)
 			}
 		}
 #endif
-		GLOBAL(lib_state)++;
+
+		GLOBAL(state)++;
 	}
-	case state_t::SL_INIT_VARS: {
+
+	if (GLOBAL(state) == S_INIT_VARS)
+	{
 		g_var->set(V_VISUALS_INTERFACE_SPECTATORS_POS_Y, g_renderer->get_screen_size().y * 0.5f);
 		g_var->set(V_MISC_VISUAL_VIEWMODEL_FOV, Helpers::get_viewmodel_fov());
 
@@ -70,20 +67,23 @@ static void __stdcall init(HMODULE I)
 
 		g_cfg->init();
 
-		GLOBAL(lib_state)++;
+		GLOBAL(state)++;
 	}
-	case state_t::SL_INIT_HOOKS: {
+
+	if (GLOBAL(state) == S_INIT_HOOKS)
+	{
 		g_input->init({ CSGO_CLASS_NAME, 0 });
 		g_hooks->init();
 		g_event->init();
 
-		GLOBAL(lib_state)++;
+		GLOBAL(state)++;
 	}
-	case state_t::SL_WAITING_FOR_SHUTDOWN: {
+
+	if (GLOBAL(state) == S_WAITING_FOR_SHUTDOWN)
+	{
 		GLOBAL(b_flags[BF_INITIALISED]) = true;
 
 #ifdef LUA_ENABLED
-		// register a lua callback for the cheat load event
 		for (auto _ : LUA_CALLBACK(CL_ON_INIT)) {
 			if (_.nulled) continue;
 
@@ -101,13 +101,16 @@ static void __stdcall init(HMODULE I)
 
 		g_ui->set_menu_state(true);
 
-		while (!(GLOBAL(lib_state.get_state()) == state_t::SL_SHUTDOWN)) {
+		while (GLOBAL(state) == S_WAITING_FOR_SHUTDOWN) {
 			g::handle_playing_time(s_time, 1000);
 			g_http->poll();
 		}
 	}
-	case state_t::SL_SHUTDOWN: {
-		// reset world brightness if nightmode was enabled
+
+	if (GLOBAL(state) == S_SHUTDOWN)
+	{
+		std::this_thread::sleep_for(std::chrono::milliseconds(200));
+
 		if (g_var->get_as<bool>(V_VISUALS_ENABLED).value() &&
 			g_var->get_as<bool>(V_VISUALS_WORLD_NIGHTMODE_ENABLED).value()) {
 			Helpers::modulate_world_brightness({
@@ -119,14 +122,11 @@ static void __stdcall init(HMODULE I)
 			});
 		}
 
-		// turn off all functions before unloading
 		GLOBAL(b_flags[BF_PANIC]) = true;
 
-		// reset all vars before unloading
 		g_var->reset();
 
 #ifdef LUA_ENABLED
-		// register a lua callback for the cheat unload event
 		for (auto _ : LUA_CALLBACK(CL_ON_UNLOAD)) {
 			if (_.nulled) continue;
 
@@ -159,7 +159,6 @@ static void __stdcall init(HMODULE I)
 
 		FreeLibraryAndExitThread(I, EXIT_SUCCESS);
 	}
-	}
 }
 
 bool __stdcall DllMain(const HMODULE mod, const int32_t r, void*)
@@ -170,7 +169,7 @@ bool __stdcall DllMain(const HMODULE mod, const int32_t r, void*)
 
 	_dll_status = _dll.in(DLL_PROCESS_ATTACH, _dll_flags, [](const HMODULE mod) {
 		const auto h = CreateThread(nullptr, 0, reinterpret_cast<LPTHREAD_START_ROUTINE>(init), mod, 0, nullptr);
-
+		
 		if (!h)
 			return false;
 

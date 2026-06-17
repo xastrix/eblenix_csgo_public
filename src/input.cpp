@@ -15,7 +15,7 @@ static unsigned long WINAPI wnd_proc(HWND h, UINT m, WPARAM w, LPARAM l)
 {
 	if (GLOBAL(b_flags[BF_INITIALISED]))
 	{
-		if (!(GLOBAL(lib_state.get_state()) == state_t::SL_SHUTDOWN))
+		if (!(GLOBAL(state) == S_SHUTDOWN))
 		{
 			g_input->process_message(m, w, l);
 
