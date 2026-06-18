@@ -136,7 +136,7 @@ void world_esp_t::on_do_post_screen_effects()
 
 	for (int i = 0; i < g_cs->m_glow_manager->get_size(); i++)
 	{
-		auto& glow = g_cs->m_glow_manager->glow_object_definitions[i];
+		auto& glow = g_cs->m_glow_manager->get_objects()[i];
 
 		if (glow.is_unused())
 			continue;

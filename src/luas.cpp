@@ -57,12 +57,12 @@ void c_lua_mgr::load_startup_scripts()
 {
 	std::string data;
 
-	if (!(Files::file_exists(LUA_STARTUP_LIST_PATH) == FS_OK)) {
+	if (!(Files::exist_object(LUA_STARTUP_LIST_PATH) == FS_OK)) {
 		Files::write(LUA_STARTUP_LIST_PATH, "a", "{}");
 		return;
 	}
 
-	if (!(Files::get_file_content(LUA_STARTUP_LIST_PATH, data) == FS_OK))
+	if (!(Files::read(LUA_STARTUP_LIST_PATH, "rb", data) == FS_OK))
 		return;
 
 	for (const auto& script : Helpers::parse_json_object(data))

@@ -306,7 +306,7 @@ static void __stdcall draw_model_execute_h(i_mat_render_ctx* ctx, const draw_mod
 }
 
 static void(__fastcall *o_override_view)(void*, void*, c_view_setup*);
-static void __fastcall override_view_h(void* _ecx, void* _edx, c_view_setup* setup)
+static void __fastcall override_view_h(void* _ecx, void*, c_view_setup* setup)
 {
 	if (GLOBAL(b_flags[BF_INITIALISED]) && !GLOBAL(b_flags[BF_PANIC]))
 	{
@@ -396,7 +396,7 @@ static void __stdcall draw_set_color_h(int r, int g, int b, int a)
 							if (!g_cs->get_local()->can_see_entity(entity, entity->get_eye_pos()) & g_var->get_as<bool>(V_ESP_VISIBLE_ONLY).value())
 								continue;
 
-							box bbox{};
+							box bbox;
 							if (Helpers::get_bbox(entity, bbox, BT_STATIC))
 							{
 								vec2 screen_size = g_renderer->get_screen_size();

@@ -26,23 +26,30 @@ struct glow_object_definition_t {
 		return next_free_slot != ENTRY_IN_USE;
 	}
 
-	void set_glow(float r, float g, float b, float a, float bloom_amount = 0.8f) {
+	void set_glow(float r, float g, float b, float a, float bloom = 0.8f) {
 		red                     = r;
 		green                   = g;
 		blue                    = b;
 		alpha                   = a;
 		render_when_occluded    = true;
 		render_when_unoccluded  = false;
-		bloom_amount            = bloom_amount;
+		bloom_amount            = bloom;
 	}
 };
 
 class c_glow_manager {
 public:
-	int get_size() {
-		return *reinterpret_cast<int*>(uintptr_t(this) + 0xC);
+	int get_size() const {
+		return m_size;
 	}
 
-	glow_object_definition_t* glow_object_definitions;
-	int first_free_slot;
+	glow_object_definition_t* get_objects() const {
+		return m_glow_objects;
+	}
+
+private:
+	char                      u0[12];
+	int                       m_size;
+	glow_object_definition_t* m_glow_objects;
+	int                       m_first_free_slot;
 };

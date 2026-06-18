@@ -16,12 +16,12 @@ void c_cfg_mgr::load_startup_config()
 {
 	std::string data;
 
-	if (!(Files::file_exists(CFG_STARTUP_FILE_PATH) == FS_OK)) {
+	if (!(Files::exist_object(CFG_STARTUP_FILE_PATH) == FS_OK)) {
 		Files::write(CFG_STARTUP_FILE_PATH, "a", "");
 		return;
 	}
 
-	if (!(Files::get_file_content(CFG_STARTUP_FILE_PATH, data) == FS_OK))
+	if (!(Files::read(CFG_STARTUP_FILE_PATH, "rb", data) == FS_OK))
 		return;
 	
 	load(std::wstring(data.begin(), data.end()));
