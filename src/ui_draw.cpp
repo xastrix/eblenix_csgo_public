@@ -46,6 +46,7 @@ void c_ui::draw(int x, int y)
 		float final_step = std::clamp(speed * fps_factor, 0.0f, 1.0f);
 
 		anim_x[idx] += (target_x - anim_x[idx]) * final_step;
+		anim_x[idx] = std::clamp(anim_x[idx], 25.0f, 37.0f);
 
 		g_renderer->rect_fill(x - 38, y - 11, 26, 14, m_colors[UI_OUTLINE_COL]);
 		g_renderer->gradient_h(x - static_cast<int>(anim_x[idx]), y - 10, 12, 12,
