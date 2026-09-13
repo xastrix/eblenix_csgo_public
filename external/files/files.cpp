@@ -58,9 +58,6 @@ F_STAT Files::write(const std::string& path, const std::string& flag, const std:
 
 F_STAT Files::make_dirs(const std::string& path)
 {
-	if (exist_object(path) == FS_FAIL)
-		return FS_FAIL;
-
 	if (!std::filesystem::create_directories(path))
 		return FS_FAIL;
 
