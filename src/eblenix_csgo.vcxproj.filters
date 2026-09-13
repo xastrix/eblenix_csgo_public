@@ -104,42 +104,6 @@
     <ClCompile Include="vec3.cpp">
       <Filter>csgo\math</Filter>
     </ClCompile>
-    <ClCompile Include="triggerbot.cpp">
-      <Filter>features</Filter>
-    </ClCompile>
-    <ClCompile Include="aimbot.cpp">
-      <Filter>features</Filter>
-    </ClCompile>
-    <ClCompile Include="autostrafe.cpp">
-      <Filter>features</Filter>
-    </ClCompile>
-    <ClCompile Include="bhop.cpp">
-      <Filter>features</Filter>
-    </ClCompile>
-    <ClCompile Include="blockbot.cpp">
-      <Filter>features</Filter>
-    </ClCompile>
-    <ClCompile Include="movement.cpp">
-      <Filter>features</Filter>
-    </ClCompile>
-    <ClCompile Include="player_esp.cpp">
-      <Filter>features</Filter>
-    </ClCompile>
-    <ClCompile Include="visuals.cpp">
-      <Filter>features</Filter>
-    </ClCompile>
-    <ClCompile Include="world_esp.cpp">
-      <Filter>features</Filter>
-    </ClCompile>
-    <ClCompile Include="hud.cpp">
-      <Filter>features</Filter>
-    </ClCompile>
-    <ClCompile Include="status_bar.cpp">
-      <Filter>features</Filter>
-    </ClCompile>
-    <ClCompile Include="spectators.cpp">
-      <Filter>features</Filter>
-    </ClCompile>
     <ClCompile Include="..\external\lua\lapi.c">
       <Filter>external\lua</Filter>
     </ClCompile>
@@ -256,6 +220,42 @@
     </ClCompile>
     <ClCompile Include="http.cpp">
       <Filter>helpers\http</Filter>
+    </ClCompile>
+    <ClCompile Include="aimbot.cpp">
+      <Filter>features\aimbot</Filter>
+    </ClCompile>
+    <ClCompile Include="hud.cpp">
+      <Filter>features\visuals</Filter>
+    </ClCompile>
+    <ClCompile Include="player_esp.cpp">
+      <Filter>features\visuals</Filter>
+    </ClCompile>
+    <ClCompile Include="spectators.cpp">
+      <Filter>features\visuals</Filter>
+    </ClCompile>
+    <ClCompile Include="status_bar.cpp">
+      <Filter>features\visuals</Filter>
+    </ClCompile>
+    <ClCompile Include="visuals.cpp">
+      <Filter>features\visuals</Filter>
+    </ClCompile>
+    <ClCompile Include="world_esp.cpp">
+      <Filter>features\visuals</Filter>
+    </ClCompile>
+    <ClCompile Include="triggerbot.cpp">
+      <Filter>features\aimbot</Filter>
+    </ClCompile>
+    <ClCompile Include="movement.cpp">
+      <Filter>features\movement</Filter>
+    </ClCompile>
+    <ClCompile Include="blockbot.cpp">
+      <Filter>features\movement</Filter>
+    </ClCompile>
+    <ClCompile Include="bhop.cpp">
+      <Filter>features\movement</Filter>
+    </ClCompile>
+    <ClCompile Include="autostrafe.cpp">
+      <Filter>features\movement</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -411,20 +411,8 @@
     </ClInclude>
     <ClInclude Include="var_defines.h" />
     <ClInclude Include="vars.h" />
-    <ClInclude Include="hud.h">
-      <Filter>features</Filter>
-    </ClInclude>
     <ClInclude Include="i_input.h">
       <Filter>csgo\structs</Filter>
-    </ClInclude>
-    <ClInclude Include="aimbot.h">
-      <Filter>features</Filter>
-    </ClInclude>
-    <ClInclude Include="movement.h">
-      <Filter>features</Filter>
-    </ClInclude>
-    <ClInclude Include="visuals.h">
-      <Filter>features</Filter>
     </ClInclude>
     <ClInclude Include="engine_trace.h">
       <Filter>csgo\engine</Filter>
@@ -534,9 +522,6 @@
     <ClInclude Include="luas.h">
       <Filter>luas</Filter>
     </ClInclude>
-    <ClInclude Include="triggerbot.h">
-      <Filter>features</Filter>
-    </ClInclude>
     <ClInclude Include="..\external\aes\aes.hpp">
       <Filter>external\aes</Filter>
     </ClInclude>
@@ -589,6 +574,21 @@
       <Filter>helpers\http</Filter>
     </ClInclude>
     <ClInclude Include="common.h" />
+    <ClInclude Include="aimbot.h">
+      <Filter>features\aimbot</Filter>
+    </ClInclude>
+    <ClInclude Include="hud.h">
+      <Filter>features\visuals</Filter>
+    </ClInclude>
+    <ClInclude Include="visuals.h">
+      <Filter>features\visuals</Filter>
+    </ClInclude>
+    <ClInclude Include="triggerbot.h">
+      <Filter>features\aimbot</Filter>
+    </ClInclude>
+    <ClInclude Include="movement.h">
+      <Filter>features\movement</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="csgo">
@@ -704,6 +704,15 @@
     </Filter>
     <Filter Include="helpers\http">
       <UniqueIdentifier>{d9ef2c67-a5c7-44f3-aeaf-24d19f5da7ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="features\aimbot">
+      <UniqueIdentifier>{b3667ddf-9cc8-4ba2-b6b9-40739ac2d2af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="features\visuals">
+      <UniqueIdentifier>{2bda4223-6d83-4293-a3a1-cc19c0136d05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="features\movement">
+      <UniqueIdentifier>{62478a49-f26d-424c-a1f6-68873e2af578}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
