@@ -77,10 +77,6 @@ public:
 
 	void undo();
 
-	static std::shared_ptr<c_input> make_shared() {
-		return std::shared_ptr<c_input>(new c_input());
-	}
-
 private:
 	HWND          m_hwnd;
 	WNDPROC       m_old_wnd_proc;
@@ -91,6 +87,4 @@ private:
 	int           m_wheel_accumulate;
 };
 
-inline std::shared_ptr<c_input> g_input = c_input::make_shared();
-
-#define KEY(vk) g_input->operator[](vk)
+inline c_input g_input;

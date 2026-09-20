@@ -12,13 +12,13 @@ void c_triggerbot::run(user_cmd_t* cmd)
 	ray_t        ray;
 	trace_filter filter;
 
-	if (!g_var->get_as<bool>(V_TRIGGERBOT_ENABLED).value())
+	if (!g_var.get_as<bool>(V_TRIGGERBOT_ENABLED).value())
 		return;
 
-	if (!(g_cs->m_engine->is_connected() && g_cs->m_engine->is_in_game()))
+	if (!(g_cs.m_engine->is_connected() && g_cs.m_engine->is_in_game()))
 		return;
 
-	if (!g_cs->get_local() || !g_cs->get_local()->is_life_state())
+	if (!g_cs.get_local() || !g_cs.get_local()->is_life_state())
 		return;
 
 	calc_trace_to_players(cmd, &filter, src, dst, ray, &tr);
@@ -26,11 +26,11 @@ void c_triggerbot::run(user_cmd_t* cmd)
 	if (!tr.entity || tr.entity->get_client_class()->class_id != ccsplayer)
 		return;
 
-	if (tr.entity == g_cs->get_local() || tr.entity->get_dormant() ||
+	if (tr.entity == g_cs.get_local() || tr.entity->get_dormant() ||
 		!tr.entity->is_life_state() || tr.entity->has_gun_game_immunity())
 		return;
 
-	const auto weapon = g_cs->get_local()->get_active_weapon();
+	const auto weapon = g_cs.get_local()->get_active_weapon();
 
 	if (!weapon || !weapon->clip1_count())
 		return;
@@ -62,7 +62,7 @@ void c_triggerbot::clip_trace_to_players(const vec3& start, const vec3& end, uin
 	if (range <= 60.0f)
 	{
 		trace_t tr;
-		g_cs->m_trace->clip_ray_to_entity(ray_t(start, end), mask, ent, &tr);
+		g_cs.m_trace->clip_ray_to_entity(ray_t(start, end), mask, ent, &tr);
 
 		if (old_trace->fraction > tr.fraction)
 			*old_trace = tr;
@@ -73,15 +73,15 @@ void c_triggerbot::calc_trace_to_players(user_cmd_t* cmd, trace_filter* filter, 
 {
 	constexpr uint32_t mask = CONTENTS_SOLID | CONTENTS_GRATE | CONTENTS_HITBOX;
 
-	filter->fp = g_cs->get_local();
+	filter->fp = g_cs.get_local();
 
-	src = g_cs->get_local()->get_eye_pos();
+	src = g_cs.get_local()->get_eye_pos();
 	Math::angle_vectors(cmd->viewangles, dst);
 
 	ray.init(src, (dst * 8192.0f) + src);
 
-	g_cs->m_trace->trace_ray(ray, mask, filter, trace);
-	clip_trace_to_players(src, dst, mask, trace, g_cs->get_local());
+	g_cs.m_trace->trace_ray(ray, mask, filter, trace);
+	clip_trace_to_players(src, dst, mask, trace, g_cs.get_local());
 }
 
 bool c_triggerbot::can_shoot(c_base_weapon* weapon, trace_t trace)
@@ -89,19 +89,19 @@ bool c_triggerbot::can_shoot(c_base_weapon* weapon, trace_t trace)
 	if (Helpers::is_knife(weapon) || Helpers::is_grenade(weapon) || Helpers::is_non_aim(weapon))
 		return false;
 
-	if (!g_var->get_as<bool>(V_TRIGGERBOT_FLASH_CHECK).value() && g_cs->get_local()->is_flashed())
+	if (!g_var.get_as<bool>(V_TRIGGERBOT_FLASH_CHECK).value() && g_cs.get_local()->is_flashed())
 		return false;
 
-	if (!g_var->get_as<bool>(V_TRIGGERBOT_SMOKE_CHECK).value() && Helpers::is_behind_smoke(g_cs->get_local()->get_eye_pos(), trace.end))
+	if (!g_var.get_as<bool>(V_TRIGGERBOT_SMOKE_CHECK).value() && Helpers::is_behind_smoke(g_cs.get_local()->get_eye_pos(), trace.end))
 		return false;
 
-	if (!g_var->get_as<bool>(V_TRIGGERBOT_TEAMMATE_CHECK).value() && (g_cs->get_local()->get_team_num() == trace.entity->get_team_num()))
+	if (!g_var.get_as<bool>(V_TRIGGERBOT_TEAMMATE_CHECK).value() && (g_cs.get_local()->get_team_num() == trace.entity->get_team_num()))
 		return false;
 
-	if (!g_var->get_as<bool>(V_TRIGGERBOT_JUMP_CHECK).value() && !(g_cs->get_local()->get_flags() & fl_onground))
+	if (!g_var.get_as<bool>(V_TRIGGERBOT_JUMP_CHECK).value() && !(g_cs.get_local()->get_flags() & fl_onground))
 		return false;
 
-	if (g_var->get_as<bool>(V_TRIGGERBOT_SCOPE_CHECK).value() && (Helpers::is_sniper(weapon) && !g_cs->get_local()->is_scoped()))
+	if (g_var.get_as<bool>(V_TRIGGERBOT_SCOPE_CHECK).value() && (Helpers::is_sniper(weapon) && !g_cs.get_local()->is_scoped()))
 		return false;
 
 	return true;
@@ -112,7 +112,7 @@ void c_triggerbot::shoot(user_cmd_t* cmd, c_base_weapon* weapon, trace_t trace)
 	if (Helpers::is_taser(weapon))
 		return;
 
-	if (g_var->get_as<bool>(V_TRIGGERBOT_HITBOX_HEAD).value())
+	if (g_var.get_as<bool>(V_TRIGGERBOT_HITBOX_HEAD).value())
 	{
 		if (trace.hitgroup == hitgroup_head)
 		{
@@ -120,7 +120,7 @@ void c_triggerbot::shoot(user_cmd_t* cmd, c_base_weapon* weapon, trace_t trace)
 		}
 	}
 
-	if (g_var->get_as<bool>(V_TRIGGERBOT_HITBOX_BODY).value())
+	if (g_var.get_as<bool>(V_TRIGGERBOT_HITBOX_BODY).value())
 	{
 		if (trace.hitgroup == hitgroup_chest || trace.hitgroup == hitgroup_stomach)
 		{
@@ -128,7 +128,7 @@ void c_triggerbot::shoot(user_cmd_t* cmd, c_base_weapon* weapon, trace_t trace)
 		}
 	}
 
-	if (g_var->get_as<bool>(V_TRIGGERBOT_HITBOX_ARMS).value())
+	if (g_var.get_as<bool>(V_TRIGGERBOT_HITBOX_ARMS).value())
 	{
 		if (trace.hitgroup == hitgroup_leftarm || trace.hitgroup == hitgroup_rightarm)
 		{
@@ -136,7 +136,7 @@ void c_triggerbot::shoot(user_cmd_t* cmd, c_base_weapon* weapon, trace_t trace)
 		}
 	}
 
-	if (g_var->get_as<bool>(V_TRIGGERBOT_HITBOX_LEGS).value())
+	if (g_var.get_as<bool>(V_TRIGGERBOT_HITBOX_LEGS).value())
 	{
 		if (trace.hitgroup == hitgroup_leftleg || trace.hitgroup == hitgroup_rightleg)
 		{

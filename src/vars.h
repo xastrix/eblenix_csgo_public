@@ -302,12 +302,8 @@ public:
 		m_vars.clear();
 	}
 
-	static std::shared_ptr<c_var_mgr> make_shared() {
-		return std::shared_ptr<c_var_mgr>(new c_var_mgr());
-	}
-
 private:
 	vars_t m_vars;
 };
 
-inline std::shared_ptr<c_var_mgr> g_var = c_var_mgr::make_shared();
+inline c_var_mgr g_var;

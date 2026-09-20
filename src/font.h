@@ -46,14 +46,10 @@ public:
 
 	void undo();
 
-	static std::shared_ptr<c_fonts> make_shared() {
-		return std::shared_ptr<c_fonts>(new c_fonts());
-	}
-
 private:
 	ID3DXFont* m_fonts[maxFonts]{};
 };
 
-inline std::shared_ptr<c_fonts> g_font = c_fonts::make_shared();
+inline c_fonts g_font;
 
-#define FONT(index) g_font->operator[](index)
+#define FONT(index) g_font[index]

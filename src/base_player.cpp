@@ -60,7 +60,7 @@ c_base_weapon* c_base_player::get_active_weapon()
 	if (!weapon)
 		return nullptr;
 
-	return g_cs->m_entity_list->get_client_entity<c_base_weapon*>(weapon);
+	return g_cs.m_entity_list->get_client_entity<c_base_weapon*>(weapon);
 }
 
 bool c_base_player::can_see_entity(c_base_entity* entity, const vec3& pos)
@@ -75,7 +75,7 @@ bool c_base_player::can_see_entity(c_base_entity* entity, const vec3& pos)
 	normalize(dir);
 	ray.init(src, pos);
 
-	g_cs->m_trace->trace_ray(ray, MASK_SHOT | CONTENTS_GRATE, &filter, &tr);
+	g_cs.m_trace->trace_ray(ray, MASK_SHOT | CONTENTS_GRATE, &filter, &tr);
 
 	return tr.entity == entity || tr.fraction > 0.97f;
 }
@@ -99,7 +99,7 @@ vec3 c_base_player::get_hitbox_position(int hitbox_id)
 	if (!setup_bones(bone_matrix, max_studio_bones, bone_used_by_hitbox, 0.0f))
 		return vec3{ 0, 0, 0 };
 
-	const auto studio_model = g_cs->m_model_info->get_studio_model(get_model());
+	const auto studio_model = g_cs.m_model_info->get_studio_model(get_model());
 
 	if (!studio_model)
 		return vec3{ 0, 0, 0 };

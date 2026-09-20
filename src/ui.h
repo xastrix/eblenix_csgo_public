@@ -85,10 +85,6 @@ public:
 
 	void undo();
 
-	static std::shared_ptr<c_ui> make_shared() {
-		return std::shared_ptr<c_ui>(new c_ui());
-	}
-
 private:
 	void calc_animation_progress(float anim_time, float delta_time, float& old_alpha);
 	void draw(int x, int y);
@@ -228,4 +224,4 @@ private:
 	sprite_t* m_sprites = new sprite_t[maxUISprites]{};
 };
 
-inline std::shared_ptr<c_ui> g_ui = c_ui::make_shared();
+inline c_ui g_ui;

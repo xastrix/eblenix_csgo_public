@@ -33,10 +33,6 @@ public:
 		return m_signatures[index];
 	}
 
-	static std::shared_ptr<c_sig> make_shared() {
-		return std::shared_ptr<c_sig>(new c_sig());
-	}
-
 private:
 	DWORD get_module_size(const HMODULE mod);
 	std::vector<int> pattern_to_bytes(const std::string& signature);
@@ -45,6 +41,6 @@ private:
 	sig_t m_signatures[maxSignatures]{};
 };
 
-inline std::shared_ptr<c_sig> g_sig = c_sig::make_shared();
+inline c_sig g_sig;
 
-#define SIG(index) g_sig->operator[](index)
+#define SIG(index) g_sig[index]

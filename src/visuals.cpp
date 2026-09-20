@@ -4,10 +4,10 @@
 
 void c_visuals::run()
 {
-	if (!g_cs->m_engine->is_connected())
+	if (!g_cs.m_engine->is_connected())
 		return;
 
-	if (!g_cs->get_local())
+	if (!g_cs.get_local())
 		return;
 
 	player_esp_t::get_instance().think();

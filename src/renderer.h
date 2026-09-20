@@ -242,10 +242,6 @@ public:
 
 	void undo();
 
-	static std::shared_ptr<c_renderer> make_shared() {
-		return std::shared_ptr<c_renderer>(new c_renderer());
-	}
-
 private:
 	IDirect3DDevice9*            m_device;
 	IDirect3DStateBlock9*        m_state_block;
@@ -257,4 +253,4 @@ private:
 };
 
 using sprite_t = c_sprite_mgr;
-inline std::shared_ptr<c_renderer> g_renderer = c_renderer::make_shared();
+inline c_renderer g_renderer;

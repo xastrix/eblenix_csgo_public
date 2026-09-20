@@ -69,10 +69,6 @@ public:
 
 	void undo();
 
-	static std::shared_ptr<c_lua_mgr> make_shared() {
-		return std::shared_ptr<c_lua_mgr>(new c_lua_mgr());
-	}
-
 private:
 	void init_api(sol::state_view state);
 	void load_startup_scripts();
@@ -85,6 +81,6 @@ private:
 	lua_list_t       m_lua_list;
 };
 
-inline std::shared_ptr<c_lua_mgr> g_lua = c_lua_mgr::make_shared();
+inline c_lua_mgr g_lua;
 
-#define LUA_CALLBACK(callback_id) g_lua->operator[](callback_id)
+#define LUA_CALLBACK(callback_id) g_lua[callback_id]

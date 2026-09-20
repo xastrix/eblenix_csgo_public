@@ -2,9 +2,6 @@
 
 #include <string>
 
-// ::shared_ptr
-#include <memory>
-
 class c_cfg_mgr {
 public:
 	void init();
@@ -15,10 +12,6 @@ public:
 	void save(const std::wstring& name);
 
 	void undo() {}
-
-	static std::shared_ptr<c_cfg_mgr> make_shared() {
-		return std::shared_ptr<c_cfg_mgr>(new c_cfg_mgr());
-	}
 };
 
-inline std::shared_ptr<c_cfg_mgr> g_cfg = c_cfg_mgr::make_shared();
+inline c_cfg_mgr g_cfg;

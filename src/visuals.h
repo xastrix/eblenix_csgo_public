@@ -4,8 +4,6 @@
 #include "helpers.h"
 
 #include <vector>
-// ::shared_ptr
-#include <memory>
 
 #define MAX_PLAYER_RENDERING_DISTANCE 1499.0f
 #define MAX_PLAYERS                   64
@@ -70,10 +68,6 @@ private:
 class c_visuals {
 public:
 	void run();
-
-	static std::shared_ptr<c_visuals> make_shared() {
-		return std::shared_ptr<c_visuals>(new c_visuals());
-	}
 };
 
-inline std::shared_ptr<c_visuals> g_visuals = c_visuals::make_shared();
+inline c_visuals g_visuals;

@@ -2,22 +2,22 @@
 
 void c_hud::run()
 {
-	if (!g_var->get_as<bool>(V_VISUALS_ENABLED).value())
+	if (!g_var.get_as<bool>(V_VISUALS_ENABLED).value())
 		return;
 
-	if (g_var->get_as<bool>(V_VISUALS_INTERFACE_SPECTATORS).value())
+	if (g_var.get_as<bool>(V_VISUALS_INTERFACE_SPECTATORS).value())
 		spectators_t::get_instance().run();
 
-	if (g_var->get_as<bool>(V_VISUALS_INTERFACE_STATUS).value())
+	if (g_var.get_as<bool>(V_VISUALS_INTERFACE_STATUS).value())
 		status_bar_t::get_instance().run();
 }
 
 void c_hud::process_message(UINT m)
 {
-	if (!g_var->get_as<bool>(V_VISUALS_ENABLED).value())
+	if (!g_var.get_as<bool>(V_VISUALS_ENABLED).value())
 		return;
 
-	if (g_var->get_as<bool>(V_VISUALS_INTERFACE_STATUS).value())
+	if (g_var.get_as<bool>(V_VISUALS_INTERFACE_STATUS).value())
 	{
 		switch (m) {
 		case WM_LBUTTONDOWN: {
@@ -41,6 +41,6 @@ void c_hud::process_message(UINT m)
 		status_bar_t::get_instance().handle_move(m);
 	}
 
-	if (g_var->get_as<bool>(V_VISUALS_INTERFACE_SPECTATORS).value())
+	if (g_var.get_as<bool>(V_VISUALS_INTERFACE_SPECTATORS).value())
 		spectators_t::get_instance().handle_move(m);
 }

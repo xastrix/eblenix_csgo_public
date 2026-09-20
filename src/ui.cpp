@@ -17,7 +17,7 @@ void c_ui::init(IDirect3DDevice9* device)
 void c_ui::run()
 {
 	float old_progress;
-	calc_animation_progress(g_var->get_as<float>(V_UI_ANIM_TOGGLE).value(), g_cs->m_globals->frame_time, old_progress);
+	calc_animation_progress(g_var.get_as<float>(V_UI_ANIM_TOGGLE).value(), g_cs.m_globals->frame_time, old_progress);
 
 	m_colors[UI_TEXT_COL] = c_color(253, 253, 253,
 		static_cast<int>(m_target_animation_progress * 255.0f));
@@ -29,7 +29,7 @@ void c_ui::run()
 		static_cast<int>(m_target_animation_progress * 130.0f));
 
 	m_colors[UI_SHADOW_COL] = c_color(20, 20, 20,
-		static_cast<int>(m_target_animation_progress * g_var->get_as<int>(V_UI_COL_A).value()));
+		static_cast<int>(m_target_animation_progress * g_var.get_as<int>(V_UI_COL_A).value()));
 
 	m_colors[UI_OUTLINE_COL] = c_color(40, 40, 40,
 		static_cast<int>(m_target_animation_progress * 255.0f));
@@ -42,7 +42,7 @@ void c_ui::run()
 		for (int i = 0; i < maxUISprites; i++)
 			m_sprites[i].begin(D3DXSPRITE_DONOTMODIFY_RENDERSTATE);
 
-		draw(g_var->get_as<int>(V_UI_POS_X).value(), g_var->get_as<int>(V_UI_POS_Y).value());
+		draw(g_var.get_as<int>(V_UI_POS_X).value(), g_var.get_as<int>(V_UI_POS_Y).value());
 
 		for (int i = 0; i < maxUISprites; i++)
 			m_sprites[i].end();
@@ -75,7 +75,7 @@ void c_ui::calc_animation_progress(float anim_time, float delta_time, float& old
 void c_ui::setup()
 {
 #ifdef LUA_ENABLED
-	lua_list_t                lua_list = g_lua->get_list();
+	lua_list_t                lua_list = g_lua.get_list();
 #endif
 	std::vector<std::wstring> cfg_list = { L"1", L"2", L"3", L"4", L"5" };
 
@@ -99,7 +99,7 @@ void c_ui::setup()
 			add_tab<UI_SUB_SUB_POS>(L"Pistols", [&]() {
 				add_item<UI_SUB_SUB_SUB_POS>(L"Type", V_AIMBOT_TYPE_PISTOL, m_types, m_colors[UI_TEXT_COL], true);
 
-				if (g_var->get_as<int>(V_AIMBOT_TYPE_PISTOL).value() == 0)
+				if (g_var.get_as<int>(V_AIMBOT_TYPE_PISTOL).value() == 0)
 					add_item<UI_SUB_SUB_SUB_POS>(L"Hitbox", V_AIMBOT_BONE_PISTOL, m_hitboxes, m_colors[UI_TEXT_COL], true);
 
 				add_float<UI_SUB_SUB_SUB_POS>(L"Fov", V_AIMBOT_FOV_PISTOL, 0.0f, 180.0f, 0.5f);
@@ -112,7 +112,7 @@ void c_ui::setup()
 			add_tab<UI_SUB_SUB_POS>(L"Rifles", [&]() {
 				add_item<UI_SUB_SUB_SUB_POS>(L"Type", V_AIMBOT_TYPE_RIFLE, m_types, m_colors[UI_TEXT_COL], true);
 
-				if (g_var->get_as<int>(V_AIMBOT_TYPE_RIFLE).value() == 0)
+				if (g_var.get_as<int>(V_AIMBOT_TYPE_RIFLE).value() == 0)
 					add_item<UI_SUB_SUB_SUB_POS>(L"Hitbox", V_AIMBOT_BONE_RIFLE, m_hitboxes, m_colors[UI_TEXT_COL], true);
 
 				add_float<UI_SUB_SUB_SUB_POS>(L"Fov", V_AIMBOT_FOV_RIFLE, 0.0f, 180.0f, 0.5f);
@@ -125,7 +125,7 @@ void c_ui::setup()
 			add_tab<UI_SUB_SUB_POS>(L"Snipers", [&]() {
 				add_item<UI_SUB_SUB_SUB_POS>(L"Type", V_AIMBOT_TYPE_SNIPER, m_types, m_colors[UI_TEXT_COL], true);
 
-				if (g_var->get_as<int>(V_AIMBOT_TYPE_SNIPER).value() == 0)
+				if (g_var.get_as<int>(V_AIMBOT_TYPE_SNIPER).value() == 0)
 					add_item<UI_SUB_SUB_SUB_POS>(L"Hitbox", V_AIMBOT_BONE_SNIPER, m_hitboxes, m_colors[UI_TEXT_COL], true);
 
 				add_float<UI_SUB_SUB_SUB_POS>(L"Fov", V_AIMBOT_FOV_SNIPER, 0.0f, 180.0f, 0.5f);
@@ -138,7 +138,7 @@ void c_ui::setup()
 			add_tab<UI_SUB_SUB_POS>(L"Heavies", [&]() {
 				add_item<UI_SUB_SUB_SUB_POS>(L"Type", V_AIMBOT_TYPE_HEAVY, m_types, m_colors[UI_TEXT_COL], true);
 
-				if (g_var->get_as<int>(V_AIMBOT_TYPE_HEAVY).value() == 0)
+				if (g_var.get_as<int>(V_AIMBOT_TYPE_HEAVY).value() == 0)
 					add_item<UI_SUB_SUB_SUB_POS>(L"Hitbox", V_AIMBOT_BONE_HEAVY, m_hitboxes, m_colors[UI_TEXT_COL], true);
 
 				add_float<UI_SUB_SUB_SUB_POS>(L"Fov", V_AIMBOT_FOV_HEAVY, 0.0f, 180.0f, 0.5f);
@@ -151,7 +151,7 @@ void c_ui::setup()
 			add_tab<UI_SUB_SUB_POS>(L"Smgs", [&]() {
 				add_item<UI_SUB_SUB_SUB_POS>(L"Type", V_AIMBOT_TYPE_SMG, m_types, m_colors[UI_TEXT_COL], true);
 
-				if (g_var->get_as<int>(V_AIMBOT_TYPE_SMG).value() == 0)
+				if (g_var.get_as<int>(V_AIMBOT_TYPE_SMG).value() == 0)
 					add_item<UI_SUB_SUB_SUB_POS>(L"Hitbox", V_AIMBOT_BONE_SMG, m_hitboxes, m_colors[UI_TEXT_COL], true);
 
 				add_float<UI_SUB_SUB_SUB_POS>(L"Fov", V_AIMBOT_FOV_SMG, 0.0f, 180.0f, 0.5f);
@@ -213,7 +213,7 @@ void c_ui::setup()
 
 			add_item<UI_SUB_SUB_POS>(L"Health Type", V_ESP_HEALTH_TYPE, { L"Default", L"Health Based", L"Gradient" }, m_colors[UI_TEXT_COL], true);
 
-			switch (g_var->get_as<int>(V_ESP_HEALTH_TYPE).value()) {
+			switch (g_var.get_as<int>(V_ESP_HEALTH_TYPE).value()) {
 			case 0: {
 				add_int<UI_SUB_SUB_POS>(L"Health R", V_ESP_HEALTH_COL_R, 0, 255, 1);
 				add_int<UI_SUB_SUB_POS>(L"Health G", V_ESP_HEALTH_COL_G, 0, 255, 1);
@@ -260,7 +260,7 @@ void c_ui::setup()
 
 			add_item<UI_SUB_SUB_POS>(L"Armor Type", V_ESP_ARMOR_TYPE, { L"Default", L"Gradient" }, m_colors[UI_TEXT_COL], true);
 
-			switch (g_var->get_as<int>(V_ESP_ARMOR_TYPE).value()) {
+			switch (g_var.get_as<int>(V_ESP_ARMOR_TYPE).value()) {
 			case 0: {
 				add_int<UI_SUB_SUB_POS>(L"Armor R", V_ESP_ARMOR_COL_R, 0, 255, 1);
 				add_int<UI_SUB_SUB_POS>(L"Armor G", V_ESP_ARMOR_COL_G, 0, 255, 1);
@@ -404,7 +404,7 @@ void c_ui::setup()
 				add_float<UI_SUB_SUB_SUB_POS>(L"Others Brightness", V_VISUALS_WORLD_NIGHTMODE_OTHER_BRIGHTNESS, 0.1f, 1.0f, 0.01f, true);
 
 				add_function<UI_SUB_SUB_SUB_POS>(L"Apply Changes", []() {
-					if (g_var->get_as<bool>(V_VISUALS_WORLD_NIGHTMODE_ENABLED).value())
+					if (g_var.get_as<bool>(V_VISUALS_WORLD_NIGHTMODE_ENABLED).value())
 						GLOBAL(b_flags[BF_NIGHTMODE_HOLD]) = false;
 				});
 			});
@@ -462,31 +462,31 @@ void c_ui::setup()
 		});
 
 		add_function<UI_SUB_POS>(L"Quit", []() {
-			g_cs->m_engine->execute_cmd("quit");
+			g_cs.m_engine->execute_cmd("quit");
 		});
 	});
 
 #ifdef LUA_ENABLED
 	add(L"Lua (" + std::to_wstring(lua_list.size()) + L")", [&]() {
 		if (!lua_list.empty()) {
-			add_item<UI_SUB_POS>(L"Lua", V_LUA_INDEX, g_lua->get_script_list(), g_lua->get_loaded_by_index(
-				g_var->get_as<int>(V_LUA_INDEX).value()) ? m_colors[UI_MAIN_COL] : m_colors[UI_TEXT_COL], true);
+			add_item<UI_SUB_POS>(L"Lua", V_LUA_INDEX, g_lua.get_script_list(), g_lua.get_loaded_by_index(
+				g_var.get_as<int>(V_LUA_INDEX).value()) ? m_colors[UI_MAIN_COL] : m_colors[UI_TEXT_COL], true);
 
 			add_function<UI_SUB_POS>(L"Load", []() {
-				g_lua->load_script(g_lua->get_script_name_by_index(g_var->get_as<int>(V_LUA_INDEX).value()));
+				g_lua.load_script(g_lua.get_script_name_by_index(g_var.get_as<int>(V_LUA_INDEX).value()));
 			});
 
 			add_function<UI_SUB_POS>(L"Unload", []() {
-				g_lua->unload_script(g_lua->get_script_name_by_index(g_var->get_as<int>(V_LUA_INDEX).value()));
+				g_lua.unload_script(g_lua.get_script_name_by_index(g_var.get_as<int>(V_LUA_INDEX).value()));
 			}, true);
 
 			add_function<UI_SUB_POS>(L"Reload Scripts", []() {
-				g_lua->reload_active_scripts();
+				g_lua.reload_active_scripts();
 			});
 		}
 
 		add_function<UI_SUB_POS>(L"Refresh Scripts", [&]() {
-			g_lua->refresh_scripts();
+			g_lua.refresh_scripts();
 			s_entry_pos[UI_SUB_POS] = 0;
 		});
 	});
@@ -573,7 +573,7 @@ void c_ui::setup()
 	add(L"Load Settings", [&]() {
 		for (const auto& cfg : cfg_list) {
 			add_function<UI_SUB_POS>(cfg, [cfg]() {
-				g_cfg->load(cfg);
+				g_cfg.load(cfg);
 			});
 		}
 	});
@@ -581,7 +581,7 @@ void c_ui::setup()
 	add(L"Save Settings", [&]() {
 		for (const auto& cfg : cfg_list) {
 			add_function<UI_SUB_POS>(cfg, [cfg]() {
-				g_cfg->save(cfg);
+				g_cfg.save(cfg);
 			});
 		}
 	});

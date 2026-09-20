@@ -35,10 +35,6 @@ public:
 	void update_thread();
 	void poll();
 
-	static std::shared_ptr<c_async_http_mgr> make_shared() {
-		return std::shared_ptr<c_async_http_mgr>(new c_async_http_mgr());
-	}
-
 private:
 	static size_t write_cb(void* c, size_t s, size_t nb, void* up) {
 		size_t ts = s * nb;
@@ -57,4 +53,4 @@ private:
 	http_requests_t   m_requests;
 };
 
-inline std::shared_ptr<c_async_http_mgr> g_http = c_async_http_mgr::make_shared();
+inline c_async_http_mgr g_http;

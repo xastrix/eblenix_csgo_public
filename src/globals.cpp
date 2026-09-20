@@ -45,8 +45,8 @@ void g::handle_playing_time(const std::chrono::steady_clock::time_point start_ti
 
 void g::unload()
 {
-	if (g_ui->get_menu_state())
-		g_ui->set_menu_state(false);
+	if (g_ui.get_menu_state())
+		g_ui.set_menu_state(false);
 
 	state = S_SHUTDOWN;
 }

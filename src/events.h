@@ -3,8 +3,6 @@
 #include "game_event_mgr.h"
 
 #include <string>
-// ::shared_ptr
-#include <memory>
 
 enum _event_list {
 	PLAYER_HURT,
@@ -38,10 +36,6 @@ public:
 	void init();
 	void undo();
 
-	static std::shared_ptr<c_event_list> make_shared() {
-		return std::shared_ptr<c_event_list>(new c_event_list());
-	}
-
 private:
 	void fire_game_event(c_game_event* _event);
 };
@@ -71,4 +65,4 @@ inline std::string g_event_list[maxEvents] = {
 	"bomb_dropped",
 	"bomb_beep",
 };
-inline std::shared_ptr<c_event_list> g_event = c_event_list::make_shared();
+inline c_event_list g_event;

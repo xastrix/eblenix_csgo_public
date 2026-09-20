@@ -4,19 +4,19 @@
 
 void c_ui::handle_toggle_keys(unsigned int vk)
 {
-	if (vk == g_var->get_as<int>(V_KEYS_ON_TOGGLE_UI).value())
+	if (vk == g_var.get_as<int>(V_KEYS_ON_TOGGLE_UI).value())
 		m_opened = !m_opened;
 
-	if (vk == g_var->get_as<int>(V_KEYS_ON_TOGGLE_AIMBOT).value())
-		g_var->set(V_AIMBOT_ENABLED, !g_var->get_as<bool>(V_AIMBOT_ENABLED).value());
+	if (vk == g_var.get_as<int>(V_KEYS_ON_TOGGLE_AIMBOT).value())
+		g_var.set(V_AIMBOT_ENABLED, !g_var.get_as<bool>(V_AIMBOT_ENABLED).value());
 
-	if (vk == g_var->get_as<int>(V_KEYS_ON_TOGGLE_TRIGGERBOT).value())
-		g_var->set(V_TRIGGERBOT_ENABLED, !g_var->get_as<bool>(V_TRIGGERBOT_ENABLED).value());
+	if (vk == g_var.get_as<int>(V_KEYS_ON_TOGGLE_TRIGGERBOT).value())
+		g_var.set(V_TRIGGERBOT_ENABLED, !g_var.get_as<bool>(V_TRIGGERBOT_ENABLED).value());
 
-	if (vk == g_var->get_as<int>(V_KEYS_ON_TOGGLE_THIRDPERSON).value())
-		g_var->set(V_MISC_VISUAL_THIRDPERSON, !g_var->get_as<bool>(V_MISC_VISUAL_THIRDPERSON).value());
+	if (vk == g_var.get_as<int>(V_KEYS_ON_TOGGLE_THIRDPERSON).value())
+		g_var.set(V_MISC_VISUAL_THIRDPERSON, !g_var.get_as<bool>(V_MISC_VISUAL_THIRDPERSON).value());
 
-	if (vk == g_var->get_as<int>(V_KEYS_ON_TOGGLE_PANIC).value())
+	if (vk == g_var.get_as<int>(V_KEYS_ON_TOGGLE_PANIC).value())
 		GLOBAL(b_flags[BF_PANIC]) = !GLOBAL(b_flags[BF_PANIC]);
 }
 
@@ -66,68 +66,68 @@ void c_ui::handle_input(unsigned int vk)
 			{
 				if (s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].state == UI_BOOL_STATE)
 				{
-					g_var->set(s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].var, false);
+					g_var.set(s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].var, false);
 				}
 				else if (s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].state == UI_INT_STATE)
 				{
-					auto value = g_var->get_as<int>(s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].var).value();
+					auto value = g_var.get_as<int>(s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].var).value();
 
-					g_var->set(s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].var, value -= s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].int_step);
+					g_var.set(s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].var, value -= s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].int_step);
 
 					if (value < s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].int_min)
-						g_var->set(s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].var, s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].int_min);
+						g_var.set(s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].var, s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].int_min);
 				}
 				else if (s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].state == UI_FLOAT_STATE)
 				{
-					auto value = g_var->get_as<float>(s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].var).value();
+					auto value = g_var.get_as<float>(s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].var).value();
 
-					g_var->set(s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].var, value -= s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].float_step);
+					g_var.set(s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].var, value -= s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].float_step);
 
 					if (value < s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].float_min)
-						g_var->set(s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].var, s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].float_min);
+						g_var.set(s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].var, s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].float_min);
 				}
 				else if (s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].state == UI_ITEM_STATE)
 				{
-					auto value = g_var->get_as<int>(s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].var).value();
+					auto value = g_var.get_as<int>(s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].var).value();
 
-					g_var->set(s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].var, value -= s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].int_step);
+					g_var.set(s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].var, value -= s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].int_step);
 
 					if (value < s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].int_min)
-						g_var->set(s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].var, s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].int_min);
+						g_var.set(s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].var, s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].int_min);
 				}
 			}
 			else if (vk == VK_RIGHT)
 			{
 				if (s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].state == UI_BOOL_STATE)
 				{
-					g_var->set(s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].var, true);
+					g_var.set(s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].var, true);
 				}
 				else if (s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].state == UI_INT_STATE)
 				{
-					auto value = g_var->get_as<int>(s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].var).value();
+					auto value = g_var.get_as<int>(s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].var).value();
 
-					g_var->set(s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].var, value += s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].int_step);
+					g_var.set(s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].var, value += s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].int_step);
 
 					if (value > s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].int_max)
-						g_var->set(s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].var, s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].int_max);
+						g_var.set(s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].var, s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].int_max);
 				}
 				else if (s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].state == UI_FLOAT_STATE)
 				{
-					auto value = g_var->get_as<float>(s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].var).value();
+					auto value = g_var.get_as<float>(s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].var).value();
 
-					g_var->set(s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].var, value += s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].float_step);
+					g_var.set(s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].var, value += s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].float_step);
 
 					if (value > s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].float_max)
-						g_var->set(s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].var, s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].float_max);
+						g_var.set(s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].var, s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].float_max);
 				}
 				else if (s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].state == UI_ITEM_STATE)
 				{
-					auto value = g_var->get_as<int>(s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].var).value();
+					auto value = g_var.get_as<int>(s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].var).value();
 
-					g_var->set(s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].var, value += s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].int_step);
+					g_var.set(s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].var, value += s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].int_step);
 
 					if (value > s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].int_max)
-						g_var->set(s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].var, s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].int_max);
+						g_var.set(s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].var, s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].int_max);
 				}
 				else if (s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].state == UI_TAB_STATE)
 				{
@@ -140,7 +140,7 @@ void c_ui::handle_input(unsigned int vk)
 				if (s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].state == UI_KEY_STATE &&
 					s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].key_hold)
 				{
-					g_var->set(s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].var, 0);
+					g_var.set(s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].var, 0);
 					s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].key_hold = false;
 				}
 				else
@@ -162,7 +162,7 @@ void c_ui::handle_input(unsigned int vk)
 				if (s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].state == UI_KEY_STATE &&
 					s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].key_hold)
 				{
-					g_var->set(s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].var, static_cast<int>(vk));
+					g_var.set(s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].var, static_cast<int>(vk));
 					s_entries[s_entry_pos[UI_SUB_POS]][UI_SUB_POS].key_hold = false;
 				}
 			}
@@ -193,68 +193,68 @@ void c_ui::handle_input(unsigned int vk)
 				{
 					if (s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].state == UI_BOOL_STATE)
 					{
-						g_var->set(s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].var, false);
+						g_var.set(s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].var, false);
 					}
 					else if (s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].state == UI_INT_STATE)
 					{
-						auto value = g_var->get_as<int>(s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].var).value();
+						auto value = g_var.get_as<int>(s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].var).value();
 
-						g_var->set(s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].var, value -= s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].int_step);
+						g_var.set(s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].var, value -= s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].int_step);
 
 						if (value < s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].int_min)
-							g_var->set(s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].var, s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].int_min);
+							g_var.set(s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].var, s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].int_min);
 					}
 					else if (s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].state == UI_FLOAT_STATE)
 					{
-						auto value = g_var->get_as<float>(s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].var).value();
+						auto value = g_var.get_as<float>(s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].var).value();
 
-						g_var->set(s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].var, value -= s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].float_step);
+						g_var.set(s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].var, value -= s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].float_step);
 
 						if (value < s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].float_min)
-							g_var->set(s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].var, s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].float_min);
+							g_var.set(s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].var, s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].float_min);
 					}
 					else if (s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].state == UI_ITEM_STATE)
 					{
-						auto value = g_var->get_as<int>(s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].var).value();
+						auto value = g_var.get_as<int>(s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].var).value();
 
-						g_var->set(s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].var, value -= s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].int_step);
+						g_var.set(s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].var, value -= s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].int_step);
 
 						if (value < s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].int_min)
-							g_var->set(s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].var, s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].int_min);
+							g_var.set(s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].var, s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].int_min);
 					}
 				}
 				else if (vk == VK_RIGHT)
 				{
 					if (s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].state == UI_BOOL_STATE)
 					{
-						g_var->set(s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].var, true);
+						g_var.set(s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].var, true);
 					}
 					else if (s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].state == UI_INT_STATE)
 					{
-						auto value = g_var->get_as<int>(s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].var).value();
+						auto value = g_var.get_as<int>(s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].var).value();
 
-						g_var->set(s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].var, value += s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].int_step);
+						g_var.set(s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].var, value += s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].int_step);
 
 						if (value > s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].int_max)
-							g_var->set(s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].var, s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].int_max);
+							g_var.set(s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].var, s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].int_max);
 					}
 					else if (s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].state == UI_FLOAT_STATE)
 					{
-						auto value = g_var->get_as<float>(s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].var).value();
+						auto value = g_var.get_as<float>(s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].var).value();
 
-						g_var->set(s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].var, value += s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].float_step);
+						g_var.set(s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].var, value += s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].float_step);
 
 						if (value > s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].float_max)
-							g_var->set(s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].var, s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].float_max);
+							g_var.set(s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].var, s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].float_max);
 					}
 					else if (s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].state == UI_ITEM_STATE)
 					{
-						auto value = g_var->get_as<int>(s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].var).value();
+						auto value = g_var.get_as<int>(s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].var).value();
 
-						g_var->set(s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].var, value += s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].int_step);
+						g_var.set(s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].var, value += s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].int_step);
 
 						if (value > s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].int_max)
-							g_var->set(s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].var, s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].int_max);
+							g_var.set(s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].var, s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].int_max);
 					}
 					else if (s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].state == UI_TAB_STATE)
 					{
@@ -267,7 +267,7 @@ void c_ui::handle_input(unsigned int vk)
 					if (s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].state == UI_KEY_STATE &&
 						s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].key_hold)
 					{
-						g_var->set(s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].var, 0);
+						g_var.set(s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].var, 0);
 						s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].key_hold = false;
 					}
 					else
@@ -289,7 +289,7 @@ void c_ui::handle_input(unsigned int vk)
 					if (s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].state == UI_KEY_STATE &&
 						s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].key_hold)
 					{
-						g_var->set(s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].var, static_cast<int>(vk));
+						g_var.set(s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].var, static_cast<int>(vk));
 						s_entries[s_entry_pos[UI_SUB_SUB_POS]][UI_SUB_SUB_POS].key_hold = false;
 					}
 				}
@@ -318,68 +318,68 @@ void c_ui::handle_input(unsigned int vk)
 				{
 					if (s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].state == UI_BOOL_STATE)
 					{
-						g_var->set(s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].var, false);
+						g_var.set(s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].var, false);
 					}
 					else if (s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].state == UI_INT_STATE)
 					{
-						auto value = g_var->get_as<int>(s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].var).value();
+						auto value = g_var.get_as<int>(s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].var).value();
 
-						g_var->set(s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].var, value -= s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].int_step);
+						g_var.set(s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].var, value -= s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].int_step);
 
 						if (value < s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].int_min)
-							g_var->set(s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].var, s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].int_min);
+							g_var.set(s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].var, s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].int_min);
 					}
 					else if (s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].state == UI_FLOAT_STATE)
 					{
-						auto value = g_var->get_as<float>(s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].var).value();
+						auto value = g_var.get_as<float>(s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].var).value();
 
-						g_var->set(s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].var, value -= s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].float_step);
+						g_var.set(s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].var, value -= s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].float_step);
 
 						if (value < s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].float_min)
-							g_var->set(s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].var, s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].float_min);
+							g_var.set(s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].var, s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].float_min);
 					}
 					else if (s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].state == UI_ITEM_STATE)
 					{
-						auto value = g_var->get_as<int>(s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].var).value();
+						auto value = g_var.get_as<int>(s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].var).value();
 
-						g_var->set(s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].var, value -= s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].int_step);
+						g_var.set(s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].var, value -= s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].int_step);
 
 						if (value < s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].int_min)
-							g_var->set(s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].var, s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].int_min);
+							g_var.set(s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].var, s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].int_min);
 					}
 				}
 				else if (vk == VK_RIGHT)
 				{
 					if (s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].state == UI_BOOL_STATE)
 					{
-						g_var->set(s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].var, true);
+						g_var.set(s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].var, true);
 					}
 					else if (s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].state == UI_INT_STATE)
 					{
-						auto value = g_var->get_as<int>(s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].var).value();
+						auto value = g_var.get_as<int>(s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].var).value();
 
-						g_var->set(s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].var, value += s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].int_step);
+						g_var.set(s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].var, value += s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].int_step);
 
 						if (value > s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].int_max)
-							g_var->set(s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].var, s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].int_max);
+							g_var.set(s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].var, s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].int_max);
 					}
 					else if (s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].state == UI_FLOAT_STATE)
 					{
-						auto value = g_var->get_as<float>(s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].var).value();
+						auto value = g_var.get_as<float>(s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].var).value();
 
-						g_var->set(s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].var, value += s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].float_step);
+						g_var.set(s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].var, value += s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].float_step);
 
 						if (value > s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].float_max)
-							g_var->set(s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].var, s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].float_max);
+							g_var.set(s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].var, s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].float_max);
 					}
 					else if (s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].state == UI_ITEM_STATE)
 					{
-						auto value = g_var->get_as<int>(s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].var).value();
+						auto value = g_var.get_as<int>(s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].var).value();
 
-						g_var->set(s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].var, value += s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].int_step);
+						g_var.set(s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].var, value += s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].int_step);
 
 						if (value > s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].int_max)
-							g_var->set(s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].var, s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].int_max);
+							g_var.set(s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].var, s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].int_max);
 					}
 				}
 				else if (vk == VK_BACK)
@@ -387,7 +387,7 @@ void c_ui::handle_input(unsigned int vk)
 					if (s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].state == UI_KEY_STATE &&
 						s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].key_hold)
 					{
-						g_var->set(s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].var, 0);
+						g_var.set(s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].var, 0);
 						s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].key_hold = false;
 					}
 					else
@@ -409,7 +409,7 @@ void c_ui::handle_input(unsigned int vk)
 					if (s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].state == UI_KEY_STATE &&
 						s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].key_hold)
 					{
-						g_var->set(s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].var, static_cast<int>(vk));
+						g_var.set(s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].var, static_cast<int>(vk));
 						s_entries[s_entry_pos[UI_SUB_SUB_SUB_POS]][UI_SUB_SUB_SUB_POS].key_hold = false;
 					}
 				}

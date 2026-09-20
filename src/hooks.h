@@ -123,12 +123,8 @@ public:
 	void init();
 	void undo();
 
-	static std::shared_ptr<c_hooks> make_shared() {
-		return std::shared_ptr<c_hooks>(new c_hooks());
-	}
-
 private:
 	hook_t m_hooks[maxHooks]{};
 };
 
-inline std::shared_ptr<c_hooks> g_hooks = c_hooks::make_shared();
+inline c_hooks g_hooks;

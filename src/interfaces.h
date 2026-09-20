@@ -21,9 +21,6 @@
 
 #include "i_input.h"
 
-// ::shared_ptr
-#include <memory>
-
 class c_interfaces {
 public:
 	c_base_client* m_client;
@@ -77,12 +74,8 @@ public:
 		return m_local.get();
 	}
 
-	static std::shared_ptr<c_csgo> make_shared() {
-		return std::shared_ptr<c_csgo>(new c_csgo());
-	}
-
 private:
 	local_t m_local{};
 };
 
-inline std::shared_ptr<c_csgo> g_cs = c_csgo::make_shared();
+inline c_csgo g_cs;

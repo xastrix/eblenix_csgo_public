@@ -17,7 +17,7 @@ static unsigned long WINAPI wnd_proc(HWND h, UINT m, WPARAM w, LPARAM l)
 	{
 		if (!(GLOBAL(state) == S_SHUTDOWN))
 		{
-			g_input->process_message(m, w, l);
+			g_input.process_message(m, w, l);
 
 #ifdef LUA_ENABLED
 			for (auto _ : LUA_CALLBACK(CL_ON_WND_PROC)) {
@@ -33,7 +33,7 @@ static unsigned long WINAPI wnd_proc(HWND h, UINT m, WPARAM w, LPARAM l)
 		}
 	}
 
-	return CallWindowProcA(g_input->get_wnd_proc(), h, m, w, l);
+	return CallWindowProcA(g_input.get_wnd_proc(), h, m, w, l);
 }
 
 void c_input::init(const std::pair<LPCSTR, LPCSTR>& wnd)
@@ -56,11 +56,11 @@ void c_input::process_message(UINT m, WPARAM w, LPARAM l)
 
 void c_input::process_mouse_message(UINT m, WPARAM w, LPARAM l)
 {
-	auto menu_opened = g_ui->get_menu_state();
+	auto menu_opened = g_ui.get_menu_state();
 	
 	// emulate WM_KEYDOWN, WM_KEYUP for mouse wheel control
 	auto emul_key_for_wheel_navigation = [&](unsigned int k) {
-		if (!(menu_opened && g_var->get_as<bool>(V_UI_MOUSE_WHEEL_NAVIGATION).value()))
+		if (!(menu_opened && g_var.get_as<bool>(V_UI_MOUSE_WHEEL_NAVIGATION).value()))
 			return;
 
 		process_keybd_message(WM_KEYDOWN, k);
@@ -69,17 +69,17 @@ void c_input::process_mouse_message(UINT m, WPARAM w, LPARAM l)
 
 	if (menu_opened) {
 		/* moving the ui by position x, y using the mouse */
-		auto ui_pos_x = g_var->get_as<int>(V_UI_POS_X).value();
-		auto ui_pos_y = g_var->get_as<int>(V_UI_POS_Y).value();
+		auto ui_pos_x = g_var.get_as<int>(V_UI_POS_X).value();
+		auto ui_pos_y = g_var.get_as<int>(V_UI_POS_Y).value();
 
 		static draggable_object_t ui_drag_obj{ ui_pos_x, ui_pos_y, 180, 255 };
 
 		if (move_object(ui_drag_obj, m)) {
-			g_var->set(V_UI_POS_X, ui_drag_obj.get_x());
-			g_var->set(V_UI_POS_Y, ui_drag_obj.get_y());
+			g_var.set(V_UI_POS_X, ui_drag_obj.get_x());
+			g_var.set(V_UI_POS_Y, ui_drag_obj.get_y());
 		}
 
-		g_hud->process_message(m);
+		g_hud.process_message(m);
 	}
 
 	switch (m) {
@@ -139,7 +139,7 @@ void c_input::process_keybd_message(UINT m, WPARAM w)
 	{
 		m_key_map[key] = state_pressed;
 
-		g_ui->handle_toggle_keys(key);
+		g_ui.handle_toggle_keys(key);
 
 		auto& hotkey_callback = m_hotkeys[key];
 
@@ -153,8 +153,8 @@ void c_input::process_keybd_message(UINT m, WPARAM w)
 
 	if (state == state_down)
 	{
-		if (g_ui->get_menu_state())
-			g_ui->handle_input(key);
+		if (g_ui.get_menu_state())
+			g_ui.handle_input(key);
 	}
 }
 

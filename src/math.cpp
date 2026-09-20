@@ -78,7 +78,7 @@ bool Math::w2s(const vec3& origin, vec3& screen)
 	if (!screen_transform(origin, screen))
 		return false;
 
-	vec2 screen_size = g_renderer->get_screen_size();
+	vec2 screen_size = g_renderer.get_screen_size();
 
 	screen.x = (screen_size.x / 2.0f) + (screen.x * screen_size.x) / 2.0f;
 	screen.y = (screen_size.y / 2.0f) - (screen.y * screen_size.y) / 2.0f;

@@ -13,7 +13,7 @@
 void c_event_list::init()
 {
 	for (int i = 0; i < maxEvents; i++)
-		g_cs->m_event_manager->add_listener(this, g_event_list[i].c_str());
+		g_cs.m_event_manager->add_listener(this, g_event_list[i].c_str());
 }
 
 void c_event_list::fire_game_event(c_game_event* _event)
@@ -22,14 +22,14 @@ void c_event_list::fire_game_event(c_game_event* _event)
 
 	if (name_hash == fnv::hash(g_event_list[PLAYER_HURT].c_str()))
 	{
-		if (g_var->get_as<bool>(V_MISC_EVENT_LOGS_PLAYER_HURT).value())
+		if (g_var.get_as<bool>(V_MISC_EVENT_LOGS_PLAYER_HURT).value())
 		{
-			auto attacker_ent_id = g_cs->m_entity_list->get_client_entity<c_base_entity*>(
-				g_cs->m_engine->get_player_for_user_id(_event->get_int("attacker")));
+			auto attacker_ent_id = g_cs.m_entity_list->get_client_entity<c_base_entity*>(
+				g_cs.m_engine->get_player_for_user_id(_event->get_int("attacker")));
 
-			if (attacker_ent_id == g_cs->get_local())
+			if (attacker_ent_id == g_cs.get_local())
 			{
-				auto ent_index = g_cs->m_engine->get_player_for_user_id(_event->get_int("userid"));
+				auto ent_index = g_cs.m_engine->get_player_for_user_id(_event->get_int("userid"));
 
 				if (ent_index)
 				{
@@ -46,7 +46,7 @@ void c_event_list::fire_game_event(c_game_event* _event)
 							if (health >= 0)
 							{
 								player_info_t info;
-								g_cs->m_engine->get_player_info(ent_index, &info);
+								g_cs.m_engine->get_player_info(ent_index, &info);
 
 								std::string player_name{ info.player_name };
 								std::transform(player_name.begin(), player_name.end(), player_name.begin(), tolower);
@@ -63,18 +63,18 @@ void c_event_list::fire_game_event(c_game_event* _event)
 	
 	if (name_hash == fnv::hash(g_event_list[ITEM_PURCHASE].c_str()))
 	{
-		if (g_var->get_as<bool>(V_MISC_EVENT_LOGS_PLAYER_PURCHASE).value())
+		if (g_var.get_as<bool>(V_MISC_EVENT_LOGS_PLAYER_PURCHASE).value())
 		{
-			auto ent_index = g_cs->m_engine->get_player_for_user_id(_event->get_int("userid"));
+			auto ent_index = g_cs.m_engine->get_player_for_user_id(_event->get_int("userid"));
 
 			if (ent_index)
 			{
-				auto entity = g_cs->m_entity_list->get_client_entity<c_base_entity*>(ent_index);
+				auto entity = g_cs.m_entity_list->get_client_entity<c_base_entity*>(ent_index);
 
-				if (entity && (entity->get_team_num() != g_cs->get_local()->get_team_num()))
+				if (entity && (entity->get_team_num() != g_cs.get_local()->get_team_num()))
 				{
 					player_info_t info;
-					g_cs->m_engine->get_player_info(ent_index, &info);
+					g_cs.m_engine->get_player_info(ent_index, &info);
 
 					std::string player_name{ info.player_name };
 					std::transform(player_name.begin(), player_name.end(), player_name.begin(), tolower);
@@ -124,5 +124,5 @@ void c_event_list::fire_game_event(c_game_event* _event)
 
 void c_event_list::undo()
 {
-	g_cs->m_event_manager->remove_listener(this);
+	g_cs.m_event_manager->remove_listener(this);
 }

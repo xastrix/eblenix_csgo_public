@@ -2,9 +2,6 @@
 
 #include "i_user_cmd.h"
 
-// ::shared_ptr
-#include <memory>
-
 struct bunnyhop_t {
 	bunnyhop_t(const bunnyhop_t&) = delete;
 	bunnyhop_t& operator=(const bunnyhop_t&) = delete;
@@ -53,10 +50,6 @@ private:
 class c_move {
 public:
 	void run(user_cmd_t* cmd);
-
-	static std::shared_ptr<c_move> make_shared() {
-		return std::shared_ptr<c_move>(new c_move());
-	}
 };
 
-inline std::shared_ptr<c_move> g_move = c_move::make_shared();
+inline c_move g_move;

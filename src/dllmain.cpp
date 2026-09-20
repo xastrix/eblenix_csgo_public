@@ -20,18 +20,18 @@ static void __stdcall init(HMODULE I)
 		g_fonts[0] = AddFontMemResourceEx(astriumwep_ttf, ASTRIUMWEP_TTF_SZ, NULL, &g_numFonts);
 		g_fonts[1] = AddFontMemResourceEx(smallestpixel7_ttf, SMALLESTPIXEL7_TTF_SZ, NULL, &g_numFonts);
 
-		g_var->init();
-		g_sig->init();
-		g_cs->init();
+		g_var.init();
+		g_sig.init();
+		g_cs.init();
 
-		g_font->init(g_cs->m_device);
-		if (g_renderer->init(g_cs->m_device))
-			g_ui->init(g_cs->m_device);
+		g_font.init(g_cs.m_device);
+		if (g_renderer.init(g_cs.m_device))
+			g_ui.init(g_cs.m_device);
 
-		g_http->init();
+		g_http.init();
 
 #ifdef LUA_ENABLED
-		g_lua->init();
+		g_lua.init();
 
 		for (auto _ : LUA_CALLBACK(CL_ON_PREINIT)) {
 			if (_.nulled) continue;
@@ -49,24 +49,24 @@ static void __stdcall init(HMODULE I)
 
 	if (GLOBAL(state) == S_INIT_VARS)
 	{
-		g_var->set(V_VISUALS_INTERFACE_SPECTATORS_POS_Y, g_renderer->get_screen_size().y * 0.5f);
-		g_var->set(V_MISC_VISUAL_VIEWMODEL_FOV, Helpers::get_viewmodel_fov());
+		g_var.set(V_VISUALS_INTERFACE_SPECTATORS_POS_Y, g_renderer.get_screen_size().y * 0.5f);
+		g_var.set(V_MISC_VISUAL_VIEWMODEL_FOV, Helpers::get_viewmodel_fov());
 
-		g_var->set(V_UI_POS_X, 80);
-		g_var->set(V_UI_POS_Y, 80);
+		g_var.set(V_UI_POS_X, 80);
+		g_var.set(V_UI_POS_Y, 80);
 
-		g_var->set(V_KEYS_ON_TOGGLE_UI, VK_INSERT);
+		g_var.set(V_KEYS_ON_TOGGLE_UI, VK_INSERT);
 
-		g_cfg->init();
+		g_cfg.init();
 
 		GLOBAL(state)++;
 	}
 
 	if (GLOBAL(state) == S_INIT_HOOKS)
 	{
-		g_input->init({ CSGO_CLASS_NAME, 0 });
-		g_hooks->init();
-		g_event->init();
+		g_input.init({ CSGO_CLASS_NAME, 0 });
+		g_hooks.init();
+		g_event.init();
 
 		GLOBAL(state)++;
 	}
@@ -87,15 +87,15 @@ static void __stdcall init(HMODULE I)
 		}
 #endif
 
-		g_input->add_hk(VK_F12, [](int) {
+		g_input.add_hk(VK_F12, [](int) {
 			g::unload();
 		});
 
-		g_ui->set_menu_state(true);
+		g_ui.set_menu_state(true);
 
 		while (GLOBAL(state) == S_WAITING_FOR_SHUTDOWN) {
 			g::handle_playing_time(s_time, 1000);
-			g_http->poll();
+			g_http.poll();
 		}
 	}
 
@@ -103,8 +103,8 @@ static void __stdcall init(HMODULE I)
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(200));
 
-		if (g_var->get_as<bool>(V_VISUALS_ENABLED).value() &&
-			g_var->get_as<bool>(V_VISUALS_WORLD_NIGHTMODE_ENABLED).value()) {
+		if (g_var.get_as<bool>(V_VISUALS_ENABLED).value() &&
+			g_var.get_as<bool>(V_VISUALS_WORLD_NIGHTMODE_ENABLED).value()) {
 			Helpers::modulate_world_brightness({
 				{ "World", 1.0f },
 				{ "SkyBox", 1.0f },
@@ -116,7 +116,7 @@ static void __stdcall init(HMODULE I)
 
 		GLOBAL(b_flags[BF_PANIC]) = true;
 
-		g_var->reset();
+		g_var.reset();
 
 #ifdef LUA_ENABLED
 		for (auto _ : LUA_CALLBACK(CL_ON_UNLOAD)) {
@@ -130,15 +130,15 @@ static void __stdcall init(HMODULE I)
 		}
 #endif
 
-		g_event->undo();
-		g_hooks->undo();
-		g_input->undo();
-		g_ui->undo();
+		g_event.undo();
+		g_hooks.undo();
+		g_input.undo();
+		g_ui.undo();
 #ifdef LUA_ENABLED
-		g_lua->undo();
+		g_lua.undo();
 #endif
-		g_http->undo();
-		g_var->undo();
+		g_http.undo();
+		g_var.undo();
 
 		for (int i = 0; i <= 1; i++) {
 			if (g_fonts[i]) {
