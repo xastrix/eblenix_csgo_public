@@ -1,6 +1,7 @@
 #include "signatures.h"
 
 #include "globals.h"
+#include "helpers.h"
 
 void c_sig::init()
 {
@@ -21,7 +22,7 @@ void c_sig::init()
 
 sig_t c_sig::scan_sig(const std::string& module_name, const std::string& signature)
 {
-	const auto mod = GetModuleHandleA(module_name.c_str());
+	const auto mod = Helpers::get_module_handle(module_name.c_str());
 
 	if (!mod)
 		return {};

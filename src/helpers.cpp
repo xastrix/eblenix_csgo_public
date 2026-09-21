@@ -14,6 +14,57 @@ using line_goes_through_smoke_t = bool(__cdecl*)(vec3, vec3);
 using netvar_key_value_map = std::unordered_map<uint32_t, uintptr_t>;
 using netvar_table_map = std::unordered_map<uint32_t, netvar_key_value_map>;
 
+typedef struct _UNICODE_STRING_CUSTOM {
+	USHORT Length;
+	USHORT MaximumLength;
+	PWSTR  Buffer;
+} UNICODE_STRING_CUSTOM;
+
+typedef struct _PEB_LDR_DATA_CUSTOM {
+	ULONG Length;
+	BOOLEAN Initialized;
+	HANDLE SsHandle;
+	LIST_ENTRY InLoadOrderModuleList;
+	LIST_ENTRY InMemoryOrderModuleList;
+	LIST_ENTRY InInitializationOrderModuleList;
+	PVOID EntryInProgress;
+	BOOLEAN ShutdownInProgress;
+	HANDLE ShutdownThreadId;
+} PEB_LDR_DATA_CUSTOM, *PPEB_LDR_DATA_CUSTOM;
+
+typedef struct _PEB_CUSTOM {
+	BOOLEAN InheritedAddressSpace;
+	BOOLEAN ReadImageFileExecOptions;
+	BOOLEAN BeingDebugged;
+	union {
+		BOOLEAN BitFields;
+		struct {
+			BOOLEAN ImageUsesLargePages : 1;
+			BOOLEAN IsProtectedProcess : 1;
+			BOOLEAN IsImageDynamicallyRelocated : 1;
+			BOOLEAN SkipPatchingUser32Forwarders : 1;
+			BOOLEAN IsPackagedProcess : 1;
+			BOOLEAN IsAppContainer : 1;
+			BOOLEAN IsProtectedProcessLight : 1;
+			BOOLEAN IsLongPathAwareProcess : 1;
+		};
+	};
+	PVOID Mutant;
+	PVOID ImageBaseAddress;
+	PPEB_LDR_DATA_CUSTOM Ldr;
+} PEB_CUSTOM, *PPEB_CUSTOM;
+
+typedef struct _LDR_DATA_TABLE_ENTRY_CUSTOM {
+	LIST_ENTRY InLoadOrderLinks;
+	LIST_ENTRY InMemoryOrderLinks;
+	LIST_ENTRY InInitializationOrderLinks;
+	PVOID DllBase;
+	PVOID EntryPoint;
+	ULONG SizeOfImage;
+	UNICODE_STRING_CUSTOM FullDllName;
+	UNICODE_STRING_CUSTOM BaseDllName;
+} LDR_DATA_TABLE_ENTRY_CUSTOM, *PLDR_DATA_TABLE_ENTRY_CUSTOM;
+
 static std::pair<std::string, std::string> parse_netvar_string(const std::string& netvar);
 static void add_props_for_table(
 	netvar_table_map& table_map,
@@ -478,7 +529,7 @@ _wfm_stat Helpers::wait_for_module(const std::vector<int>& modules, int ms)
 		const auto timeout_ms{ 50000 };
 		auto waited_ms{ 0 };
 
-		while (!GetModuleHandleA(GLOBAL(module_list[module_index]).c_str()))
+		while (!get_module_handle(GLOBAL(module_list[module_index]).c_str()))
 		{
 			if (waited_ms >= timeout_ms)
 				return WM_TIMEOUT;
@@ -508,7 +559,7 @@ module_t Helpers::get_module(const std::string& name)
 	module_t ret;
 	MODULEINFO mod_info{ 0 };
 
-	auto mod = GetModuleHandleA(name.empty() ? nullptr : name.c_str());
+	auto mod = get_module_handle(name.empty() ? nullptr : name.c_str());
 	if (!mod)
 		return ret;
 
@@ -553,6 +604,95 @@ uintptr_t Helpers::get_netvar(const std::string& netvar)
 		return 0;
 
 	return table_map.at(fnv::hash(prop.c_str()));
+}
+
+void* Helpers::get_proc_address(void* mod_base, const char* func_name)
+{
+	if (!mod_base || !func_name)
+		return nullptr;
+
+	auto* byte_module_base = reinterpret_cast<BYTE*>(mod_base);
+
+	auto* dos = reinterpret_cast<PIMAGE_DOS_HEADER>(mod_base);
+	if (dos->e_magic != IMAGE_DOS_SIGNATURE)
+		return nullptr;
+
+	auto* nt = reinterpret_cast<PIMAGE_NT_HEADERS>(byte_module_base + dos->e_lfanew);
+	if (nt->Signature != IMAGE_NT_SIGNATURE)
+		return nullptr;
+
+	auto export_dir = nt->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT];
+	if (export_dir.VirtualAddress == 0 || export_dir.Size == 0)
+		return nullptr;
+
+	auto* exports = reinterpret_cast<PIMAGE_EXPORT_DIRECTORY>(byte_module_base + export_dir.VirtualAddress);
+
+	auto* name_array = reinterpret_cast<DWORD*>(byte_module_base + exports->AddressOfNames);
+	auto* func_array = reinterpret_cast<DWORD*>(byte_module_base + exports->AddressOfFunctions);
+	auto* ordinal_array = reinterpret_cast<WORD*>(byte_module_base + exports->AddressOfNameOrdinals);
+
+	for (DWORD i = 0; i < exports->NumberOfNames; i++)
+	{
+		const char* curr_name = reinterpret_cast<const char*>(byte_module_base + name_array[i]);
+
+		size_t j = 0;
+		while (curr_name[j] && curr_name[j] == func_name[j]) j++;
+
+		if (curr_name[j] == '\0' && func_name[j] == '\0')
+		{
+			WORD ordinal = ordinal_array[i];
+			if (ordinal >= exports->NumberOfFunctions)
+				return nullptr;
+
+			DWORD funcRVA = func_array[ordinal];
+			if (funcRVA >= export_dir.VirtualAddress && funcRVA < (export_dir.VirtualAddress + export_dir.Size)) return nullptr;
+
+			return reinterpret_cast<void*>(byte_module_base + funcRVA);
+		}
+	}
+
+	return nullptr;
+}
+
+HMODULE Helpers::get_module_handle(const char* mod_name)
+{
+	auto* peb = reinterpret_cast<PEB_CUSTOM*>(__readfsdword(0x30));
+
+	if (!peb || !peb->Ldr) return nullptr;
+	if (!mod_name) return reinterpret_cast<HMODULE>(peb->ImageBaseAddress);
+
+	PLIST_ENTRY head = &peb->Ldr->InLoadOrderModuleList;
+	PLIST_ENTRY curr = head->Flink;
+
+	while (curr != head)
+	{
+		auto* entry = reinterpret_cast<PLDR_DATA_TABLE_ENTRY_CUSTOM>(curr);
+
+		if (entry->BaseDllName.Buffer != nullptr)
+		{
+			const wchar_t* name1 = entry->BaseDllName.Buffer;
+			const char* name2 = mod_name;
+
+			size_t i = 0;
+			while (name1[i] && name2[i])
+			{
+				wchar_t c1 = (name1[i] >= L'A' && name1[i] <= L'Z') ? (name1[i] + 32) : name1[i];
+				char c2 = (name2[i] >= 'A' && name2[i] <= 'Z') ? (name2[i] + 32) : name2[i];
+
+				if (c1 != static_cast<wchar_t>(c2))
+					break;
+
+				i++;
+			}
+
+			if (name1[i] == L'\0' && name2[i] == '\0')
+				return reinterpret_cast<HMODULE>(entry->DllBase);
+		}
+
+		curr = curr->Flink;
+	}
+
+	return nullptr;
 }
 
 static std::pair<std::string, std::string> parse_netvar_string(const std::string& netvar)

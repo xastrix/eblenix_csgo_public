@@ -135,6 +135,12 @@ namespace Helpers
 	/* Returns the netvar offset by its name ("Table::Prop") */
 	uintptr_t get_netvar(const std::string& netvar);
 
+	/* Returns the exported function address from a module by its name */
+	void* get_proc_address(void* mod_base, const char* func_name);
+
+	/* Returns the handle of a loaded module by its name through PEB */
+	HMODULE get_module_handle(const char* mod_name);
+
 	/* RAII class to temporarily change memory protection of a specified memory region
 	   Restores original protection when the object is destroyed */
 	struct unprotect_t {
@@ -197,7 +203,7 @@ namespace Helpers
 	template <typename T>
 	inline T get_export(const std::string& module_name, const std::string& function_name)
 	{
-		return reinterpret_cast<T>(GetProcAddress(GetModuleHandleA(module_name.c_str()), function_name.c_str()));
+		return reinterpret_cast<T>(get_proc_address(get_module_handle(module_name.c_str()), function_name.c_str()));
 	}
 
 	/* Retrieves an interface from a specified module by name */

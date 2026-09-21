@@ -220,7 +220,7 @@ private:
 	m_entry m_entry[MAX_MENU_ENTRIES]{};
 	s_entry s_entries[MAX_SUB_ENTRIES][maxUISubs]{};
 
-	c_color   m_colors                [maxUIColors]{};
+	c_color   m_colors[maxUIColors]{};
 	sprite_t* m_sprites = new sprite_t[maxUISprites]{};
 };
 
