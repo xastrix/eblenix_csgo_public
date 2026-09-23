@@ -87,6 +87,24 @@ void c_event_list::fire_game_event(c_game_event* _event)
 			}
 		}
 	}
+
+	if (name_hash == fnv::hash(g_event_list[PLAYER_JUMP].c_str()       ) ||
+		name_hash == fnv::hash(g_event_list[PLAYER_FOOTSTEP].c_str()   ) ||
+		name_hash == fnv::hash(g_event_list[PLAYER_FALLDAMAGE].c_str() ) ||
+		name_hash == fnv::hash(g_event_list[WEAPON_FIRE].c_str()       ) ||
+		name_hash == fnv::hash(g_event_list[WEAPON_RELOAD].c_str()     ) ||
+		name_hash == fnv::hash(g_event_list[WEAPON_ZOOM].c_str())      )
+	{
+		if (g_var.get_as<bool>(V_ESP_ENABLED).value() && (g_var.get_as<bool>(V_ESP_FLAGS_ENABLED).value() && g_var.get_as<bool>(V_ESP_FLAGS_SOUND).value()))
+		{
+			auto ent_index = g_cs.m_engine->get_player_for_user_id(_event->get_int("userid"));
+
+			if (ent_index)
+			{
+				player_esp_t::get_instance().trace_player_sound(ent_index);
+			}
+		}
+	}
 	
 	if (name_hash == fnv::hash(g_event_list[ROUND_PRESTART].c_str()))
 	{
@@ -95,7 +113,7 @@ void c_event_list::fire_game_event(c_game_event* _event)
 	
 	if (name_hash == fnv::hash(g_event_list[ROUND_START].c_str()))
 	{
-		player_esp_t::get_instance().on_round_start_e();
+		player_esp_t::get_instance().reset_positions();
 	}
 	
 	if (name_hash == fnv::hash(g_event_list[BOMB_PLANTED].c_str()))

@@ -16,6 +16,9 @@ register_callback(cb.on_game_events, function(e)
 	elseif e:get_name() == event_list[e_list.player_disconnect] then
 		print("test_game_events.lua: player disconnect!\n")
 
+	elseif e:get_name() == event_list[e_list.player_jump] then
+		print("test_game_events.lua: player jump!\n")
+
 	elseif e:get_name() == event_list[e_list.player_footstep] then
 		print("test_game_events.lua: player footstep!\n")
 
@@ -45,6 +48,15 @@ register_callback(cb.on_game_events, function(e)
 
 	elseif e:get_name() == event_list[e_list.round_end] then
 		print("test_game_events.lua: round end!\n")
+
+	elseif e:get_name() == event_list[e_list.weapon_fire] then
+		print("test_game_events.lua: weapon fire!\n")
+
+	elseif e:get_name() == event_list[e_list.weapon_reload] then
+		print("test_game_events.lua: weapon reload!\n")
+
+	elseif e:get_name() == event_list[e_list.weapon_zoom] then
+		print("test_game_events.lua: weapon zoom!\n")
 
 	elseif e:get_name() == event_list[e_list.bomb_beginplant] then
 		print("test_game_events.lua: bomb begin plant!\n")

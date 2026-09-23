@@ -161,6 +161,7 @@
 #define V_ESP_FLAGS_AMMO "esp->flags->ammo"
 #define V_ESP_FLAGS_FLASHED "esp->flags->flashed"
 #define V_ESP_FLAGS_DEFUSING "esp->flags->defusing"
+#define V_ESP_FLAGS_SOUND "esp->flags->sound"
 #define V_ESP_FLAGS_DISTANCE "esp->flags->distance"
 #define V_ESP_FLAGS_SCOPED "esp->flags->scoped"
 #define V_ESP_FLAGS_COL "esp->flags->col"

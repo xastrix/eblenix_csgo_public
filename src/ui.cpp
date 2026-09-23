@@ -316,6 +316,7 @@ void c_ui::setup()
 			add_bool<UI_SUB_SUB_POS>(L"Scoped", V_ESP_FLAGS_SCOPED);
 			add_bool<UI_SUB_SUB_POS>(L"Flashed", V_ESP_FLAGS_FLASHED);
 			add_bool<UI_SUB_SUB_POS>(L"Defusing", V_ESP_FLAGS_DEFUSING);
+			add_bool<UI_SUB_SUB_POS>(L"Sound", V_ESP_FLAGS_SOUND);
 			add_bool<UI_SUB_SUB_POS>(L"Distance", V_ESP_FLAGS_DISTANCE, true);
 
 			add_int<UI_SUB_SUB_POS>(L"Flags R", V_ESP_FLAGS_COL_R, 0, 255, 1);

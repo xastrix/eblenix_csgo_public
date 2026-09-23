@@ -39,7 +39,13 @@ void player_esp_t::think()
 	}
 }
 
-void player_esp_t::on_round_start_e()
+void player_esp_t::trace_player_sound(int ent_index)
+{
+	m_player_sounds[ent_index].visible = true;
+	m_player_sounds[ent_index].expire_time = g_cs.m_globals->cur_time + 1.0f;
+}
+
+void player_esp_t::reset_positions()
 {
 	for (int i = 0; i <= MAX_PLAYERS; i++) {
 		reset_position(i);
@@ -69,16 +75,16 @@ void player_esp_t::calc_player_animation_progress(int index, float& anim, c_base
 		}
 	}
 
-	if (!begin_anim.m_confirmed) {
-		begin_anim.m_elapsed += rate;
-		float t = begin_anim.m_elapsed / 0.5f;
+	if (!begin_anim.confirmed) {
+		begin_anim.elapsed += rate;
+		float t = begin_anim.elapsed / 0.5f;
 
 		if (t > 1.0f) {
 			t = 1.0f;
-			begin_anim.m_confirmed = true;
+			begin_anim.confirmed = true;
 		}
 
-		begin_anim.m_final_val = t * 100.0f;
+		begin_anim.final_val = t * 100.0f;
 	}
 }
 
@@ -166,7 +172,7 @@ void player_esp_t::player_rendering(int index, c_base_player* entity, box bbox)
 	{
 		const auto max_hp = 100;
 		const auto inner_hp = std::min(health, max_hp);
-		const auto hp = m_begin_anims[index].m_confirmed ? inner_hp : m_begin_anims[index].m_final_val;
+		const auto hp = m_begin_anims[index].confirmed ? inner_hp : m_begin_anims[index].final_val;
 
 		if (hp)
 		{
@@ -235,7 +241,7 @@ void player_esp_t::player_rendering(int index, c_base_player* entity, box bbox)
 
 	if (g_var.get_as<bool>(V_ESP_ARMOR_ENABLED).value())
 	{
-		armor = m_begin_anims[index].m_confirmed ? armor : m_begin_anims[index].m_final_val;
+		armor = m_begin_anims[index].confirmed ? armor : m_begin_anims[index].final_val;
 
 		if (armor > ARMOR_MIN_VAL)
 		{
@@ -394,6 +400,17 @@ void player_esp_t::player_rendering(int index, c_base_player* entity, box bbox)
 				flags.push_back(std::pair<std::string, c_color>("Defusing", col));
 		}
 
+		if (g_var.get_as<bool>(V_ESP_FLAGS_SOUND).value())
+		{
+			if (m_player_sounds[index].visible)
+			{
+				flags.push_back(std::pair<std::string, c_color>("Sound", col));
+
+				if (m_player_sounds[index].expire_time < g_cs.m_globals->cur_time)
+					m_player_sounds[index].visible = false;
+			}
+		}
+
 		if (g_var.get_as<bool>(V_ESP_FLAGS_DISTANCE).value())
 		{
 			const auto dist = g_cs.get_local()->get_vec_origin().distance_to(entity->get_vec_origin());
@@ -430,8 +447,8 @@ void player_esp_t::reset_position(int index)
 	m_has_seen[index] = false;
 	m_anim_progress[index] = 0.0f;
 
-	m_begin_anims[index].m_confirmed = false;
-	m_begin_anims[index].m_elapsed = 0.0f;
+	m_begin_anims[index].confirmed = false;
+	m_begin_anims[index].elapsed = 0.0f;
 }
 
 void player_esp_t::update_position(int index, const vec3& pos)

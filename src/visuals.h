@@ -11,9 +11,14 @@
 #define ARMOR_MIN_VAL                 10
 
 struct begin_animation_t {
-	int   m_final_val{};
-	float m_elapsed{};
-	bool  m_confirmed{};
+	int   final_val{};
+	float elapsed{};
+	bool  confirmed{};
+};
+
+struct player_snd_t {
+	bool  visible{};
+	float expire_time{};
 };
 
 struct player_esp_t {
@@ -26,7 +31,9 @@ struct player_esp_t {
 	}
 
 	void think();
-	void on_round_start_e();
+	void trace_player_sound(int ent_index);
+
+	void reset_positions();
 
 private:
 	player_esp_t() = default;
@@ -41,6 +48,7 @@ private:
 	begin_animation_t m_begin_anims[MAX_PLAYERS]{};
 	bool              m_has_seen[MAX_PLAYERS]{};
 	float             m_alpha[MAX_PLAYERS]{};
+	player_snd_t      m_player_sounds[MAX_PLAYERS]{};
 };
 
 struct world_esp_t {

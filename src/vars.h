@@ -133,6 +133,7 @@ public:
 		set(V_ESP_FLAGS_AMMO, false);
 		set(V_ESP_FLAGS_FLASHED, false);
 		set(V_ESP_FLAGS_DEFUSING, false);
+		set(V_ESP_FLAGS_SOUND, false);
 		set(V_ESP_FLAGS_DISTANCE, false);
 		set(V_ESP_FLAGS_SCOPED, false);
 		set(V_ESP_FLAGS_COL_R, 255);
