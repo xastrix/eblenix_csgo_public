@@ -9,7 +9,9 @@
 #include "ui.h"
 #include "input.h"
 #include "events.h"
+#ifdef HTTP_ENABLED
 #include "http.h"
+#endif
 
 #include <files.h>
 #include <aes_clipboard.hpp>
@@ -29,7 +31,9 @@ static void init_surface_functions(sol::environment& env);
 static void init_clipboard_functions(sol::environment& env);
 static void init_memory_functions(sol::environment& env);
 static void init_cmdl_functions(sol::environment& env);
+#ifdef HTTP_ENABLED
 static void init_http_functions(sol::environment& env);
+#endif
 static void init_global_functions(sol::environment& env);
 static void init_lists(sol::environment& env);
 static void init_safe_env(sol::environment& env, sol::state_view state);
@@ -62,7 +66,9 @@ void c_lua_mgr::init_api(sol::state_view state)
 	init_clipboard_functions(m_env);
 	init_memory_functions(m_env);
 	init_cmdl_functions(m_env);
+#ifdef HTTP_ENABLED
 	init_http_functions(m_env);
+#endif
 	init_global_functions(m_env);
 
 	init_lists(m_env);
@@ -300,10 +306,12 @@ static void init_usertypes(sol::environment& env)
 		"set_prop_vec",        &c_base_player::set_prop<vec3>
 	);
 
+#ifdef HTTP_ENABLED
 	env.new_usertype<http_res_t>("http",
 		"resp",                &http_res_t::body,
 		"code",                sol::readonly(&http_res_t::response_code)
 	);
+#endif
 }
 
 static void init_global_vars_functions(sol::environment& env)
@@ -977,6 +985,7 @@ static void init_cmdl_functions(sol::environment& env)
 	env["cmdl"] = table;
 }
 
+#ifdef HTTP_ENABLED
 static void init_http_functions(sol::environment& env)
 {
 	sol::table table = env.create();
@@ -989,6 +998,7 @@ static void init_http_functions(sol::environment& env)
 
 	env["http"] = table;
 }
+#endif
 
 static void init_global_functions(sol::environment& env)
 {

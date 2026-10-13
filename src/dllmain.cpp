@@ -2,7 +2,9 @@
 #include "input.h"
 #include "events.h"
 #include "hooks.h"
+#ifdef HTTP_ENABLED
 #include "http.h"
+#endif
 
 #include "fonts.hpp"
 static DWORD  g_numFonts;
@@ -28,7 +30,9 @@ static void __stdcall init(HMODULE I)
 		if (g_renderer.init(g_cs.m_device))
 			g_ui.init(g_cs.m_device);
 
+#ifdef HTTP_ENABLED
 		g_http.init();
+#endif
 
 #ifdef LUA_ENABLED
 		g_lua.init();
@@ -95,7 +99,9 @@ static void __stdcall init(HMODULE I)
 
 		while (GLOBAL(state) == S_WAITING_FOR_SHUTDOWN) {
 			g::handle_playing_time(s_time, 1000);
+#ifdef HTTP_ENABLED
 			g_http.poll();
+#endif
 		}
 	}
 
@@ -137,7 +143,9 @@ static void __stdcall init(HMODULE I)
 #ifdef LUA_ENABLED
 		g_lua.undo();
 #endif
+#ifdef HTTP_ENABLED
 		g_http.undo();
+#endif
 		g_var.undo();
 
 		for (int i = 0; i <= 1; i++) {

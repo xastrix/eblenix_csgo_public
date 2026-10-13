@@ -30,6 +30,9 @@
 /* Enable/disable lua scripts, if undefined, scripts are disabled */
 #define LUA_ENABLED
 
+/* Enable/disable HTTP connections */
+#define HTTP_ENABLED
+
 enum fn_num {
 	// Hook indexes in virtual tables
 
