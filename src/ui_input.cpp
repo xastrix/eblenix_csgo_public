@@ -1,6 +1,23 @@
 #include "ui.h"
 
 #include "globals.h"
+#include "input.h"
+
+void c_ui::handle_dragging(UINT m)
+{
+	static draggable_object_t ui_drag_obj = { 0, 0, 0, 0 };
+
+	ui_drag_obj.set_x(g_var.get_as<int>(V_UI_POS_X).value());
+	ui_drag_obj.set_y(g_var.get_as<int>(V_UI_POS_Y).value());
+
+	ui_drag_obj.set_width(m_menu_width);
+	ui_drag_obj.set_height(m_menu_height);
+
+	if (g_input.move_object(ui_drag_obj, m)) {
+		g_var.set(V_UI_POS_X, ui_drag_obj.get_x());
+		g_var.set(V_UI_POS_Y, ui_drag_obj.get_y());
+	}
+}
 
 void c_ui::handle_toggle_keys(unsigned int vk)
 {

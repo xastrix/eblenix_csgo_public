@@ -30,7 +30,9 @@ struct draggable_object_t {
 	void set_y(int y) { m_y = y; }
 
 	int get_width() { return m_width; }
+	void set_width(int width) { m_width = width; }
 	int get_height() { return m_height; }
+	void set_height(int height) { m_height = height; }
 
 	int get_drag_x() { return m_drag_offset_x; }
 	void set_drag_x(int x) { m_drag_offset_x = x; }

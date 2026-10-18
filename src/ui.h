@@ -6,8 +6,10 @@
 
 #include "renderer.h"
 
-#define MAX_MENU_ENTRIES 11
-#define MAX_SUB_ENTRIES  16
+#define MAX_MENU_ENTRIES                        12
+#define MAX_SUB_ENTRIES                         16
+#define MENU_BOX_WIDTH                          178
+#define MENU_BOX_HEIGHT                         22
 
 enum _ui_states {
 	UI_NONE_STATE,
@@ -77,11 +79,14 @@ public:
 	void on_reset();
 	void on_reset_end();
 
+	void handle_dragging(UINT m);
 	void handle_toggle_keys(unsigned int vk);
 	void handle_input(unsigned int vk);
 
 	bool get_menu_state() { return m_opened; }
 	void set_menu_state(bool v) { m_opened = v; }
+
+	c_color get_menu_color(int index) { return m_colors[index]; }
 
 	void undo();
 
@@ -206,16 +211,10 @@ private:
 	void clear();
 
 private:
-	bool m_opened,
-	     m_sopened[maxUISubs]{};
-
-	int m_entry_pos,
-		m_entry_sz,
-		s_entry_pos[maxUISubs]{},
-		s_entry_sz[maxUISubs]{};
-
-	float m_current_animation_progress,
-		  m_target_animation_progress;
+	bool  m_opened, m_sopened[maxUISubs]{};
+	int   m_entry_pos, m_entry_sz, s_entry_pos[maxUISubs]{}, s_entry_sz[maxUISubs]{};
+	float m_current_animation_progress, m_target_animation_progress;
+	int   m_menu_width, m_menu_height;
 
 	m_entry m_entry[MAX_MENU_ENTRIES]{};
 	s_entry s_entries[MAX_SUB_ENTRIES][maxUISubs]{};
