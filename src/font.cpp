@@ -1,0 +1,109 @@
+#include "font.h"
+
+static std::vector<font_t> g_fonts = {
+	{ Tahoma12px,     12, "Tahoma",           FW_MEDIUM,   ANTIALIASED_QUALITY },
+	{ Verdana12px,    12, "Verdana",          FW_SEMIBOLD, ANTIALIASED_QUALITY },
+	{ SmallFonts10px, 10, "Smallest Pixel-7", FW_THIN,     ANTIALIASED_QUALITY },
+	{ Astriumwep12px, 12, "AstriumWep",       FW_NORMAL,   CLEARTYPE_QUALITY },
+	{ Astriumwep16px, 16, "AstriumWep",       FW_NORMAL,   CLEARTYPE_QUALITY },
+	{ Astriumwep25px, 25, "AstriumWep",       FW_NORMAL,   CLEARTYPE_QUALITY },
+};
+
+void c_fonts::init(IDirect3DDevice9* device)
+{
+	for (const auto& font : g_fonts)
+	{
+		D3DXCreateFontA(
+			device,
+			font.px, 0,
+			font.weight, 1, 0,
+			DEFAULT_CHARSET,
+			OUT_DEFAULT_PRECIS,
+			font.quality,
+			FF_DONTCARE,
+			font.name.c_str(),
+			&m_fonts[font.index]);
+	}
+}
+
+void c_fonts::restore(IDirect3DDevice9* device)
+{
+	init(device);
+}
+
+void c_fonts::draw_string(const std::string& string, float x, float y, ID3DXFont* font, uint8_t flags, c_color color)
+{
+	RECT r{ x, y, x, y };
+	RECT o_r{ x + 1, y + 1, x + 1, y + 1 };
+
+	if (flags & TEXT_CENTER_X) {
+		const auto half_width = static_cast<LONG>(get_text_width(string, font) / 2);
+
+		r = { static_cast<LONG>(x) - half_width, static_cast<LONG>(y), static_cast<LONG>(x) - half_width, static_cast<LONG>(y) };
+		o_r = { static_cast<LONG>(x) - half_width + 1, static_cast<LONG>(y) + 1, static_cast<LONG>(x) - half_width + 1, static_cast<LONG>(y) + 1 };
+	}
+
+	if (flags & TEXT_OUTLINE)
+		font->DrawTextA(NULL, string.c_str(), -1, &o_r, DT_NOCLIP, c_color(0, 0, 0, color.get_arr()[3]).get());
+
+	font->DrawTextA(NULL, string.c_str(), -1, &r, DT_NOCLIP, color.get());
+}
+
+void c_fonts::draw_stringW(const std::wstring& string, float x, float y, ID3DXFont* font, uint8_t flags, c_color color)
+{
+	RECT r{ x, y, x, y };
+	RECT o_r{ x + 1, y + 1, x + 1, y + 1 };
+
+	if (flags & TEXT_CENTER_X) {
+		const auto half_width = static_cast<LONG>(get_text_widthW(string, font) / 2);
+
+		r = { static_cast<LONG>(x) - half_width, static_cast<LONG>(y), static_cast<LONG>(x) - half_width, static_cast<LONG>(y) };
+		o_r = { static_cast<LONG>(x) - half_width + 1, static_cast<LONG>(y) + 1, static_cast<LONG>(x) - half_width + 1, static_cast<LONG>(y) + 1 };
+	}
+
+	if (flags & TEXT_OUTLINE)
+		font->DrawTextW(NULL, string.c_str(), -1, &o_r, DT_NOCLIP, c_color(0, 0, 0, color.get_arr()[3]).get());
+
+	font->DrawTextW(NULL, string.c_str(), -1, &r, DT_NOCLIP, color.get());
+}
+
+float c_fonts::get_text_width(const std::string& string, ID3DXFont* font)
+{
+	RECT r{};
+	font->DrawTextA(0, string.c_str(), -1, &r, DT_CALCRECT, 0xffffffff);
+
+	return (r.right - r.left);
+}
+
+float c_fonts::get_text_widthW(const std::wstring& string, ID3DXFont* font)
+{
+	RECT r{};
+	font->DrawTextW(0, string.c_str(), -1, &r, DT_CALCRECT, 0xffffffff);
+
+	return (r.right - r.left);
+}
+
+float c_fonts::get_text_height(const std::string& string, ID3DXFont* font)
+{
+	RECT r{};
+	font->DrawTextA(0, string.c_str(), -1, &r, DT_CALCRECT, 0xffffffff);
+	return (r.bottom - r.top);
+}
+
+float c_fonts::get_text_heightW(const std::wstring& string, ID3DXFont* font)
+{
+	RECT r{};
+	font->DrawTextW(0, string.c_str(), -1, &r, DT_CALCRECT, 0xffffffff);
+	return (r.bottom - r.top);
+}
+
+void c_fonts::undo()
+{
+	for (const auto& font : g_fonts)
+	{
+		if (m_fonts[font.index]) {
+			m_fonts[font.index]->Release();
+			m_fonts[font.index] = nullptr;
+		}
+	}
+}
