@@ -4,8 +4,6 @@
 #include <vector>
 #include <thread>
 
-#include "common.h"
-
 enum _module_list {
 	clientDLL,
 	engineDLL,

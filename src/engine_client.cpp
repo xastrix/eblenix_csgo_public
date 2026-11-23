@@ -1,7 +1,5 @@
 #include "engine_client.h"
 
-#include "common.h"
-
 int c_engine_client::get_local_player()
 {
 	using original_fn = int(__thiscall*)(c_engine_client*);
